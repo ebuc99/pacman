@@ -1,0 +1,60 @@
+## Process this file with automake to produce Makefile.in
+
+## Created by Anjuta
+
+AM_CPPFLAGS = \
+	-DPACKAGE_LOCALE_DIR=\""$(localedir)"\" \
+	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
+	-DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\"
+
+AM_CFLAGS =\
+	 -Wall\
+	 -g
+
+
+pacman_SOURCES =  \
+	figur.cpp \
+	figur.h \
+	ghost_figur.cpp \
+	ghost_figur.h \
+	pacman.cpp \
+	pacman.h \
+	pacman_figur.cpp \
+	pacman_figur.h \
+	pille.cpp \
+	pille.h \
+	schiene.cpp \
+	schiene.h
+
+pacman_CXXFLAGS = -ansi \
+	-fno-default-inline \
+	-ffor-scope \
+	-Wall \
+	-W \
+	-Wpointer-arith \
+	-Wcast-qual \
+	-Wcast-align \
+	-Wconversion \
+	-Woverloaded-virtual \
+	-Wsign-compare \
+	-Wnon-virtual-dtor \
+	-Woverloaded-virtual \
+	-Wfloat-equal \
+	-Wunreachable-code \
+	-Wno-reorder \
+	-D_GNU_SOURCE 
+
+pacman_LDFLAGS = $(SDL_CFLAGS) 
+
+pacman_LDADD =  \
+	$(SDL_LIBS)
+ 
+
+pacmanEXTRA_DIST = libsdl \
+	sdl-image \
+	sdl-ttf 
+
+  
+
+bin_PROGRAMS =  \
+	pacman

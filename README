@@ -1,0 +1,14 @@
+Pacman
+------
+
+This is a clone of the original pacman from Atari , as I remember , and I played 
+for the first time on an Atari 130 XL in the early 90s.
+But Paul Neaves pacman clone has inspired me greatly.
+One of the main targets of this implementation is a SDL Application with very
+less use of CPU power.
+
+License
+-------------------
+
+pacman is licensed under the terms of the GNU General Public License 
+version 2 (or any later version).

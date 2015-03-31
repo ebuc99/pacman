@@ -1,0 +1,5 @@
+pacman-pille.o: pille.cpp /usr/include/stdc-predef.h pille.h
+
+/usr/include/stdc-predef.h:
+
+pille.h:

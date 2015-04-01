@@ -483,7 +483,7 @@ Ghost *pinky_l, Ghost *inky_l, Ghost *clyde_l, SDL_Surface *score) {
 
 /* Hauptfunktion mit Spielschleife */
 int main(int argc, char *argv[]) {
-	SDL_Surface *temp, *hintergrund, *pille, *pacman, *pacman_normal;
+	SDL_Surface *hintergrund, *pille, *pacman, *pacman_normal;
 	SDL_Surface *pacman_links_1, *pacman_links_2, *ar_pacman_links[4];
 	SDL_Surface *pacman_oben_1, *pacman_oben_2, *ar_pacman_oben[4];
 	SDL_Surface *pacman_rechts_1, *pacman_rechts_2, *ar_pacman_rechts[4];
@@ -514,7 +514,6 @@ int main(int argc, char *argv[]) {
 	unsigned short int pille_counter = 0;
 	short int start_offset = 10;
 	float startTicks;
-	float lastTicks;
 	float lastTickstemp;
 	float ms = 1.0;
 	float wechsel_counter = 0;
@@ -530,7 +529,7 @@ int main(int argc, char *argv[]) {
                 printf("Kann Videomodus nicht setzen %s\n",SDL_GetError());
                 return EXIT_FAILURE;
         }
-	SDL_WM_SetCaption("Pacman");
+	SDL_WM_SetCaption("Pacman", "");
 	
 	/* Grafiken initialisieren */
     hintergrund = LoadSurface("/usr/local/share/pacman/gfx/hintergrund2.png");
@@ -649,7 +648,7 @@ int main(int argc, char *argv[]) {
 	draw_dynamic_content(punkte, 530, 60);
 	AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
 	Refresh();
-	lastTicks = SDL_GetTicks();
+	startTicks = SDL_GetTicks();
 	blinky_l.set_leader(1);	// Blinky als Referenz-Sprite fürs Neuzeichnen festgelegt
 	/* zuerst mal alle anhalten */
 	stop_all(true, &pacman_l, &blinky_l, &pinky_l, &inky_l, &clyde_l); 
@@ -686,7 +685,6 @@ int main(int argc, char *argv[]) {
 					die_counter++;
 					if(die_counter == 13) {
 						pacman_l.is_dying = 0;
-						//stop_all(false, &pacman_l, &blinky_l, &pinky_l, &inky_l, &clyde_l);
 						reset(&pacman_l, &blinky_l, &pinky_l, &inky_l, &clyde_l, pacman, blinky);
 						stop_all(true, &pacman_l, &blinky_l, &pinky_l, &inky_l, &clyde_l);
 						ct_pm = 0;
@@ -747,8 +745,7 @@ int main(int argc, char *argv[]) {
 		  	if(pacman_l.get_richtung() == 3) 
 	    			pacman = ar_pacman_unten[0];
 			pacman_l.parking();
-		}	
-		//df_pm = 0;	
+		}		
 		
 		draw_ghosts(&blinky_l, blinky, augen_0, augen_1, augen_2, augen_3);
 		draw_ghosts(&pinky_l, pinky, augen_0, augen_1, augen_2, augen_3);
@@ -763,16 +760,15 @@ int main(int argc, char *argv[]) {
 		}
 				
 		// für die korrekte Geschwindigkeit
-		startTicks = SDL_GetTicks();
-		lastTickstemp = lastTicks;
-		lastTicks = startTicks;
-		if((startTicks - lastTickstemp) <= WAIT_IN_MS) {
-		  	SDL_Delay((int)(WAIT_IN_MS - (startTicks - lastTickstemp)));
-			ms = (float)(((startTicks - lastTickstemp))/WAIT_IN_MS);
+		lastTickstemp = startTicks;
+		startTicks = (float)SDL_GetTicks();
+		lastTickstemp = startTicks - lastTickstemp;
+		if(lastTickstemp <= WAIT_IN_MS) {
+		  	SDL_Delay((int)(WAIT_IN_MS - lastTickstemp));
+			ms = (float)(lastTickstemp/WAIT_IN_MS);
 		}
-		else {
-			ms = (float)((startTicks - lastTickstemp)/WAIT_IN_MS);
-		}
+		else 
+			ms = (float)(lastTickstemp/WAIT_IN_MS);
 		
 		// und alle bewegen
 		move_pacman(pacman, &pacman_l, ms);

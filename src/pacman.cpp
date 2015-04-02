@@ -450,14 +450,16 @@ Ghost *pinky_l, Ghost *inky_l, Ghost *clyde_l, SDL_Surface *score) {
 			}
 			if(event.key.keysym.sym == SDLK_f) {
 				fullscreen = !fullscreen;
+        SDL_Surface* newScreen;
 				if(fullscreen)
-					screen = SDL_SetVideoMode(640, 480, 24, SDL_HWSURFACE | SDL_FULLSCREEN);
+          newScreen = SDL_SetVideoMode(640, 480, 24, SDL_HWSURFACE | SDL_FULLSCREEN);
 				else
-				  	screen = SDL_SetVideoMode(640, 480, 24, SDL_HWSURFACE);
-						
-				draw_static_content(score, 530, 30, 1);
-				AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
-				Refresh();
+          newScreen = SDL_SetVideoMode(640, 480, 24, SDL_HWSURFACE);
+        if (NULL != newScreen) {  // successful? NULL indicates failure
+          screen = newScreen;  // take it, but do not dispose of the old screen (says SDL documentation)
+				  AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
+				  // no Refresh() here, because at this moment nothing has been drawn to the new screen
+        }
 			}
 			if(event.key.keysym.sym == SDLK_p) {
 				if(!pacman_l->is_dying) {

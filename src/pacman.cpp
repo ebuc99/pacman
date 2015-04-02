@@ -122,6 +122,10 @@ static int greater(int a, int b) {
 static SDL_Surface *LoadSurface(const char *filename, int transparant_color = -1) {
 	SDL_Surface *surface, *temp;
 	temp = IMG_Load(filename);
+	if(!temp) {
+		printf("Error IMG_Load: %s\n", IMG_GetError());
+		exit(-1);
+	}
 	if(transparant_color != -1)
 		SDL_SetColorKey(temp, SDL_SRCCOLORKEY | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, transparant_color, transparant_color, transparant_color));
 	surface = SDL_DisplayFormat(temp);
@@ -450,16 +454,16 @@ Ghost *pinky_l, Ghost *inky_l, Ghost *clyde_l, SDL_Surface *score) {
 			}
 			if(event.key.keysym.sym == SDLK_f) {
 				fullscreen = !fullscreen;
-        SDL_Surface* newScreen;
+    			SDL_Surface* newScreen;
 				if(fullscreen)
-          newScreen = SDL_SetVideoMode(640, 480, 24, SDL_HWSURFACE | SDL_FULLSCREEN);
+      				newScreen = SDL_SetVideoMode(640, 480, 24, SDL_HWSURFACE | SDL_FULLSCREEN);
 				else
-          newScreen = SDL_SetVideoMode(640, 480, 24, SDL_HWSURFACE);
-        if (NULL != newScreen) {  // successful? NULL indicates failure
-          screen = newScreen;  // take it, but do not dispose of the old screen (says SDL documentation)
-				  AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
-				  // no Refresh() here, because at this moment nothing has been drawn to the new screen
-        }
+      				newScreen = SDL_SetVideoMode(640, 480, 24, SDL_HWSURFACE);
+    			if (NULL != newScreen) {  // successful? NULL indicates failure
+      				screen = newScreen;  // take it, but do not dispose of the old screen (says SDL documentation)
+					AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
+					// no Refresh() here, because at this moment nothing has been drawn to the new screen
+    			}
 			}
 			if(event.key.keysym.sym == SDLK_p) {
 				if(!pacman_l->is_dying) {
@@ -654,14 +658,15 @@ int main(int argc, char *argv[]) {
 	blinky_l.set_leader(1);	// Blinky als Referenz-Sprite fürs Neuzeichnen festgelegt
 	/* zuerst mal alle anhalten */
 	stop_all(true, &pacman_l, &blinky_l, &pinky_l, &inky_l, &clyde_l); 
-	
+
+	// game loop
 	while(loop) {	
 		if(start_offset == -1)	
 			loop = eventloop(hintergrund, &pacman_l, &blinky_l, &pinky_l, 
 			&inky_l, &clyde_l, score);
 		
 		if(wechsel_counter > 50) {
-			/* Geisteranimation */
+			/* ghost animations */
 			refresh_ghosts = 1;
 			if(ghost_change) {
 				ghost_change = 0;
@@ -678,7 +683,7 @@ int main(int argc, char *argv[]) {
 				clyde = ar_clyde[ghost_change];
 			} 
 			
-			/* pacman Sterbeanimation */
+			/* pacman die animantion */
 			if(pacman_l.is_dying) {
 				if(pacman_l.is_dying > 1)
 					pacman_l.is_dying--;

@@ -1,5 +1,8 @@
 #ifndef FIGUR_H
 #define FIGUR_H
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
+
 class Figur {
 	public:
 		/* Konstruktor und Destruktor */
@@ -52,5 +55,6 @@ class Figur {
 		int initial_x;
 		int initial_y;
 		float initial_v;
+		SDL_Surface *LoadSurface(const char *filename, int transparant_color);
 };
 #endif

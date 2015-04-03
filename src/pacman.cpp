@@ -235,10 +235,6 @@ static void draw_pillen(SDL_Surface *pille, SDL_Surface *superpille) {
 				AddUpdateRects(dest.x , dest.y, superpille->w, superpille->h);
 			}
 		}
-		/*AddUpdateRects(148 - 4, 75 - 4, superpille->w, superpille->h);
-		AddUpdateRects(490 - 4, 75 - 4, superpille->w, superpille->h);
-		AddUpdateRects(148 - 4, 348 - 4, superpille->w, superpille->h);
-		AddUpdateRects(490 - 4, 348 - 4, superpille->w, superpille->h);*/
 	}
 }
 
@@ -301,12 +297,12 @@ static void check_pillen(Pacman *pacman_l, int *punktestand) {
 }
 
 /* Reset */
-static void reset(Pacman *pacman_l, Ghost *blinky_l, Ghost *pinky_l, Ghost *inky_l, Ghost *clyde_l, SDL_Surface *pacman, SDL_Surface *ghost) {
+static void reset(Pacman *pacman_l, Ghost *blinky_l, Ghost *pinky_l, Ghost *inky_l, Ghost *clyde_l, /*SDL_Surface *pacman,*/ SDL_Surface *ghost) {
 	AddUpdateRects(blinky_l->x, blinky_l->y, ghost->w, ghost->h);
 	AddUpdateRects(pinky_l->x, pinky_l->y, ghost->w, ghost->h);
 	AddUpdateRects(inky_l->x, inky_l->y, ghost->w, ghost->h);
 	AddUpdateRects(clyde_l->x, clyde_l->y, ghost->w, ghost->h);
-	AddUpdateRects(pacman_l->x, pacman_l->y, pacman->w, pacman->h);
+	AddUpdateRects(pacman_l->x, pacman_l->y, pacman_l->pacman->w, pacman_l->pacman->h /*pacman->w, pacman->h*/);
 	pacman_l->reset();
 	blinky_l->reset();
 	pinky_l->reset();
@@ -330,14 +326,6 @@ static int check_collision(SDL_Surface *pacman, SDL_Surface *ghost, Pacman &rpac
 		}
 	}			
 	return 0;
-}
-
-/* pacman zeichnen */
-static void draw_pacman(SDL_Surface *pacman, Pacman *pacman_l) {
-	SDL_Rect dest;
-	dest.x = pacman_l->x;
-	dest.y = pacman_l->y;
-	SDL_BlitSurface(pacman, NULL, screen, &dest);
 }
 
 /* Geister zeichnen */
@@ -480,8 +468,7 @@ Ghost *pinky_l, Ghost *inky_l, Ghost *clyde_l, SDL_Surface *score) {
 			break;
 		case SDL_QUIT:
 			return 0;
-		}
-		
+		}		
 	}
 	return 1;
 }
@@ -489,18 +476,13 @@ Ghost *pinky_l, Ghost *inky_l, Ghost *clyde_l, SDL_Surface *score) {
 
 /* Hauptfunktion mit Spielschleife */
 int main(int argc, char *argv[]) {
-	SDL_Surface *hintergrund, *pille, *pacman, *pacman_normal;
-	SDL_Surface *pacman_links_1, *pacman_links_2, *ar_pacman_links[4];
-	SDL_Surface *pacman_oben_1, *pacman_oben_2, *ar_pacman_oben[4];
-	SDL_Surface *pacman_rechts_1, *pacman_rechts_2, *ar_pacman_rechts[4];
-	SDL_Surface *pacman_unten_1, *pacman_unten_2, *ar_pacman_unten[4];
+	SDL_Surface *hintergrund, *pille;
 	SDL_Surface *blinky, *blinky_1, *blinky_2, *ar_blinky[2];
 	SDL_Surface *pinky, *pinky_1, *pinky_2, *ar_pinky[2];
 	SDL_Surface *inky, *inky_1, *inky_2, *ar_inky[2];
 	SDL_Surface *clyde, *clyde_1, *clyde_2, *ar_clyde[2];
 	SDL_Surface *augen_0, *augen_1, *augen_2, *augen_3;
 	SDL_Surface *superpille[5];
-	SDL_Surface *ar_pacman_die[13];
 	SDL_Surface *punkte, *score;
 	TTF_Font *font;
 	SDL_Color textgelb = {255, 247, 11, 0};
@@ -512,7 +494,6 @@ int main(int argc, char *argv[]) {
 	Ghost inky_l(280, 222, GHOSTS_V,  INTELLIGENCE_INKY, INIT_DIRECTION_UP, INIT_UP_DOWN_INKY);
 	Ghost clyde_l(340, 222, GHOSTS_V, INTELLIGENCE_CLYDE, INIT_DIRECTION_UP, INIT_UP_DOWN_CLYDE);
 	Ghost *ghost_array[4] = {&blinky_l, &pinky_l, &inky_l, &clyde_l};
-	Pacman pacman_l(310, 338, PACMAN_V_FAST, WECHSEL_RATE);
 	int ghost_change = 0;
 	int loop = 1;
 	int ct_pm = 0;
@@ -536,19 +517,13 @@ int main(int argc, char *argv[]) {
                 return EXIT_FAILURE;
         }
 	SDL_WM_SetCaption("Pacman", "");
-	
+
+	// Instanz von Pacman
+	Pacman pacman_l(310, 338, PACMAN_V_FAST, WECHSEL_RATE);
+
 	/* Grafiken initialisieren */
     hintergrund = LoadSurface("/usr/local/share/pacman/gfx/hintergrund2.png");
     pille = LoadSurface("/usr/local/share/pacman/gfx/pille.png");
-    pacman_normal = LoadSurface("/usr/local/share/pacman/gfx/pacman.png", 255);
-    pacman_links_1 = LoadSurface("/usr/local/share/pacman/gfx/pacman_links_1.png", 255);
-    pacman_links_2 = LoadSurface("/usr/local/share/pacman/gfx/pacman_links_2.png", 255);
-    pacman_oben_1 = LoadSurface("/usr/local/share/pacman/gfx/pacman_oben_1.png", 255);
-    pacman_oben_2 = LoadSurface("/usr/local/share/pacman/gfx/pacman_oben_2.png", 255);
-    pacman_rechts_1 = LoadSurface("/usr/local/share/pacman/gfx/pacman_rechts_1.png", 255);
-    pacman_rechts_2 = LoadSurface("/usr/local/share/pacman/gfx/pacman_rechts_2.png", 255);
-    pacman_unten_1 = LoadSurface("/usr/local/share/pacman/gfx/pacman_unten_1.png", 255);
-    pacman_unten_2 = LoadSurface("/usr/local/share/pacman/gfx/pacman_unten_2.png", 255);
     blinky_1 = LoadSurface("/usr/local/share/pacman/gfx/blinky_1.png", 255);
     blinky_2 = LoadSurface("/usr/local/share/pacman/gfx/blinky_2.png", 255);
     pinky_1 = LoadSurface("/usr/local/share/pacman/gfx/pinky_1.png", 255);
@@ -561,44 +536,6 @@ int main(int argc, char *argv[]) {
     augen_1 = LoadSurface("/usr/local/share/pacman/gfx/augen_1.png", 0);
     augen_2 = LoadSurface("/usr/local/share/pacman/gfx/augen_2.png", 0);
     augen_3 = LoadSurface("/usr/local/share/pacman/gfx/augen_3.png", 0);
-    
-
-    // alle pacman Bilder initialisieren
-    ar_pacman_links[0] = pacman_links_1;
-    ar_pacman_links[1] = pacman_links_2;
-    ar_pacman_links[2] = pacman_links_1;
-    ar_pacman_links[3] = pacman_normal;
-        
-    ar_pacman_oben[0] = pacman_oben_1;
-    ar_pacman_oben[1] = pacman_oben_2;
-    ar_pacman_oben[2] = pacman_oben_1;
-    ar_pacman_oben[3] = pacman_normal;
-        
-    ar_pacman_rechts[0] = pacman_rechts_1;
-    ar_pacman_rechts[1] = pacman_rechts_2;
-    ar_pacman_rechts[2] = pacman_rechts_1;
-    ar_pacman_rechts[3] = pacman_normal;
-        
-    ar_pacman_unten[0] = pacman_unten_1;
-    ar_pacman_unten[1] = pacman_unten_2;
-    ar_pacman_unten[2] = pacman_unten_1;
-    ar_pacman_unten[3] = pacman_normal;
-    
-    ar_pacman_die[0] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_1.png", 255);
-    ar_pacman_die[1] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_2.png", 255);
-    ar_pacman_die[2] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_3.png", 255);
-    ar_pacman_die[3] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_4.png", 255);
-    ar_pacman_die[4] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_5.png", 255);
-    ar_pacman_die[5] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_6.png", 255);
-    ar_pacman_die[6] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_7.png", 255);
-    ar_pacman_die[7] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_8.png", 255);
-    ar_pacman_die[8] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_9.png", 255);
-    ar_pacman_die[9] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_7.png", 255);
-    ar_pacman_die[10] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_8.png", 255);
-    ar_pacman_die[11] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_9.png", 255);
-    ar_pacman_die[12] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_9.png", 255);
-	
-	pacman = ar_pacman_links[ct_pm];
 	
 	superpille[0] = LoadSurface("/usr/local/share/pacman/gfx/superpille_1.png", 0);
 	superpille[1] = LoadSurface("/usr/local/share/pacman/gfx/superpille_2.png", 0);
@@ -645,7 +582,7 @@ int main(int argc, char *argv[]) {
 	draw_hintergrund(hintergrund);
 	init_pillen();
 	draw_pillen(pille, superpille[pille_counter]);
-	draw_pacman(pacman, &pacman_l);
+	pacman_l.draw (screen);
 	draw_ghosts(&blinky_l, blinky, augen_0, augen_1, augen_2, augen_3);
 	draw_ghosts(&pinky_l, pinky, augen_0, augen_1, augen_2, augen_3);
 	draw_ghosts(&inky_l, inky, augen_0, augen_1, augen_2, augen_3);
@@ -656,7 +593,7 @@ int main(int argc, char *argv[]) {
 	Refresh();
 	startTicks = (float)SDL_GetTicks();
 	blinky_l.set_leader(1);	// Blinky als Referenz-Sprite fürs Neuzeichnen festgelegt
-	/* zuerst mal alle anhalten */
+	// zuerst mal alle anhalten 
 	stop_all(true, &pacman_l, &blinky_l, &pinky_l, &inky_l, &clyde_l); 
 
 	// game loop
@@ -666,7 +603,7 @@ int main(int argc, char *argv[]) {
 			&inky_l, &clyde_l, score);
 		
 		if(wechsel_counter > 50) {
-			/* ghost animations */
+			// ghost animations
 			refresh_ghosts = 1;
 			if(ghost_change) {
 				ghost_change = 0;
@@ -683,16 +620,17 @@ int main(int argc, char *argv[]) {
 				clyde = ar_clyde[ghost_change];
 			} 
 			
-			/* pacman die animantion */
+			//
 			if(pacman_l.is_dying) {
 				if(pacman_l.is_dying > 1)
 					pacman_l.is_dying--;
 				else {
-					pacman = ar_pacman_die[die_counter];
+					//pacman = ar_pacman_die[die_counter];
+					pacman_l.die_pic (die_counter);
 					die_counter++;
 					if(die_counter == 13) {
 						pacman_l.is_dying = 0;
-						reset(&pacman_l, &blinky_l, &pinky_l, &inky_l, &clyde_l, pacman, blinky);
+						reset(&pacman_l, &blinky_l, &pinky_l, &inky_l, &clyde_l, blinky);
 						stop_all(true, &pacman_l, &blinky_l, &pinky_l, &inky_l, &clyde_l);
 						ct_pm = 0;
 						start_offset = 10;
@@ -706,7 +644,7 @@ int main(int argc, char *argv[]) {
 			else
 				pille_counter++;			
 			
-			/* Anfangsoffset */
+			// Anfangsoffset 
 			if(start_offset > 0)
 				start_offset--;
 			else if (start_offset == 0) {
@@ -728,13 +666,13 @@ int main(int argc, char *argv[]) {
 	
 		if(pacman_l.wechsel()) {
 			if(pacman_l.get_richtung() == 0)
-		  		pacman = ar_pacman_links[ct_pm];
+		  		pacman_l.left_pic(ct_pm); //= ar_pacman_links[ct_pm];
 		  	if(pacman_l.get_richtung() == 1) 
-		   		pacman = ar_pacman_oben[ct_pm];
+		   		pacman_l.up_pic(ct_pm); //= ar_pacman_oben[ct_pm];
 		  	if(pacman_l.get_richtung() == 2) 
-		    		pacman = ar_pacman_rechts[ct_pm];
+		    	pacman_l.right_pic(ct_pm); // = ar_pacman_rechts[ct_pm];
 		  	if(pacman_l.get_richtung() == 3) 
-	    			pacman = ar_pacman_unten[ct_pm];
+	    		pacman_l.down_pic(ct_pm); // = ar_pacman_unten[ct_pm];
 		  	ct_pm++;
 		}
 		if(ct_pm > 3)
@@ -744,13 +682,13 @@ int main(int argc, char *argv[]) {
 		if(pacman_l.is_pacman_stopped() && !pacman_l.is_dying) {
 			ct_pm = 0;
 			if(pacman_l.get_richtung() == 0)
-		  		pacman = ar_pacman_links[0];
+		  		pacman_l.left_pic(0); //= ar_pacman_links[0];
 		  	if(pacman_l.get_richtung() == 1) 
-		   		pacman = ar_pacman_oben[0];
+		   		pacman_l.up_pic(0); //= ar_pacman_oben[0];
 		 	if(pacman_l.get_richtung() == 2) 
-		    		pacman = ar_pacman_rechts[0];
+		    	pacman_l.right_pic(0); //= ar_pacman_rechts[0];
 		  	if(pacman_l.get_richtung() == 3) 
-	    			pacman = ar_pacman_unten[0];
+	    		pacman_l.down_pic(0); //= ar_pacman_unten[0];
 			pacman_l.parking();
 		}		
 		
@@ -758,10 +696,10 @@ int main(int argc, char *argv[]) {
 		draw_ghosts(&pinky_l, pinky, augen_0, augen_1, augen_2, augen_3);
 		draw_ghosts(&inky_l, inky, augen_0, augen_1, augen_2, augen_3);
 		draw_ghosts(&clyde_l, clyde, augen_0, augen_1, augen_2, augen_3);
-		draw_pacman(pacman, &pacman_l);
+		pacman_l.draw (screen);
 		draw_blocks();
 		Refresh();
-		if(check_collision(pacman, blinky, pacman_l, ghost_array) && !pacman_l.is_dying) {
+		if(check_collision(pacman_l.pacman, blinky, pacman_l, ghost_array) && !pacman_l.is_dying) {
 			stop_all(true, &pacman_l, &blinky_l, &pinky_l, &inky_l, &clyde_l);
 			pacman_l.is_dying = 10;  
 		}
@@ -778,7 +716,7 @@ int main(int argc, char *argv[]) {
 			ms = (float)(lastTickstemp/WAIT_IN_MS);
 		
 		// und alle bewegen
-		move_pacman(pacman, &pacman_l, ms);
+		move_pacman(pacman_l.pacman, &pacman_l, ms);
 		move_ghosts(blinky, &blinky_l, &pacman_l, ms);
 		move_ghosts(pinky, &pinky_l, &pacman_l, ms);
 		move_ghosts(inky, &inky_l, &pacman_l, ms);
@@ -786,7 +724,7 @@ int main(int argc, char *argv[]) {
 		
 	}
 	SDL_FreeSurface(pille);
-	SDL_FreeSurface(pacman);
+	SDL_FreeSurface(pacman_l.pacman);
 	SDL_FreeSurface(hintergrund);
 	
 	return EXIT_SUCCESS;

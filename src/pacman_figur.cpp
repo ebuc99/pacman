@@ -10,9 +10,61 @@ Pacman::Pacman(int init_x, int init_y, float init_v, int init_wechsel_rate):
 	wechsel_x = init_x;
 	wechsel_y = init_y;
 	richtung = 0;
+	pacman_normal = Figur::LoadSurface("/usr/local/share/pacman/gfx/pacman.png", 255);
+	pacman_links_1 = LoadSurface("/usr/local/share/pacman/gfx/pacman_links_1.png", 255);
+    pacman_links_2 = LoadSurface("/usr/local/share/pacman/gfx/pacman_links_2.png", 255);
+    pacman_oben_1 = LoadSurface("/usr/local/share/pacman/gfx/pacman_oben_1.png", 255);
+    pacman_oben_2 = LoadSurface("/usr/local/share/pacman/gfx/pacman_oben_2.png", 255);
+    pacman_rechts_1 = LoadSurface("/usr/local/share/pacman/gfx/pacman_rechts_1.png", 255);
+    pacman_rechts_2 = LoadSurface("/usr/local/share/pacman/gfx/pacman_rechts_2.png", 255);
+    pacman_unten_1 = LoadSurface("/usr/local/share/pacman/gfx/pacman_unten_1.png", 255);
+    pacman_unten_2 = LoadSurface("/usr/local/share/pacman/gfx/pacman_unten_2.png", 255);
+	// alle pacman Bilder initialisieren
+    ar_pacman_links[0] = pacman_links_1;
+    ar_pacman_links[1] = pacman_links_2;
+    ar_pacman_links[2] = pacman_links_1;
+    ar_pacman_links[3] = pacman_normal;
+        
+    ar_pacman_oben[0] = pacman_oben_1;
+    ar_pacman_oben[1] = pacman_oben_2;
+    ar_pacman_oben[2] = pacman_oben_1;
+    ar_pacman_oben[3] = pacman_normal;
+        
+    ar_pacman_rechts[0] = pacman_rechts_1;
+    ar_pacman_rechts[1] = pacman_rechts_2;
+    ar_pacman_rechts[2] = pacman_rechts_1;
+    ar_pacman_rechts[3] = pacman_normal;
+        
+    ar_pacman_unten[0] = pacman_unten_1;
+    ar_pacman_unten[1] = pacman_unten_2;
+    ar_pacman_unten[2] = pacman_unten_1;
+    ar_pacman_unten[3] = pacman_normal;
+    
+    ar_pacman_die[0] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_1.png", 255);
+    ar_pacman_die[1] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_2.png", 255);
+    ar_pacman_die[2] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_3.png", 255);
+    ar_pacman_die[3] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_4.png", 255);
+    ar_pacman_die[4] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_5.png", 255);
+    ar_pacman_die[5] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_6.png", 255);
+    ar_pacman_die[6] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_7.png", 255);
+    ar_pacman_die[7] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_8.png", 255);
+    ar_pacman_die[8] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_9.png", 255);
+    ar_pacman_die[9] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_7.png", 255);
+    ar_pacman_die[10] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_8.png", 255);
+    ar_pacman_die[11] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_9.png", 255);
+    ar_pacman_die[12] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_9.png", 255);
+	
+	pacman = ar_pacman_links[ct_pm];
 }
 
 Pacman::~Pacman() {
+}
+
+void Pacman::draw(SDL_Surface* screen) {
+	SDL_Rect dest;
+	dest.x = this->x;
+	dest.y = this->y;
+	SDL_BlitSurface(pacman, NULL, screen, &dest);
 }
 
 void Pacman::move_left(float ms, float max_step) {
@@ -67,6 +119,25 @@ void Pacman::move_down(float ms, float max_step) {
 	richtung = 3;
 }
 
+void Pacman::left_pic(int cnt_pic) {
+	pacman = ar_pacman_links[cnt_pic];
+}
+
+void Pacman::up_pic(int cnt_pic) {
+	pacman = ar_pacman_oben[cnt_pic];
+}
+
+void Pacman::right_pic(int cnt_pic) {
+	pacman = ar_pacman_rechts[cnt_pic];
+}
+
+void Pacman::down_pic(int cnt_pic) {
+	pacman = ar_pacman_unten[cnt_pic];
+}
+
+void Pacman::die_pic(int cnt_pic) {
+	pacman = ar_pacman_die[cnt_pic];
+}
 int Pacman::wechsel() {
 	if (is_wechsel) {
 		is_wechsel = 0;

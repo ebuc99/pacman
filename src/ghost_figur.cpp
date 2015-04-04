@@ -35,7 +35,7 @@ Ghost::Ghost(int init_x, int init_y, float init_v, int init_intelligence,
     augen_3 = LoadSurface("/usr/local/share/pacman/gfx/augen_3.png", 0);
 	ar_ghost[0] = ghost_1;
 	ar_ghost[1] = ghost_2;
-	ghost = ar_ghost[1];
+	this->ghost_sf = ar_ghost[1];
 }
 
 Ghost::~Ghost() {
@@ -45,7 +45,7 @@ void Ghost::draw(SDL_Surface *screen, int moving) {
 	SDL_Rect dest;
 	dest.x = this->x;
 	dest.y = this->y;
-	SDL_BlitSurface(ghost, NULL, screen, &dest);
+	SDL_BlitSurface(this->ghost_sf, NULL, screen, &dest);
 	if(moving) {
 		switch(this->get_richtung()) {
 			case 0:
@@ -68,7 +68,7 @@ void Ghost::draw(SDL_Surface *screen, int moving) {
 }
 
 void Ghost::animation(int cnt_pic) {
-	ghost = ar_ghost[cnt_pic];
+	this->ghost_sf = ar_ghost[cnt_pic];
 }
 
 void Ghost::set_leader(int leader) {

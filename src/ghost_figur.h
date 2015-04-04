@@ -48,7 +48,7 @@ class Ghost : public Figur {
 		static const unsigned short int CLYDE = 3;
 
 		/* Ghost Surface */
-		SDL_Surface *ghost;
+		SDL_Surface *ghost_sf;
 		
 	private:
 		unsigned short int its_leader;

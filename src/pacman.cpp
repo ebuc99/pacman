@@ -155,35 +155,35 @@ static int moving() {
 }
 
 /* alles anhalten */
-static void stop_all(unsigned short int stop, Pacman *pacman_l, Ghost *blinky_l, Ghost *pinky_l, Ghost *inky_l, Ghost *clyde_l) {
+static void stop_all(unsigned short int stop, Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghost *clyde) {
 	static float speed_ghosts;
 	static float speed_pacman;
 	if(stop) {
-		speed_ghosts = blinky_l->get_speed();
-		speed_pacman = pacman_l->get_speed();
-		blinky_l->set_speed(0);
-		pinky_l->set_speed(0);
-		inky_l->set_speed(0);
-		clyde_l->set_speed(0);
-		pacman_l->set_speed(0);
+		speed_ghosts = blinky->get_speed();
+		speed_pacman = pacman->get_speed();
+		blinky->set_speed(0);
+		pinky->set_speed(0);
+		inky->set_speed(0);
+		clyde->set_speed(0);
+		pacman->set_speed(0);
 		stop_moving = 1;
 	} else {
-		blinky_l->set_speed(speed_ghosts);
-		pinky_l->set_speed(speed_ghosts);
-		inky_l->set_speed(speed_ghosts);
-		clyde_l->set_speed(speed_ghosts);
-		pacman_l->set_speed(speed_pacman);
+		blinky->set_speed(speed_ghosts);
+		pinky->set_speed(speed_ghosts);
+		inky->set_speed(speed_ghosts);
+		clyde->set_speed(speed_ghosts);
+		pacman->set_speed(speed_pacman);
 		stop_moving = 0;
 	}
 }
 
 
 /* diese Funktion meldet die Geistergrafiken nur dann zum neu Zeichnen an, wenn sie sich geändert haben */
-static void AddUpdateRects_ghost(SDL_Surface *ghost, Ghost *ghost_l) {
+static void AddUpdateRects_ghost(Ghost *ghost_l) {
 	if((ghost_l->get_richtung() == 0) || (ghost_l->get_richtung() == 1))
-		AddUpdateRects(ghost_l->x, ghost_l->y, (ghost->w + abs(ghost_l->x - ghost_l->last_x)), (ghost->h + abs(ghost_l->y - ghost_l->last_y)));
+		AddUpdateRects(ghost_l->x, ghost_l->y, (ghost_l->ghost_sf->w + abs(ghost_l->x - ghost_l->last_x)), (ghost_l->ghost_sf->h + abs(ghost_l->y - ghost_l->last_y)));
 	else
-		AddUpdateRects((ghost_l->x - abs(ghost_l->x - ghost_l->last_x)), (ghost_l->y - abs(ghost_l->y - ghost_l->last_y)), ghost->w, ghost->h);
+		AddUpdateRects((ghost_l->x - abs(ghost_l->x - ghost_l->last_x)), (ghost_l->y - abs(ghost_l->y - ghost_l->last_y)), ghost_l->ghost_sf->w, ghost_l->ghost_sf->h);
 }
 
 
@@ -276,14 +276,14 @@ static void compute_score(SDL_Surface *punkte, char *char_punktestand, int int_p
 }
 
 /* Kollisionsbehandlung pacman <-> Pillen */
-static void check_pillen(Pacman *pacman_l, int *punktestand) {
-	if(pacman_l->was_moving()){
+static void check_pillen(Pacman *pacman, int *punktestand) {
+	if(pacman->was_moving()){
 		static int cnt_slow;	// Anzahl der Umläufe, die er langsam bleibt
 		for(int i = 0; i < ANZAHL_PILLEN; i++) {
-			if(pillen[i].sichtbar && ((pillen[i].x - 10) >= less(pacman_l->x,pacman_l->last_x)) && ((pillen[i].x - 10) <= greater(pacman_l->x,pacman_l->last_x)) && ((pillen[i].y - 10) >= less(pacman_l->y,pacman_l->last_y)) && ((pillen[i].y - 10) <= greater(pacman_l->y,pacman_l->last_y))) {
+			if(pillen[i].sichtbar && ((pillen[i].x - 10) >= less(pacman->x,pacman->last_x)) && ((pillen[i].x - 10) <= greater(pacman->x,pacman->last_x)) && ((pillen[i].y - 10) >= less(pacman->y,pacman->last_y)) && ((pillen[i].y - 10) <= greater(pacman->y,pacman->last_y))) {
 				cnt_slow = 15;
 				pillen[i].sichtbar = 0;
-				pacman_l->set_speed(PACMAN_V_SLOW);
+				pacman->set_speed(PACMAN_V_SLOW);
 				(*punktestand)++;
 				break;
 			}	
@@ -292,35 +292,35 @@ static void check_pillen(Pacman *pacman_l, int *punktestand) {
 		if(cnt_slow > 0)
 			cnt_slow--; 
 		if(cnt_slow <= 0)
-			pacman_l->set_speed(PACMAN_V_FAST); // wieder schnell
+			pacman->set_speed(PACMAN_V_FAST); // wieder schnell
 	}
 }
 
 /* Reset */
-static void reset(Pacman *pacman_l, Ghost *blinky_l, Ghost *pinky_l, Ghost *inky_l, Ghost *clyde_l, /*SDL_Surface *pacman,*/ SDL_Surface *ghost) {
-	AddUpdateRects(blinky_l->x, blinky_l->y, ghost->w, ghost->h);
-	AddUpdateRects(pinky_l->x, pinky_l->y, ghost->w, ghost->h);
-	AddUpdateRects(inky_l->x, inky_l->y, ghost->w, ghost->h);
-	AddUpdateRects(clyde_l->x, clyde_l->y, ghost->w, ghost->h);
-	AddUpdateRects(pacman_l->x, pacman_l->y, pacman_l->pacman->w, pacman_l->pacman->h /*pacman->w, pacman->h*/);
-	pacman_l->reset();
-	blinky_l->reset();
-	pinky_l->reset();
-	inky_l->reset();
-	clyde_l->reset();
+static void reset(Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghost *clyde) {
+	AddUpdateRects(blinky->x, blinky->y, blinky->ghost_sf->w, blinky->ghost_sf->h);
+	AddUpdateRects(pinky->x, pinky->y, pinky->ghost_sf->w, pinky->ghost_sf->h);
+	AddUpdateRects(inky->x, inky->y, inky->ghost_sf->w, inky->ghost_sf->h);
+	AddUpdateRects(clyde->x, clyde->y, clyde->ghost_sf->w, clyde->ghost_sf->h);
+	AddUpdateRects(pacman->x, pacman->y, pacman->pacman_sf->w, pacman->pacman_sf->h);
+	pacman->reset();
+	blinky->reset();
+	pinky->reset();
+	inky->reset();
+	clyde->reset();
 }
 
 /* Kollisionsbehandlung pacman <-> Geister */
-static int check_collision(SDL_Surface *pacman, SDL_Surface *ghost, Pacman &rpacman_l, Ghost **ghost_array) {
-	unsigned short int x_left_pacman = rpacman_l.x;
-	unsigned short int y_up_pacman = rpacman_l.y;
-	unsigned short int x_right_pacman = rpacman_l.x + pacman->w;
-	unsigned short int y_down_pacman = rpacman_l.y + pacman->h;
+static int check_collision(Pacman *pacman, Ghost **ghost_array) {
+	unsigned short int x_left_pacman = pacman->x;
+	unsigned short int y_up_pacman = pacman->y;
+	unsigned short int x_right_pacman = pacman->x + pacman->pacman_sf->w;
+	unsigned short int y_down_pacman = pacman->y + pacman->pacman_sf->h;
 	
 	if(moving()) {
 	    for(int i = 0; i <= 3; i++) {
-	    	unsigned short int x_real_ghost = ghost_array[i]->x + (int)(ghost->w * 0.5);
-			unsigned short int y_real_ghost = ghost_array[i]->y + (int)(ghost->h * 0.5);
+	    	unsigned short int x_real_ghost = ghost_array[i]->x + (int)(ghost_array[i]->ghost_sf->w * 0.5);
+			unsigned short int y_real_ghost = ghost_array[i]->y + (int)(ghost_array[i]->ghost_sf->h * 0.5);
 			if((x_real_ghost >= x_left_pacman) && (x_real_ghost <= x_right_pacman) && (y_real_ghost >= y_up_pacman) && (y_real_ghost <= y_down_pacman))
 				return 1;
 		}
@@ -349,20 +349,20 @@ static void draw_blocks(void) {
 }
 
 /* Bewege pacman */
-static void move_pacman(SDL_Surface *pacman, Pacman *pacman_l, float ms) {
+static void move_pacman(Pacman *pacman, float ms) {
 	if(Ghost::was_moving_leader || (stop_moving && moving())){
-		AddUpdateRects(pacman_l->x, pacman_l->y, pacman->w, pacman->h);
+		AddUpdateRects(pacman->x, pacman->y, pacman->pacman_sf->w, pacman->pacman_sf->h);
 	}
-	pacman_l->move_on_rails(ms, ANZAHL_SCHIENEN, ar_s);
+	pacman->move_on_rails(ms, ANZAHL_SCHIENEN, ar_s);
 }
 
 /* Bewege Geist */
-static void move_ghosts(SDL_Surface *ghost, Ghost *ghost_l, Pacman *pacman_l, float(ms)) {
+static void move_ghosts(Ghost *ghost_l, Pacman *pacman, float(ms)) {
 	if(ghost_l->was_moving() || (stop_moving && moving())){
-		AddUpdateRects_ghost(ghost, ghost_l);	
+		AddUpdateRects_ghost(ghost_l);	
 	}
 	
-	ghost_l->move_on_rails(pacman_l, ms, ANZAHL_SCHIENEN, ar_s);
+	ghost_l->move_on_rails(pacman, ms, ANZAHL_SCHIENEN, ar_s);
 }
 
 /* Anmelden von Grafiken zum Neuzeichnen */
@@ -397,22 +397,22 @@ void Refresh() {
 }
 
 /* Tastaturereignisse */
-static int eventloop(SDL_Surface *hintergrund, Pacman *pacman_l, Ghost *blinky_l, 
-Ghost *pinky_l, Ghost *inky_l, Ghost *clyde_l, SDL_Surface *score) {
+static int eventloop(SDL_Surface *hintergrund, Pacman *pacman, Ghost *blinky, 
+Ghost *pinky, Ghost *inky, Ghost *clyde, SDL_Surface *score) {
 	static unsigned short int pause;
 	SDL_Event event;
 	while(SDL_PollEvent(&event)) {
 		switch(event.type) {
 		case SDL_KEYDOWN:
-			if(!pacman_l->is_dying && !pause) {
+			if(!pacman->is_dying && !pause) {
 				if(event.key.keysym.sym == SDLK_LEFT)
-					pacman_l->richtung_pre = 0;
+					pacman->richtung_pre = 0;
 				if(event.key.keysym.sym == SDLK_UP) 
-					pacman_l->richtung_pre = 1; 
+					pacman->richtung_pre = 1; 
 				if(event.key.keysym.sym == SDLK_RIGHT) 
-					pacman_l->richtung_pre = 2;
+					pacman->richtung_pre = 2;
 				if(event.key.keysym.sym == SDLK_DOWN) 
-					pacman_l->richtung_pre = 3; 
+					pacman->richtung_pre = 3; 
 			}
 			if(event.key.keysym.sym == SDLK_f) {
 				fullscreen = !fullscreen;
@@ -428,13 +428,13 @@ Ghost *pinky_l, Ghost *inky_l, Ghost *clyde_l, SDL_Surface *score) {
     			}
 			}
 			if(event.key.keysym.sym == SDLK_p) {
-				if(!pacman_l->is_dying) {
+				if(!pacman->is_dying) {
 					if(!stop_moving) {
-						stop_all(true, pacman_l, blinky_l, pinky_l, inky_l, clyde_l);  
+						stop_all(true, pacman, blinky, pinky, inky, clyde);  
 						pause = 1;
 					}
 					else {
-						stop_all(false, pacman_l, blinky_l, pinky_l, inky_l, clyde_l);
+						stop_all(false, pacman, blinky, pinky, inky, clyde);
 						pause = 0;
 					}
 				}
@@ -483,14 +483,18 @@ int main(int argc, char *argv[]) {
 	SDL_WM_SetCaption("Pacman", "");
 
 	// init pacman
-	Pacman pacman_l(310, 338, PACMAN_V_FAST, WECHSEL_RATE);
+	Pacman *pacman = new Pacman(310, 338, PACMAN_V_FAST, WECHSEL_RATE);
 
 	// init ghosts
-	Ghost blinky_l(310, 173, GHOSTS_V, INTELLIGENCE_BLINKY, INIT_DIRECTION_LEFT, INIT_UP_DOWN, Ghost::BLINKY);
-	Ghost pinky_l(310, 222, GHOSTS_V, INTELLIGENCE_PINKY, INIT_DIRECTION_UP, INIT_UP_DOWN, Ghost::PINKY);
-	Ghost inky_l(280, 222, GHOSTS_V,  INTELLIGENCE_INKY, INIT_DIRECTION_UP, INIT_UP_DOWN_INKY, Ghost::INKY);
-	Ghost clyde_l(340, 222, GHOSTS_V, INTELLIGENCE_CLYDE, INIT_DIRECTION_UP, INIT_UP_DOWN_CLYDE, Ghost::CLYDE);
-	Ghost *ghost_array[4] = {&blinky_l, &pinky_l, &inky_l, &clyde_l};
+	Ghost *blinky = new Ghost(310, 173, GHOSTS_V, INTELLIGENCE_BLINKY, 
+	                          INIT_DIRECTION_LEFT, INIT_UP_DOWN, Ghost::BLINKY);
+	Ghost *pinky = new Ghost(310, 222, GHOSTS_V, INTELLIGENCE_PINKY, 
+	                         INIT_DIRECTION_UP, INIT_UP_DOWN, Ghost::PINKY);
+	Ghost *inky = new Ghost(280, 222, GHOSTS_V,  INTELLIGENCE_INKY, 
+	                        INIT_DIRECTION_UP, INIT_UP_DOWN_INKY, Ghost::INKY);
+	Ghost *clyde = new Ghost(340, 222, GHOSTS_V, INTELLIGENCE_CLYDE, 
+	                         INIT_DIRECTION_UP, INIT_UP_DOWN_CLYDE, Ghost::CLYDE);
+	Ghost *ghost_array[4] = {blinky, pinky, inky, clyde};
 	
 
 	/* Grafiken initialisieren */
@@ -526,25 +530,25 @@ int main(int argc, char *argv[]) {
 	draw_hintergrund(hintergrund);
 	init_pillen();
 	draw_pillen(pille, superpille[pille_counter]);
-	pacman_l.draw(screen);
-	blinky_l.draw(screen, moving());
-	pinky_l.draw(screen, moving());
-	inky_l.draw(screen, moving());
-	clyde_l.draw(screen, moving());
+	pacman->draw(screen);
+	blinky->draw(screen, moving());
+	pinky->draw(screen, moving());
+	inky->draw(screen, moving());
+	clyde->draw(screen, moving());
 	draw_dynamic_content(score, 530, 30);
 	draw_dynamic_content(punkte, 530, 60);
 	AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
 	Refresh();
 	startTicks = (float)SDL_GetTicks();
-	blinky_l.set_leader(1);	// Blinky als Referenz-Sprite fürs Neuzeichnen festgelegt
+	blinky->set_leader(1);	// Blinky als Referenz-Sprite fürs Neuzeichnen festgelegt
 	// zuerst mal alle anhalten 
-	stop_all(true, &pacman_l, &blinky_l, &pinky_l, &inky_l, &clyde_l); 
+	stop_all(true, pacman, blinky, pinky, inky, clyde); 
 
 	// game loop
 	while(loop) {	
 		if(start_offset == -1)	
-			loop = eventloop(hintergrund, &pacman_l, &blinky_l, &pinky_l, 
-			&inky_l, &clyde_l, score);
+			loop = eventloop(hintergrund, pacman, blinky, pinky, 
+			inky, clyde, score);
 		
 		if(wechsel_counter > 50) {
 			// ghost animations
@@ -553,23 +557,22 @@ int main(int argc, char *argv[]) {
 				ghost_change = 0;
 			else
 				ghost_change = 1;
-			blinky_l.animation(ghost_change);
-			pinky_l.animation(ghost_change);
-			inky_l.animation(ghost_change);
-			clyde_l.animation(ghost_change);
+			blinky->animation(ghost_change);
+			pinky->animation(ghost_change);
+			inky->animation(ghost_change);
+			clyde->animation(ghost_change);
 			
 			//
-			if(pacman_l.is_dying) {
-				if(pacman_l.is_dying > 1)
-					pacman_l.is_dying--;
+			if(pacman->is_dying) {
+				if(pacman->is_dying > 1)
+					pacman->is_dying--;
 				else {
-					//pacman = ar_pacman_die[die_counter];
-					pacman_l.die_pic(die_counter);
+					pacman->die_pic(die_counter);
 					die_counter++;
 					if(die_counter == 13) {
-						pacman_l.is_dying = 0;
-						reset(&pacman_l, &blinky_l, &pinky_l, &inky_l, &clyde_l, blinky_l.ghost);
-						stop_all(true, &pacman_l, &blinky_l, &pinky_l, &inky_l, &clyde_l);
+						pacman->is_dying = 0;
+						reset(pacman, blinky, pinky, inky, clyde);
+						stop_all(true, pacman, blinky, pinky, inky, clyde);
 						ct_pm = 0;
 						start_offset = 10;
 						die_counter = 0;
@@ -586,7 +589,7 @@ int main(int argc, char *argv[]) {
 			if(start_offset > 0)
 				start_offset--;
 			else if (start_offset == 0) {
-				stop_all(false, &pacman_l, &blinky_l, &pinky_l, &inky_l, &clyde_l);
+				stop_all(false, pacman, blinky, pinky, inky, clyde);
 				start_offset = -1;
 		 	}
 				
@@ -597,49 +600,49 @@ int main(int argc, char *argv[]) {
 		wechsel_counter = wechsel_counter + ms;
 		
 		draw_hintergrund(hintergrund);
-		check_pillen(&pacman_l, &int_punktestand);
+		check_pillen(pacman, &int_punktestand);
 		compute_score(punkte, char_punktestand, int_punktestand, font, &textgelb); 
 		draw_static_content(score, 530, 30);
 		draw_pillen(pille, superpille[pille_counter]);
 	
-		if(pacman_l.wechsel()) {
-			if(pacman_l.get_richtung() == 0)
-		  		pacman_l.left_pic(ct_pm); 
-		  	if(pacman_l.get_richtung() == 1) 
-		   		pacman_l.up_pic(ct_pm); 
-		  	if(pacman_l.get_richtung() == 2) 
-		    	pacman_l.right_pic(ct_pm); 
-		  	if(pacman_l.get_richtung() == 3) 
-	    		pacman_l.down_pic(ct_pm); 
+		if(pacman->wechsel()) {
+			if(pacman->get_richtung() == 0)
+		  		pacman->left_pic(ct_pm); 
+		  	if(pacman->get_richtung() == 1) 
+		   		pacman->up_pic(ct_pm); 
+		  	if(pacman->get_richtung() == 2) 
+		    	pacman->right_pic(ct_pm); 
+		  	if(pacman->get_richtung() == 3) 
+	    		pacman->down_pic(ct_pm); 
 		  	ct_pm++;
 		}
 		if(ct_pm > 3)
 			ct_pm = 0;
 			
 	  	// wenn Pacman steht, dann bitte auf "normal" stellen
-		if(pacman_l.is_pacman_stopped() && !pacman_l.is_dying) {
+		if(pacman->is_pacman_stopped() && !pacman->is_dying) {
 			ct_pm = 0;
-			if(pacman_l.get_richtung() == 0)
-		  		pacman_l.left_pic(0); 
-		  	if(pacman_l.get_richtung() == 1) 
-		   		pacman_l.up_pic(0); 
-		 	if(pacman_l.get_richtung() == 2) 
-		    	pacman_l.right_pic(0); 
-		  	if(pacman_l.get_richtung() == 3) 
-	    		pacman_l.down_pic(0); 
-			pacman_l.parking();
+			if(pacman->get_richtung() == 0)
+		  		pacman->left_pic(0); 
+		  	if(pacman->get_richtung() == 1) 
+		   		pacman->up_pic(0); 
+		 	if(pacman->get_richtung() == 2) 
+		    	pacman->right_pic(0); 
+		  	if(pacman->get_richtung() == 3) 
+	    		pacman->down_pic(0); 
+			pacman->parking();
 		}		
 		
-		blinky_l.draw(screen, moving());
-		pinky_l.draw(screen, moving());
-		inky_l.draw(screen, moving());
-		clyde_l.draw(screen, moving());
-		pacman_l.draw (screen);
+		blinky->draw(screen, moving());
+		pinky->draw(screen, moving());
+		inky->draw(screen, moving());
+		clyde->draw(screen, moving());
+		pacman->draw (screen);
 		draw_blocks();
 		Refresh();
-		if(check_collision(pacman_l.pacman, blinky_l.ghost, pacman_l, ghost_array) && !pacman_l.is_dying) {
-			stop_all(true, &pacman_l, &blinky_l, &pinky_l, &inky_l, &clyde_l);
-			pacman_l.is_dying = 10;  
+		if(check_collision(pacman, ghost_array) && !pacman->is_dying) {
+			stop_all(true, pacman, blinky, pinky, inky, clyde);
+			pacman->is_dying = 10;  
 		}
 				
 		// für die korrekte Geschwindigkeit
@@ -654,15 +657,15 @@ int main(int argc, char *argv[]) {
 			ms = (float)(lastTickstemp/WAIT_IN_MS);
 		
 		// und alle bewegen
-		move_pacman(pacman_l.pacman, &pacman_l, ms);
-		move_ghosts(blinky_l.ghost, &blinky_l, &pacman_l, ms);
-		move_ghosts(pinky_l.ghost, &pinky_l, &pacman_l, ms);
-		move_ghosts(inky_l.ghost, &inky_l, &pacman_l, ms);
-		move_ghosts(clyde_l.ghost, &clyde_l, &pacman_l, ms);
+		move_pacman(pacman, ms);
+		move_ghosts(blinky, pacman, ms);
+		move_ghosts(pinky, pacman, ms);
+		move_ghosts(inky, pacman, ms);
+		move_ghosts(clyde, pacman, ms);
 		
 	}
 	SDL_FreeSurface(pille);
-	SDL_FreeSurface(pacman_l.pacman);
+	SDL_FreeSurface(pacman->pacman_sf);
 	SDL_FreeSurface(hintergrund);
 	
 	return EXIT_SUCCESS;

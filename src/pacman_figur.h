@@ -44,7 +44,7 @@ class Pacman : public Figur {
 		/* Pacman stirbt gerade */
 		unsigned short int is_dying;
 
-		SDL_Surface *pacman;
+		SDL_Surface *pacman_sf;
 	private:
 		unsigned short int pacman_stopped; 
 		unsigned short int is_wechsel;

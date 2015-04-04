@@ -55,7 +55,7 @@ Pacman::Pacman(int init_x, int init_y, float init_v, int init_wechsel_rate):
     ar_pacman_die[11] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_9.png", 255);
     ar_pacman_die[12] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_9.png", 255);
 	
-	pacman = ar_pacman_links[ct_pm];
+	this->pacman_sf = ar_pacman_links[ct_pm];
 }
 
 Pacman::~Pacman() {
@@ -65,7 +65,7 @@ void Pacman::draw(SDL_Surface* screen) {
 	SDL_Rect dest;
 	dest.x = this->x;
 	dest.y = this->y;
-	SDL_BlitSurface(pacman, NULL, screen, &dest);
+	SDL_BlitSurface(this->pacman_sf, NULL, screen, &dest);
 }
 
 void Pacman::move_left(float ms, float max_step) {
@@ -121,23 +121,23 @@ void Pacman::move_down(float ms, float max_step) {
 }
 
 void Pacman::left_pic(int cnt_pic) {
-	pacman = ar_pacman_links[cnt_pic];
+	this->pacman_sf = ar_pacman_links[cnt_pic];
 }
 
 void Pacman::up_pic(int cnt_pic) {
-	pacman = ar_pacman_oben[cnt_pic];
+	this->pacman_sf = ar_pacman_oben[cnt_pic];
 }
 
 void Pacman::right_pic(int cnt_pic) {
-	pacman = ar_pacman_rechts[cnt_pic];
+	this->pacman_sf = ar_pacman_rechts[cnt_pic];
 }
 
 void Pacman::down_pic(int cnt_pic) {
-	pacman = ar_pacman_unten[cnt_pic];
+	this->pacman_sf = ar_pacman_unten[cnt_pic];
 }
 
 void Pacman::die_pic(int cnt_pic) {
-	pacman = ar_pacman_die[cnt_pic];
+	this->pacman_sf = ar_pacman_die[cnt_pic];
 }
 int Pacman::wechsel() {
 	if (is_wechsel) {

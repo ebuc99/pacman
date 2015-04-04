@@ -1,7 +1,8 @@
 #include "ghost_figur.h"
 #include <stdlib.h>
 
-Ghost::Ghost(int init_x, int init_y, float init_v, int init_intelligence, int init_richtung, int init_up_down):
+Ghost::Ghost(int init_x, int init_y, float init_v, int init_intelligence, 
+             int init_richtung, int init_up_down, unsigned short int ghost_ident):
 	Figur(init_x, init_y, init_v),
 	its_leader(0),
 	initial_intelligence(init_intelligence),
@@ -10,9 +11,64 @@ Ghost::Ghost(int init_x, int init_y, float init_v, int init_intelligence, int in
 	richtung = init_richtung;
 	intelligence = init_intelligence;
 	up_down = init_up_down;
+
+	// Surfaces
+	if(ghost_ident == BLINKY) {
+		ghost_1 = LoadSurface("/usr/local/share/pacman/gfx/blinky_1.png", 255);
+        ghost_2 = LoadSurface("/usr/local/share/pacman/gfx/blinky_2.png", 255);
+	}
+	else if(ghost_ident == PINKY) {
+		ghost_1 = LoadSurface("/usr/local/share/pacman/gfx/pinky_1.png", 255);
+        ghost_2 = LoadSurface("/usr/local/share/pacman/gfx/pinky_2.png", 255);
+	}
+	else if(ghost_ident == INKY) {
+		ghost_1 = LoadSurface("/usr/local/share/pacman/gfx/inky_1.png", 255);
+        ghost_2 = LoadSurface("/usr/local/share/pacman/gfx/inky_2.png", 255);
+	}
+	else if(ghost_ident == CLYDE) {
+		ghost_1 = LoadSurface("/usr/local/share/pacman/gfx/clyde_1.png", 255);
+        ghost_2 = LoadSurface("/usr/local/share/pacman/gfx/clyde_2.png", 255);
+	}
+	augen_0 = LoadSurface("/usr/local/share/pacman/gfx/augen_0.png", 0);
+    augen_1 = LoadSurface("/usr/local/share/pacman/gfx/augen_1.png", 0);
+    augen_2 = LoadSurface("/usr/local/share/pacman/gfx/augen_2.png", 0);
+    augen_3 = LoadSurface("/usr/local/share/pacman/gfx/augen_3.png", 0);
+	ar_ghost[0] = ghost_1;
+	ar_ghost[1] = ghost_2;
+	ghost = ar_ghost[1];
 }
 
 Ghost::~Ghost() {
+}
+
+void Ghost::draw(SDL_Surface *screen, int moving) {
+	SDL_Rect dest;
+	dest.x = this->x;
+	dest.y = this->y;
+	SDL_BlitSurface(ghost, NULL, screen, &dest);
+	if(moving) {
+		switch(this->get_richtung()) {
+			case 0:
+				SDL_BlitSurface(augen_0, NULL, screen, &dest);
+				break;
+			case 1: 
+				SDL_BlitSurface(augen_1, NULL, screen, &dest);
+				break;
+			case 2:
+				SDL_BlitSurface(augen_2, NULL, screen, &dest);
+				break;
+			case 3: 
+				SDL_BlitSurface(augen_3, NULL, screen, &dest);
+				break;
+			default:
+				SDL_BlitSurface(augen_0, NULL, screen, &dest);
+				break;
+		}
+	}
+}
+
+void Ghost::animation(int cnt_pic) {
+	ghost = ar_ghost[cnt_pic];
 }
 
 void Ghost::set_leader(int leader) {

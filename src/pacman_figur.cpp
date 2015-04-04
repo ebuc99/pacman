@@ -10,6 +10,7 @@ Pacman::Pacman(int init_x, int init_y, float init_v, int init_wechsel_rate):
 	wechsel_x = init_x;
 	wechsel_y = init_y;
 	richtung = 0;
+	richtung_pre = 0;
 	pacman_normal = Figur::LoadSurface("/usr/local/share/pacman/gfx/pacman.png", 255);
 	pacman_links_1 = LoadSurface("/usr/local/share/pacman/gfx/pacman_links_1.png", 255);
     pacman_links_2 = LoadSurface("/usr/local/share/pacman/gfx/pacman_links_2.png", 255);

@@ -48,7 +48,6 @@ class Pacman : public Figur {
 	private:
 		unsigned short int pacman_stopped; 
 		unsigned short int is_wechsel;
-		int ct_pm = 0;
 		SDL_Surface *pacman_normal;
 		SDL_Surface *pacman_links_1, *pacman_links_2, *ar_pacman_links[4];
 		SDL_Surface *pacman_oben_1, *pacman_oben_2, *ar_pacman_oben[4];

@@ -1,5 +1,0 @@
-pacman-schiene.o: schiene.cpp /usr/include/stdc-predef.h schiene.h
-
-/usr/include/stdc-predef.h:
-
-schiene.h:

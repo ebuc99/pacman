@@ -55,10 +55,21 @@ Pacman::Pacman(int init_x, int init_y, float init_v, int init_wechsel_rate):
     ar_pacman_die[11] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_9.png", 255);
     ar_pacman_die[12] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_9.png", 255);
 	
-	this->pacman_sf = ar_pacman_links[ct_pm];
+	this->pacman_sf = ar_pacman_links[0];
 }
 
 Pacman::~Pacman() {
+	SDL_FreeSurface(pacman_normal);
+	SDL_FreeSurface(pacman_links_1);
+	SDL_FreeSurface(pacman_links_2);
+	SDL_FreeSurface(pacman_oben_1);
+	SDL_FreeSurface(pacman_oben_2);
+	SDL_FreeSurface(pacman_rechts_1);
+	SDL_FreeSurface(pacman_rechts_2);
+	SDL_FreeSurface(pacman_unten_1);
+	SDL_FreeSurface(pacman_unten_2);
+	for(int i = 0; i < 13; i++)
+		SDL_FreeSurface(ar_pacman_die[i]);
 }
 
 void Pacman::draw(SDL_Surface* screen) {

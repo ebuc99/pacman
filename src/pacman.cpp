@@ -662,11 +662,16 @@ int main(int argc, char *argv[]) {
 		move_ghosts(pinky, pacman, ms);
 		move_ghosts(inky, pacman, ms);
 		move_ghosts(clyde, pacman, ms);
-		
 	}
+	
+	delete pacman;
+	delete blinky;
+	delete pinky;
+	delete inky;
+	delete clyde;
 	SDL_FreeSurface(pille);
-	SDL_FreeSurface(pacman->pacman_sf);
 	SDL_FreeSurface(hintergrund);
+
 	
 	return EXIT_SUCCESS;
 }

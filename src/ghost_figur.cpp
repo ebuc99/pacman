@@ -39,6 +39,12 @@ Ghost::Ghost(int init_x, int init_y, float init_v, int init_intelligence,
 }
 
 Ghost::~Ghost() {
+	SDL_FreeSurface(ghost_1);
+	SDL_FreeSurface(ghost_2);
+	SDL_FreeSurface(augen_0);
+	SDL_FreeSurface(augen_1);
+	SDL_FreeSurface(augen_2);
+	SDL_FreeSurface(augen_3);
 }
 
 void Ghost::draw(SDL_Surface *screen, int moving) {

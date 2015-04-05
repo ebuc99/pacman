@@ -7,6 +7,13 @@ But Paul Neaves pacman clone has inspired me greatly.
 One of the main targets of this implementation is a SDL Application with very
 less use of CPU power.
 
+
+Install hint
+------------
+
+You need libsdl, sdl-image, sdl-ttf and sdl-mixer. 
+
+
 License
 -------------------
 

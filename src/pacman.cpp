@@ -3,31 +3,30 @@
 
 
 
-/* Konstanten */
-const unsigned short int UPDATERECTS = 200; 		// Anzahl der Rechtecke, die maximal neu gezeichnet werden
-const float PACMAN_V_FAST = 0.2f;			// Geschwindigkeit von Pacman ohne zu fressen
-const float PACMAN_V_SLOW = 0.18f; 			// Geschwindigkeit von Pacman während des Fressens
-const float GHOSTS_V = 0.18f;				// Geschwindigkeit der Geister
-const unsigned short int WECHSEL_RATE = 7;		// gibt an, nach wievielen Pixel Bewegung für Pacman ein neues Bild geladen wird (nur für Pacman
-							// wichtig
-const unsigned short int INTELLIGENCE_BLINKY = 90;	// Intelligenz der Geister							
+// Constants
+const unsigned short int UPDATERECTS = 200; 		// maximum number of rectangles for redrawing
+const float PACMAN_V_FAST = 0.2f;			// pacman's speed when not eating
+const float PACMAN_V_SLOW = 0.18f; 			// pacman's speed while eating
+const float GHOSTS_V = 0.18f;				// normal speed of the ghosts
+const unsigned short int WECHSEL_RATE = 7;		// load a new image for pacman after a movement of this number of pixels
+const unsigned short int INTELLIGENCE_BLINKY = 90;	// intelligence for each ghost
 const unsigned short int INTELLIGENCE_PINKY = 60;
 const unsigned short int INTELLIGENCE_INKY = 30;
 const unsigned short int INTELLIGENCE_CLYDE = 0;
-const unsigned short int INIT_DIRECTION_LEFT = 0;	// initiale Startrichtung links (Blinky)
-const unsigned short int INIT_DIRECTION_UP = 1;	// initiale Startrichtung hoch (alle anderen Geister)
-const unsigned short int INIT_UP_DOWN = 0;		// wie oft hoch und runter bevor der Geist aus dem Schloss darf
+const unsigned short int INIT_DIRECTION_LEFT = 0;	// initial direction of movement (only used for Blinky)
+const unsigned short int INIT_DIRECTION_UP = 1;	// initial direction of movement (used for the other ghosts)
+const unsigned short int INIT_UP_DOWN = 0;		// initial up/down cycles before the ghost will be allowed to leave the castle
 const unsigned short int INIT_UP_DOWN_INKY = 5;
 const unsigned short int INIT_UP_DOWN_CLYDE = 11;
-const float WAIT_IN_MS = 2.0;				// Dauer eines Schleifensurchlaufs
-const unsigned short int ANZAHL_SCHIENEN = 50;	// Anzahl der Schienen	
-const unsigned short int ANZAHL_SCHIENEN_PILLE = 37; // Anzahl der Schienen mit Pille
-const unsigned short int ANZAHL_PILLEN = 246;		// Anzahl der Pillen
+const float WAIT_IN_MS = 2.0;				// duration of a loop (i.e. minimum time between frames)
+const unsigned short int ANZAHL_SCHIENEN = 50;	// number of rails
+const unsigned short int ANZAHL_SCHIENEN_PILLE = 37; // number of pill-filled rails
+const unsigned short int ANZAHL_PILLEN = 246;		// number of pills
 
-// statische Elementvariable definieren
+// initialize static member variables
 int Ghost::was_moving_leader = 1;
 
-// globale Variablen
+// define global Variables
 enum Richtung {
 	Links,
 	Oben,
@@ -47,7 +46,7 @@ int refresh_ghosts = 0;
 //int pacman_dying = 0;
 
 
-// nur zum Test, müßte dann anders initialisiert werden
+// rail initialization - quick and dirty, should be done in a more elegant way
 const Schiene s0(207, 338, 412, 338);
 const Schiene s1(207, 37, 207, 380);
 const Schiene s2(138, 92, 480, 92);
@@ -94,7 +93,7 @@ const Schiene s42(330, 380, 371, 380);
 const Schiene s43(290, 380, 290, 420);
 const Schiene s44(330, 380, 330, 420);
 
-//Ghost Castle
+// ghost castle
 const Schiene s45(310, 174, 310, 222);
 const Schiene s46(280, 222, 309, 222);
 const Schiene s47(311, 222, 340, 222);
@@ -104,7 +103,7 @@ const Schiene s49(340, 200, 340, 222);
 Schiene ar_s[ANZAHL_SCHIENEN] = {s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s21, s22, s23, s24, s25, s26, s27, s28, s29, s30, s31, s32, s33, s34, s35, s36, s37, s38, s39, s40, s41, s42, s43, s44, s45, s46, s47, s48, s49};
 Schiene ar_s_pille[ANZAHL_SCHIENEN_PILLE] = {s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s24, s25, s26, s27, s28, s29, s30, s31, s32, s33, s34, s35, s36, s37, s38, s39, s40, s41, s42, s43, s44};
 
-/* das folgende sind Hilfsfunktionen, vielleicht in Extraklasse auslagern */
+// helper functions - maybe move to a separated class?
 static int less(int a, int b) {
 	if(a < b) 
 		return a;
@@ -119,25 +118,25 @@ static int greater(int a, int b) {
 
 }
 
-static SDL_Surface *LoadSurface(const char *filename, int transparant_color = -1) {
+static SDL_Surface *LoadSurface(const char *filename, int transparent_color = -1) {
 	SDL_Surface *surface, *temp;
 	temp = IMG_Load(filename);
 	if(!temp) {
-		printf("Error IMG_Load: %s\n", IMG_GetError());
+		printf("Unable to load image: %s\n", IMG_GetError());
 		exit(-1);
 	}
-	if(transparant_color != -1)
-		SDL_SetColorKey(temp, SDL_SRCCOLORKEY | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, transparant_color, transparant_color, transparant_color));
+	if(transparent_color != -1)
+		SDL_SetColorKey(temp, SDL_SRCCOLORKEY | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, transparent_color, transparent_color, transparent_color));
 	surface = SDL_DisplayFormat(temp);
 	if(surface == NULL) {
-		printf("Konnte Grafik nicht laden: %s\n", SDL_GetError());
+		printf("Unable to convert image to display format: %s\n", SDL_GetError());
                 exit(EXIT_FAILURE);
         }
     SDL_FreeSurface(temp);
     return surface;	
 }
 
-/* hier wird entschieden, ob was neugezeichnet werden soll */
+// decide whether something has to be redrawn
 static int moving() {
 	if(stop_moving) {
 		if(refresh_ghosts) {
@@ -154,7 +153,7 @@ static int moving() {
 	}
 }
 
-/* alles anhalten */
+/* stop all figures */
 static void stop_all(unsigned short int stop, Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghost *clyde) {
 	static float speed_ghosts;
 	static float speed_pacman;
@@ -178,7 +177,7 @@ static void stop_all(unsigned short int stop, Pacman *pacman, Ghost *blinky, Gho
 }
 
 
-/* diese Funktion meldet die Geistergrafiken nur dann zum neu Zeichnen an, wenn sie sich geändert haben */
+/* this function registers the ghosts' graphics for redrawing, but only if they have changed */
 static void AddUpdateRects_ghost(Ghost *ghost_l) {
 	if((ghost_l->get_richtung() == 0) || (ghost_l->get_richtung() == 1))
 		AddUpdateRects(ghost_l->x, ghost_l->y, (ghost_l->ghost_sf->w + abs(ghost_l->x - ghost_l->last_x)), (ghost_l->ghost_sf->h + abs(ghost_l->y - ghost_l->last_y)));
@@ -187,14 +186,14 @@ static void AddUpdateRects_ghost(Ghost *ghost_l) {
 }
 
 
-/* Hintergrund neu zeichnen, aber nur wenn Blinky (Referenzgeist für die Bewegung) sich bewegt hat */
+/* redraw background, but only if Blinky (=reference ghost for movement) has moved */
 static void draw_hintergrund(SDL_Surface *hintergrund) {
 	if(moving()) {
 		SDL_BlitSurface(hintergrund, NULL, screen, NULL);
  	}
 }
 
-/* Pillen auf dem Spielfeld verteilen */
+/* initially, throw some pills across the level */
 static void init_pillen() {
 	int m = 0;
 	int i_ar_pille_x[26] = {148,162,176,190,204,217,231,245,259,273,287,300,314,327,340,354,368,381,395,409,422,436,449,462,476,490};
@@ -218,7 +217,7 @@ static void init_pillen() {
 		}
 }
 
-/* Pillen zeichnen, aber nur wenn Blinky sich bewegt hat */
+/* draw pills, but only if Blinky has moved */
 static void draw_pillen(SDL_Surface *pille, SDL_Surface *superpille) {
 	if(moving()){
 		SDL_Rect dest;
@@ -238,7 +237,7 @@ static void draw_pillen(SDL_Surface *pille, SDL_Surface *superpille) {
 	}
 }
 
-// zum Zeichnen statischen Inhalts, welches nur manchmal neu gezeichnet werden muß
+// redraw static content, which only has to be redrawn sometimes
 static void draw_static_content(SDL_Surface *surface, int x, int y, int force = 0) {
 	static unsigned short int  temp_force = 0;
 	if(force)
@@ -253,7 +252,7 @@ static void draw_static_content(SDL_Surface *surface, int x, int y, int force = 
 	}
 }
 
-// zum zeichnen der Punktezählung
+// especially for drawing the score
 static void draw_dynamic_content(SDL_Surface *surface, int x, int y) {
 	if(moving()) {
 		SDL_Rect dest;
@@ -264,7 +263,7 @@ static void draw_dynamic_content(SDL_Surface *surface, int x, int y) {
 	}
 }
 
-/* Punkte berechenen */
+/* compute the score */
 static void compute_score(SDL_Surface *punkte, char *char_punktestand, int int_punktestand, TTF_Font *font, SDL_Color *textgelb) {
 	static int punktestand;
 	if((punktestand != int_punktestand) || moving()) {
@@ -275,10 +274,10 @@ static void compute_score(SDL_Surface *punkte, char *char_punktestand, int int_p
 	}	
 }
 
-/* Kollisionsbehandlung pacman <-> Pillen */
+/* collision handling pacman <-> pills */
 static void check_pillen(Pacman *pacman, int *punktestand) {
 	if(pacman->was_moving()){
-		static int cnt_slow;	// Anzahl der Umläufe, die er langsam bleibt
+		static int cnt_slow;	// number of loops that pacman will stay slow
 		for(int i = 0; i < ANZAHL_PILLEN; i++) {
 			if(pillen[i].sichtbar && ((pillen[i].x - 10) >= less(pacman->x,pacman->last_x)) && ((pillen[i].x - 10) <= greater(pacman->x,pacman->last_x)) && ((pillen[i].y - 10) >= less(pacman->y,pacman->last_y)) && ((pillen[i].y - 10) <= greater(pacman->y,pacman->last_y))) {
 				cnt_slow = 15;
@@ -288,7 +287,7 @@ static void check_pillen(Pacman *pacman, int *punktestand) {
 				break;
 			}	
 		}	
-		//bloss wenn er sich real wirklich bewegt hat
+		// only if pacman really has moved
 		if(cnt_slow > 0)
 			cnt_slow--; 
 		if(cnt_slow <= 0)
@@ -296,7 +295,7 @@ static void check_pillen(Pacman *pacman, int *punktestand) {
 	}
 }
 
-/* Reset */
+/* reset */
 static void reset(Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghost *clyde) {
 	AddUpdateRects(blinky->x, blinky->y, blinky->ghost_sf->w, blinky->ghost_sf->h);
 	AddUpdateRects(pinky->x, pinky->y, pinky->ghost_sf->w, pinky->ghost_sf->h);
@@ -310,7 +309,7 @@ static void reset(Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghos
 	clyde->reset();
 }
 
-/* Kollisionsbehandlung pacman <-> Geister */
+/* collision handling pacman <-> ghosts */
 static int check_collision(Pacman *pacman, Ghost **ghost_array) {
 	unsigned short int x_left_pacman = pacman->x;
 	unsigned short int y_up_pacman = pacman->y;
@@ -329,7 +328,9 @@ static int check_collision(Pacman *pacman, Ghost **ghost_array) {
 }
 
 
-/* Links und rechts beim Mittelgang sind zwei schwarze Rechtecke unter denen pacman und die Geister verschwinden, wenn sie links oder rechts rauslaufen */
+// At the left and right of the tunnel, there are two black rectangles,
+// below which pacman and the ghosts will disappear if they leave the
+// level to the left or right.
 static void draw_blocks(void) {
 	if(moving()) {
   	SDL_Rect b1, b2;
@@ -356,7 +357,7 @@ static void move_pacman(Pacman *pacman, float ms) {
 	pacman->move_on_rails(ms, ANZAHL_SCHIENEN, ar_s);
 }
 
-/* Bewege Geist */
+/* move pacman on the rails, according to it's speed and direction */
 static void move_ghosts(Ghost *ghost_l, Pacman *pacman, float(ms)) {
 	if(ghost_l->was_moving() || (stop_moving && moving())){
 		AddUpdateRects_ghost(ghost_l);	
@@ -365,7 +366,7 @@ static void move_ghosts(Ghost *ghost_l, Pacman *pacman, float(ms)) {
 	ghost_l->move_on_rails(pacman, ms, ANZAHL_SCHIENEN, ar_s);
 }
 
-/* Anmelden von Grafiken zum Neuzeichnen */
+/* register graphic parts for updating */
 void AddUpdateRects(int x, int y, int w, int h) {
 	if (x < 0) {
          	w += x;
@@ -388,7 +389,7 @@ void AddUpdateRects(int x, int y, int w, int h) {
     	rect_num++;
 }
 
-/* Das Neuzeichnen */
+// do the graphic update, so we can see the changes on the screen
 void Refresh() {
 	if(moving()){
 		SDL_UpdateRects(screen, rect_num, rects);
@@ -396,7 +397,7 @@ void Refresh() {
 	}
 }
 
-/* Tastaturereignisse */
+// SDL event loop: handle keyboard input events, and others
 static int eventloop(SDL_Surface *hintergrund, Pacman *pacman, Ghost *blinky, 
 Ghost *pinky, Ghost *inky, Ghost *clyde, SDL_Surface *score) {
 	static unsigned short int pause;
@@ -448,7 +449,7 @@ Ghost *pinky, Ghost *inky, Ghost *clyde, SDL_Surface *score) {
 }
 
 
-/* Hauptfunktion mit Spielschleife */
+// main function, contains the game loop
 int main(int argc, char *argv[]) {
 	SDL_Surface *hintergrund, *pille;
 	SDL_Surface *superpille[5];
@@ -469,20 +470,20 @@ int main(int argc, char *argv[]) {
 	float ms = 1.0;
 	float wechsel_counter = 0;
 	
-	// SDL-Initialisierung vornehmen
+	// initialize SDL
 	if(SDL_Init(SDL_INIT_VIDEO) != 0) {
-                printf("Konnte SDL nicht initialisieren: %s\n",SDL_GetError());
+                printf("SDL initialization failed: %s\n", SDL_GetError());
                 return EXIT_FAILURE;
         }
 	atexit(SDL_Quit);
 	screen = SDL_SetVideoMode(680, 512, 24, SDL_HWSURFACE);
         if(screen == 0) {
-                printf("Kann Videomodus nicht setzen %s\n",SDL_GetError());
+                printf("Setting video mode failed: %s\n",SDL_GetError());
                 return EXIT_FAILURE;
         }
 	SDL_WM_SetCaption("Pacman", "");
 
-	// init pacman
+	// create an instance of pacman
 	Pacman *pacman = new Pacman(310, 338, PACMAN_V_FAST, WECHSEL_RATE);
 
 	// init ghosts
@@ -506,24 +507,24 @@ int main(int argc, char *argv[]) {
 	superpille[3] = LoadSurface("/usr/local/share/pacman/gfx/superpille_3.png", 0);
 	superpille[4] = LoadSurface("/usr/local/share/pacman/gfx/superpille_2.png", 0);
 	
-	// TTF initialisieren
+	// initialize TTF so we are able to write texts to the screen
 	if(TTF_Init() == -1) {
 		return EXIT_FAILURE;
 	}
 	//font = TTF_OpenFont("comicbd.ttf", 20);
 	font = TTF_OpenFont("/usr/local/share/pacman/fonts/Cheapmot.TTF", 20);
 	if(!font) {
-		printf("TTF_OpenFont: %s\n", TTF_GetError());
+		printf("Unable to open TTF font: %s\n", TTF_GetError());
 		return -1;
 	}
 	punkte = TTF_RenderText_Solid(font, char_punktestand, textgelb);
 	if(punkte == NULL) {
-		printf("Fehler beim Rendern von TTF: %s\n", TTF_GetError());
+		printf("Unable to render text: %s\n", TTF_GetError());
 		return EXIT_FAILURE;
 	}
 	score = TTF_RenderText_Solid(font, "Score", textweiss);
 	if(score == NULL) {
-		printf("Fehler beim Rendern von TTF: %s\n", TTF_GetError());
+		printf("Unable to render text: %s\n", TTF_GetError());
 		return EXIT_FAILURE;
 	}
         
@@ -540,8 +541,8 @@ int main(int argc, char *argv[]) {
 	AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
 	Refresh();
 	startTicks = (float)SDL_GetTicks();
-	blinky->set_leader(1);	// Blinky als Referenz-Sprite fürs Neuzeichnen festgelegt
-	// zuerst mal alle anhalten 
+	blinky->set_leader(1);	// Blinky will be the reference sprite for redrawing
+	// at first, stop all figures 
 	stop_all(true, pacman, blinky, pinky, inky, clyde); 
 
 	// game loop
@@ -585,7 +586,7 @@ int main(int argc, char *argv[]) {
 			else
 				pille_counter++;			
 			
-			// Anfangsoffset 
+			// handle start offset 
 			if(start_offset > 0)
 				start_offset--;
 			else if (start_offset == 0) {
@@ -619,7 +620,7 @@ int main(int argc, char *argv[]) {
 		if(ct_pm > 3)
 			ct_pm = 0;
 			
-	  	// wenn Pacman steht, dann bitte auf "normal" stellen
+	  	// if pacman stops, please set it to "normal"
 		if(pacman->is_pacman_stopped() && !pacman->is_dying) {
 			ct_pm = 0;
 			if(pacman->get_richtung() == 0)
@@ -645,7 +646,7 @@ int main(int argc, char *argv[]) {
 			pacman->is_dying = 10;  
 		}
 				
-		// für die korrekte Geschwindigkeit
+		// determine the correct game speed
 		lastTickstemp = startTicks;
 		startTicks = (float)SDL_GetTicks();
 		lastTickstemp = startTicks - lastTickstemp;
@@ -656,7 +657,7 @@ int main(int argc, char *argv[]) {
 		else 
 			ms = (float)(lastTickstemp/WAIT_IN_MS);
 		
-		// und alle bewegen
+		// and move all figures
 		move_pacman(pacman, ms);
 		move_ghosts(blinky, pacman, ms);
 		move_ghosts(pinky, pacman, ms);
@@ -664,13 +665,17 @@ int main(int argc, char *argv[]) {
 		move_ghosts(clyde, pacman, ms);
 	}
 	
+	// clean up SDL
+    	TTF_CloseFont(font);
+    	TTF_Quit();
+	SDL_FreeSurface(pille);
+	SDL_FreeSurface(hintergrund);
+
 	delete pacman;
 	delete blinky;
 	delete pinky;
 	delete inky;
 	delete clyde;
-	SDL_FreeSurface(pille);
-	SDL_FreeSurface(hintergrund);
 
 	
 	return EXIT_SUCCESS;

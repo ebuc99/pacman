@@ -5,41 +5,41 @@
 
 class Figur {
 	public:
-		/* Konstruktor und Destruktor */
+		// constructor and destructor
 		Figur(int init_x, int init_y, float init_v);
 		~Figur();
 		
-		/* Position der Figur */
+		// position of the figure
 		int x, y; 
 		
-		/* letzten x und y Werte, wichtig bei Prüfung ob Pillen gegessen */
+		// last x and y values (important when checking whether pills have been eaten)
 		int last_x, last_y; 
 		
-		/* Bewegung in alle vier Richtungen */
+		// four directions of movement
 		void move_left(float ms, float max_step = 999);
 		void move_up(float ms, float max_step = 999);
 		void move_right(float ms, float max_step = 999);
 		void move_down(float ms, float max_step = 999);
 		
-		/* Wrapper über die Funktionen zuvor */
+		// wrapper for the directional movement functions
 		void move(float ms, int direction);
 		
-		/* setzt Geschwindigkeit der Figur */
+		// sets the speed of the figure
 		void set_speed(float v);
 		
-		/* liefert Geschwindigkeit */
+		// returns the speed
 		float get_speed() const;
 		
-		/* Wurde die Figur bewegt? Wichtig für Performancetuning! */
+		// has the figure moved? (needed for performance tuning)
 		int was_moving();
 		
-		/* Parkt die Figur */
+		// is the figure parking?
 		void parking();
 		
-		/* liefert die Richtung */
+		// returns the direction
 		int get_richtung() const;
 		
-		/* setzt die Richtung */
+		// sets the direction of movement
 		void set_richtung(int p_richtung);
 		
 	protected:

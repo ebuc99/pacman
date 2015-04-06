@@ -103,14 +103,14 @@ SDL_Surface* Figur::LoadSurface(const char *filename, int transparant_color = -1
 	SDL_Surface *surface, *temp;
 	temp = IMG_Load(filename);
 	if(!temp) {
-		printf("Error IMG_Load: %s\n", IMG_GetError());
+		printf("Unable to load image: %s\n", IMG_GetError());
 		exit(-1);
 	}
 	if(transparant_color != -1)
 		SDL_SetColorKey(temp, SDL_SRCCOLORKEY | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, transparant_color, transparant_color, transparant_color));
 	surface = SDL_DisplayFormat(temp);
 	if(surface == NULL) {
-		printf("Konnte Grafik nicht laden: %s\n", SDL_GetError());
+		printf("Unable to convert image to display format: %s\n", SDL_GetError());
                 exit(EXIT_FAILURE);
         }
     SDL_FreeSurface(temp);

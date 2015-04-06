@@ -104,15 +104,15 @@ int Ghost::relative_pos_pacman(Pacman *pacman) {
 	dy = abs(pacman->y - this->y);
 	if(dx > dy) {
 		if((pacman->x - this->x) > 0) 
-			return 2;	// nach rechts
+			return 2;	// to the right
 		else
-			return 0;	// nach links
+			return 0;	// to the left
 	}
 	else {
 		if((pacman->y - this->y) > 0) 
-			return 3;	// nach unten
+			return 3;	// down
 		else
-			return 1;	// nach oben
+			return 1;	// up
 	}
 }
 
@@ -146,7 +146,7 @@ int Ghost::choose_direction(int * sammel_richtung, int richtung_pacman, int samm
 			return *(sammel_richtung + 1);
 	}
 	if(sammel_counter == 3) {
-	// zuerst die statische Elementvariable definieren
+	// first, define the static member variable
 		if(zufallswert <= 33)
 			return *sammel_richtung;
 		if((zufallswert > 33) && (zufallswert <= 66))
@@ -154,7 +154,7 @@ int Ghost::choose_direction(int * sammel_richtung, int richtung_pacman, int samm
 		if((zufallswert > 66) && (zufallswert <= 100))
 			return *(sammel_richtung + 2);
 	}
-	return *sammel_richtung; // nur um Compilerwarnung zu unterdrücken		
+	return *sammel_richtung; // suppress compiler warning
 }
 
 
@@ -164,15 +164,15 @@ void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Schiene *a
 	int richtung_pacman = this->relative_pos_pacman(pacman);
 	int sammel_richtung[3];
 	int sammel_counter = 0;
-	float max_links = 999;							// maximale nach links (sonst verläßt der Geist die Schienen)
-	float max_oben = 999;							// maximale nach oben
-	float max_rechts = 999;							// maximale nach rechts
-	float max_unten = 999;							// maximal nach unten
+	float max_links = 999;							// maximum to the left (otherwise, the ghost will leave the rails)
+	float max_oben = 999;							// maximum up
+	float max_rechts = 999;							// maximum to the right
+	float max_unten = 999;							// maximum down
 	
 	
 		
 		for(i = 0; i <= anz_schienen - 1; i++) {	
-			// zuerst den Mittelgang
+			// first, check the tunnel
 			if((richtung_ghost != 2) && (this->x <= 100) && (this->y == 215)) {
 		 		this->x = 515;
 		 		this->cur_x = 515;
@@ -186,7 +186,7 @@ void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Schiene *a
 		 		break;
 			}
 
-			// Richtung: links
+			// to the left
 			if ((richtung_ghost == 0) && (this->y > ar_s[i].y1) && (this->x == ar_s[i].x1) && (this->x == ar_s[i].x2) && this->y <= ar_s[i].y2) {
 				sammel_richtung[sammel_counter] = 1;
 				sammel_counter++;	
@@ -205,7 +205,7 @@ void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Schiene *a
 			if(sammel_counter == 3)
 				break;
 		
-			// Richtung: oben
+			// up
 			if ((richtung_ghost == 1) && (this->x > ar_s[i].x1) && (this->y == ar_s[i].y1) && (this->y == ar_s[i].y2) && (this->x <= ar_s[i].x2)) {
 				if(!this->up_down) {
 					sammel_richtung[sammel_counter] = 0;
@@ -229,7 +229,7 @@ void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Schiene *a
 			if(sammel_counter == 3)
 				break;
 		
-			// Richtung: rechts
+			// to the right
 			if ((richtung_ghost == 2) && (this->y > ar_s[i].y1) && (this->x == ar_s[i].x1) && (this->x == ar_s[i].x2) && this->y <= ar_s[i].y2) {
 				sammel_richtung[sammel_counter] = 1;
 				sammel_counter++;
@@ -249,7 +249,7 @@ void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Schiene *a
 			if(sammel_counter == 3)
 				break;
 		
-			// Richtung: unten
+			// down
 			if ((richtung_ghost == 3) && (this->x > ar_s[i].x1) && (this->y == ar_s[i].y1) && (this->y == ar_s[i].y2) && (this->x <= ar_s[i].x2)) {
 				if(!this->up_down) {
 					sammel_richtung[sammel_counter] = 0;

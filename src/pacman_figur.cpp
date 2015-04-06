@@ -20,7 +20,7 @@ Pacman::Pacman(int init_x, int init_y, float init_v, int init_wechsel_rate):
     pacman_rechts_2 = LoadSurface("/usr/local/share/pacman/gfx/pacman_rechts_2.png", 255);
     pacman_unten_1 = LoadSurface("/usr/local/share/pacman/gfx/pacman_unten_1.png", 255);
     pacman_unten_2 = LoadSurface("/usr/local/share/pacman/gfx/pacman_unten_2.png", 255);
-	// alle pacman Bilder initialisieren
+	// initialize all pacman images
     ar_pacman_links[0] = pacman_links_1;
     ar_pacman_links[1] = pacman_links_2;
     ar_pacman_links[2] = pacman_links_1;
@@ -187,7 +187,7 @@ void Pacman::move_on_rails(float ms, int anz_schienen, Schiene *ar_s) {
 		}
 	}
 	for(i = 0; i <= anz_schienen - 1; i++) {	
-		// zuerst den Mittelgang
+		// first, check the tunnel
 		if((this->richtung_pre != 2) && (this->x <= 100) && (this->y == 215)) {
 	 		this->x = 515;
 	 		this->cur_x = 515;
@@ -201,7 +201,7 @@ void Pacman::move_on_rails(float ms, int anz_schienen, Schiene *ar_s) {
 	 		break;
 		}
 		
-		// jetzt auf den "normalen" Schienen
+		// now the "normal" rails
 	  	if ((this->get_richtung() == 0) && (this->x > ar_s[i].x1) && (this->y == ar_s[i].y1) && (this->y == ar_s[i].y2) && (this->x <= ar_s[i].x2)) {
 			this->move_left(ms, this->x - ar_s[i].x1);
 			check_move = 1;

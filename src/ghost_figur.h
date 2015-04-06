@@ -5,7 +5,7 @@
 
 class Ghost : public Figur {
 	public:
-		/* Konstruktor und Destruktor */
+		/* constructor and destructor */
 		Ghost(int init_x, int init_y, float init_v, int init_intelligence, 
 		      int init_richtung, int init_up_down, unsigned short int ghost_ident);
 		~Ghost();
@@ -16,29 +16,28 @@ class Ghost : public Figur {
 		/* ghost animation */
 		void animation(int cnt_pic);
 		
-		/* setzt den Leader (maßgeblich für das Neuzeichnen)*/
+		// defines the leader (reference for redrawing)
 		void set_leader(int leader); 
 		
-		/* Überladenes move von Figur */
+		// overloaded move of class Figur
 		void move(float ms, int direction, float max_links = 999, float max_oben = 999, float max_rechts = 999, float max_unten = 999);
 		
-		/* wurde der Leader bewegt? */
+		// has the leader moved?
 		static int was_moving_leader;
 		
-		/* liefert die relative Positon von Pacman zum Geist in der Kodierung 0 = links, 1 = oben, 2 = rechts, 3 = unten */
+		// returns the relative position between pacman and the ghost, coded like this: 0 = left, 1 = up, 2 = right, 3 = down
 		int relative_pos_pacman(Pacman *pacman);
 		
-		/* Hier steckt die "künstliche Intelligenz" der Geister. Sie laufen mit einer Wahrscheinlichkeit dort hin,
-   		   wo pacman ist. */ 
+		// This is the A.I. of the ghosts: with a defined probability, they move to the direction where pacman is.
 		int choose_direction(int * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence);
 		
-		/* Bewegt den Geist auf den Schiene */
+		// moves a ghost on the defined rails
 		void move_on_rails(Pacman *pacman, float ms, int anz_schienen, Schiene *ar_s);
 		
-		/* liefert die Intelligenz des Geistes */
+		// returns the intelligence of the ghost
 		int get_intelligence() const;
 		
-		/* Geist wieder zurücksetzen */
+		// reset the ghost
 		void reset();
 
 		/* Idents for the ghosts */

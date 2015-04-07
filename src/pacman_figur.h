@@ -3,6 +3,7 @@
 
 #include "figur.h"
 #include "schiene.h"
+
 class Pacman : public Figur {
 	public:
 		// constructor and destructor

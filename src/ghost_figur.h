@@ -1,3 +1,6 @@
+#ifndef GHOST_FIGUR_H
+#define GHOST_FIGUR_H
+
 #include "figur.h"
 #include "schiene.h"
 #include <time.h>
@@ -59,3 +62,4 @@ class Ghost : public Figur {
 		SDL_Surface *augen_0, *augen_1, *augen_2, *augen_3;
 		
 };
+#endif

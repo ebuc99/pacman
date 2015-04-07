@@ -43,7 +43,6 @@ Pille pillen[ANZAHL_PILLEN];
 int fullscreen = 0;
 int stop_moving = 0;
 int refresh_ghosts = 0;
-//int pacman_dying = 0;
 
 
 // rail initialization - quick and dirty, should be done in a more elegant way
@@ -666,8 +665,8 @@ int main(int argc, char *argv[]) {
 	}
 	
 	// clean up SDL
-    	TTF_CloseFont(font);
-    	TTF_Quit();
+    TTF_CloseFont(font);
+    TTF_Quit();
 	SDL_FreeSurface(pille);
 	SDL_FreeSurface(hintergrund);
 

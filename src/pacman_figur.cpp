@@ -162,26 +162,24 @@ int Pacman::wechsel() {
 void Pacman::move_on_rails(float ms, int anz_schienen, Schiene *ar_s) {
 	int i;
 	int check_move = 0;
+	// check if the pre selected direction is
+	// not equal to the current direction and pacman is on a cross road
 	if(this->get_richtung() != this->richtung_pre) {
 		for(i = 0; i <= anz_schienen - 1; i++) {
 			if((this->richtung_pre == 0) && (this->x > ar_s[i].x1) && (this->y == ar_s[i].y1) && (this->y == ar_s[i].y2) && (this->x <= ar_s[i].x2)) {
-				if(this->get_richtung() != this->richtung_pre)
-					this->is_wechsel = 1;
+				this->is_wechsel = 1;
 				this->set_richtung(this->richtung_pre);
 			}
 			if((this->richtung_pre == 1) && (this->y > ar_s[i].y1) && (this->x == ar_s[i].x1) && (this->x == ar_s[i].x2) && this->y <= ar_s[i].y2) {
-				if(this->get_richtung() != this->richtung_pre)
-					this->is_wechsel = 1;
+				this->is_wechsel = 1;
 				this->set_richtung(this->richtung_pre);
 			}
 			if((this->richtung_pre == 2) && (this->x < ar_s[i].x2) && (this->y == ar_s[i].y1) && (this->y == ar_s[i].y2) && (this->x >= ar_s[i].x1)) {
-				if(this->get_richtung() != this->richtung_pre)
-					this->is_wechsel = 1;
+				this->is_wechsel = 1;
 				this->set_richtung(this->richtung_pre);
 			}
 			if((this->richtung_pre == 3) && (this->y < ar_s[i].y2) && (this->x == ar_s[i].x1) && (this->x == ar_s[i].x2) && (this->y >= ar_s[i].y1)) {
-				if(this->get_richtung() != this->richtung_pre)
-					this->is_wechsel = 1;
+				this->is_wechsel = 1;
 				this->set_richtung(this->richtung_pre);
 			}
 		}

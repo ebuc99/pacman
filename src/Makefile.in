@@ -93,7 +93,7 @@ PROGRAMS = $(bin_PROGRAMS)
 am_pacman_OBJECTS = pacman-figur.$(OBJEXT) \
 	pacman-ghost_figur.$(OBJEXT) pacman-pacman.$(OBJEXT) \
 	pacman-pacman_figur.$(OBJEXT) pacman-pille.$(OBJEXT) \
-	pacman-schiene.$(OBJEXT)
+	pacman-schiene.$(OBJEXT) pacman-labyrinth.$(OBJEXT)
 pacman_OBJECTS = $(am_pacman_OBJECTS)
 am__DEPENDENCIES_1 =
 pacman_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -288,7 +288,9 @@ pacman_SOURCES = \
 	pille.cpp \
 	pille.h \
 	schiene.cpp \
-	schiene.h
+	schiene.h \
+	labyrinth.h \
+	labyrinth.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \
@@ -405,6 +407,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-figur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-ghost_figur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-labyrinth.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-pacman.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-pacman_figur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-pille.Po@am__quote@
@@ -507,6 +510,20 @@ pacman-schiene.obj: schiene.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='schiene.cpp' object='pacman-schiene.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-schiene.obj `if test -f 'schiene.cpp'; then $(CYGPATH_W) 'schiene.cpp'; else $(CYGPATH_W) '$(srcdir)/schiene.cpp'; fi`
+
+pacman-labyrinth.o: labyrinth.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-labyrinth.o -MD -MP -MF $(DEPDIR)/pacman-labyrinth.Tpo -c -o pacman-labyrinth.o `test -f 'labyrinth.cpp' || echo '$(srcdir)/'`labyrinth.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-labyrinth.Tpo $(DEPDIR)/pacman-labyrinth.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='labyrinth.cpp' object='pacman-labyrinth.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-labyrinth.o `test -f 'labyrinth.cpp' || echo '$(srcdir)/'`labyrinth.cpp
+
+pacman-labyrinth.obj: labyrinth.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-labyrinth.obj -MD -MP -MF $(DEPDIR)/pacman-labyrinth.Tpo -c -o pacman-labyrinth.obj `if test -f 'labyrinth.cpp'; then $(CYGPATH_W) 'labyrinth.cpp'; else $(CYGPATH_W) '$(srcdir)/labyrinth.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-labyrinth.Tpo $(DEPDIR)/pacman-labyrinth.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='labyrinth.cpp' object='pacman-labyrinth.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-labyrinth.obj `if test -f 'labyrinth.cpp'; then $(CYGPATH_W) 'labyrinth.cpp'; else $(CYGPATH_W) '$(srcdir)/labyrinth.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

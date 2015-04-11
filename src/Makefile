@@ -93,7 +93,8 @@ PROGRAMS = $(bin_PROGRAMS)
 am_pacman_OBJECTS = pacman-figur.$(OBJEXT) \
 	pacman-ghost_figur.$(OBJEXT) pacman-pacman.$(OBJEXT) \
 	pacman-pacman_figur.$(OBJEXT) pacman-pille.$(OBJEXT) \
-	pacman-schiene.$(OBJEXT) pacman-labyrinth.$(OBJEXT)
+	pacman-schiene.$(OBJEXT) pacman-labyrinth.$(OBJEXT) \
+	pacman-screen.$(OBJEXT)
 pacman_OBJECTS = $(am_pacman_OBJECTS)
 am__DEPENDENCIES_1 =
 pacman_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -290,7 +291,9 @@ pacman_SOURCES = \
 	schiene.cpp \
 	schiene.h \
 	labyrinth.h \
-	labyrinth.cpp
+	labyrinth.cpp \
+	screen.h \
+	screen.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \
@@ -412,6 +415,7 @@ include ./$(DEPDIR)/pacman-pacman.Po
 include ./$(DEPDIR)/pacman-pacman_figur.Po
 include ./$(DEPDIR)/pacman-pille.Po
 include ./$(DEPDIR)/pacman-schiene.Po
+include ./$(DEPDIR)/pacman-screen.Po
 
 .cpp.o:
 	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -524,6 +528,20 @@ pacman-labyrinth.obj: labyrinth.cpp
 #	$(AM_V_CXX)source='labyrinth.cpp' object='pacman-labyrinth.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-labyrinth.obj `if test -f 'labyrinth.cpp'; then $(CYGPATH_W) 'labyrinth.cpp'; else $(CYGPATH_W) '$(srcdir)/labyrinth.cpp'; fi`
+
+pacman-screen.o: screen.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-screen.o -MD -MP -MF $(DEPDIR)/pacman-screen.Tpo -c -o pacman-screen.o `test -f 'screen.cpp' || echo '$(srcdir)/'`screen.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-screen.Tpo $(DEPDIR)/pacman-screen.Po
+#	$(AM_V_CXX)source='screen.cpp' object='pacman-screen.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-screen.o `test -f 'screen.cpp' || echo '$(srcdir)/'`screen.cpp
+
+pacman-screen.obj: screen.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-screen.obj -MD -MP -MF $(DEPDIR)/pacman-screen.Tpo -c -o pacman-screen.obj `if test -f 'screen.cpp'; then $(CYGPATH_W) 'screen.cpp'; else $(CYGPATH_W) '$(srcdir)/screen.cpp'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-screen.Tpo $(DEPDIR)/pacman-screen.Po
+#	$(AM_V_CXX)source='screen.cpp' object='pacman-screen.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-screen.obj `if test -f 'screen.cpp'; then $(CYGPATH_W) 'screen.cpp'; else $(CYGPATH_W) '$(srcdir)/screen.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

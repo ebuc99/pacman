@@ -26,7 +26,9 @@ pacman_SOURCES =  \
 	schiene.cpp \
 	schiene.h \
 	labyrinth.h \
-	labyrinth.cpp
+	labyrinth.cpp \
+	screen.h \
+	screen.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \

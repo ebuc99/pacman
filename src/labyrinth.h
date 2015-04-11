@@ -1,10 +1,11 @@
 #include "pacman_figur.h"
 #include "ghost_figur.h"
+#include "screen.h"
 
 class Labyrinth {
 	public:
 		//constructor and destructor
-		Labyrinth();
+		Labyrinth(SDL_Surface *screen);
 		~Labyrinth();
 
 		// At the left and right of the tunnel, there are two black rectangles,

@@ -1,18 +1,7 @@
 #include "labyrinth.h"
 
-Labyrinth::Labyrinth(){
-	// initialize SDL
-	if(SDL_Init(SDL_INIT_VIDEO) != 0) {
-                printf("SDL initialization failed: %s\n", SDL_GetError());
-                this->sdl_init_error = EXIT_FAILURE;
-        }
-	atexit(SDL_Quit);
-	this->screen = SDL_SetVideoMode(680, 512, 24, SDL_HWSURFACE);
-        if(this->screen == 0) {
-                printf("Setting video mode failed: %s\n",SDL_GetError());
-                this->sdl_init_error = EXIT_FAILURE;
-        }
-	SDL_WM_SetCaption("Pacman", "");
+Labyrinth::Labyrinth(SDL_Surface *screen){
+	this->screen = screen;
 }
 
 Labyrinth::~Labyrinth(){

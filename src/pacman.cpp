@@ -4,7 +4,6 @@
 
 
 // Constants
-const unsigned short int UPDATERECTS = 200; 		// maximum number of rectangles for redrawing
 const float PACMAN_V_FAST = 0.2f;			// pacman's speed when not eating
 const float PACMAN_V_SLOW = 0.18f; 			// pacman's speed while eating
 const float GHOSTS_V = 0.18f;				// normal speed of the ghosts
@@ -35,10 +34,8 @@ enum Richtung {
 };
  
 
-int rect_num = 0;
-
-SDL_Rect rects[UPDATERECTS];
 Pille pillen[ANZAHL_PILLEN];
+Screen *screen;
 int fullscreen = 0;
 int stop_moving = 0;
 int refresh_ghosts = 0;
@@ -176,11 +173,11 @@ static void stop_all(unsigned short int stop, Pacman *pacman, Ghost *blinky, Gho
 
 
 /* this function registers the ghosts' graphics for redrawing, but only if they have changed */
-static void AddUpdateRects_ghost(Ghost *ghost_l, SDL_Surface *screen) {
+static void AddUpdateRects_ghost(Ghost *ghost_l) {
 	if((ghost_l->get_richtung() == 0) || (ghost_l->get_richtung() == 1))
-		AddUpdateRects(ghost_l->x, ghost_l->y, (ghost_l->ghost_sf->w + abs(ghost_l->x - ghost_l->last_x)), (ghost_l->ghost_sf->h + abs(ghost_l->y - ghost_l->last_y)), screen);
+		screen->AddUpdateRects(ghost_l->x, ghost_l->y, (ghost_l->ghost_sf->w + abs(ghost_l->x - ghost_l->last_x)), (ghost_l->ghost_sf->h + abs(ghost_l->y - ghost_l->last_y)));
 	else
-		AddUpdateRects((ghost_l->x - abs(ghost_l->x - ghost_l->last_x)), (ghost_l->y - abs(ghost_l->y - ghost_l->last_y)), ghost_l->ghost_sf->w, ghost_l->ghost_sf->h, screen);
+		screen->AddUpdateRects((ghost_l->x - abs(ghost_l->x - ghost_l->last_x)), (ghost_l->y - abs(ghost_l->y - ghost_l->last_y)), ghost_l->ghost_sf->w, ghost_l->ghost_sf->h);
 }
 
 
@@ -216,27 +213,27 @@ static void init_pillen() {
 }
 
 /* draw pills, but only if Blinky has moved */
-static void draw_pillen(SDL_Surface *pille, SDL_Surface *superpille, SDL_Surface *screen) {
+static void draw_pillen(SDL_Surface *pille, SDL_Surface *superpille) {
 	if(moving()){
 		SDL_Rect dest;
 		for(int i = 0; i < ANZAHL_PILLEN; i++) {
 			if(pillen[i].sichtbar && !pillen[i].superpille) {
 				dest.x = pillen[i].x;
 				dest.y = pillen[i].y;
-				SDL_BlitSurface(pille, NULL, screen, &dest);
+				SDL_BlitSurface(pille, NULL, screen->screen_sf, &dest);
 			}
 			if(pillen[i].sichtbar && pillen[i].superpille) {
 				dest.x = pillen[i].x - 4;
 				dest.y = pillen[i].y - 4;
-				SDL_BlitSurface(superpille, NULL, screen, &dest);
-				AddUpdateRects(dest.x , dest.y, superpille->w, superpille->h, screen);
+				SDL_BlitSurface(superpille, NULL, screen->screen_sf, &dest);
+				screen->AddUpdateRects(dest.x , dest.y, superpille->w, superpille->h);
 			}
 		}
 	}
 }
 
 // redraw static content, which only has to be redrawn sometimes
-static void draw_static_content(SDL_Surface *surface, SDL_Surface *screen, int x, int y, int force = 0) {
+static void draw_static_content(SDL_Surface *surface, int x, int y, int force = 0) {
 	static unsigned short int  temp_force = 0;
 	if(force)
 		temp_force = force;
@@ -244,30 +241,30 @@ static void draw_static_content(SDL_Surface *surface, SDL_Surface *screen, int x
 		SDL_Rect dest;
 		dest.x = x; 
 		dest.y = y; 
-		SDL_BlitSurface(surface, NULL, screen, &dest);
-		AddUpdateRects(dest.x, dest.y, surface->w + 10, surface->h, screen);
+		SDL_BlitSurface(surface, NULL, screen->screen_sf, &dest);
+		screen->AddUpdateRects(dest.x, dest.y, surface->w + 10, surface->h);
 		temp_force = 0;
 	}
 }
 
 // especially for drawing the score
-static void draw_dynamic_content(SDL_Surface *surface, int x, int y, SDL_Surface *screen) {
+static void draw_dynamic_content(SDL_Surface *surface, int x, int y) {
 	if(moving()) {
 		SDL_Rect dest;
 		dest.x = x; 
 		dest.y = y; 
-		SDL_BlitSurface(surface, NULL, screen, &dest);
-		AddUpdateRects(dest.x, dest.y, surface->w + 10, surface->h, screen);
+		SDL_BlitSurface(surface, NULL, screen->screen_sf, &dest);
+		screen->AddUpdateRects(dest.x, dest.y, surface->w + 10, surface->h);
 	}
 }
 
 /* compute the score */
-static void compute_score(SDL_Surface *punkte, char *char_punktestand, int int_punktestand, TTF_Font *font, SDL_Color *textgelb, SDL_Surface *screen) {
+static void compute_score(SDL_Surface *punkte, char *char_punktestand, int int_punktestand, TTF_Font *font, SDL_Color *textgelb) {
 	static int punktestand;
 	if((punktestand != int_punktestand) || moving()) {
 		sprintf(char_punktestand, "%d", int_punktestand * 10);
 		punkte = TTF_RenderText_Solid(font, char_punktestand, (*textgelb));
-		draw_dynamic_content(punkte, 530, 60, screen);
+		draw_dynamic_content(punkte, 530, 60);
 		punktestand = int_punktestand;
 	}	
 }
@@ -294,12 +291,12 @@ static void check_pillen(Pacman *pacman, int *punktestand) {
 }
 
 /* reset */
-static void reset(Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghost *clyde, SDL_Surface *screen) {
-	AddUpdateRects(blinky->x, blinky->y, blinky->ghost_sf->w, blinky->ghost_sf->h, screen);
-	AddUpdateRects(pinky->x, pinky->y, pinky->ghost_sf->w, pinky->ghost_sf->h, screen);
-	AddUpdateRects(inky->x, inky->y, inky->ghost_sf->w, inky->ghost_sf->h, screen);
-	AddUpdateRects(clyde->x, clyde->y, clyde->ghost_sf->w, clyde->ghost_sf->h, screen);
-	AddUpdateRects(pacman->x, pacman->y, pacman->pacman_sf->w, pacman->pacman_sf->h, screen);
+static void reset(Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghost *clyde) {
+	screen->AddUpdateRects(blinky->x, blinky->y, blinky->ghost_sf->w, blinky->ghost_sf->h);
+	screen->AddUpdateRects(pinky->x, pinky->y, pinky->ghost_sf->w, pinky->ghost_sf->h);
+	screen->AddUpdateRects(inky->x, inky->y, inky->ghost_sf->w, inky->ghost_sf->h);
+	screen->AddUpdateRects(clyde->x, clyde->y, clyde->ghost_sf->w, clyde->ghost_sf->h);
+	screen->AddUpdateRects(pacman->x, pacman->y, pacman->pacman_sf->w, pacman->pacman_sf->h);
 	pacman->reset();
 	blinky->reset();
 	pinky->reset();
@@ -326,56 +323,26 @@ static int check_collision(Pacman *pacman, Ghost **ghost_array) {
 }
 
 /* Bewege pacman */
-static void move_pacman(Pacman *pacman, float ms, SDL_Surface *screen) {
+static void move_pacman(Pacman *pacman, float ms) {
 	if(Ghost::was_moving_leader || (stop_moving && moving())){
-		AddUpdateRects(pacman->x, pacman->y, pacman->pacman_sf->w, pacman->pacman_sf->h, screen);
+		screen->AddUpdateRects(pacman->x, pacman->y, pacman->pacman_sf->w, pacman->pacman_sf->h);
 	}
 	pacman->move_on_rails(ms, ANZAHL_SCHIENEN, ar_s);
 }
 
 /* move pacman on the rails, according to it's speed and direction */
-static void move_ghosts(Ghost *ghost_l, Pacman *pacman, float(ms), SDL_Surface *screen) {
+static void move_ghosts(Ghost *ghost_l, Pacman *pacman, float(ms)) {
 	if(ghost_l->was_moving() || (stop_moving && moving())){
-		AddUpdateRects_ghost(ghost_l, screen);	
+		AddUpdateRects_ghost(ghost_l);	
 	}
 	
 	ghost_l->move_on_rails(pacman, ms, ANZAHL_SCHIENEN, ar_s);
 }
 
-/* register graphic parts for updating */
-void AddUpdateRects(int x, int y, int w, int h, SDL_Surface *screen) {
-	if (x < 0) {
-         	w += x;
-        	x = 0;
-    	}
-    	if (y < 0) {
-        	h += y;
-        	y = 0;
-   	}
-	if (x + w > screen->w)
-       	 	w = screen->w - x;
-    	if (y + h > screen->h)
-        	h = screen->h - y;
-    	if (w <= 0 || h <= 0)
-        	return;
-    	rects[rect_num].x = x;
-    	rects[rect_num].y = y;
-    	rects[rect_num].w = w;
-    	rects[rect_num].h = h;
-    	rect_num++;
-}
-
-// do the graphic update, so we can see the changes on the screen
-void Refresh(SDL_Surface *screen) {
-	if(moving()){
-		SDL_UpdateRects(screen, rect_num, rects);
-		rect_num = 0;
-	}
-}
 
 // SDL event loop: handle keyboard input events, and others
 static int eventloop(SDL_Surface *hintergrund, Pacman *pacman, Ghost *blinky, 
-Ghost *pinky, Ghost *inky, Ghost *clyde, SDL_Surface *score, SDL_Surface *screen) {
+Ghost *pinky, Ghost *inky, Ghost *clyde, SDL_Surface *score) {
 	static unsigned short int pause;
 	SDL_Event event;
 	while(SDL_PollEvent(&event)) {
@@ -399,8 +366,8 @@ Ghost *pinky, Ghost *inky, Ghost *clyde, SDL_Surface *score, SDL_Surface *screen
 				else
       				newScreen = SDL_SetVideoMode(640, 480, 24, SDL_HWSURFACE);
     			if (NULL != newScreen) {  // successful? NULL indicates failure
-      				screen = newScreen;  // take it, but do not dispose of the old screen (says SDL documentation)
-					AddUpdateRects(0, 0, hintergrund->w, hintergrund->h, screen);
+      				screen->screen_sf = newScreen;  // take it, but do not dispose of the old screen (says SDL documentation)
+					screen->AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
 					// no Refresh() here, because at this moment nothing has been drawn to the new screen
     			}
 			}
@@ -446,23 +413,14 @@ int main(int argc, char *argv[]) {
 	float ms = 1.0;
 	float wechsel_counter = 0;
 	
-	/*// initialize SDL
-	if(SDL_Init(SDL_INIT_VIDEO) != 0) {
-                printf("SDL initialization failed: %s\n", SDL_GetError());
-                return EXIT_FAILURE;
-        }
-	atexit(SDL_Quit);
-	screen = SDL_SetVideoMode(680, 512, 24, SDL_HWSURFACE);
-        if(screen == 0) {
-                printf("Setting video mode failed: %s\n",SDL_GetError());
-                return EXIT_FAILURE;
-        }
-	SDL_WM_SetCaption("Pacman", "");*/
-
-	// create the window and the labyrinth
-	Labyrinth *labyrinth = new Labyrinth();
-	if(labyrinth->sdl_init_error == EXIT_FAILURE)
+	// create the window 
+	screen = new Screen();
+	if(screen->sdl_init_error == EXIT_FAILURE)
 		return EXIT_FAILURE;
+
+	//create the labyrinth
+	Labyrinth *labyrinth = new Labyrinth(screen->screen_sf);
+	
 
 	// create an instance of pacman
 	Pacman *pacman = new Pacman(310, 338, PACMAN_V_FAST, WECHSEL_RATE);
@@ -509,18 +467,18 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
         
-	draw_hintergrund(hintergrund, labyrinth->screen);
+	draw_hintergrund(hintergrund, screen->screen_sf);
 	init_pillen();
-	draw_pillen(pille, superpille[pille_counter], labyrinth->screen);
-	pacman->draw(labyrinth->screen);
-	blinky->draw(labyrinth->screen, moving());
-	pinky->draw(labyrinth->screen, moving());
-	inky->draw(labyrinth->screen, moving());
-	clyde->draw(labyrinth->screen, moving());
-	draw_dynamic_content(score, 530, 30, labyrinth->screen);
-	draw_dynamic_content(punkte, 530, 60, labyrinth->screen);
-	AddUpdateRects(0, 0, hintergrund->w, hintergrund->h, labyrinth->screen);
-	Refresh(labyrinth->screen);
+	draw_pillen(pille, superpille[pille_counter]);
+	pacman->draw(screen->screen_sf);
+	blinky->draw(screen->screen_sf, moving());
+	pinky->draw(screen->screen_sf, moving());
+	inky->draw(screen->screen_sf, moving());
+	clyde->draw(screen->screen_sf, moving());
+	draw_dynamic_content(score, 530, 30);
+	draw_dynamic_content(punkte, 530, 60);
+	screen->AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
+	screen->Refresh(moving());
 	startTicks = (float)SDL_GetTicks();
 	blinky->set_leader(1);	// Blinky will be the reference sprite for redrawing
 	// at first, stop all figures 
@@ -530,7 +488,7 @@ int main(int argc, char *argv[]) {
 	while(loop) {	
 		if(start_offset == -1)	
 			loop = eventloop(hintergrund, pacman, blinky, pinky, 
-			inky, clyde, score, labyrinth->screen);
+			inky, clyde, score);
 		
 		if(wechsel_counter > 50) {
 			// ghost animations
@@ -553,7 +511,7 @@ int main(int argc, char *argv[]) {
 					die_counter++;
 					if(die_counter == 13) {
 						pacman->is_dying = 0;
-						reset(pacman, blinky, pinky, inky, clyde, labyrinth->screen);
+						reset(pacman, blinky, pinky, inky, clyde);
 						stop_all(true, pacman, blinky, pinky, inky, clyde);
 						ct_pm = 0;
 						start_offset = 10;
@@ -581,11 +539,11 @@ int main(int argc, char *argv[]) {
 			refresh_ghosts = 0;
 		wechsel_counter = wechsel_counter + ms;
 		
-		draw_hintergrund(hintergrund, labyrinth->screen);
+		draw_hintergrund(hintergrund, screen->screen_sf);
 		check_pillen(pacman, &int_punktestand);
-		compute_score(punkte, char_punktestand, int_punktestand, font, &textgelb, labyrinth->screen); 
-		draw_static_content(score, labyrinth->screen, 530, 30);
-		draw_pillen(pille, superpille[pille_counter], labyrinth->screen);
+		compute_score(punkte, char_punktestand, int_punktestand, font, &textgelb); 
+		draw_static_content(score, 530, 30);
+		draw_pillen(pille, superpille[pille_counter]);
 	
 		if(pacman->wechsel()) {
 			if(pacman->get_richtung() == 0)
@@ -615,14 +573,14 @@ int main(int argc, char *argv[]) {
 			pacman->parking();
 		}		
 		
-		blinky->draw(labyrinth->screen, moving());
-		pinky->draw(labyrinth->screen, moving());
-		inky->draw(labyrinth->screen, moving());
-		clyde->draw(labyrinth->screen, moving());
-		pacman->draw (labyrinth->screen);
+		blinky->draw(screen->screen_sf, moving());
+		pinky->draw(screen->screen_sf, moving());
+		inky->draw(screen->screen_sf, moving());
+		clyde->draw(screen->screen_sf, moving());
+		pacman->draw (screen->screen_sf);
 		if(moving())
 			labyrinth->draw_blocks();
-		Refresh(labyrinth->screen);
+		screen->Refresh(moving());
 		if(check_collision(pacman, ghost_array) && !pacman->is_dying) {
 			stop_all(true, pacman, blinky, pinky, inky, clyde);
 			pacman->is_dying = 10;  
@@ -640,11 +598,11 @@ int main(int argc, char *argv[]) {
 			ms = (float)(lastTickstemp/WAIT_IN_MS);
 		
 		// and move all figures
-		move_pacman(pacman, ms, labyrinth->screen);
-		move_ghosts(blinky, pacman, ms, labyrinth->screen);
-		move_ghosts(pinky, pacman, ms, labyrinth->screen);
-		move_ghosts(inky, pacman, ms, labyrinth->screen);
-		move_ghosts(clyde, pacman, ms, labyrinth->screen);
+		move_pacman(pacman, ms);
+		move_ghosts(blinky, pacman, ms);
+		move_ghosts(pinky, pacman, ms);
+		move_ghosts(inky, pacman, ms);
+		move_ghosts(clyde, pacman, ms);
 	}
 	
 	// clean up SDL
@@ -659,6 +617,5 @@ int main(int argc, char *argv[]) {
 	delete inky;
 	delete clyde;
 
-	
 	return EXIT_SUCCESS;
 }

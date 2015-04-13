@@ -158,7 +158,7 @@ int Ghost::choose_direction(int * sammel_richtung, int richtung_pacman, int samm
 }
 
 
-void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Schiene *ar_s) {
+void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Schiene **ar_s) {
 	int i;
 	int richtung_ghost = this->get_richtung();
 	int richtung_pacman = this->relative_pos_pacman(pacman);
@@ -187,87 +187,87 @@ void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Schiene *a
 			}
 
 			// to the left
-			if ((richtung_ghost == 0) && (this->y > ar_s[i].y1) && (this->x == ar_s[i].x1) && (this->x == ar_s[i].x2) && this->y <= ar_s[i].y2) {
+			if ((richtung_ghost == 0) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
 				sammel_richtung[sammel_counter] = 1;
 				sammel_counter++;	
-				max_oben = this->cur_y - ar_s[i].y1;		
+				max_oben = this->cur_y - ar_s[i]->y1;		
 			}
-			if ((richtung_ghost == 0) && (this->y < ar_s[i].y2) && (this->x == ar_s[i].x1) && (this->x == ar_s[i].x2) && (this->y >= ar_s[i].y1)) {
+			if ((richtung_ghost == 0) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
 				sammel_richtung[sammel_counter] = 3;
 				sammel_counter++;
-				max_unten = ar_s[i].y2 - this->cur_y;
+				max_unten = ar_s[i]->y2 - this->cur_y;
 			}
-		  	if ((richtung_ghost == 0) && (this->x > ar_s[i].x1) && (this->y == ar_s[i].y1) && (this->y == ar_s[i].y2) && (this->x <= ar_s[i].x2)) {		
+		  	if ((richtung_ghost == 0) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {		
 				sammel_richtung[sammel_counter] = 0;
 				sammel_counter++;
-				max_links = this->cur_x - ar_s[i].x1;
+				max_links = this->cur_x - ar_s[i]->x1;
 			}
 			if(sammel_counter == 3)
 				break;
 		
 			// up
-			if ((richtung_ghost == 1) && (this->x > ar_s[i].x1) && (this->y == ar_s[i].y1) && (this->y == ar_s[i].y2) && (this->x <= ar_s[i].x2)) {
+			if ((richtung_ghost == 1) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
 				if(!this->up_down) {
 					sammel_richtung[sammel_counter] = 0;
 					sammel_counter++;
-					max_links = this->cur_x - ar_s[i].x1;
+					max_links = this->cur_x - ar_s[i]->x1;
 				}
 			}
-			if ((richtung_ghost == 1) && (this->x < ar_s[i].x2) && (this->y == ar_s[i].y1) && (this->y == ar_s[i].y2) && (this->x >= ar_s[i].x1)) {
+			if ((richtung_ghost == 1) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
 				if(!this->up_down) {
 					sammel_richtung[sammel_counter] = 2;
 					sammel_counter++;
-					max_rechts = ar_s[i].x2 - this->cur_x;
+					max_rechts = ar_s[i]->x2 - this->cur_x;
 				}
 			}
-			if ((richtung_ghost == 1) && (this->y > ar_s[i].y1) && (this->x == ar_s[i].x1) && (this->x == ar_s[i].x2) && this->y <= ar_s[i].y2) {
+			if ((richtung_ghost == 1) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
 				sammel_richtung[sammel_counter] = 1;
 				sammel_counter++;
-				max_oben = this->cur_y - ar_s[i].y1;
+				max_oben = this->cur_y - ar_s[i]->y1;
 			}
 		
 			if(sammel_counter == 3)
 				break;
 		
 			// to the right
-			if ((richtung_ghost == 2) && (this->y > ar_s[i].y1) && (this->x == ar_s[i].x1) && (this->x == ar_s[i].x2) && this->y <= ar_s[i].y2) {
+			if ((richtung_ghost == 2) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
 				sammel_richtung[sammel_counter] = 1;
 				sammel_counter++;
-				max_oben = this->cur_y - ar_s[i].y1;
+				max_oben = this->cur_y - ar_s[i]->y1;
 			}
-			if ((richtung_ghost == 2) && (this->y < ar_s[i].y2) && (this->x == ar_s[i].x1) && (this->x == ar_s[i].x2) && (this->y >= ar_s[i].y1)) {
+			if ((richtung_ghost == 2) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
 				sammel_richtung[sammel_counter] = 3;
 				sammel_counter++;
-				max_unten = ar_s[i].y2 - this->cur_y;
+				max_unten = ar_s[i]->y2 - this->cur_y;
 			}
-			if ((richtung_ghost == 2) && (this->x < ar_s[i].x2) && (this->y == ar_s[i].y1) && (this->y == ar_s[i].y2) && (this->x >= ar_s[i].x1)) {
+			if ((richtung_ghost == 2) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
 				sammel_richtung[sammel_counter] = 2;
 				sammel_counter++;
-				max_rechts = ar_s[i].x2 - this->cur_x;
+				max_rechts = ar_s[i]->x2 - this->cur_x;
 			}
 			
 			if(sammel_counter == 3)
 				break;
 		
 			// down
-			if ((richtung_ghost == 3) && (this->x > ar_s[i].x1) && (this->y == ar_s[i].y1) && (this->y == ar_s[i].y2) && (this->x <= ar_s[i].x2)) {
+			if ((richtung_ghost == 3) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
 				if(!this->up_down) {
 					sammel_richtung[sammel_counter] = 0;
 					sammel_counter++;
-					max_links = this->cur_x - ar_s[i].x1;
+					max_links = this->cur_x - ar_s[i]->x1;
 				}
 			}
-			if ((richtung_ghost == 3) && (this->x < ar_s[i].x2) && (this->y == ar_s[i].y1) && (this->y == ar_s[i].y2) && (this->x >= ar_s[i].x1)) {
+			if ((richtung_ghost == 3) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
 				if(!this->up_down) {
 					sammel_richtung[sammel_counter] = 2;
 					sammel_counter++;
-					max_rechts = ar_s[i].x2 - this->cur_x;
+					max_rechts = ar_s[i]->x2 - this->cur_x;
 				}
 			}
-			if ((richtung_ghost == 3) && (this->y < ar_s[i].y2) && (this->x == ar_s[i].x1) && (this->x == ar_s[i].x2) && (this->y >= ar_s[i].y1)) {
+			if ((richtung_ghost == 3) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
 				sammel_richtung[sammel_counter] = 3;
 				sammel_counter++;
-				max_unten = ar_s[i].y2 - this->cur_y;
+				max_unten = ar_s[i]->y2 - this->cur_y;
 			}
 		
 			if(sammel_counter == 3)

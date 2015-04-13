@@ -31,7 +31,7 @@ class Pacman : public Figur {
 		int wechsel();
 		
 		// moves a ghost on the defined rails
-		void move_on_rails(float ms, int anz_schienen, Schiene *ar_s);
+		void move_on_rails(float ms, int anz_schienen, Schiene **ar_s);
 		
 		// returns whether pacman has stopped
 		int is_pacman_stopped();

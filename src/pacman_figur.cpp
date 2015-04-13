@@ -159,26 +159,26 @@ int Pacman::wechsel() {
 		return 0;
 }
 
-void Pacman::move_on_rails(float ms, int anz_schienen, Schiene *ar_s) {
+void Pacman::move_on_rails(float ms, int anz_schienen, Schiene **ar_s) {
 	int i;
 	int check_move = 0;
 	// check if the pre selected direction is
 	// not equal to the current direction and pacman is on a cross road
 	if(this->get_richtung() != this->richtung_pre) {
 		for(i = 0; i <= anz_schienen - 1; i++) {
-			if((this->richtung_pre == 0) && (this->x > ar_s[i].x1) && (this->y == ar_s[i].y1) && (this->y == ar_s[i].y2) && (this->x <= ar_s[i].x2)) {
+			if((this->richtung_pre == 0) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
 				this->is_wechsel = 1;
 				this->set_richtung(this->richtung_pre);
 			}
-			if((this->richtung_pre == 1) && (this->y > ar_s[i].y1) && (this->x == ar_s[i].x1) && (this->x == ar_s[i].x2) && this->y <= ar_s[i].y2) {
+			if((this->richtung_pre == 1) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
 				this->is_wechsel = 1;
 				this->set_richtung(this->richtung_pre);
 			}
-			if((this->richtung_pre == 2) && (this->x < ar_s[i].x2) && (this->y == ar_s[i].y1) && (this->y == ar_s[i].y2) && (this->x >= ar_s[i].x1)) {
+			if((this->richtung_pre == 2) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
 				this->is_wechsel = 1;
 				this->set_richtung(this->richtung_pre);
 			}
-			if((this->richtung_pre == 3) && (this->y < ar_s[i].y2) && (this->x == ar_s[i].x1) && (this->x == ar_s[i].x2) && (this->y >= ar_s[i].y1)) {
+			if((this->richtung_pre == 3) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
 				this->is_wechsel = 1;
 				this->set_richtung(this->richtung_pre);
 			}
@@ -200,23 +200,23 @@ void Pacman::move_on_rails(float ms, int anz_schienen, Schiene *ar_s) {
 		}
 		
 		// now the "normal" rails
-	  	if ((this->get_richtung() == 0) && (this->x > ar_s[i].x1) && (this->y == ar_s[i].y1) && (this->y == ar_s[i].y2) && (this->x <= ar_s[i].x2)) {
-			this->move_left(ms, this->x - ar_s[i].x1);
+	  	if ((this->get_richtung() == 0) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
+			this->move_left(ms, this->x - ar_s[i]->x1);
 			check_move = 1;
 			break;
 		}
-		if ((this->get_richtung() == 1) && (this->y > ar_s[i].y1) && (this->x == ar_s[i].x1) && (this->x == ar_s[i].x2) && this->y <= ar_s[i].y2) {
-			this->move_up(ms, this->y - ar_s[i].y1);
+		if ((this->get_richtung() == 1) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
+			this->move_up(ms, this->y - ar_s[i]->y1);
 			check_move = 1;
 			break;
 		}
-		if ((this->get_richtung() == 2) && (this->x < ar_s[i].x2) && (this->y == ar_s[i].y1) && (this->y == ar_s[i].y2) && (this->x >= ar_s[i].x1)) {
-			this->move_right(ms, ar_s[i].x2 - this->x);
+		if ((this->get_richtung() == 2) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
+			this->move_right(ms, ar_s[i]->x2 - this->x);
 			check_move = 1;
 			break;
 		}
-		if ((this->get_richtung() == 3) && (this->y < ar_s[i].y2) && (this->x == ar_s[i].x1) && (this->x == ar_s[i].x2) && (this->y >= ar_s[i].y1)) {
-			this->move_down(ms, ar_s[i].y2 - this->y);
+		if ((this->get_richtung() == 3) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
+			this->move_down(ms, ar_s[i]->y2 - this->y);
 			check_move = 1;
 			break;
 		}			

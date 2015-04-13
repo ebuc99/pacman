@@ -35,7 +35,7 @@ class Ghost : public Figur {
 		int choose_direction(int * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence);
 		
 		// moves a ghost on the defined rails
-		void move_on_rails(Pacman *pacman, float ms, int anz_schienen, Schiene *ar_s);
+		void move_on_rails(Pacman *pacman, float ms, int anz_schienen, Schiene **ar_s);
 		
 		// returns the intelligence of the ghost
 		int get_intelligence() const;

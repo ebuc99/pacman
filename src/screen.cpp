@@ -47,3 +47,27 @@ void Screen::Refresh(int moving) {
 		this->rect_num = 0;
 	}
 }
+
+void Screen::draw_static_content(SDL_Surface *surface, int x, int y, int moving, int force) {
+	static unsigned short int  temp_force = 0;
+	if(force)
+		temp_force = force;
+	if(moving && temp_force) {
+		SDL_Rect dest;
+		dest.x = x; 
+		dest.y = y; 
+		SDL_BlitSurface(surface, NULL, this->screen_sf, &dest);
+		this->AddUpdateRects(dest.x, dest.y, surface->w + 10, surface->h);
+		temp_force = 0;
+	}
+}
+
+void Screen::draw_dynamic_content(SDL_Surface *surface, int x, int y, int moving) {
+	if(moving) {
+		SDL_Rect dest;
+		dest.x = x; 
+		dest.y = y; 
+		SDL_BlitSurface(surface, NULL, this->screen_sf, &dest);
+		this->AddUpdateRects(dest.x, dest.y, surface->w + 10, surface->h);
+	}
+}

@@ -34,7 +34,7 @@ class Labyrinth {
 		void init_pillen();
 
 		/* draw pills, but only if Blinky has moved */
-		void draw_pillen(SDL_Surface *pille, SDL_Surface *superpille, int moving);
+		void draw_pillen(SDL_Surface *pille, SDL_Surface *superpille);
 
 		/* collision handling pacman <-> pills */
 		void check_pillen(Pacman *pacman, int *punktestand);

@@ -93,21 +93,18 @@ void Figur::set_richtung(int p_richtung) {
 }
 
 float Figur::least(float a, float b) {
-	if(a < b) 
-		return a;
-	else 
-		return b;
+	return (a < b) ? a : b;
 }
 
-SDL_Surface* Figur::LoadSurface(const char *filename, int transparant_color = -1) {
+SDL_Surface* Figur::LoadSurface(const char *filename, int transparent_color = -1) {
 	SDL_Surface *surface, *temp;
 	temp = IMG_Load(filename);
 	if(!temp) {
 		printf("Unable to load image: %s\n", IMG_GetError());
 		exit(-1);
 	}
-	if(transparant_color != -1)
-		SDL_SetColorKey(temp, SDL_SRCCOLORKEY | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, transparant_color, transparant_color, transparant_color));
+	if(transparent_color != -1)
+		SDL_SetColorKey(temp, SDL_SRCCOLORKEY | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, transparent_color, transparent_color, transparent_color));
 	surface = SDL_DisplayFormat(temp);
 	if(surface == NULL) {
 		printf("Unable to convert image to display format: %s\n", SDL_GetError());

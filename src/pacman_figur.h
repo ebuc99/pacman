@@ -1,7 +1,9 @@
 #ifndef PACMAN_FIGUR_H
 #define PACMAN_FIGUR_H
 
+class Pacman;  // this tells the following include files that Pacman is a class
 #include "figur.h"
+#include "screen.h"
 #include "schiene.h"
 
 class Pacman : public Figur {
@@ -10,7 +12,7 @@ class Pacman : public Figur {
 		Pacman(int init_x, int init_y, float init_v, int init_wechsel_rate);
 		~Pacman();
 		// draw pacman
-		void draw(SDL_Surface* screen);
+		void draw(Screen* screen);
 		
 		// four directions for movement
 		void move_left(float ms, float max_step = 999);

@@ -72,11 +72,8 @@ Pacman::~Pacman() {
 		SDL_FreeSurface(ar_pacman_die[i]);
 }
 
-void Pacman::draw(SDL_Surface* screen) {
-	SDL_Rect dest;
-	dest.x = this->x;
-	dest.y = this->y;
-	SDL_BlitSurface(this->pacman_sf, NULL, screen, &dest);
+void Pacman::draw(Screen* screen) {
+    screen->draw(this->pacman_sf, this->x, this->y);
 }
 
 void Pacman::move_left(float ms, float max_step) {

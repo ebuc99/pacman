@@ -83,8 +83,8 @@ void Labyrinth::draw_blocks() {
   	b2.w = 30;
   	b2.h = 30;
   
-  	SDL_FillRect(this->screen->screen_sf, &b1, SDL_MapRGB(this->screen->screen_sf->format, 0, 0, 0));
-  	SDL_FillRect(this->screen->screen_sf, &b2, SDL_MapRGB(this->screen->screen_sf->format, 0, 0, 0));
+  	SDL_FillRect(this->screen->getSurface(), &b1, SDL_MapRGB(this->screen->getSurface()->format, 0, 0, 0));
+  	SDL_FillRect(this->screen->getSurface(), &b2, SDL_MapRGB(this->screen->getSurface()->format, 0, 0, 0));
 }
 
 void Labyrinth::init_pillen() {
@@ -110,21 +110,19 @@ void Labyrinth::init_pillen() {
 		}
 }
 
-void Labyrinth::draw_pillen(SDL_Surface *pille, SDL_Surface *superpille, int moving) {
-	if(moving){
-		SDL_Rect dest;
-		for(int i = 0; i < NUMBER_PILLS; i++) {
-			if(pillen[i].sichtbar && !pillen[i].superpille) {
-				dest.x = pillen[i].x;
-				dest.y = pillen[i].y;
-				SDL_BlitSurface(pille, NULL, screen->screen_sf, &dest);
-			}
-			if(pillen[i].sichtbar && pillen[i].superpille) {
-				dest.x = pillen[i].x - 4;
-				dest.y = pillen[i].y - 4;
-				SDL_BlitSurface(superpille, NULL, screen->screen_sf, &dest);
-				screen->AddUpdateRects(dest.x , dest.y, superpille->w, superpille->h);
-			}
+void Labyrinth::draw_pillen(SDL_Surface *pille, SDL_Surface *superpille) {
+	SDL_Rect dest;
+	for(int i = 0; i < NUMBER_PILLS; i++) {
+		if(pillen[i].sichtbar && !pillen[i].superpille) {
+			dest.x = pillen[i].x;
+			dest.y = pillen[i].y;
+			SDL_BlitSurface(pille, NULL, screen->getSurface(), &dest);
+		}
+		if(pillen[i].sichtbar && pillen[i].superpille) {
+			dest.x = pillen[i].x - 4;
+			dest.y = pillen[i].y - 4;
+			SDL_BlitSurface(superpille, NULL, screen->getSurface(), &dest);
+			screen->AddUpdateRects(dest.x , dest.y, superpille->w, superpille->h);
 		}
 	}
 }

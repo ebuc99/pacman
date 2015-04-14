@@ -1,7 +1,9 @@
 #ifndef GHOST_FIGUR_H
 #define GHOST_FIGUR_H
 
+class Ghost;  // this tells the following include files that Ghost is a class
 #include "figur.h"
+#include "screen.h"
 #include "schiene.h"
 #include <time.h>
 #include "pacman_figur.h"
@@ -14,7 +16,7 @@ class Ghost : public Figur {
 		~Ghost();
 
 		/* draw ghost */
-		void draw(SDL_Surface *screen, int moving);
+		void draw(Screen *screen);
 
 		/* ghost animation */
 		void animation(int cnt_pic);

@@ -36,7 +36,7 @@ enum Richtung {
 
 //Pille pillen[ANZAHL_PILLEN];
 Screen *screen;
-int fullscreen = 0;
+
 int stop_moving = 0;
 int refresh_ghosts = 0;
 
@@ -109,13 +109,6 @@ static void AddUpdateRects_ghost(Ghost *ghost_l) {
 }
 
 
-/* redraw background, but only if Blinky (=reference ghost for movement) has moved */
-static void draw_hintergrund(SDL_Surface *hintergrund, SDL_Surface *screen) {
-	if(moving()) {
-		SDL_BlitSurface(hintergrund, NULL, screen, NULL);
- 	}
-}
-
 
 /* compute the score */
 static void compute_score(SDL_Surface *punkte, char *char_punktestand, int int_punktestand, TTF_Font *font, SDL_Color *textgelb) {
@@ -123,7 +116,7 @@ static void compute_score(SDL_Surface *punkte, char *char_punktestand, int int_p
 	if((punktestand != int_punktestand) || moving()) {
 		sprintf(char_punktestand, "%d", int_punktestand * 10);
 		punkte = TTF_RenderText_Solid(font, char_punktestand, (*textgelb));
-		screen->draw_dynamic_content(punkte, 530, 60, moving());
+		screen->draw_dynamic_content(punkte, 530, 60);
 		punktestand = int_punktestand;
 	}	
 }
@@ -197,17 +190,7 @@ Ghost *pinky, Ghost *inky, Ghost *clyde) {
 					pacman->richtung_pre = 3; 
 			}
 			if(event.key.keysym.sym == SDLK_f) {
-				fullscreen = !fullscreen;
-    			SDL_Surface* newScreen;
-				if(fullscreen)
-      				newScreen = SDL_SetVideoMode(640, 480, 24, SDL_HWSURFACE | SDL_FULLSCREEN);
-				else
-      				newScreen = SDL_SetVideoMode(640, 480, 24, SDL_HWSURFACE);
-    			if (NULL != newScreen) {  // successful? NULL indicates failure
-      				screen->screen_sf = newScreen;  // take it, but do not dispose of the old screen (says SDL documentation)
-					screen->AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
-					// no Refresh() here, because at this moment nothing has been drawn to the new screen
-    			}
+			    screen->toggleFullscreen();
 			}
 			if(event.key.keysym.sym == SDLK_p) {
 				if(!pacman->is_dying) {
@@ -250,10 +233,11 @@ int main(int argc, char *argv[]) {
 	float lastTickstemp;
 	float ms = 1.0;
 	float wechsel_counter = 0;
+	srand(time(0)); // init randomize
 	
 	// create the window 
 	screen = new Screen();
-	if(screen->sdl_init_error == EXIT_FAILURE)
+	if(screen->occuredInitSdlError() == EXIT_FAILURE)
 		return EXIT_FAILURE;
 
 	//create the labyrinth
@@ -305,18 +289,16 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
         
-	draw_hintergrund(hintergrund, screen->screen_sf);
-	//init_pillen();
+	screen->draw(hintergrund);
 	labyrinth->init_pillen();
-	//draw_pillen(pille, superpille[pille_counter]);
-	labyrinth->draw_pillen(pille, superpille[pille_counter], moving());
-	pacman->draw(screen->screen_sf);
-	blinky->draw(screen->screen_sf, moving());
-	pinky->draw(screen->screen_sf, moving());
-	inky->draw(screen->screen_sf, moving());
-	clyde->draw(screen->screen_sf, moving());
-	screen->draw_dynamic_content(score, 530, 30, moving());
-	screen->draw_dynamic_content(punkte, 530, 60, moving());
+	labyrinth->draw_pillen(pille, superpille[pille_counter]);
+	screen->draw(pacman);
+	screen->draw(blinky);
+	screen->draw(pinky);
+	screen->draw(inky);
+	screen->draw(clyde);
+	screen->draw_dynamic_content(score, 530, 30);
+	screen->draw_dynamic_content(punkte, 530, 60);
 	screen->AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
 	screen->Refresh(moving());
 	startTicks = (float)SDL_GetTicks();
@@ -376,13 +358,15 @@ int main(int argc, char *argv[]) {
 			refresh_ghosts = 0;
 		wechsel_counter = wechsel_counter + ms;
 		
-		draw_hintergrund(hintergrund, screen->screen_sf);
-		//check_pillen(pacman, &int_punktestand);
 		labyrinth->check_pillen(pacman, &int_punktestand);
-		compute_score(punkte, char_punktestand, int_punktestand, font, &textgelb); 
-		screen->draw_static_content(score, 530, 30, moving());
-		//draw_pillen(pille, superpille[pille_counter]);
-		labyrinth->draw_pillen(pille, superpille[pille_counter], moving());
+		if (moving()) {
+		    // redraw background and pills, but only if Blinky (=reference ghost for movement) has moved
+		    screen->draw(hintergrund);
+		    labyrinth->draw_pillen(pille, superpille[pille_counter]);
+
+			compute_score(punkte, char_punktestand, int_punktestand, font, &textgelb); 
+			screen->draw_static_content(score, 530, 30);
+		}
 	
 		if(pacman->wechsel()) {
 			if(pacman->get_richtung() == 0)
@@ -412,13 +396,14 @@ int main(int argc, char *argv[]) {
 			pacman->parking();
 		}		
 		
-		blinky->draw(screen->screen_sf, moving());
-		pinky->draw(screen->screen_sf, moving());
-		inky->draw(screen->screen_sf, moving());
-		clyde->draw(screen->screen_sf, moving());
-		pacman->draw (screen->screen_sf);
-		if(moving())
-			labyrinth->draw_blocks();
+		screen->draw(pacman);
+		if(moving()) {
+		    screen->draw(blinky);
+		    screen->draw(pinky);
+		    screen->draw(inky);
+		    screen->draw(clyde);
+		    labyrinth->draw_blocks();
+		}
 		screen->Refresh(moving());
 		if(check_collision(pacman, ghost_array) && !pacman->is_dying) {
 			stop_all(true, pacman, blinky, pinky, inky, clyde);

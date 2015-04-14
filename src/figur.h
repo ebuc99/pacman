@@ -55,6 +55,6 @@ class Figur {
 		int initial_x;
 		int initial_y;
 		float initial_v;
-		SDL_Surface *LoadSurface(const char *filename, int transparant_color);
+		SDL_Surface *LoadSurface(const char *filename, int transparent_color);
 };
 #endif

@@ -47,30 +47,25 @@ Ghost::~Ghost() {
 	SDL_FreeSurface(augen_3);
 }
 
-void Ghost::draw(SDL_Surface *screen, int moving) {
-	SDL_Rect dest;
-	dest.x = this->x;
-	dest.y = this->y;
-	SDL_BlitSurface(this->ghost_sf, NULL, screen, &dest);
-	if(moving) {
-		switch(this->get_richtung()) {
-			case 0:
-				SDL_BlitSurface(augen_0, NULL, screen, &dest);
-				break;
-			case 1: 
-				SDL_BlitSurface(augen_1, NULL, screen, &dest);
-				break;
-			case 2:
-				SDL_BlitSurface(augen_2, NULL, screen, &dest);
-				break;
-			case 3: 
-				SDL_BlitSurface(augen_3, NULL, screen, &dest);
-				break;
-			default:
-				SDL_BlitSurface(augen_0, NULL, screen, &dest);
-				break;
-		}
-	}
+void Ghost::draw(Screen *screen) {
+    screen->draw(this->ghost_sf, this->x, this->y);
+    switch(this->get_richtung()) {
+        case 0:
+            screen->draw(augen_0, this->x, this->y);
+            break;
+        case 1: 
+            screen->draw(augen_1, this->x, this->y);
+            break;
+        case 2:
+            screen->draw(augen_2, this->x, this->y);
+            break;
+        case 3: 
+            screen->draw(augen_3, this->x, this->y);
+            break;
+        default:
+            screen->draw(augen_0, this->x, this->y);
+            break;
+    }
 }
 
 void Ghost::animation(int cnt_pic) {
@@ -125,7 +120,6 @@ int Ghost::choose_direction(int * sammel_richtung, int richtung_pacman, int samm
 	int ist_richtung_pacman = -1;
 	int zufallswert;
 	
-	srand(time(0));
 	for(i = 0;i < sammel_counter;i++) {
 		if(*(sammel_richtung + i) == richtung_pacman){
 			ist_richtung_pacman = i;
@@ -133,7 +127,6 @@ int Ghost::choose_direction(int * sammel_richtung, int richtung_pacman, int samm
 	}
 	if(sammel_counter == 1)
 		return *sammel_richtung;
-	//srand(time(0));
 	zufallswert = (rand() % 100 + 1);
 	if(ist_richtung_pacman != -1) {
 		if(zufallswert <= intelligence) 

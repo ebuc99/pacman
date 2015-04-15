@@ -34,7 +34,6 @@ enum Richtung {
 };
  
 
-//Pille pillen[ANZAHL_PILLEN];
 Screen *screen;
 
 int stop_moving = 0;
@@ -190,7 +189,7 @@ Ghost *pinky, Ghost *inky, Ghost *clyde) {
 					pacman->richtung_pre = 3; 
 			}
 			if(event.key.keysym.sym == SDLK_f) {
-			    screen->toggleFullscreen();
+			    screen->toggleFullscreen();				
 			}
 			if(event.key.keysym.sym == SDLK_p) {
 				if(!pacman->is_dying) {
@@ -232,7 +231,7 @@ int main() {
 	float startTicks;
 	float lastTickstemp;
 	float ms = 1.0;
-	float wechsel_counter = 0;
+	float animation_counter = 0;
 	srand((unsigned int)time(0)); // init randomize
 	
 	// create the window 
@@ -297,8 +296,8 @@ int main() {
 	screen->draw(pinky);
 	screen->draw(inky);
 	screen->draw(clyde);
-	screen->draw_dynamic_content(score, 530, 30);
-	screen->draw_dynamic_content(punkte, 530, 60);
+	screen->draw(score, 530, 30);
+	screen->draw(punkte, 530, 60);
 	screen->AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
 	screen->Refresh(moving());
 	startTicks = (float)SDL_GetTicks();
@@ -312,7 +311,7 @@ int main() {
 			loop = eventloop(pacman, blinky, pinky, 
 			inky, clyde);
 		
-		if(wechsel_counter > 50) {
+		if(animation_counter > 50) {
 			// ghost animations
 			refresh_ghosts = 1;
 			ghost_change = !ghost_change;
@@ -352,12 +351,12 @@ int main() {
 				start_offset = -1;
 		 	}
 				
-			wechsel_counter = 0;
+			animation_counter = 0;
 		}
 		else
 			refresh_ghosts = 0;
-		wechsel_counter = wechsel_counter + ms;
-		
+
+		animation_counter = animation_counter + ms;
 		labyrinth->check_pillen(pacman, &int_punktestand);
 		if (moving()) {
 		    // redraw background and pills, but only if Blinky (=reference ghost for movement) has moved
@@ -365,7 +364,7 @@ int main() {
 		    labyrinth->draw_pillen(pille, superpille[pille_counter]);
 
 			compute_score(punkte, char_punktestand, int_punktestand, font, &textgelb); 
-			screen->draw_static_content(score, 530, 30);
+			screen->draw(score, 530, 30);
 		}
 	
 		if(pacman->wechsel()) {

@@ -53,20 +53,6 @@ void Screen::Refresh(int moving) {
 	}
 }
 
-void Screen::draw_static_content(SDL_Surface *surface, int x, int y, int force) {
-	static unsigned short int  temp_force = 0;
-	if(force)
-		temp_force = force;
-	if(temp_force) {
-		SDL_Rect dest;
-		dest.x = x; 
-		dest.y = y; 
-		SDL_BlitSurface(surface, NULL, this->screen_surface, &dest);
-		this->AddUpdateRects(dest.x, dest.y, surface->w + 10, surface->h);
-		temp_force = 0;
-	}
-}
-
 void Screen::draw_dynamic_content(SDL_Surface *surface, int x, int y) {
 	SDL_Rect dest;
 	dest.x = x; 

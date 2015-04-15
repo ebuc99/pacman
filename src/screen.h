@@ -22,7 +22,7 @@ class Screen {
 		void AddUpdateRects(int x, int y, int w, int h);
 		// actually display the updated rectangles
 		void Refresh(int moving);
-		void draw_static_content(SDL_Surface *surface, int x, int y, int force = 0);
+		
 		void draw_dynamic_content(SDL_Surface *surface, int x, int y);
 			
 		// return the screen surface pointer

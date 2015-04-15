@@ -7,23 +7,23 @@
 const float PACMAN_V_FAST = 0.2f;			// pacman's speed when not eating
 const float PACMAN_V_SLOW = 0.18f; 			// pacman's speed while eating
 const float GHOSTS_V = 0.18f;				// normal speed of the ghosts
-const unsigned short int WECHSEL_RATE = 7;		// load a new image for pacman after a movement of this number of pixels
-const unsigned short int INTELLIGENCE_BLINKY = 90;	// intelligence for each ghost
-const unsigned short int INTELLIGENCE_PINKY = 60;
-const unsigned short int INTELLIGENCE_INKY = 30;
-const unsigned short int INTELLIGENCE_CLYDE = 0;
-const unsigned short int INIT_DIRECTION_LEFT = 0;	// initial direction of movement (only used for Blinky)
-const unsigned short int INIT_DIRECTION_UP = 1;	// initial direction of movement (used for the other ghosts)
-const unsigned short int INIT_UP_DOWN = 0;		// initial up/down cycles before the ghost will be allowed to leave the castle
-const unsigned short int INIT_UP_DOWN_INKY = 5;
-const unsigned short int INIT_UP_DOWN_CLYDE = 11;
+const uint16_t WECHSEL_RATE = 7;		// load a new image for pacman after a movement of this number of pixels
+const uint16_t INTELLIGENCE_BLINKY = 90;	// intelligence for each ghost
+const uint16_t INTELLIGENCE_PINKY = 60;
+const uint16_t INTELLIGENCE_INKY = 30;
+const uint16_t INTELLIGENCE_CLYDE = 0;
+const uint16_t INIT_DIRECTION_LEFT = 0;	// initial direction of movement (only used for Blinky)
+const uint16_t INIT_DIRECTION_UP = 1;	// initial direction of movement (used for the other ghosts)
+const uint16_t INIT_UP_DOWN = 0;		// initial up/down cycles before the ghost will be allowed to leave the castle
+const uint16_t INIT_UP_DOWN_INKY = 5;
+const uint16_t INIT_UP_DOWN_CLYDE = 11;
 const float WAIT_IN_MS = 2.0;				// duration of a loop (i.e. minimum time between frames)
-const unsigned short int ANZAHL_SCHIENEN = 50;	// number of rails
-const unsigned short int ANZAHL_SCHIENEN_PILLE = 37; // number of pill-filled rails
-const unsigned short int ANZAHL_PILLEN = 246;		// number of pills
+const uint16_t ANZAHL_SCHIENEN = 50;	// number of rails
+const uint16_t ANZAHL_SCHIENEN_PILLE = 37; // number of pill-filled rails
+const uint16_t ANZAHL_PILLEN = 246;		// number of pills
 
 // initialize static member variables
-int Ghost::was_moving_leader = 1;
+uint16_t Ghost::was_moving_leader = 1;
 
 // define global Variables
 enum Richtung {
@@ -48,7 +48,7 @@ static SDL_Surface *LoadSurface(const char *filename, int transparent_color = -1
 		exit(-1);
 	}
 	if(transparent_color != -1)
-		SDL_SetColorKey(temp, SDL_SRCCOLORKEY | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, transparent_color, transparent_color, transparent_color));
+		SDL_SetColorKey(temp, SDL_SRCCOLORKEY | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, (uint8_t)transparent_color, (uint8_t)transparent_color, (uint8_t)transparent_color));
 	surface = SDL_DisplayFormat(temp);
 	if(surface == NULL) {
 		printf("Unable to convert image to display format: %s\n", SDL_GetError());
@@ -76,7 +76,7 @@ static int moving() {
 }
 
 /* stop all figures */
-static void stop_all(unsigned short int stop, Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghost *clyde) {
+static void stop_all(uint16_t stop, Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghost *clyde) {
 	static float speed_ghosts;
 	static float speed_pacman;
 	if(stop) {
@@ -137,15 +137,15 @@ static void reset(Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghos
 
 /* collision handling pacman <-> ghosts */
 static int check_collision(Pacman *pacman, Ghost **ghost_array) {
-	unsigned short int x_left_pacman = pacman->x;
-	unsigned short int y_up_pacman = pacman->y;
-	unsigned short int x_right_pacman = pacman->x + pacman->pacman_sf->w;
-	unsigned short int y_down_pacman = pacman->y + pacman->pacman_sf->h;
+	int x_left_pacman = pacman->x;
+	int y_up_pacman = pacman->y;
+	int x_right_pacman = pacman->x + pacman->pacman_sf->w;
+	int y_down_pacman = pacman->y + pacman->pacman_sf->h;
 	
 	if(moving()) {
 	    for(int i = 0; i <= 3; i++) {
-	    	unsigned short int x_real_ghost = ghost_array[i]->x + (int)(ghost_array[i]->ghost_sf->w * 0.5);
-			unsigned short int y_real_ghost = ghost_array[i]->y + (int)(ghost_array[i]->ghost_sf->h * 0.5);
+	    	int x_real_ghost = ghost_array[i]->x + (int)(ghost_array[i]->ghost_sf->w * 0.5);
+			int y_real_ghost = ghost_array[i]->y + (int)(ghost_array[i]->ghost_sf->h * 0.5);
 			if((x_real_ghost >= x_left_pacman) && (x_real_ghost <= x_right_pacman) && (y_real_ghost >= y_up_pacman) && (y_real_ghost <= y_down_pacman))
 				return 1;
 		}
@@ -172,9 +172,9 @@ static void move_ghosts(Ghost *ghost_l, Pacman *pacman, float(ms), Labyrinth *la
 
 
 // SDL event loop: handle keyboard input events, and others
-static int eventloop(SDL_Surface *hintergrund, Pacman *pacman, Ghost *blinky, 
+static int eventloop(Pacman *pacman, Ghost *blinky, 
 Ghost *pinky, Ghost *inky, Ghost *clyde) {
-	static unsigned short int pause;
+	static uint16_t pause;
 	SDL_Event event;
 	while(SDL_PollEvent(&event)) {
 		switch(event.type) {
@@ -214,7 +214,7 @@ Ghost *pinky, Ghost *inky, Ghost *clyde) {
 
 
 // main function, contains the game loop
-int main(int argc, char *argv[]) {
+int main() {
 	SDL_Surface *hintergrund, *pille;
 	SDL_Surface *superpille[5];
 	SDL_Surface *punkte, *score;
@@ -226,14 +226,14 @@ int main(int argc, char *argv[]) {
 	int ghost_change = 0;
 	int loop = 1;
 	int ct_pm = 0;
-	unsigned short int die_counter = 0;
-	unsigned short int pille_counter = 0;
+	uint16_t die_counter = 0;
+	uint16_t pille_counter = 0;
 	short int start_offset = 10;
 	float startTicks;
 	float lastTickstemp;
 	float ms = 1.0;
 	float wechsel_counter = 0;
-	srand(time(0)); // init randomize
+	srand((unsigned int)time(0)); // init randomize
 	
 	// create the window 
 	screen = new Screen();
@@ -309,7 +309,7 @@ int main(int argc, char *argv[]) {
 	// game loop
 	while(loop) {	
 		if(start_offset == -1)	
-			loop = eventloop(hintergrund, pacman, blinky, pinky, 
+			loop = eventloop(pacman, blinky, pinky, 
 			inky, clyde);
 		
 		if(wechsel_counter > 50) {

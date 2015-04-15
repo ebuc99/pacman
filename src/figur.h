@@ -31,16 +31,16 @@ class Figur {
 		float get_speed() const;
 		
 		// has the figure moved? (needed for performance tuning)
-		int was_moving();
+		uint16_t was_moving();
 		
 		// is the figure parking?
 		void parking();
 		
 		// returns the direction
-		int get_richtung() const;
+		uint16_t get_richtung() const;
 		
 		// sets the direction of movement
-		void set_richtung(int p_richtung);
+		void set_richtung(uint16_t p_richtung);
 		
 	protected:
 		float cur_y;
@@ -49,8 +49,8 @@ class Figur {
 		int wechsel_y;
 		int wechsel_rate;
 		float dx, dy;
-		int richtung;
-		int intelligence;
+		uint16_t richtung;
+		uint16_t intelligence;
 		float least(float a, float b);
 		int initial_x;
 		int initial_y;

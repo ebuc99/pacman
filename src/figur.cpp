@@ -11,8 +11,8 @@ Figur::Figur(int init_x, int init_y, float init_v):
 	y = init_y;
 	last_x = init_x;
 	last_y = init_y;
-	cur_x = init_x;
-	cur_y = init_y;
+	cur_x = (float)init_x;
+	cur_y = (float)init_y;
 	dx = init_v;
 	dy = init_v;
 }
@@ -71,7 +71,7 @@ float Figur::get_speed() const {
 	return dx;
 }
 
-int Figur::was_moving() {
+uint16_t Figur::was_moving() {
 	if((x != last_x) || (y != last_y))
 		return 1;
 	else
@@ -84,11 +84,11 @@ void Figur::parking() {
 
 }
 
-int Figur::get_richtung() const {
+uint16_t Figur::get_richtung() const {
 	return richtung;
 }
 
-void Figur::set_richtung(int p_richtung) {
+void Figur::set_richtung(uint16_t p_richtung) {
 	richtung = p_richtung;
 }
 
@@ -104,7 +104,7 @@ SDL_Surface* Figur::LoadSurface(const char *filename, int transparent_color = -1
 		exit(-1);
 	}
 	if(transparent_color != -1)
-		SDL_SetColorKey(temp, SDL_SRCCOLORKEY | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, transparent_color, transparent_color, transparent_color));
+		SDL_SetColorKey(temp, SDL_SRCCOLORKEY | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, (uint8_t)transparent_color, (uint8_t)transparent_color, (uint8_t)transparent_color));
 	surface = SDL_DisplayFormat(temp);
 	if(surface == NULL) {
 		printf("Unable to convert image to display format: %s\n", SDL_GetError());

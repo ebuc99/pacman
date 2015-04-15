@@ -8,7 +8,5 @@
 #include "pille.h"
 
 
-static void AddUpdateRects(int x, int y, int w, int h, SDL_Surface *screen);
-
 #endif
 

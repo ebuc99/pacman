@@ -11,8 +11,8 @@ class Ghost;  // this tells the following include files that Ghost is a class
 class Ghost : public Figur {
 	public:
 		/* constructor and destructor */
-		Ghost(int init_x, int init_y, float init_v, int init_intelligence, 
-		      int init_richtung, int init_up_down, unsigned short int ghost_ident);
+		Ghost(int init_x, int init_y, float init_v, uint16_t init_intelligence, 
+		      uint16_t init_richtung, uint16_t init_up_down, uint16_t ghost_ident);
 		~Ghost();
 
 		/* draw ghost */
@@ -22,44 +22,44 @@ class Ghost : public Figur {
 		void animation(int cnt_pic);
 		
 		// defines the leader (reference for redrawing)
-		void set_leader(int leader); 
+		void set_leader(uint16_t leader); 
 		
 		// overloaded move of class Figur
 		void move(float ms, int direction, float max_links = 999, float max_oben = 999, float max_rechts = 999, float max_unten = 999);
 		
 		// has the leader moved?
-		static int was_moving_leader;
+		static uint16_t was_moving_leader;
 		
 		// returns the relative position between pacman and the ghost, coded like this: 0 = left, 1 = up, 2 = right, 3 = down
-		int relative_pos_pacman(Pacman *pacman);
+		uint16_t relative_pos_pacman(Pacman *pacman);
 		
 		// This is the A.I. of the ghosts: with a defined probability, they move to the direction where pacman is.
-		int choose_direction(int * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence);
+		uint16_t choose_direction(uint16_t * sammel_richtung, uint16_t richtung_pacman, int sammel_counter, uint16_t intelligence);
 		
 		// moves a ghost on the defined rails
 		void move_on_rails(Pacman *pacman, float ms, int anz_schienen, Schiene **ar_s);
 		
 		// returns the intelligence of the ghost
-		int get_intelligence() const;
+		uint16_t get_intelligence() const;
 		
 		// reset the ghost
 		void reset();
 
 		/* Idents for the ghosts */
-		static const unsigned short int BLINKY = 0;
-		static const unsigned short int PINKY = 1;
-		static const unsigned short int INKY = 2;
-		static const unsigned short int CLYDE = 3;
+		static const uint16_t BLINKY = 0;
+		static const uint16_t PINKY = 1;
+		static const uint16_t INKY = 2;
+		static const uint16_t CLYDE = 3;
 
 		/* Ghost Surface */
 		SDL_Surface *ghost_sf;
 		
 	private:
-		unsigned short int its_leader;
-		unsigned short int up_down;
-		unsigned short int initial_richtung;
-		unsigned short int initial_intelligence;
-		unsigned short int initial_up_down;
+		uint16_t its_leader;
+		uint16_t up_down;
+		uint16_t initial_richtung;
+		uint16_t initial_intelligence;
+		uint16_t initial_up_down;
 		SDL_Surface *ghost_1, *ghost_2, *ar_ghost[2];
 		SDL_Surface *augen_0, *augen_1, *augen_2, *augen_3;
 		

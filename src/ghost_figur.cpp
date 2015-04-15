@@ -1,8 +1,8 @@
 #include "ghost_figur.h"
 #include <stdlib.h>
 
-Ghost::Ghost(int init_x, int init_y, float init_v, int init_intelligence, 
-             int init_richtung, int init_up_down, unsigned short int ghost_ident):
+Ghost::Ghost(int init_x, int init_y, float init_v, uint16_t init_intelligence, 
+             uint16_t init_richtung, uint16_t init_up_down, uint16_t ghost_ident):
 	Figur(init_x, init_y, init_v),
 	its_leader(0),
 	initial_intelligence(init_intelligence),
@@ -72,7 +72,7 @@ void Ghost::animation(int cnt_pic) {
 	this->ghost_sf = ar_ghost[cnt_pic];
 }
 
-void Ghost::set_leader(int leader) {
+void Ghost::set_leader(uint16_t leader) {
 	its_leader = leader;
 }
 
@@ -93,7 +93,7 @@ void Ghost::move(float ms, int direction, float max_links, float max_oben, float
 	}	
 }
 
-int Ghost::relative_pos_pacman(Pacman *pacman) {
+uint16_t Ghost::relative_pos_pacman(Pacman *pacman) {
 	int dx, dy;
 	dx = abs(pacman->x - this->x);
 	dy = abs(pacman->y - this->y);
@@ -111,11 +111,11 @@ int Ghost::relative_pos_pacman(Pacman *pacman) {
 	}
 }
 
-int Ghost::get_intelligence() const {
+uint16_t Ghost::get_intelligence() const {
 	return intelligence;
 }
 
-int Ghost::choose_direction(int * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence) {
+uint16_t Ghost::choose_direction(uint16_t * sammel_richtung, uint16_t richtung_pacman, int sammel_counter, uint16_t intelligence) {
 	int i;
 	int ist_richtung_pacman = -1;
 	int zufallswert;
@@ -153,9 +153,9 @@ int Ghost::choose_direction(int * sammel_richtung, int richtung_pacman, int samm
 
 void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Schiene **ar_s) {
 	int i;
-	int richtung_ghost = this->get_richtung();
-	int richtung_pacman = this->relative_pos_pacman(pacman);
-	int sammel_richtung[3];
+	uint16_t richtung_ghost = this->get_richtung();
+	uint16_t richtung_pacman = this->relative_pos_pacman(pacman);
+	uint16_t sammel_richtung[3];
 	int sammel_counter = 0;
 	float max_links = 999;							// maximum to the left (otherwise, the ghost will leave the rails)
 	float max_oben = 999;							// maximum up

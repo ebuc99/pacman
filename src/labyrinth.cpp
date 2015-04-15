@@ -114,13 +114,13 @@ void Labyrinth::draw_pillen(SDL_Surface *pille, SDL_Surface *superpille) {
 	SDL_Rect dest;
 	for(int i = 0; i < NUMBER_PILLS; i++) {
 		if(pillen[i].sichtbar && !pillen[i].superpille) {
-			dest.x = pillen[i].x;
-			dest.y = pillen[i].y;
+			dest.x = (short int)pillen[i].x;
+			dest.y = (short int)pillen[i].y;
 			SDL_BlitSurface(pille, NULL, screen->getSurface(), &dest);
 		}
 		if(pillen[i].sichtbar && pillen[i].superpille) {
-			dest.x = pillen[i].x - 4;
-			dest.y = pillen[i].y - 4;
+			dest.x = (short int)(pillen[i].x - 4);
+			dest.y = (short int)(pillen[i].y - 4);
 			SDL_BlitSurface(superpille, NULL, screen->getSurface(), &dest);
 			screen->AddUpdateRects(dest.x , dest.y, superpille->w, superpille->h);
 		}

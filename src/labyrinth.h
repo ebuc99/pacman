@@ -8,8 +8,8 @@ class Labyrinth {
 		static const uint16_t NUMBER_RAILS = 50; // number of rails
 		static const uint16_t NUMBER_RAILS_PILLS = 37; // number of pill-filled rails
 		static const uint16_t NUMBER_PILLS = 246; // number of pills
-		const float PACMAN_V_FAST = 0.2f; // pacman's speed when not eating
-		const float PACMAN_V_SLOW = 0.18f; // pacman's speed while eating
+		static const float PACMAN_V_FAST = 0.2f; // pacman's speed when not eating
+		static const float PACMAN_V_SLOW = 0.18f; // pacman's speed while eating
 		Pille pillen[NUMBER_PILLS];
 		int cnt_slow; // number of loops that pacman will stay slow
 		Schiene *s0, *s1, *s2, *s3, *s4, *s5, *s6, *s7, *s8, *s9, *s10, *s11, 

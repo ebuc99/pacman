@@ -23,12 +23,12 @@ pacman_SOURCES =  \
 	pacman_figur.h \
 	pille.cpp \
 	pille.h \
-	schiene.cpp \
-	schiene.h \
 	labyrinth.h \
 	labyrinth.cpp \
 	screen.h \
-	screen.cpp
+	screen.cpp \
+	rail.h \
+	rail.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \

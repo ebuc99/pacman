@@ -156,7 +156,7 @@ int Pacman::wechsel() {
 		return 0;
 }
 
-void Pacman::move_on_rails(float ms, int anz_schienen, Schiene **ar_s) {
+void Pacman::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
 	int i;
 	int check_move = 0;
 	// check if the pre selected direction is

@@ -225,9 +225,9 @@ int main() {
 	int ghost_change = 0;
 	int loop = 1;
 	int ct_pm = 0;
-	uint16_t die_counter = 0;
-	uint16_t pille_counter = 0;
-	short int start_offset = 10;
+	int die_counter = 0;
+	int pille_counter = 0;
+	int start_offset = 10;
 	float startTicks;
 	float lastTickstemp;
 	float ms = 1.0;
@@ -361,7 +361,7 @@ int main() {
 		if (moving()) {
 		    // redraw background and pills, but only if Blinky (=reference ghost for movement) has moved
 		    screen->draw(hintergrund);
-		    labyrinth->draw_pillen(pille, superpille[pille_counter]);
+		    //labyrinth->draw_pillen(pille, superpille[pille_counter]);
 
 			compute_score(punkte, char_punktestand, int_punktestand, font, &textgelb); 
 			screen->draw(score, 530, 30);

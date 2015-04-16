@@ -4,7 +4,7 @@
 class Pacman;  // this tells the following include files that Pacman is a class
 #include "figur.h"
 #include "screen.h"
-#include "schiene.h"
+#include "rail.h"
 
 class Pacman : public Figur {
 	public:
@@ -33,7 +33,7 @@ class Pacman : public Figur {
 		int wechsel();
 		
 		// moves a ghost on the defined rails
-		void move_on_rails(float ms, int anz_schienen, Schiene **ar_s);
+		void move_on_rails(float ms, int anz_schienen, Rail **ar_s);
 		
 		// returns whether pacman has stopped
 		int is_pacman_stopped();

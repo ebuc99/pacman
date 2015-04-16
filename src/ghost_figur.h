@@ -4,7 +4,7 @@
 class Ghost;  // this tells the following include files that Ghost is a class
 #include "figur.h"
 #include "screen.h"
-#include "schiene.h"
+#include "rail.h"
 #include <time.h>
 #include "pacman_figur.h"
 
@@ -37,7 +37,7 @@ class Ghost : public Figur {
 		uint16_t choose_direction(uint16_t * sammel_richtung, uint16_t richtung_pacman, int sammel_counter, uint16_t intelligence);
 		
 		// moves a ghost on the defined rails
-		void move_on_rails(Pacman *pacman, float ms, int anz_schienen, Schiene **ar_s);
+		void move_on_rails(Pacman *pacman, float ms, int anz_schienen, Rail **ar_s);
 		
 		// returns the intelligence of the ghost
 		uint16_t get_intelligence() const;

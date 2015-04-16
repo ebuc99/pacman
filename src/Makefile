@@ -93,8 +93,8 @@ PROGRAMS = $(bin_PROGRAMS)
 am_pacman_OBJECTS = pacman-figur.$(OBJEXT) \
 	pacman-ghost_figur.$(OBJEXT) pacman-pacman.$(OBJEXT) \
 	pacman-pacman_figur.$(OBJEXT) pacman-pille.$(OBJEXT) \
-	pacman-schiene.$(OBJEXT) pacman-labyrinth.$(OBJEXT) \
-	pacman-screen.$(OBJEXT)
+	pacman-labyrinth.$(OBJEXT) pacman-screen.$(OBJEXT) \
+	pacman-rail.$(OBJEXT)
 pacman_OBJECTS = $(am_pacman_OBJECTS)
 am__DEPENDENCIES_1 =
 pacman_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -288,12 +288,12 @@ pacman_SOURCES = \
 	pacman_figur.h \
 	pille.cpp \
 	pille.h \
-	schiene.cpp \
-	schiene.h \
 	labyrinth.h \
 	labyrinth.cpp \
 	screen.h \
-	screen.cpp
+	screen.cpp \
+	rail.h \
+	rail.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \
@@ -414,7 +414,7 @@ include ./$(DEPDIR)/pacman-labyrinth.Po
 include ./$(DEPDIR)/pacman-pacman.Po
 include ./$(DEPDIR)/pacman-pacman_figur.Po
 include ./$(DEPDIR)/pacman-pille.Po
-include ./$(DEPDIR)/pacman-schiene.Po
+include ./$(DEPDIR)/pacman-rail.Po
 include ./$(DEPDIR)/pacman-screen.Po
 
 .cpp.o:
@@ -501,20 +501,6 @@ pacman-pille.obj: pille.cpp
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-pille.obj `if test -f 'pille.cpp'; then $(CYGPATH_W) 'pille.cpp'; else $(CYGPATH_W) '$(srcdir)/pille.cpp'; fi`
 
-pacman-schiene.o: schiene.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-schiene.o -MD -MP -MF $(DEPDIR)/pacman-schiene.Tpo -c -o pacman-schiene.o `test -f 'schiene.cpp' || echo '$(srcdir)/'`schiene.cpp
-	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-schiene.Tpo $(DEPDIR)/pacman-schiene.Po
-#	$(AM_V_CXX)source='schiene.cpp' object='pacman-schiene.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-schiene.o `test -f 'schiene.cpp' || echo '$(srcdir)/'`schiene.cpp
-
-pacman-schiene.obj: schiene.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-schiene.obj -MD -MP -MF $(DEPDIR)/pacman-schiene.Tpo -c -o pacman-schiene.obj `if test -f 'schiene.cpp'; then $(CYGPATH_W) 'schiene.cpp'; else $(CYGPATH_W) '$(srcdir)/schiene.cpp'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-schiene.Tpo $(DEPDIR)/pacman-schiene.Po
-#	$(AM_V_CXX)source='schiene.cpp' object='pacman-schiene.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-schiene.obj `if test -f 'schiene.cpp'; then $(CYGPATH_W) 'schiene.cpp'; else $(CYGPATH_W) '$(srcdir)/schiene.cpp'; fi`
-
 pacman-labyrinth.o: labyrinth.cpp
 	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-labyrinth.o -MD -MP -MF $(DEPDIR)/pacman-labyrinth.Tpo -c -o pacman-labyrinth.o `test -f 'labyrinth.cpp' || echo '$(srcdir)/'`labyrinth.cpp
 	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-labyrinth.Tpo $(DEPDIR)/pacman-labyrinth.Po
@@ -542,6 +528,20 @@ pacman-screen.obj: screen.cpp
 #	$(AM_V_CXX)source='screen.cpp' object='pacman-screen.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-screen.obj `if test -f 'screen.cpp'; then $(CYGPATH_W) 'screen.cpp'; else $(CYGPATH_W) '$(srcdir)/screen.cpp'; fi`
+
+pacman-rail.o: rail.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-rail.o -MD -MP -MF $(DEPDIR)/pacman-rail.Tpo -c -o pacman-rail.o `test -f 'rail.cpp' || echo '$(srcdir)/'`rail.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-rail.Tpo $(DEPDIR)/pacman-rail.Po
+#	$(AM_V_CXX)source='rail.cpp' object='pacman-rail.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-rail.o `test -f 'rail.cpp' || echo '$(srcdir)/'`rail.cpp
+
+pacman-rail.obj: rail.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-rail.obj -MD -MP -MF $(DEPDIR)/pacman-rail.Tpo -c -o pacman-rail.obj `if test -f 'rail.cpp'; then $(CYGPATH_W) 'rail.cpp'; else $(CYGPATH_W) '$(srcdir)/rail.cpp'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-rail.Tpo $(DEPDIR)/pacman-rail.Po
+#	$(AM_V_CXX)source='rail.cpp' object='pacman-rail.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-rail.obj `if test -f 'rail.cpp'; then $(CYGPATH_W) 'rail.cpp'; else $(CYGPATH_W) '$(srcdir)/rail.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

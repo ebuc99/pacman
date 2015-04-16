@@ -151,7 +151,7 @@ uint16_t Ghost::choose_direction(uint16_t * sammel_richtung, uint16_t richtung_p
 }
 
 
-void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Schiene **ar_s) {
+void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Rail **ar_s) {
 	int i;
 	uint16_t richtung_ghost = this->get_richtung();
 	uint16_t richtung_pacman = this->relative_pos_pacman(pacman);

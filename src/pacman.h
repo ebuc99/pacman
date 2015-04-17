@@ -4,7 +4,6 @@
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
 #include "labyrinth.h"
-#include "schiene.h"
 #include "pille.h"
 
 

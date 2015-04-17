@@ -214,8 +214,7 @@ Ghost *pinky, Ghost *inky, Ghost *clyde) {
 
 // main function, contains the game loop
 int main() {
-	SDL_Surface *hintergrund, *pille;
-	SDL_Surface *superpille[5];
+	SDL_Surface *hintergrund;
 	SDL_Surface *punkte, *score;
 	TTF_Font *font;
 	SDL_Color textgelb = {255, 247, 11, 0};
@@ -226,7 +225,6 @@ int main() {
 	int loop = 1;
 	int ct_pm = 0;
 	int die_counter = 0;
-	int pille_counter = 0;
 	int start_offset = 10;
 	float startTicks;
 	float lastTickstemp;
@@ -260,12 +258,6 @@ int main() {
 
 	/* Grafiken initialisieren */
     hintergrund = LoadSurface("/usr/local/share/pacman/gfx/hintergrund2.png");
-    pille = LoadSurface("/usr/local/share/pacman/gfx/pille.png");	
-	superpille[0] = LoadSurface("/usr/local/share/pacman/gfx/superpille_1.png", 0);
-	superpille[1] = LoadSurface("/usr/local/share/pacman/gfx/superpille_2.png", 0);
-	superpille[2] = LoadSurface("/usr/local/share/pacman/gfx/superpille_3.png", 0);
-	superpille[3] = LoadSurface("/usr/local/share/pacman/gfx/superpille_3.png", 0);
-	superpille[4] = LoadSurface("/usr/local/share/pacman/gfx/superpille_2.png", 0);
 	
 	// initialize TTF so we are able to write texts to the screen
 	if(TTF_Init() == -1) {
@@ -290,7 +282,7 @@ int main() {
         
 	screen->draw(hintergrund);
 	labyrinth->init_pillen();
-	labyrinth->draw_pillen(pille, superpille[pille_counter]);
+	labyrinth->draw_pillen();
 	screen->draw(pacman);
 	screen->draw(blinky);
 	screen->draw(pinky);
@@ -337,11 +329,7 @@ int main() {
 					}
 				}
 			}
-			
-			if(pille_counter == 4)
-				pille_counter = 0;
-			else
-				pille_counter++;			
+			labyrinth->pill_animation();
 			
 			// handle start offset 
 			if(start_offset > 0)
@@ -361,7 +349,7 @@ int main() {
 		if (moving()) {
 		    // redraw background and pills, but only if Blinky (=reference ghost for movement) has moved
 		    screen->draw(hintergrund);
-		    //labyrinth->draw_pillen(pille, superpille[pille_counter]);
+		    labyrinth->draw_pillen();
 
 			compute_score(punkte, char_punktestand, int_punktestand, font, &textgelb); 
 			screen->draw(score, 530, 30);
@@ -431,7 +419,6 @@ int main() {
 	// clean up SDL
     TTF_CloseFont(font);
     TTF_Quit();
-	SDL_FreeSurface(pille);
 	SDL_FreeSurface(hintergrund);
 
 	delete pacman;

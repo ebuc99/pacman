@@ -11,6 +11,7 @@ class Labyrinth {
 		static const float PACMAN_V_FAST = 0.2f; // pacman's speed when not eating
 		static const float PACMAN_V_SLOW = 0.18f; // pacman's speed while eating
 		Pille pillen[NUMBER_PILLS];
+		int cnt_pill_animation; 
 		int cnt_slow; // number of loops that pacman will stay slow
 		Rail *s0, *s1, *s2, *s3, *s4, *s5, *s6, *s7, *s8, *s9, *s10, *s11, 
 				*s12, *s13, *s14, *s15, *s16, *s17, *s18, *s19, *s20, *s21, 
@@ -19,6 +20,11 @@ class Labyrinth {
 				*s42, *s43, *s44, *s45, *s46, *s47, *s48, *s49;
 		int less(int a, int b);
 		int greater(int a, int b);
+		SDL_Surface *pille, *superpille, *ar_superpille[5];
+		
+		//very bad, because the same method is in figur (and pacman)
+		// it must be in a basic class in future
+		SDL_Surface *LoadSurface(const char *filename, int transparent_color = -1);
 	public:
 		//constructor and destructor
 		Labyrinth(Screen *screen);
@@ -33,12 +39,14 @@ class Labyrinth {
 		void init_pillen();
 
 		/* draw pills, but only if Blinky has moved */
-		void draw_pillen(SDL_Surface *pille, SDL_Surface *superpille);
+		void draw_pillen();
 
 		/* collision handling pacman <-> pills */
 		void check_pillen(Pacman *pacman, int *punktestand);
 
-		uint16_t number_rails() const;
+		void pill_animation();
+
+		int number_rails() const;
 
 		Screen *screen;
 		int sdl_init_error;

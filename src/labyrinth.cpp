@@ -1,7 +1,8 @@
 #include "labyrinth.h"
 #include "string.h"
 
-Labyrinth::Labyrinth(Screen *screen){
+Labyrinth::Labyrinth(Screen *screen):
+	cnt_pill_animation(0){
 	this->screen = screen;
 	s0 = new Rail(207, 338, 412, 338);
 	s1 = new Rail(207, 37, 207, 380);
@@ -59,10 +60,20 @@ Labyrinth::Labyrinth(Screen *screen){
 	Rail *array_rails_temp[this->NUMBER_RAILS] = {s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s21, s22, s23, s24, s25, s26, s27, s28, s29, s30, s31, s32, s33, s34, s35, s36, s37, s38, s39, s40, s41, s42, s43, s44, s45, s46, s47, s48, s49};
 	memcpy(array_rails, array_rails_temp, sizeof(array_rails_temp));
 	Rail *array_rails_pills_temp[this->NUMBER_RAILS_PILLS] = {s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s24, s25, s26, s27, s28, s29, s30, s31, s32, s33, s34, s35, s36, s37, s38, s39, s40, s41, s42, s43, s44};
-	memcpy(array_rails_pills, array_rails_pills_temp, sizeof(array_rails_pills_temp));	
+	memcpy(array_rails_pills, array_rails_pills_temp, sizeof(array_rails_pills_temp));
+
+	pille = this->LoadSurface("/usr/local/share/pacman/gfx/pille.png");	
+	ar_superpille[0] = this->LoadSurface("/usr/local/share/pacman/gfx/superpille_1.png", 0);
+	ar_superpille[1] = this->LoadSurface("/usr/local/share/pacman/gfx/superpille_2.png", 0);
+	ar_superpille[2] = this->LoadSurface("/usr/local/share/pacman/gfx/superpille_3.png", 0);
+	ar_superpille[3] = this->LoadSurface("/usr/local/share/pacman/gfx/superpille_3.png", 0);
+	ar_superpille[4] = this->LoadSurface("/usr/local/share/pacman/gfx/superpille_2.png", 0);
+	superpille = ar_superpille[cnt_pill_animation]; 
 }   
 
 Labyrinth::~Labyrinth(){
+	SDL_FreeSurface(pille);
+	free(ar_superpille);
 }
 
 int Labyrinth::less(int a, int b) {
@@ -110,7 +121,7 @@ void Labyrinth::init_pillen() {
 		}
 }
 
-void Labyrinth::draw_pillen(SDL_Surface *pille, SDL_Surface *superpille) {
+void Labyrinth::draw_pillen() {
 	SDL_Rect dest;
 	for(int i = 0; i < NUMBER_PILLS; i++) {
 		if(pillen[i].sichtbar && !pillen[i].superpille) {
@@ -147,7 +158,33 @@ void Labyrinth::check_pillen(Pacman *pacman, int *punktestand) {
 	}
 }
 
-uint16_t Labyrinth::number_rails() const {
+int Labyrinth::number_rails() const {
 	return this->NUMBER_RAILS;
+}
+
+void Labyrinth::pill_animation() {
+	if(cnt_pill_animation == 4)
+		cnt_pill_animation = 0;
+	else
+		cnt_pill_animation++;
+	superpille = ar_superpille[cnt_pill_animation];
+}
+
+SDL_Surface *Labyrinth::LoadSurface(const char *filename, int transparent_color) {
+	SDL_Surface *surface, *temp;
+	temp = IMG_Load(filename);
+	if(!temp) {
+		printf("Unable to load image: %s\n", IMG_GetError());
+		exit(-1);
+	}
+	if(transparent_color != -1)
+		SDL_SetColorKey(temp, SDL_SRCCOLORKEY | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, (uint8_t)transparent_color, (uint8_t)transparent_color, (uint8_t)transparent_color));
+	surface = SDL_DisplayFormat(temp);
+	if(surface == NULL) {
+		printf("Unable to convert image to display format: %s\n", SDL_GetError());
+                exit(EXIT_FAILURE);
+        }
+    SDL_FreeSurface(temp);
+    return surface;	
 }
 	

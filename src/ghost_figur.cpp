@@ -1,8 +1,8 @@
 #include "ghost_figur.h"
 #include <stdlib.h>
 
-Ghost::Ghost(int init_x, int init_y, float init_v, uint16_t init_intelligence, 
-             uint16_t init_richtung, uint16_t init_up_down, uint16_t ghost_ident):
+Ghost::Ghost(int init_x, int init_y, float init_v, int init_intelligence, 
+             int init_richtung, int init_up_down, int ghost_ident):
 	Figur(init_x, init_y, init_v),
 	its_leader(0),
 	initial_intelligence(init_intelligence),
@@ -72,7 +72,7 @@ void Ghost::animation(int cnt_pic) {
 	this->ghost_sf = ar_ghost[cnt_pic];
 }
 
-void Ghost::set_leader(uint16_t leader) {
+void Ghost::set_leader(int leader) {
 	its_leader = leader;
 }
 
@@ -93,7 +93,7 @@ void Ghost::move(float ms, int direction, float max_links, float max_oben, float
 	}	
 }
 
-uint16_t Ghost::relative_pos_pacman(Pacman *pacman) {
+int Ghost::relative_pos_pacman(Pacman *pacman) {
 	int dx, dy;
 	dx = abs(pacman->x - this->x);
 	dy = abs(pacman->y - this->y);
@@ -111,11 +111,11 @@ uint16_t Ghost::relative_pos_pacman(Pacman *pacman) {
 	}
 }
 
-uint16_t Ghost::get_intelligence() const {
+int Ghost::get_intelligence() const {
 	return intelligence;
 }
 
-uint16_t Ghost::choose_direction(uint16_t * sammel_richtung, uint16_t richtung_pacman, int sammel_counter, uint16_t intelligence) {
+int Ghost::choose_direction(int * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence) {
 	int i;
 	int ist_richtung_pacman = -1;
 	int zufallswert;
@@ -153,9 +153,9 @@ uint16_t Ghost::choose_direction(uint16_t * sammel_richtung, uint16_t richtung_p
 
 void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Rail **ar_s) {
 	int i;
-	uint16_t richtung_ghost = this->get_richtung();
-	uint16_t richtung_pacman = this->relative_pos_pacman(pacman);
-	uint16_t sammel_richtung[3];
+	int richtung_ghost = this->get_richtung();
+	int richtung_pacman = this->relative_pos_pacman(pacman);
+	int sammel_richtung[3];
 	int sammel_counter = 0;
 	float max_links = 999;							// maximum to the left (otherwise, the ghost will leave the rails)
 	float max_oben = 999;							// maximum up
@@ -183,17 +183,17 @@ void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Rail **ar_
 			if ((richtung_ghost == 0) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
 				sammel_richtung[sammel_counter] = 1;
 				sammel_counter++;	
-				max_oben = this->cur_y - ar_s[i]->y1;		
+				max_oben = this->cur_y - (float)ar_s[i]->y1;		
 			}
 			if ((richtung_ghost == 0) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
 				sammel_richtung[sammel_counter] = 3;
 				sammel_counter++;
-				max_unten = ar_s[i]->y2 - this->cur_y;
+				max_unten = (float)ar_s[i]->y2 - this->cur_y;
 			}
 		  	if ((richtung_ghost == 0) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {		
 				sammel_richtung[sammel_counter] = 0;
 				sammel_counter++;
-				max_links = this->cur_x - ar_s[i]->x1;
+				max_links = this->cur_x - (float)ar_s[i]->x1;
 			}
 			if(sammel_counter == 3)
 				break;
@@ -203,20 +203,20 @@ void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Rail **ar_
 				if(!this->up_down) {
 					sammel_richtung[sammel_counter] = 0;
 					sammel_counter++;
-					max_links = this->cur_x - ar_s[i]->x1;
+					max_links = this->cur_x - (float)ar_s[i]->x1;
 				}
 			}
 			if ((richtung_ghost == 1) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
 				if(!this->up_down) {
 					sammel_richtung[sammel_counter] = 2;
 					sammel_counter++;
-					max_rechts = ar_s[i]->x2 - this->cur_x;
+					max_rechts = (float)ar_s[i]->x2 - this->cur_x;
 				}
 			}
 			if ((richtung_ghost == 1) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
 				sammel_richtung[sammel_counter] = 1;
 				sammel_counter++;
-				max_oben = this->cur_y - ar_s[i]->y1;
+				max_oben = this->cur_y - (float)ar_s[i]->y1;
 			}
 		
 			if(sammel_counter == 3)
@@ -226,17 +226,17 @@ void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Rail **ar_
 			if ((richtung_ghost == 2) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
 				sammel_richtung[sammel_counter] = 1;
 				sammel_counter++;
-				max_oben = this->cur_y - ar_s[i]->y1;
+				max_oben = this->cur_y - (float)ar_s[i]->y1;
 			}
 			if ((richtung_ghost == 2) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
 				sammel_richtung[sammel_counter] = 3;
 				sammel_counter++;
-				max_unten = ar_s[i]->y2 - this->cur_y;
+				max_unten = (float)ar_s[i]->y2 - this->cur_y;
 			}
 			if ((richtung_ghost == 2) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
 				sammel_richtung[sammel_counter] = 2;
 				sammel_counter++;
-				max_rechts = ar_s[i]->x2 - this->cur_x;
+				max_rechts = (float)ar_s[i]->x2 - this->cur_x;
 			}
 			
 			if(sammel_counter == 3)
@@ -247,20 +247,20 @@ void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Rail **ar_
 				if(!this->up_down) {
 					sammel_richtung[sammel_counter] = 0;
 					sammel_counter++;
-					max_links = this->cur_x - ar_s[i]->x1;
+					max_links = this->cur_x - (float)ar_s[i]->x1;
 				}
 			}
 			if ((richtung_ghost == 3) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
 				if(!this->up_down) {
 					sammel_richtung[sammel_counter] = 2;
 					sammel_counter++;
-					max_rechts = ar_s[i]->x2 - this->cur_x;
+					max_rechts = (float)ar_s[i]->x2 - this->cur_x;
 				}
 			}
 			if ((richtung_ghost == 3) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
 				sammel_richtung[sammel_counter] = 3;
 				sammel_counter++;
-				max_unten = ar_s[i]->y2 - this->cur_y;
+				max_unten = (float)ar_s[i]->y2 - this->cur_y;
 			}
 		
 			if(sammel_counter == 3)
@@ -295,10 +295,21 @@ void Ghost::reset() {
 	dy = initial_v;
 	last_x = initial_x;
 	last_y = initial_y;
-	cur_x = initial_x;
-	cur_y = initial_y;
+	cur_x = (float)initial_x;
+	cur_y = (float)initial_y;
 	richtung = initial_richtung;
 	intelligence = initial_intelligence;
 	up_down = initial_up_down;
+}
+
+void Ghost::AddUpdateRects_ghost(Screen *screen) {
+	if(this->get_richtung() == 0)
+		screen->AddUpdateRects(this->x, this->y, (this->ghost_sf->w + abs(this->x - this->last_x)), this->ghost_sf->h);
+	if(this->get_richtung() == 1)
+		screen->AddUpdateRects(this->x, this->y, this->ghost_sf->w, (this->ghost_sf->h + abs(this->y - this->last_y)));
+	if(this->get_richtung() == 2)
+		screen->AddUpdateRects((this->x - abs(this->x - this->last_x)), this->y, this->ghost_sf->w, this->ghost_sf->h);
+	if(this->get_richtung() == 3)
+		screen->AddUpdateRects(this->x, (this->y - abs(this->y - this->last_y)), this->ghost_sf->w, this->ghost_sf->h);
 }
 

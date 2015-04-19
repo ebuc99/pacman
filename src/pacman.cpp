@@ -23,7 +23,7 @@ const uint16_t ANZAHL_SCHIENEN_PILLE = 37; // number of pill-filled rails
 const uint16_t ANZAHL_PILLEN = 246;		// number of pills
 
 // initialize static member variables
-uint16_t Ghost::was_moving_leader = 1;
+int Ghost::was_moving_leader = 1;
 
 // define global Variables
 enum Richtung {
@@ -99,16 +99,6 @@ static void stop_all(uint16_t stop, Pacman *pacman, Ghost *blinky, Ghost *pinky,
 }
 
 
-/* this function registers the ghosts' graphics for redrawing, but only if they have changed */
-static void AddUpdateRects_ghost(Ghost *ghost_l) {
-	if((ghost_l->get_richtung() == 0) || (ghost_l->get_richtung() == 1))
-		screen->AddUpdateRects(ghost_l->x, ghost_l->y, (ghost_l->ghost_sf->w + abs(ghost_l->x - ghost_l->last_x)), (ghost_l->ghost_sf->h + abs(ghost_l->y - ghost_l->last_y)));
-	else
-		screen->AddUpdateRects((ghost_l->x - abs(ghost_l->x - ghost_l->last_x)), (ghost_l->y - abs(ghost_l->y - ghost_l->last_y)), ghost_l->ghost_sf->w, ghost_l->ghost_sf->h);
-}
-
-
-
 /* compute the score */
 static void compute_score(SDL_Surface *punkte, char *char_punktestand, int int_punktestand, TTF_Font *font, SDL_Color *textgelb) {
 	static int punktestand;
@@ -154,18 +144,15 @@ static int check_collision(Pacman *pacman, Ghost **ghost_array) {
 
 /* Bewege pacman */
 static void move_pacman(Pacman *pacman, float ms, Labyrinth *labyrinth) {
-	if(Ghost::was_moving_leader || (stop_moving && moving())){
+	if(moving())
 		screen->AddUpdateRects(pacman->x, pacman->y, pacman->pacman_sf->w, pacman->pacman_sf->h);
-	}
 	pacman->move_on_rails(ms, labyrinth->number_rails(), labyrinth->array_rails);
 }
 
 /* move pacman on the rails, according to it's speed and direction */
 static void move_ghosts(Ghost *ghost_l, Pacman *pacman, float(ms), Labyrinth *labyrinth) {
-	if(ghost_l->was_moving() || (stop_moving && moving())){
-		AddUpdateRects_ghost(ghost_l);	
-	}
-	
+	if(moving())
+		ghost_l->AddUpdateRects_ghost(screen);
 	ghost_l->move_on_rails(pacman, ms, labyrinth->number_rails(), labyrinth->array_rails);
 }
 

@@ -71,7 +71,7 @@ float Figur::get_speed() const {
 	return dx;
 }
 
-uint16_t Figur::was_moving() {
+int Figur::was_moving() {
 	if((x != last_x) || (y != last_y))
 		return 1;
 	else
@@ -84,11 +84,11 @@ void Figur::parking() {
 
 }
 
-uint16_t Figur::get_richtung() const {
+int Figur::get_richtung() const {
 	return richtung;
 }
 
-void Figur::set_richtung(uint16_t p_richtung) {
+void Figur::set_richtung(int p_richtung) {
 	richtung = p_richtung;
 }
 

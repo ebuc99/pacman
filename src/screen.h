@@ -21,7 +21,7 @@ class Screen {
 		// register graphic parts for updating
 		void AddUpdateRects(int x, int y, int w, int h);
 		// actually display the updated rectangles
-		void Refresh(int moving);
+		void Refresh();
 		
 		void draw_dynamic_content(SDL_Surface *surface, int x, int y);
 			

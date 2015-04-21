@@ -313,3 +313,7 @@ void Ghost::AddUpdateRects_ghost(Screen *screen) {
 		screen->AddUpdateRects(this->x, (this->y - abs(this->y - this->last_y)), this->ghost_sf->w, this->ghost_sf->h);
 }
 
+SDL_Surface* Ghost::get_Surface() const {
+	return ghost_sf;
+}
+

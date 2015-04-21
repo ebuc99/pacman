@@ -43,14 +43,20 @@ class Pacman : public Figur {
 		
 		// reset pacman
 		void reset();
+
+		/* collision handling pacman <-> ghosts */
+		int touch(Figur **ghost_array) const;
 		
+		// Surface zurückgeben
+		SDL_Surface* get_Surface() const;
+
 		// saves whether pacman is dying at the moment
 		unsigned short int is_dying;
 
-		SDL_Surface *pacman_sf;
 	private:
 		unsigned short int pacman_stopped; 
 		unsigned short int is_wechsel;
+		SDL_Surface *pacman_sf;
 		SDL_Surface *pacman_normal;
 		SDL_Surface *pacman_links_1, *pacman_links_2, *ar_pacman_links[4];
 		SDL_Surface *pacman_oben_1, *pacman_oben_2, *ar_pacman_oben[4];

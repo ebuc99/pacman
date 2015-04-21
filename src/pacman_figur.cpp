@@ -247,3 +247,23 @@ void Pacman::reset() {
 	is_wechsel = 1;
 	pacman_stopped = 0;
 }
+
+SDL_Surface* Pacman::get_Surface() const {
+	return pacman_sf;
+}
+
+int Pacman::touch(Figur **ghost_array) const{
+	int x_left_pacman = this->x;
+	int y_up_pacman = this->y;
+	int x_right_pacman = this->x + this->get_Surface()->w;
+	int y_down_pacman = this->y + this->get_Surface()->h;
+	
+	
+    for(int i = 0; i <= 3; i++) {
+    	int x_real_ghost = ghost_array[i]->x + (int)(ghost_array[i]->get_Surface()->w * 0.5);
+		int y_real_ghost = ghost_array[i]->y + (int)(ghost_array[i]->get_Surface()->h * 0.5);
+		if((x_real_ghost >= x_left_pacman) && (x_real_ghost <= x_right_pacman) && (y_real_ghost >= y_up_pacman) && (y_real_ghost <= y_down_pacman))
+			return 1;
+	}			
+	return 0;
+}

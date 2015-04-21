@@ -39,24 +39,22 @@ void Screen::AddUpdateRects(int x, int y, int w, int h) {
         h = this->screen_surface->h - y;
     if (w <= 0 || h <= 0)
         return;
-	rects[rect_num].x = x;
-	rects[rect_num].y = y;
-	rects[rect_num].w = w;
-	rects[rect_num].h = h;
+	rects[rect_num].x = (short int)x;
+	rects[rect_num].y = (short int)y;
+	rects[rect_num].w = (short int)w;
+	rects[rect_num].h = (short int)h;
 	rect_num++;
 }
 
-void Screen::Refresh(int moving) {
-	if(moving){
-		SDL_UpdateRects(this->screen_surface, this->rect_num, this->rects);
-		this->rect_num = 0;
-	}
+void Screen::Refresh() {
+	SDL_UpdateRects(this->screen_surface, this->rect_num, this->rects);
+	this->rect_num = 0;
 }
 
 void Screen::draw_dynamic_content(SDL_Surface *surface, int x, int y) {
 	SDL_Rect dest;
-	dest.x = x; 
-	dest.y = y; 
+	dest.x = (short int)x; 
+	dest.y = (short int)y; 
 	SDL_BlitSurface(surface, NULL, this->screen_surface, &dest);
 	this->AddUpdateRects(dest.x, dest.y, surface->w + 10, surface->h);
 }
@@ -66,8 +64,8 @@ void Screen::draw(SDL_Surface* graphic, int offset_x, int offset_y) {
         SDL_BlitSurface(graphic, NULL, screen_surface, NULL);
     } else {
         SDL_Rect position;
-        position.x = offset_x;
-        position.y = offset_y;
+        position.x = (short int)offset_x;
+        position.y = (short int)offset_y;
         SDL_BlitSurface(graphic, NULL, screen_surface, &position);
     }
 }

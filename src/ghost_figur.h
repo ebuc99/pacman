@@ -54,8 +54,8 @@ class Ghost : public Figur {
 		static const int INKY = 2;
 		static const int CLYDE = 3;
 
-		/* Ghost Surface */
-		SDL_Surface *ghost_sf;
+		// Surface zurückgeben
+		SDL_Surface* get_Surface() const;
 		
 	private:
 		int its_leader;
@@ -63,6 +63,7 @@ class Ghost : public Figur {
 		int initial_richtung;
 		int initial_intelligence;
 		int initial_up_down;
+		SDL_Surface *ghost_sf;
 		SDL_Surface *ghost_1, *ghost_2, *ar_ghost[2];
 		SDL_Surface *augen_0, *augen_1, *augen_2, *augen_3;
 		

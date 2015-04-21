@@ -113,3 +113,6 @@ SDL_Surface* Figur::LoadSurface(const char *filename, int transparent_color = -1
     SDL_FreeSurface(temp);
     return surface;	
 }
+
+SDL_Surface* Figur::get_Surface() const {
+}

@@ -112,11 +112,11 @@ static void compute_score(SDL_Surface *punkte, char *char_punktestand, int int_p
 
 /* reset */
 static void reset(Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghost *clyde) {
-	screen->AddUpdateRects(blinky->x, blinky->y, blinky->ghost_sf->w, blinky->ghost_sf->h);
-	screen->AddUpdateRects(pinky->x, pinky->y, pinky->ghost_sf->w, pinky->ghost_sf->h);
-	screen->AddUpdateRects(inky->x, inky->y, inky->ghost_sf->w, inky->ghost_sf->h);
-	screen->AddUpdateRects(clyde->x, clyde->y, clyde->ghost_sf->w, clyde->ghost_sf->h);
-	screen->AddUpdateRects(pacman->x, pacman->y, pacman->pacman_sf->w, pacman->pacman_sf->h);
+	screen->AddUpdateRects(blinky->x, blinky->y, blinky->get_Surface()->w, blinky->get_Surface()->h);
+	screen->AddUpdateRects(pinky->x, pinky->y, pinky->get_Surface()->w, pinky->get_Surface()->h);
+	screen->AddUpdateRects(inky->x, inky->y, inky->get_Surface()->w, inky->get_Surface()->h);
+	screen->AddUpdateRects(clyde->x, clyde->y, clyde->get_Surface()->w, clyde->get_Surface()->h);
+	screen->AddUpdateRects(pacman->x, pacman->y, pacman->get_Surface()->w, pacman->get_Surface()->h);
 	pacman->reset();
 	blinky->reset();
 	pinky->reset();
@@ -124,28 +124,10 @@ static void reset(Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghos
 	clyde->reset();
 }
 
-/* collision handling pacman <-> ghosts */
-static int check_collision(Pacman *pacman, Ghost **ghost_array) {
-	int x_left_pacman = pacman->x;
-	int y_up_pacman = pacman->y;
-	int x_right_pacman = pacman->x + pacman->pacman_sf->w;
-	int y_down_pacman = pacman->y + pacman->pacman_sf->h;
-	
-	if(moving()) {
-	    for(int i = 0; i <= 3; i++) {
-	    	int x_real_ghost = ghost_array[i]->x + (int)(ghost_array[i]->ghost_sf->w * 0.5);
-			int y_real_ghost = ghost_array[i]->y + (int)(ghost_array[i]->ghost_sf->h * 0.5);
-			if((x_real_ghost >= x_left_pacman) && (x_real_ghost <= x_right_pacman) && (y_real_ghost >= y_up_pacman) && (y_real_ghost <= y_down_pacman))
-				return 1;
-		}
-	}			
-	return 0;
-}
-
 /* Bewege pacman */
 static void move_pacman(Pacman *pacman, float ms, Labyrinth *labyrinth) {
 	if(moving())
-		screen->AddUpdateRects(pacman->x, pacman->y, pacman->pacman_sf->w, pacman->pacman_sf->h);
+		screen->AddUpdateRects(pacman->x, pacman->y, pacman->get_Surface()->w, pacman->get_Surface()->h);
 	pacman->move_on_rails(ms, labyrinth->number_rails(), labyrinth->array_rails);
 }
 
@@ -240,7 +222,7 @@ int main() {
 	                        INIT_DIRECTION_UP, INIT_UP_DOWN_INKY, Ghost::INKY);
 	Ghost *clyde = new Ghost(340, 222, GHOSTS_V, INTELLIGENCE_CLYDE, 
 	                         INIT_DIRECTION_UP, INIT_UP_DOWN_CLYDE, Ghost::CLYDE);
-	Ghost *ghost_array[4] = {blinky, pinky, inky, clyde};
+	Figur *ghost_array[4] = {blinky, pinky, inky, clyde};
 	
 
 	/* Grafiken initialisieren */
@@ -278,7 +260,7 @@ int main() {
 	screen->draw(score, 530, 30);
 	screen->draw(punkte, 530, 60);
 	screen->AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
-	screen->Refresh(moving());
+	screen->Refresh();
 	startTicks = (float)SDL_GetTicks();
 	blinky->set_leader(1);	// Blinky will be the reference sprite for redrawing
 	// at first, stop all figures 
@@ -377,11 +359,11 @@ int main() {
 		    screen->draw(inky);
 		    screen->draw(clyde);
 		    labyrinth->draw_blocks();
-		}
-		screen->Refresh(moving());
-		if(check_collision(pacman, ghost_array) && !pacman->is_dying) {
-			stop_all(true, pacman, blinky, pinky, inky, clyde);
-			pacman->is_dying = 10;  
+			screen->Refresh();
+			if(pacman->touch(ghost_array)  && !pacman->is_dying) {
+				stop_all(true, pacman, blinky, pinky, inky, clyde);
+				pacman->is_dying = 10;  
+			}
 		}
 				
 		// determine the correct game speed

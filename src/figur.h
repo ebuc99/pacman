@@ -7,7 +7,7 @@ class Figur {
 	public:
 		// constructor and destructor
 		Figur(int init_x, int init_y, float init_v);
-		~Figur();
+		virtual ~Figur();
 		
 		// position of the figure
 		int x, y; 
@@ -41,6 +41,9 @@ class Figur {
 		
 		// sets the direction of movement
 		void set_richtung(int p_richtung);
+
+		// Surface zurückgeben
+		virtual SDL_Surface* get_Surface() const;
 		
 	protected:
 		float cur_y;

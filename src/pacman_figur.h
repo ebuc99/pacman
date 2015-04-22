@@ -29,8 +29,8 @@ class Pacman : public Figur {
 		// for pacman die animation
 		void die_pic(int cnt_pic);
 		
-		// returns whether a new animation frame of pacman should be used
-		int wechsel();
+		// animate pacman
+		void animate();
 		
 		// moves a ghost on the defined rails
 		void move_on_rails(float ms, int anz_schienen, Rail **ar_s);
@@ -54,8 +54,9 @@ class Pacman : public Figur {
 		unsigned short int is_dying;
 
 	private:
-		unsigned short int pacman_stopped; 
-		unsigned short int is_wechsel;
+		int pacman_stopped; 
+		int animation;
+		int cnt_animation;
 		SDL_Surface *pacman_sf;
 		SDL_Surface *pacman_normal;
 		SDL_Surface *pacman_links_1, *pacman_links_2, *ar_pacman_links[4];

@@ -192,7 +192,6 @@ int main() {
 	int int_punktestand = 0;
 	int ghost_change = 0;
 	int loop = 1;
-	int ct_pm = 0;
 	int die_counter = 0;
 	int start_offset = 10;
 	float startTicks;
@@ -292,7 +291,6 @@ int main() {
 						pacman->is_dying = 0;
 						reset(pacman, blinky, pinky, inky, clyde);
 						stop_all(true, pacman, blinky, pinky, inky, clyde);
-						ct_pm = 0;
 						start_offset = 10;
 						die_counter = 0;
 					}
@@ -319,28 +317,13 @@ int main() {
 		    // redraw background and pills, but only if Blinky (=reference ghost for movement) has moved
 		    screen->draw(hintergrund);
 		    labyrinth->draw_pillen();
-
 			compute_score(punkte, char_punktestand, int_punktestand, font, &textgelb); 
 			screen->draw(score, 530, 30);
 		}
-	
-		if(pacman->wechsel()) {
-			if(pacman->get_richtung() == 0)
-		  		pacman->left_pic(ct_pm); 
-		  	if(pacman->get_richtung() == 1) 
-		   		pacman->up_pic(ct_pm); 
-		  	if(pacman->get_richtung() == 2) 
-		    	pacman->right_pic(ct_pm); 
-		  	if(pacman->get_richtung() == 3) 
-	    		pacman->down_pic(ct_pm); 
-		  	ct_pm++;
-		}
-		if(ct_pm > 3)
-			ct_pm = 0;
+		pacman->animate();
 			
 	  	// if pacman stops, please set it to "normal"
 		if(pacman->is_pacman_stopped() && !pacman->is_dying) {
-			ct_pm = 0;
 			if(pacman->get_richtung() == 0)
 		  		pacman->left_pic(0); 
 		  	if(pacman->get_richtung() == 1) 

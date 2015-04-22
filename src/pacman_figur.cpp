@@ -3,7 +3,8 @@
 
 Pacman::Pacman(int init_x, int init_y, float init_v, int init_wechsel_rate):
 	Figur(init_x, init_y, init_v),
-	is_wechsel(0),
+	animation(0),
+	cnt_animation(0),
 	pacman_stopped(0),
 	is_dying(0) {
     wechsel_rate = init_wechsel_rate;
@@ -84,7 +85,7 @@ void Pacman::move_left(float ms, float max_step) {
 	if ((wechsel_rate > 0) && ((fabs(x - wechsel_x) >= wechsel_rate)||(fabs(y - wechsel_y) >= wechsel_rate))) {
 		wechsel_x = x;
 		wechsel_y = y;
-		is_wechsel = 1;
+		animation = 1;
 	}
 	richtung = 0;
 }
@@ -97,7 +98,7 @@ void Pacman::move_up(float ms, float max_step) {
 	if ((wechsel_rate > 0) && ((fabs(x - wechsel_x) >= wechsel_rate)||(fabs(y - wechsel_y) >= wechsel_rate))) {
 		wechsel_x = x;
 		wechsel_y = y;
-		is_wechsel = 1;
+		animation = 1;
 	}
 	richtung = 1;
 }
@@ -110,7 +111,7 @@ void Pacman::move_right(float ms, float max_step) {
 	if ((wechsel_rate > 0) && ((fabs(x - wechsel_x) >= wechsel_rate)||(fabs(y - wechsel_y) >= wechsel_rate))) {
 		wechsel_x = x;
 		wechsel_y = y;
-		is_wechsel = 1;
+		animation = 1;
 	}
 	richtung = 2;
 }
@@ -123,7 +124,7 @@ void Pacman::move_down(float ms, float max_step) {
 	if ((wechsel_rate > 0) && ((fabs(x - wechsel_x) >= wechsel_rate)||(fabs(y - wechsel_y) >= wechsel_rate))) {
 		wechsel_x = x;
 		wechsel_y = y;
-		is_wechsel = 1;
+		animation = 1;
 	}
 	richtung = 3;
 }
@@ -147,13 +148,21 @@ void Pacman::down_pic(int cnt_pic) {
 void Pacman::die_pic(int cnt_pic) {
 	this->pacman_sf = ar_pacman_die[cnt_pic];
 }
-int Pacman::wechsel() {
-	if (is_wechsel) {
-		is_wechsel = 0;
-		return 1;
+void Pacman::animate() {
+	if (animation) {
+		animation = 0;
+		if(this->get_richtung() == 0)
+	  		this->left_pic(cnt_animation); 
+	  	if(this->get_richtung() == 1) 
+	   		this->up_pic(cnt_animation); 
+	  	if(this->get_richtung() == 2) 
+	    	this->right_pic(cnt_animation); 
+	  	if(this->get_richtung() == 3) 
+    		this->down_pic(cnt_animation); 
+	  	cnt_animation++;
 	}
-	else
-		return 0;
+	if(cnt_animation > 3)
+			cnt_animation = 0;
 }
 
 void Pacman::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
@@ -164,19 +173,19 @@ void Pacman::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
 	if(this->get_richtung() != this->richtung_pre) {
 		for(i = 0; i <= anz_schienen - 1; i++) {
 			if((this->richtung_pre == 0) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
-				this->is_wechsel = 1;
+				this->animation = 1;
 				this->set_richtung(this->richtung_pre);
 			}
 			if((this->richtung_pre == 1) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
-				this->is_wechsel = 1;
+				this->animation = 1;
 				this->set_richtung(this->richtung_pre);
 			}
 			if((this->richtung_pre == 2) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
-				this->is_wechsel = 1;
+				this->animation = 1;
 				this->set_richtung(this->richtung_pre);
 			}
 			if((this->richtung_pre == 3) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
-				this->is_wechsel = 1;
+				this->animation = 1;
 				this->set_richtung(this->richtung_pre);
 			}
 		}
@@ -244,7 +253,8 @@ void Pacman::reset() {
 	wechsel_y = initial_y;
 	richtung = 0;
 	richtung_pre = 0;
-	is_wechsel = 1;
+	animation = 1;
+	cnt_animation = 0;
 	pacman_stopped = 0;
 }
 

@@ -44,6 +44,9 @@ class Figur {
 
 		// Surface zurückgeben
 		virtual SDL_Surface* get_Surface() const;
+
+		// reset the figur
+		virtual void reset();
 		
 	protected:
 		float cur_y;

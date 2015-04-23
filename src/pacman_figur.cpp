@@ -77,6 +77,11 @@ void Pacman::draw(Screen* screen) {
     screen->draw(this->pacman_sf, this->x, this->y);
 }
 
+void Pacman::move(Screen* screen, int moving, float ms, Labyrinth *labyrinth) {
+	if(moving)
+		screen->AddUpdateRects(this->x, this->y, this->get_Surface()->w, this->get_Surface()->h);
+	this->move_on_rails(ms, labyrinth->number_rails(), labyrinth->array_rails);
+}
 void Pacman::move_left(float ms, float max_step) {
 	last_x = x;
 	last_y = y;
@@ -207,22 +212,22 @@ void Pacman::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
 		
 		// now the "normal" rails
 	  	if ((this->get_richtung() == 0) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
-			this->move_left(ms, this->x - ar_s[i]->x1);
+			this->move_left(ms, (float)(this->x - ar_s[i]->x1));
 			check_move = 1;
 			break;
 		}
 		if ((this->get_richtung() == 1) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
-			this->move_up(ms, this->y - ar_s[i]->y1);
+			this->move_up(ms, (float)(this->y - ar_s[i]->y1));
 			check_move = 1;
 			break;
 		}
 		if ((this->get_richtung() == 2) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
-			this->move_right(ms, ar_s[i]->x2 - this->x);
+			this->move_right(ms, (float)(ar_s[i]->x2 - this->x));
 			check_move = 1;
 			break;
 		}
 		if ((this->get_richtung() == 3) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
-			this->move_down(ms, ar_s[i]->y2 - this->y);
+			this->move_down(ms, (float)(ar_s[i]->y2 - this->y));
 			check_move = 1;
 			break;
 		}			
@@ -247,8 +252,8 @@ void Pacman::reset() {
 	dy = initial_v;
 	last_x = initial_x;
 	last_y = initial_y;
-	cur_x = initial_x;
-	cur_y = initial_y;
+	cur_x = (float)initial_x;
+	cur_y = (float)initial_y;
 	wechsel_x = initial_x;
 	wechsel_y = initial_y;
 	richtung = 0;

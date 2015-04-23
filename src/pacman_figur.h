@@ -5,6 +5,7 @@ class Pacman;  // this tells the following include files that Pacman is a class
 #include "figur.h"
 #include "screen.h"
 #include "rail.h"
+#include "labyrinth.h"
 
 class Pacman : public Figur {
 	public:
@@ -14,11 +15,8 @@ class Pacman : public Figur {
 		// draw pacman
 		void draw(Screen* screen);
 		
-		// four directions for movement
-		void move_left(float ms, float max_step = 999);
-		void move_up(float ms, float max_step = 999);
-		void move_right(float ms, float max_step = 999);
-		void move_down(float ms, float max_step = 999);
+		//move pacman
+		void move(Screen* screen, int moving, float ms, Labyrinth *labyrinth);
 
 		// pacman all direction animation
 		void left_pic(int cnt_pic);
@@ -54,6 +52,11 @@ class Pacman : public Figur {
 		unsigned short int is_dying;
 
 	private:
+		// four directions for movement
+		void move_left(float ms, float max_step = 999);
+		void move_up(float ms, float max_step = 999);
+		void move_right(float ms, float max_step = 999);
+		void move_down(float ms, float max_step = 999);
 		int pacman_stopped; 
 		int animation;
 		int cnt_animation;

@@ -1,3 +1,7 @@
+#ifndef LABYRINTH_H
+#define LABYRINTH_H
+
+class Labyrinth;
 #include "pacman_figur.h"
 #include "ghost_figur.h"
 #include "screen.h"
@@ -54,3 +58,4 @@ class Labyrinth {
 		Rail *array_rails[NUMBER_RAILS];
 		Rail *array_rails_pills[NUMBER_RAILS_PILLS];
 };
+#endif

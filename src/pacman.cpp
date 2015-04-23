@@ -124,12 +124,6 @@ static void reset(Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghos
 	clyde->reset();
 }
 
-/* Bewege pacman */
-static void move_pacman(Pacman *pacman, float ms, Labyrinth *labyrinth) {
-	if(moving())
-		screen->AddUpdateRects(pacman->x, pacman->y, pacman->get_Surface()->w, pacman->get_Surface()->h);
-	pacman->move_on_rails(ms, labyrinth->number_rails(), labyrinth->array_rails);
-}
 
 /* move pacman on the rails, according to it's speed and direction */
 static void move_ghosts(Ghost *ghost_l, Pacman *pacman, float(ms), Labyrinth *labyrinth) {
@@ -361,7 +355,7 @@ int main() {
 			ms = (float)(lastTickstemp/WAIT_IN_MS);
 		
 		// and move all figures
-		move_pacman(pacman, ms, labyrinth);
+		pacman->move(screen, moving(), ms, labyrinth);
 		move_ghosts(blinky, pacman, ms, labyrinth);
 		move_ghosts(pinky, pacman, ms, labyrinth);
 		move_ghosts(inky, pacman, ms, labyrinth);

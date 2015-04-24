@@ -2,6 +2,8 @@
 #define FIGUR_H
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+//#include "screen.h"
+//#include "labyrinth.h"
 
 class Figur {
 	public:
@@ -47,6 +49,10 @@ class Figur {
 
 		// reset the figur
 		virtual void reset();
+
+		//helper functions
+		int less(int a, int b);
+		int greater(int a, int b);
 		
 	protected:
 		float cur_y;

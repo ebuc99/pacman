@@ -32,9 +32,9 @@ class Screen {
 		// draw another graphic to the screen's surface
 		void draw(SDL_Surface* graphic, int offset_x = 0, int offset_y = 0);
 		// draw pacman to the screen's surface
-		void draw(Pacman* pacman);
+		//void draw(Pacman* pacman);
 		// draw a ghost to the screen's surface
-		void draw(Ghost* ghost);
+		//void draw(Ghost* ghost);
 
 		// methods for fullscreen mode
 		// return whether fullscreen mode is set

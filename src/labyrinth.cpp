@@ -76,12 +76,13 @@ Labyrinth::~Labyrinth(){
 	free(ar_superpille);
 }
 
-int Labyrinth::less(int a, int b) {
+/*int Labyrinth::less(int a, int b) {
 	return (a < b) ? a : b;
 }
 int Labyrinth::greater(int a, int b) {
 	return (a > b) ? a : b;
-}
+}*/
+
 void Labyrinth::draw_blocks() {
   	SDL_Rect b1, b2;
   	b1.x = 100;
@@ -135,26 +136,6 @@ void Labyrinth::draw_pillen() {
 			SDL_BlitSurface(superpille, NULL, screen->getSurface(), &dest);
 			screen->AddUpdateRects(dest.x , dest.y, superpille->w, superpille->h);
 		}
-	}
-}
-
-void Labyrinth::check_pillen(Pacman *pacman, int *punktestand) {
-	if(pacman->was_moving()){
-		//static int cnt_slow;	// number of loops that pacman will stay slow
-		for(int i = 0; i < NUMBER_PILLS; i++) {
-			if(pillen[i].sichtbar && ((pillen[i].x - 10) >= less(pacman->x,pacman->last_x)) && ((pillen[i].x - 10) <= greater(pacman->x,pacman->last_x)) && ((pillen[i].y - 10) >= less(pacman->y,pacman->last_y)) && ((pillen[i].y - 10) <= greater(pacman->y,pacman->last_y))) {
-				cnt_slow = 15;
-				pillen[i].sichtbar = 0;
-				pacman->set_speed(PACMAN_V_SLOW);
-				(*punktestand)++;
-				break;
-			}	
-		}	
-		// only if pacman really has moved
-		if(cnt_slow > 0)
-			cnt_slow--; 
-		if(cnt_slow <= 0)
-			pacman->set_speed(PACMAN_V_FAST); // wieder schnell
 	}
 }
 

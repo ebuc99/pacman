@@ -48,10 +48,14 @@ class Pacman : public Figur {
 		// Surface zurückgeben
 		SDL_Surface* get_Surface() const;
 
+		void check_eat_pills(Labyrinth *labyrinth, int *punktestand);
+
 		// saves whether pacman is dying at the moment
 		unsigned short int is_dying;
 
 	private:
+		static const float PACMAN_V_FAST = 0.2f; // pacman's speed when not eating
+		static const float PACMAN_V_SLOW = 0.18f; // pacman's speed while eating
 		// four directions for movement
 		void move_left(float ms, float max_step = 999);
 		void move_up(float ms, float max_step = 999);
@@ -60,6 +64,7 @@ class Pacman : public Figur {
 		int pacman_stopped; 
 		int animation;
 		int cnt_animation;
+		int cnt_slow; // number of loops that pacman will stay slow
 		SDL_Surface *pacman_sf;
 		SDL_Surface *pacman_normal;
 		SDL_Surface *pacman_links_1, *pacman_links_2, *ar_pacman_links[4];

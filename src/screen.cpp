@@ -70,13 +70,13 @@ void Screen::draw(SDL_Surface* graphic, int offset_x, int offset_y) {
     }
 }
 
-void Screen::draw(Ghost* ghost) {
+/*void Screen::draw(Ghost* ghost) {
     ghost->draw(this);
 }
 
 void Screen::draw(Pacman* pacman) {
     pacman->draw(this);
-}
+}*/
 
 void Screen::setFullscreen(bool fs) {
     if (fs == fullscreen)

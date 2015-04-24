@@ -6,7 +6,7 @@ class Ghost;  // this tells the following include files that Ghost is a class
 #include "screen.h"
 #include "rail.h"
 #include <time.h>
-#include "pacman_figur.h"
+#include "labyrinth.h"
 
 class Ghost : public Figur {
 	public:
@@ -26,18 +26,19 @@ class Ghost : public Figur {
 		
 		// overloaded move of class Figur
 		void move(float ms, int direction, float max_links = 999, float max_oben = 999, float max_rechts = 999, float max_unten = 999);
+		void move(Screen *screen, int moving, Figur *pacman, float(ms), Labyrinth *labyrinth);
 		
 		// has the leader moved?
 		static int was_moving_leader;
 		
 		// returns the relative position between pacman and the ghost, coded like this: 0 = left, 1 = up, 2 = right, 3 = down
-		int relative_pos_pacman(Pacman *pacman);
+		int relative_pos_pacman(Figur *pacman);
 		
 		// This is the A.I. of the ghosts: with a defined probability, they move to the direction where pacman is.
 		int choose_direction(int * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence);
 		
 		// moves a ghost on the defined rails
-		void move_on_rails(Pacman *pacman, float ms, int anz_schienen, Rail **ar_s);
+		void move_on_rails(Figur *pacman, float ms, int anz_schienen, Rail **ar_s);
 		
 		// returns the intelligence of the ghost
 		int get_intelligence() const;

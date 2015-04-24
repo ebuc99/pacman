@@ -124,15 +124,6 @@ static void reset(Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghos
 	clyde->reset();
 }
 
-
-/* move pacman on the rails, according to it's speed and direction */
-static void move_ghosts(Ghost *ghost_l, Pacman *pacman, float(ms), Labyrinth *labyrinth) {
-	if(moving())
-		ghost_l->AddUpdateRects_ghost(screen);
-	ghost_l->move_on_rails(pacman, ms, labyrinth->number_rails(), labyrinth->array_rails);
-}
-
-
 // SDL event loop: handle keyboard input events, and others
 static int eventloop(Pacman *pacman, Ghost *blinky, 
 Ghost *pinky, Ghost *inky, Ghost *clyde) {
@@ -245,11 +236,12 @@ int main() {
 	screen->draw(hintergrund);
 	labyrinth->init_pillen();
 	labyrinth->draw_pillen();
-	screen->draw(pacman);
-	screen->draw(blinky);
-	screen->draw(pinky);
-	screen->draw(inky);
-	screen->draw(clyde);
+	pacman->draw(screen);
+	blinky->draw(screen);
+	pinky->draw(screen);
+	inky->draw(screen);
+	clyde->draw(screen);
+	
 	screen->draw(score, 530, 30);
 	screen->draw(punkte, 530, 60);
 	screen->AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
@@ -306,7 +298,8 @@ int main() {
 			refresh_ghosts = 0;
 
 		animation_counter = animation_counter + ms;
-		labyrinth->check_pillen(pacman, &int_punktestand);
+		//labyrinth->check_pillen(pacman, &int_punktestand);
+		pacman->check_eat_pills(labyrinth, &int_punktestand);
 		if (moving()) {
 		    // redraw background and pills, but only if Blinky (=reference ghost for movement) has moved
 		    screen->draw(hintergrund);
@@ -328,13 +321,13 @@ int main() {
 	    		pacman->down_pic(0); 
 			pacman->parking();
 		}		
-		
-		screen->draw(pacman);
+
+		pacman->draw(screen);
 		if(moving()) {
-		    screen->draw(blinky);
-		    screen->draw(pinky);
-		    screen->draw(inky);
-		    screen->draw(clyde);
+			blinky->draw(screen);
+			pinky->draw(screen);
+			inky->draw(screen);
+			clyde->draw(screen);
 		    labyrinth->draw_blocks();
 			screen->Refresh();
 			if(pacman->touch(ghost_array)  && !pacman->is_dying) {
@@ -356,10 +349,10 @@ int main() {
 		
 		// and move all figures
 		pacman->move(screen, moving(), ms, labyrinth);
-		move_ghosts(blinky, pacman, ms, labyrinth);
-		move_ghosts(pinky, pacman, ms, labyrinth);
-		move_ghosts(inky, pacman, ms, labyrinth);
-		move_ghosts(clyde, pacman, ms, labyrinth);
+		blinky->move(screen, moving(), pacman, ms, labyrinth);
+		pinky->move(screen, moving(), pacman, ms, labyrinth);
+		inky->move(screen, moving(), pacman, ms, labyrinth);
+		clyde->move(screen, moving(), pacman, ms, labyrinth);
 	}
 	
 	// clean up SDL

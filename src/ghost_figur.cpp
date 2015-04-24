@@ -93,7 +93,13 @@ void Ghost::move(float ms, int direction, float max_links, float max_oben, float
 	}	
 }
 
-int Ghost::relative_pos_pacman(Pacman *pacman) {
+void Ghost::move(Screen *screen, int moving, Figur *pacman, float(ms), Labyrinth *labyrinth) {
+	if(moving)
+			this->AddUpdateRects_ghost(screen);
+	this->move_on_rails(pacman, ms, labyrinth->number_rails(), labyrinth->array_rails);
+}
+
+int Ghost::relative_pos_pacman(Figur *pacman) {
 	int dx, dy;
 	dx = abs(pacman->x - this->x);
 	dy = abs(pacman->y - this->y);
@@ -151,7 +157,7 @@ int Ghost::choose_direction(int * sammel_richtung, int richtung_pacman, int samm
 }
 
 
-void Ghost::move_on_rails(Pacman *pacman, float ms, int anz_schienen, Rail **ar_s) {
+void Ghost::move_on_rails(Figur *pacman, float ms, int anz_schienen, Rail **ar_s) {
 	int i;
 	int richtung_ghost = this->get_richtung();
 	int richtung_pacman = this->relative_pos_pacman(pacman);

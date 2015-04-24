@@ -1,6 +1,5 @@
 #include "figur.h"
 #include "math.h"
-#include <SDL/SDL.h>
 
 
 Figur::Figur(int init_x, int init_y, float init_v):
@@ -118,4 +117,11 @@ SDL_Surface* Figur::get_Surface() const {
 }
 
 void Figur::reset() {
+}
+
+int Figur::less(int a, int b) {
+	return (a < b) ? a : b;
+}
+int Figur::greater(int a, int b) {
+	return (a > b) ? a : b;
 }

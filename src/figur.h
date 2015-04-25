@@ -2,8 +2,8 @@
 #define FIGUR_H
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-//#include "screen.h"
-//#include "labyrinth.h"
+#include "screen.h"
+#include "labyrinth.h"
 
 class Figur {
 	public:

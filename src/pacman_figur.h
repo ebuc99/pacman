@@ -1,11 +1,8 @@
 #ifndef PACMAN_FIGUR_H
 #define PACMAN_FIGUR_H
 
-class Pacman;  // this tells the following include files that Pacman is a class
 #include "figur.h"
-#include "screen.h"
 #include "rail.h"
-#include "labyrinth.h"
 
 class Pacman : public Figur {
 	public:

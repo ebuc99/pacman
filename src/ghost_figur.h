@@ -1,12 +1,9 @@
 #ifndef GHOST_FIGUR_H
 #define GHOST_FIGUR_H
 
-class Ghost;  // this tells the following include files that Ghost is a class
 #include "figur.h"
-#include "screen.h"
 #include "rail.h"
 #include <time.h>
-#include "labyrinth.h"
 
 class Ghost : public Figur {
 	public:

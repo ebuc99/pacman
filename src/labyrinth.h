@@ -1,9 +1,9 @@
 #ifndef LABYRINTH_H
 #define LABYRINTH_H
 
-class Labyrinth;
 #include "screen.h"
 #include "pille.h"
+#include "rail.h"
 
 class Labyrinth {
 	private: 

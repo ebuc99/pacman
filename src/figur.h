@@ -50,6 +50,12 @@ class Figur {
 		// reset the figur
 		virtual void reset();
 
+		// set the Labyrinth
+		void set_labyrinth(Labyrinth *labyrinth);
+
+		// set the Screen
+		void set_screen(Screen *screen);
+
 		//helper functions
 		int less(int a, int b);
 		int greater(int a, int b);
@@ -68,5 +74,7 @@ class Figur {
 		int initial_y;
 		float initial_v;
 		SDL_Surface *LoadSurface(const char *filename, int transparent_color);
+		Labyrinth *labyrinth;
+		Screen *screen;
 };
 #endif

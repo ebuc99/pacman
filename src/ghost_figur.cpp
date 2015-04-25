@@ -47,23 +47,23 @@ Ghost::~Ghost() {
 	SDL_FreeSurface(augen_3);
 }
 
-void Ghost::draw(Screen *screen) {
-    screen->draw(this->ghost_sf, this->x, this->y);
+void Ghost::draw() {
+    this->screen->draw(this->ghost_sf, this->x, this->y);
     switch(this->get_richtung()) {
         case 0:
-            screen->draw(augen_0, this->x, this->y);
+            this->screen->draw(augen_0, this->x, this->y);
             break;
         case 1: 
-            screen->draw(augen_1, this->x, this->y);
+            this->screen->draw(augen_1, this->x, this->y);
             break;
         case 2:
-            screen->draw(augen_2, this->x, this->y);
+            this->screen->draw(augen_2, this->x, this->y);
             break;
         case 3: 
-            screen->draw(augen_3, this->x, this->y);
+            this->screen->draw(augen_3, this->x, this->y);
             break;
         default:
-            screen->draw(augen_0, this->x, this->y);
+            this->screen->draw(augen_0, this->x, this->y);
             break;
     }
 }
@@ -93,10 +93,10 @@ void Ghost::move(float ms, int direction, float max_links, float max_oben, float
 	}	
 }
 
-void Ghost::move(Screen *screen, int moving, Figur *pacman, float(ms), Labyrinth *labyrinth) {
+void Ghost::move(int moving, Figur *pacman, float(ms)) {
 	if(moving)
-			this->AddUpdateRects_ghost(screen);
-	this->move_on_rails(pacman, ms, labyrinth->number_rails(), labyrinth->array_rails);
+			this->AddUpdateRects_ghost();
+	this->move_on_rails(pacman, ms, this->labyrinth->number_rails(), labyrinth->array_rails);
 }
 
 int Ghost::relative_pos_pacman(Figur *pacman) {
@@ -308,15 +308,15 @@ void Ghost::reset() {
 	up_down = initial_up_down;
 }
 
-void Ghost::AddUpdateRects_ghost(Screen *screen) {
+void Ghost::AddUpdateRects_ghost() {
 	if(this->get_richtung() == 0)
-		screen->AddUpdateRects(this->x, this->y, (this->ghost_sf->w + abs(this->x - this->last_x)), this->ghost_sf->h);
+		this->screen->AddUpdateRects(this->x, this->y, (this->ghost_sf->w + abs(this->x - this->last_x)), this->ghost_sf->h);
 	if(this->get_richtung() == 1)
-		screen->AddUpdateRects(this->x, this->y, this->ghost_sf->w, (this->ghost_sf->h + abs(this->y - this->last_y)));
+		this->screen->AddUpdateRects(this->x, this->y, this->ghost_sf->w, (this->ghost_sf->h + abs(this->y - this->last_y)));
 	if(this->get_richtung() == 2)
-		screen->AddUpdateRects((this->x - abs(this->x - this->last_x)), this->y, this->ghost_sf->w, this->ghost_sf->h);
+		this->screen->AddUpdateRects((this->x - abs(this->x - this->last_x)), this->y, this->ghost_sf->w, this->ghost_sf->h);
 	if(this->get_richtung() == 3)
-		screen->AddUpdateRects(this->x, (this->y - abs(this->y - this->last_y)), this->ghost_sf->w, this->ghost_sf->h);
+		this->screen->AddUpdateRects(this->x, (this->y - abs(this->y - this->last_y)), this->ghost_sf->w, this->ghost_sf->h);
 }
 
 SDL_Surface* Ghost::get_Surface() const {

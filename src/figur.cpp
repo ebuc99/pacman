@@ -119,6 +119,14 @@ SDL_Surface* Figur::get_Surface() const {
 void Figur::reset() {
 }
 
+void Figur::set_labyrinth(Labyrinth *labyrinth) {
+	this->labyrinth = labyrinth;
+}
+
+void Figur::set_screen(Screen *screen) {
+	this->screen = screen;
+}
+
 int Figur::less(int a, int b) {
 	return (a < b) ? a : b;
 }

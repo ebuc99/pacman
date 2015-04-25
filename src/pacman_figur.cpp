@@ -73,14 +73,14 @@ Pacman::~Pacman() {
 		SDL_FreeSurface(ar_pacman_die[i]);
 }
 
-void Pacman::draw(Screen* screen) {
-    screen->draw(this->pacman_sf, this->x, this->y);
+void Pacman::draw() {
+    this->screen->draw(this->pacman_sf, this->x, this->y);
 }
 
-void Pacman::move(Screen* screen, int moving, float ms, Labyrinth *labyrinth) {
+void Pacman::move(int moving, float ms) {
 	if(moving)
-		screen->AddUpdateRects(this->x, this->y, this->get_Surface()->w, this->get_Surface()->h);
-	this->move_on_rails(ms, labyrinth->number_rails(), labyrinth->array_rails);
+		this->screen->AddUpdateRects(this->x, this->y, this->get_Surface()->w, this->get_Surface()->h);
+	this->move_on_rails(ms, this->labyrinth->number_rails(), this->labyrinth->array_rails);
 }
 void Pacman::move_left(float ms, float max_step) {
 	last_x = x;
@@ -283,12 +283,12 @@ int Pacman::touch(Figur **ghost_array) const{
 	return 0;
 }
 
-void Pacman::check_eat_pills(Labyrinth *labyrinth, int *punktestand) {
+void Pacman::check_eat_pills(int *punktestand) {
 	if(this->was_moving()){
-		for(int i = 0; i < labyrinth->NUMBER_PILLS; i++) {
-			if(labyrinth->pillen[i].sichtbar && ((labyrinth->pillen[i].x - 10) >= less(this->x,this->last_x)) && ((labyrinth->pillen[i].x - 10) <= greater(this->x,this->last_x)) && ((labyrinth->pillen[i].y - 10) >= less(this->y,this->last_y)) && ((labyrinth->pillen[i].y - 10) <= greater(this->y,this->last_y))) {
+		for(int i = 0; i < this->labyrinth->NUMBER_PILLS; i++) {
+			if(this->labyrinth->pillen[i].sichtbar && ((this->labyrinth->pillen[i].x - 10) >= less(this->x,this->last_x)) && ((this->labyrinth->pillen[i].x - 10) <= greater(this->x,this->last_x)) && ((this->labyrinth->pillen[i].y - 10) >= less(this->y,this->last_y)) && ((this->labyrinth->pillen[i].y - 10) <= greater(this->y,this->last_y))) {
 				cnt_slow = 15;
-				labyrinth->pillen[i].sichtbar = 0;
+				this->labyrinth->pillen[i].sichtbar = 0;
 				this->set_speed(PACMAN_V_SLOW);
 				(*punktestand)++;
 				break;

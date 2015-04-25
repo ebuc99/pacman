@@ -10,10 +10,10 @@ class Pacman : public Figur {
 		Pacman(int init_x, int init_y, float init_v, int init_wechsel_rate);
 		~Pacman();
 		// draw pacman
-		void draw(Screen* screen);
+		void draw();
 		
 		//move pacman
-		void move(Screen* screen, int moving, float ms, Labyrinth *labyrinth);
+		void move(int moving, float ms);
 
 		// pacman all direction animation
 		void left_pic(int cnt_pic);
@@ -45,7 +45,7 @@ class Pacman : public Figur {
 		// Surface zurückgeben
 		SDL_Surface* get_Surface() const;
 
-		void check_eat_pills(Labyrinth *labyrinth, int *punktestand);
+		void check_eat_pills(int *punktestand);
 
 		// saves whether pacman is dying at the moment
 		unsigned short int is_dying;

@@ -18,9 +18,6 @@ const uint16_t INIT_UP_DOWN = 0;		// initial up/down cycles before the ghost wil
 const uint16_t INIT_UP_DOWN_INKY = 5;
 const uint16_t INIT_UP_DOWN_CLYDE = 11;
 const float WAIT_IN_MS = 2.0;				// duration of a loop (i.e. minimum time between frames)
-const uint16_t ANZAHL_SCHIENEN = 50;	// number of rails
-const uint16_t ANZAHL_SCHIENEN_PILLE = 37; // number of pill-filled rails
-const uint16_t ANZAHL_PILLEN = 246;		// number of pills
 
 // initialize static member variables
 int Ghost::was_moving_leader = 1;
@@ -196,16 +193,30 @@ int main() {
 
 	// create an instance of pacman
 	Pacman *pacman = new Pacman(310, 338, PACMAN_V_FAST, WECHSEL_RATE);
+	pacman->set_labyrinth(labyrinth);
+	pacman->set_screen(screen);
 
 	// init ghosts
 	Ghost *blinky = new Ghost(310, 173, GHOSTS_V, INTELLIGENCE_BLINKY, 
 	                          INIT_DIRECTION_LEFT, INIT_UP_DOWN, Ghost::BLINKY);
+	blinky->set_labyrinth(labyrinth);
+	blinky->set_screen(screen);
+	
 	Ghost *pinky = new Ghost(310, 222, GHOSTS_V, INTELLIGENCE_PINKY, 
 	                         INIT_DIRECTION_UP, INIT_UP_DOWN, Ghost::PINKY);
+	pinky->set_labyrinth(labyrinth);
+	pinky->set_screen(screen);
+	
 	Ghost *inky = new Ghost(280, 222, GHOSTS_V,  INTELLIGENCE_INKY, 
 	                        INIT_DIRECTION_UP, INIT_UP_DOWN_INKY, Ghost::INKY);
+	inky->set_labyrinth(labyrinth);
+	inky->set_screen(screen);
+	
 	Ghost *clyde = new Ghost(340, 222, GHOSTS_V, INTELLIGENCE_CLYDE, 
 	                         INIT_DIRECTION_UP, INIT_UP_DOWN_CLYDE, Ghost::CLYDE);
+	clyde->set_labyrinth(labyrinth);
+	clyde->set_screen(screen);
+	
 	Figur *ghost_array[4] = {blinky, pinky, inky, clyde};
 	
 
@@ -236,11 +247,11 @@ int main() {
 	screen->draw(hintergrund);
 	labyrinth->init_pillen();
 	labyrinth->draw_pillen();
-	pacman->draw(screen);
-	blinky->draw(screen);
-	pinky->draw(screen);
-	inky->draw(screen);
-	clyde->draw(screen);
+	pacman->draw();
+	blinky->draw();
+	pinky->draw();
+	inky->draw();
+	clyde->draw();
 	
 	screen->draw(score, 530, 30);
 	screen->draw(punkte, 530, 60);
@@ -298,8 +309,7 @@ int main() {
 			refresh_ghosts = 0;
 
 		animation_counter = animation_counter + ms;
-		//labyrinth->check_pillen(pacman, &int_punktestand);
-		pacman->check_eat_pills(labyrinth, &int_punktestand);
+		pacman->check_eat_pills(&int_punktestand);
 		if (moving()) {
 		    // redraw background and pills, but only if Blinky (=reference ghost for movement) has moved
 		    screen->draw(hintergrund);
@@ -322,12 +332,12 @@ int main() {
 			pacman->parking();
 		}		
 
-		pacman->draw(screen);
+		pacman->draw();
 		if(moving()) {
-			blinky->draw(screen);
-			pinky->draw(screen);
-			inky->draw(screen);
-			clyde->draw(screen);
+			blinky->draw();
+			pinky->draw();
+			inky->draw();
+			clyde->draw();
 		    labyrinth->draw_blocks();
 			screen->Refresh();
 			if(pacman->touch(ghost_array)  && !pacman->is_dying) {
@@ -348,11 +358,11 @@ int main() {
 			ms = (float)(lastTickstemp/WAIT_IN_MS);
 		
 		// and move all figures
-		pacman->move(screen, moving(), ms, labyrinth);
-		blinky->move(screen, moving(), pacman, ms, labyrinth);
-		pinky->move(screen, moving(), pacman, ms, labyrinth);
-		inky->move(screen, moving(), pacman, ms, labyrinth);
-		clyde->move(screen, moving(), pacman, ms, labyrinth);
+		pacman->move(moving(), ms);
+		blinky->move(moving(), pacman, ms);
+		pinky->move(moving(), pacman, ms);
+		inky->move(moving(), pacman, ms);
+		clyde->move(moving(), pacman, ms);
 	}
 	
 	// clean up SDL
@@ -365,6 +375,7 @@ int main() {
 	delete pinky;
 	delete inky;
 	delete clyde;
+	delete screen;
 
 	return EXIT_SUCCESS;
 }

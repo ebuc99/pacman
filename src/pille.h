@@ -3,11 +3,11 @@
 
 class Pille {
 	public: 
-		/* Konstruktor und Destruktor */
+		// constructor and destructor
 		Pille();
 		~Pille();
 		
-		/* Position der Pille */
+		// position of the pill
 		int x;
 		int y;
 		unsigned short int sichtbar;

@@ -44,10 +44,10 @@ class Figur {
 		// sets the direction of movement
 		void set_richtung(int p_richtung);
 
-		// Surface zurückgeben
+		// return the surface, must be implemented by subclasses
 		virtual SDL_Surface* get_Surface() const;
 
-		// reset the figur
+		// reset the figure
 		virtual void reset();
 
 		// set the Labyrinth

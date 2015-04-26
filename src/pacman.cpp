@@ -220,7 +220,7 @@ int main() {
 	Figur *ghost_array[4] = {blinky, pinky, inky, clyde};
 	
 
-	/* Grafiken initialisieren */
+	// initialize background graphic
     hintergrund = LoadSurface("/usr/local/share/pacman/gfx/hintergrund2.png");
 	
 	// initialize TTF so we are able to write texts to the screen

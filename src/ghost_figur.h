@@ -52,7 +52,7 @@ class Ghost : public Figur {
 		static const int INKY = 2;
 		static const int CLYDE = 3;
 
-		// Surface zurückgeben
+		// return the surface
 		SDL_Surface* get_Surface() const;
 		
 	private:

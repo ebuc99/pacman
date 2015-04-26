@@ -42,7 +42,7 @@ class Pacman : public Figur {
 		/* collision handling pacman <-> ghosts */
 		int touch(Figur **ghost_array) const;
 		
-		// Surface zurückgeben
+		// return the surface
 		SDL_Surface* get_Surface() const;
 
 		void check_eat_pills(int *punktestand);

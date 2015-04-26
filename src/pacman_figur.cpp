@@ -298,6 +298,6 @@ void Pacman::check_eat_pills(int *punktestand) {
 		if(cnt_slow > 0)
 			cnt_slow--; 
 		if(cnt_slow <= 0)
-			this->set_speed(PACMAN_V_FAST); // wieder schnell
+			this->set_speed(PACMAN_V_FAST); // make pacman fast again
 	}
 }

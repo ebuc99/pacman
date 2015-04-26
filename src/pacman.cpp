@@ -107,20 +107,6 @@ static void compute_score(SDL_Surface *punkte, char *char_punktestand, int int_p
 	}	
 }
 
-/* reset */
-static void reset(Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghost *clyde) {
-	screen->AddUpdateRects(blinky->x, blinky->y, blinky->get_Surface()->w, blinky->get_Surface()->h);
-	screen->AddUpdateRects(pinky->x, pinky->y, pinky->get_Surface()->w, pinky->get_Surface()->h);
-	screen->AddUpdateRects(inky->x, inky->y, inky->get_Surface()->w, inky->get_Surface()->h);
-	screen->AddUpdateRects(clyde->x, clyde->y, clyde->get_Surface()->w, clyde->get_Surface()->h);
-	screen->AddUpdateRects(pacman->x, pacman->y, pacman->get_Surface()->w, pacman->get_Surface()->h);
-	pacman->reset();
-	blinky->reset();
-	pinky->reset();
-	inky->reset();
-	clyde->reset();
-}
-
 // SDL event loop: handle keyboard input events, and others
 static int eventloop(Pacman *pacman, Ghost *blinky, 
 Ghost *pinky, Ghost *inky, Ghost *clyde) {
@@ -277,7 +263,7 @@ int main() {
 			inky->animation(ghost_change);
 			clyde->animation(ghost_change);
 			
-			//
+			// Pacman die animation
 			if(pacman->is_dying) {
 				if(pacman->is_dying > 1)
 					pacman->is_dying--;
@@ -286,7 +272,11 @@ int main() {
 					die_counter++;
 					if(die_counter == 13) {
 						pacman->is_dying = 0;
-						reset(pacman, blinky, pinky, inky, clyde);
+						pacman->reset();
+						blinky->reset();
+						pinky->reset();
+						inky->reset();
+						clyde->reset();
 						stop_all(true, pacman, blinky, pinky, inky, clyde);
 						start_offset = 10;
 						die_counter = 0;

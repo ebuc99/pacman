@@ -22,15 +22,6 @@ const float WAIT_IN_MS = 2.0;				// duration of a loop (i.e. minimum time betwee
 // initialize static member variables
 int Ghost::was_moving_leader = 1;
 
-// define global Variables
-enum Richtung {
-	Links,
-	Oben,
-	Rechts,
-	Unten
-};
- 
-
 Screen *screen;
 
 int stop_moving = 0;
@@ -115,7 +106,7 @@ Ghost *pinky, Ghost *inky, Ghost *clyde) {
 	while(SDL_PollEvent(&event)) {
 		switch(event.type) {
 		case SDL_KEYDOWN:
-			if(!pacman->is_dying && !pause) {
+			if(!pacman->is_dying() && !pause) {
 				if(event.key.keysym.sym == SDLK_LEFT)
 					pacman->richtung_pre = 0;
 				if(event.key.keysym.sym == SDLK_UP) 
@@ -129,7 +120,7 @@ Ghost *pinky, Ghost *inky, Ghost *clyde) {
 			    screen->toggleFullscreen();				
 			}
 			if(event.key.keysym.sym == SDLK_p) {
-				if(!pacman->is_dying) {
+				if(!pacman->is_dying()) {
 					if(!stop_moving) {
 						stop_all(true, pacman, blinky, pinky, inky, clyde);  
 						pause = 1;
@@ -160,7 +151,6 @@ int main() {
 	int int_punktestand = 0;
 	int ghost_change = 0;
 	int loop = 1;
-	int die_counter = 0;
 	int start_offset = 10;
 	float startTicks;
 	float lastTickstemp;
@@ -264,23 +254,15 @@ int main() {
 			clyde->animation(ghost_change);
 			
 			// Pacman die animation
-			if(pacman->is_dying) {
-				if(pacman->is_dying > 1)
-					pacman->is_dying--;
-				else {
-					pacman->die_pic(die_counter);
-					die_counter++;
-					if(die_counter == 13) {
-						pacman->is_dying = 0;
-						pacman->reset();
-						blinky->reset();
-						pinky->reset();
-						inky->reset();
-						clyde->reset();
-						stop_all(true, pacman, blinky, pinky, inky, clyde);
-						start_offset = 10;
-						die_counter = 0;
-					}
+			if(pacman->is_dying()) {
+				if(!pacman->die_animation()) {
+					pacman->reset();
+					blinky->reset();
+					pinky->reset();
+					inky->reset();
+					clyde->reset();
+					stop_all(true, pacman, blinky, pinky, inky, clyde);
+					start_offset = 10;
 				}
 			}
 			labyrinth->pill_animation();
@@ -310,7 +292,7 @@ int main() {
 		pacman->animate();
 			
 	  	// if pacman stops, please set it to "normal"
-		if(pacman->is_pacman_stopped() && !pacman->is_dying) {
+		if(pacman->is_pacman_stopped() && !pacman->is_dying()) {
 			if(pacman->get_richtung() == 0)
 		  		pacman->left_pic(0); 
 		  	if(pacman->get_richtung() == 1) 
@@ -330,9 +312,9 @@ int main() {
 			clyde->draw();
 		    labyrinth->draw_blocks();
 			screen->Refresh();
-			if(pacman->touch(ghost_array)  && !pacman->is_dying) {
+			if(pacman->touch(ghost_array)  && !pacman->is_dying()) {
 				stop_all(true, pacman, blinky, pinky, inky, clyde);
-				pacman->is_dying = 10;  
+				pacman->set_dying(10);  
 			}
 		}
 				

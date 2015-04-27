@@ -6,7 +6,8 @@ Pacman::Pacman(int init_x, int init_y, float init_v, int init_wechsel_rate):
 	animation(0),
 	cnt_animation(0),
 	pacman_stopped(0),
-	is_dying(0) {
+	dying(0),
+	die_counter(0) {
     wechsel_rate = init_wechsel_rate;
 	wechsel_x = init_x;
 	wechsel_y = init_y;
@@ -299,5 +300,26 @@ void Pacman::check_eat_pills(int *punktestand) {
 			cnt_slow--; 
 		if(cnt_slow <= 0)
 			this->set_speed(PACMAN_V_FAST); // make pacman fast again
+	}
+}
+
+void Pacman::set_dying(int dying) {
+	this->dying = dying;
+}
+
+int Pacman::is_dying() const {
+	return dying;
+}
+
+int Pacman::die_animation() {
+	if(dying > 1)
+		return dying--;
+	else {
+		this->die_pic(die_counter++);
+		if(die_counter == 13) {
+			die_counter = 0;
+			dying = 0;
+		}
+		return die_counter;
 	}
 }

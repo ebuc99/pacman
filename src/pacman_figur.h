@@ -47,8 +47,11 @@ class Pacman : public Figur {
 
 		void check_eat_pills(int *punktestand);
 
-		// saves whether pacman is dying at the moment
-		unsigned short int is_dying;
+		// pacman dies
+		void set_dying(int dying);
+		int is_dying() const;
+		int die_animation();
+		
 
 	private:
 		static const float PACMAN_V_FAST = 0.2f; // pacman's speed when not eating
@@ -62,6 +65,8 @@ class Pacman : public Figur {
 		int animation;
 		int cnt_animation;
 		int cnt_slow; // number of loops that pacman will stay slow
+		int dying; // saves whether pacman is dying at the moment
+		int die_counter; // counter for die animation
 		SDL_Surface *pacman_sf;
 		SDL_Surface *pacman_normal;
 		SDL_Surface *pacman_links_1, *pacman_links_2, *ar_pacman_links[4];

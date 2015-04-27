@@ -10,7 +10,7 @@ class Pille {
 		// position of the pill
 		int x;
 		int y;
-		unsigned short int sichtbar;
-		unsigned short int superpille;
+		int sichtbar;
+		int superpille;
 };
 #endif

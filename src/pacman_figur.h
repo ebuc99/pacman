@@ -7,7 +7,7 @@
 class Pacman : public Figur {
 	public:
 		// constructor and destructor
-		Pacman(int init_x, int init_y, float init_v, int init_wechsel_rate);
+		Pacman(int init_x, int init_y);
 		~Pacman();
 		// draw pacman
 		void draw();
@@ -45,7 +45,7 @@ class Pacman : public Figur {
 		// return the surface
 		SDL_Surface* get_Surface() const;
 
-		void check_eat_pills(int *punktestand);
+		void check_eat_pills(int *punktestand, Figur **ghost_array);
 
 		// pacman dies
 		void set_dying(int dying);
@@ -56,6 +56,7 @@ class Pacman : public Figur {
 	private:
 		static const float PACMAN_V_FAST = 0.2f; // pacman's speed when not eating
 		static const float PACMAN_V_SLOW = 0.18f; // pacman's speed while eating
+		static const uint16_t WECHSEL_RATE = 7; // load a new image for pacman after a movement of this number of pixels
 		// four directions for movement
 		void move_left(float ms, float max_step = 999);
 		void move_up(float ms, float max_step = 999);

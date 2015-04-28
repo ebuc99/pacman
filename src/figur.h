@@ -59,6 +59,8 @@ class Figur {
 		//helper functions
 		int less(int a, int b);
 		int greater(int a, int b);
+		enum Hunter {GHOST, PACMAN};
+		Hunter hunter;
 		
 	protected:
 		float cur_y;

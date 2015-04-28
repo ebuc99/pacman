@@ -4,10 +4,6 @@
 
 
 // Constants
-const float PACMAN_V_FAST = 0.2f;			// pacman's speed when not eating
-const float PACMAN_V_SLOW = 0.18f; 			// pacman's speed while eating
-const float GHOSTS_V = 0.18f;				// normal speed of the ghosts
-const uint16_t WECHSEL_RATE = 7;		// load a new image for pacman after a movement of this number of pixels
 const uint16_t INTELLIGENCE_BLINKY = 90;	// intelligence for each ghost
 const uint16_t INTELLIGENCE_PINKY = 60;
 const uint16_t INTELLIGENCE_INKY = 30;
@@ -168,27 +164,27 @@ int main() {
 	
 
 	// create an instance of pacman
-	Pacman *pacman = new Pacman(310, 338, PACMAN_V_FAST, WECHSEL_RATE);
+	Pacman *pacman = new Pacman(310, 338);
 	pacman->set_labyrinth(labyrinth);
 	pacman->set_screen(screen);
 
 	// init ghosts
-	Ghost *blinky = new Ghost(310, 173, GHOSTS_V, INTELLIGENCE_BLINKY, 
+	Ghost *blinky = new Ghost(310, 173, INTELLIGENCE_BLINKY, 
 	                          INIT_DIRECTION_LEFT, INIT_UP_DOWN, Ghost::BLINKY);
 	blinky->set_labyrinth(labyrinth);
 	blinky->set_screen(screen);
 	
-	Ghost *pinky = new Ghost(310, 222, GHOSTS_V, INTELLIGENCE_PINKY, 
+	Ghost *pinky = new Ghost(310, 222, INTELLIGENCE_PINKY, 
 	                         INIT_DIRECTION_UP, INIT_UP_DOWN, Ghost::PINKY);
 	pinky->set_labyrinth(labyrinth);
 	pinky->set_screen(screen);
 	
-	Ghost *inky = new Ghost(280, 222, GHOSTS_V,  INTELLIGENCE_INKY, 
+	Ghost *inky = new Ghost(280, 222, INTELLIGENCE_INKY, 
 	                        INIT_DIRECTION_UP, INIT_UP_DOWN_INKY, Ghost::INKY);
 	inky->set_labyrinth(labyrinth);
 	inky->set_screen(screen);
 	
-	Ghost *clyde = new Ghost(340, 222, GHOSTS_V, INTELLIGENCE_CLYDE, 
+	Ghost *clyde = new Ghost(340, 222, INTELLIGENCE_CLYDE, 
 	                         INIT_DIRECTION_UP, INIT_UP_DOWN_CLYDE, Ghost::CLYDE);
 	clyde->set_labyrinth(labyrinth);
 	clyde->set_screen(screen);
@@ -281,7 +277,7 @@ int main() {
 			refresh_ghosts = 0;
 
 		animation_counter = animation_counter + ms;
-		pacman->check_eat_pills(&int_punktestand);
+		pacman->check_eat_pills(&int_punktestand, ghost_array);
 		if (moving()) {
 		    // redraw background and pills, but only if Blinky (=reference ghost for movement) has moved
 		    screen->draw(hintergrund);

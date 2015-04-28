@@ -1,14 +1,14 @@
 #include "pacman_figur.h"
 #include "math.h"
 
-Pacman::Pacman(int init_x, int init_y, float init_v, int init_wechsel_rate):
-	Figur(init_x, init_y, init_v),
+Pacman::Pacman(int init_x, int init_y):
+	Figur(init_x, init_y, PACMAN_V_FAST),
 	animation(0),
 	cnt_animation(0),
 	pacman_stopped(0),
 	dying(0),
 	die_counter(0) {
-    wechsel_rate = init_wechsel_rate;
+    wechsel_rate = WECHSEL_RATE;
 	wechsel_x = init_x;
 	wechsel_y = init_y;
 	richtung = 0;
@@ -284,7 +284,7 @@ int Pacman::touch(Figur **ghost_array) const{
 	return 0;
 }
 
-void Pacman::check_eat_pills(int *punktestand) {
+void Pacman::check_eat_pills(int *punktestand, Figur **ghost_array) {
 	if(this->was_moving()){
 		for(int i = 0; i < this->labyrinth->NUMBER_PILLS; i++) {
 			if(this->labyrinth->pillen[i].sichtbar && ((this->labyrinth->pillen[i].x - 10) >= less(this->x,this->last_x)) && ((this->labyrinth->pillen[i].x - 10) <= greater(this->x,this->last_x)) && ((this->labyrinth->pillen[i].y - 10) >= less(this->y,this->last_y)) && ((this->labyrinth->pillen[i].y - 10) <= greater(this->y,this->last_y))) {
@@ -301,6 +301,8 @@ void Pacman::check_eat_pills(int *punktestand) {
 		if(cnt_slow <= 0)
 			this->set_speed(PACMAN_V_FAST); // make pacman fast again
 	}
+	// NUR ZUM TEST
+	ghost_array[0]->hunter = Figur::GHOST;
 }
 
 void Pacman::set_dying(int dying) {

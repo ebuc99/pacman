@@ -1,13 +1,14 @@
 #include "ghost_figur.h"
 #include <stdlib.h>
 
-Ghost::Ghost(int init_x, int init_y, float init_v, int init_intelligence, 
+Ghost::Ghost(int init_x, int init_y, int init_intelligence, 
              int init_richtung, int init_up_down, int ghost_ident):
-	Figur(init_x, init_y, init_v),
+	Figur(init_x, init_y, GHOSTS_V),
 	its_leader(0),
 	initial_intelligence(init_intelligence),
 	initial_richtung(init_richtung),
 	initial_up_down(init_up_down) {
+	hunter = GHOST;
 	richtung = init_richtung;
 	intelligence = init_intelligence;
 	up_down = init_up_down;

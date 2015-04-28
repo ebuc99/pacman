@@ -8,7 +8,7 @@
 class Ghost : public Figur {
 	public:
 		/* constructor and destructor */
-		Ghost(int init_x, int init_y, float init_v, int init_intelligence, 
+		Ghost(int init_x, int init_y, int init_intelligence, 
 		      int init_richtung, int init_up_down, int ghost_ident);
 		~Ghost();
 
@@ -56,6 +56,7 @@ class Ghost : public Figur {
 		SDL_Surface* get_Surface() const;
 		
 	private:
+		static const float GHOSTS_V = 0.18f; // normal speed of the ghosts
 		int its_leader;
 		int up_down;
 		int initial_richtung;

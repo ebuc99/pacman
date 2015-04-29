@@ -81,7 +81,7 @@ void Pacman::draw() {
 void Pacman::move(int moving, float ms) {
 	if(moving)
 		this->screen->AddUpdateRects(this->x, this->y, this->get_Surface()->w, this->get_Surface()->h);
-	this->move_on_rails(ms, this->labyrinth->number_rails(), this->labyrinth->array_rails);
+	this->move_on_rails(ms, this->labyrinth->number_rails(), this->labyrinth->array_rails);		
 }
 void Pacman::move_left(float ms, float max_step) {
 	last_x = x;
@@ -292,6 +292,13 @@ void Pacman::check_eat_pills(int *punktestand, Figur **ghost_array) {
 				this->labyrinth->pillen[i].sichtbar = 0;
 				this->set_speed(PACMAN_V_SLOW);
 				(*punktestand)++;
+				if(this->labyrinth->pillen[i].superpille) {
+					ghost_array[0]->set_hunter(PACMAN);
+					ghost_array[1]->set_hunter(PACMAN);
+					ghost_array[2]->set_hunter(PACMAN);
+					ghost_array[3]->set_hunter(PACMAN);
+					this->labyrinth->cnt_hunting_mode += 6000;
+				}
 				break;
 			}	
 		}	
@@ -301,8 +308,6 @@ void Pacman::check_eat_pills(int *punktestand, Figur **ghost_array) {
 		if(cnt_slow <= 0)
 			this->set_speed(PACMAN_V_FAST); // make pacman fast again
 	}
-	// NUR ZUM TEST
-	ghost_array[0]->hunter = Figur::GHOST;
 }
 
 void Pacman::set_dying(int dying) {

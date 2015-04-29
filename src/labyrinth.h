@@ -48,5 +48,7 @@ class Labyrinth {
 		
 		Rail *array_rails[NUMBER_RAILS];
 		Rail *array_rails_pills[NUMBER_RAILS_PILLS];
+
+		int cnt_hunting_mode;
 };
 #endif

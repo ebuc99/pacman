@@ -278,14 +278,25 @@ int main() {
 
 		animation_counter = animation_counter + ms;
 		pacman->check_eat_pills(&int_punktestand, ghost_array);
+		if(labyrinth->cnt_hunting_mode == 0) {
+			blinky->set_hunter(Figur::GHOST);
+			pinky->set_hunter(Figur::GHOST);
+			inky->set_hunter(Figur::GHOST);
+			clyde->set_hunter(Figur::GHOST);
+			labyrinth->cnt_hunting_mode--;
+		}
+		else if(labyrinth->cnt_hunting_mode > 0)
+			labyrinth->cnt_hunting_mode--;
+			
 		if (moving()) {
 		    // redraw background and pills, but only if Blinky (=reference ghost for movement) has moved
 		    screen->draw(hintergrund);
 		    labyrinth->draw_pillen();
 			compute_score(punkte, char_punktestand, int_punktestand, font, &textgelb); 
 			screen->draw(score, 530, 30);
+			pacman->animate();
 		}
-		pacman->animate();
+		//pacman->animate();
 			
 	  	// if pacman stops, please set it to "normal"
 		if(pacman->is_pacman_stopped() && !pacman->is_dying()) {
@@ -300,8 +311,9 @@ int main() {
 			pacman->parking();
 		}		
 
-		pacman->draw();
+		//pacman->draw();
 		if(moving()) {
+			pacman->draw();
 			blinky->draw();
 			pinky->draw();
 			inky->draw();

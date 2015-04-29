@@ -68,7 +68,9 @@ Labyrinth::Labyrinth(Screen *screen):
 	ar_superpille[2] = this->LoadSurface("/usr/local/share/pacman/gfx/superpille_3.png", 0);
 	ar_superpille[3] = this->LoadSurface("/usr/local/share/pacman/gfx/superpille_3.png", 0);
 	ar_superpille[4] = this->LoadSurface("/usr/local/share/pacman/gfx/superpille_2.png", 0);
-	superpille = ar_superpille[cnt_pill_animation]; 
+	superpille = ar_superpille[cnt_pill_animation];
+
+	cnt_hunting_mode = -1;
 }   
 
 Labyrinth::~Labyrinth(){

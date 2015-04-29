@@ -46,6 +46,10 @@ class Ghost : public Figur {
 		// this function registers the ghosts' graphics for redrawing, but only if they have changed
 		void AddUpdateRects_ghost();
 
+		// hunting or hunted
+		Figur::Hunter get_hunter() const;
+		void set_hunter(Hunter hunter);
+
 		/* Idents for the ghosts */
 		static const int BLINKY = 0;
 		static const int PINKY = 1;

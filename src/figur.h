@@ -56,11 +56,14 @@ class Figur {
 		// set the Screen
 		void set_screen(Screen *screen);
 
+		// hunting or hunted
+		enum Hunter {GHOST, PACMAN, NONE};
+		virtual Hunter get_hunter() const;
+		virtual void set_hunter(Hunter hunter);
+		                        
 		//helper functions
 		int less(int a, int b);
 		int greater(int a, int b);
-		enum Hunter {GHOST, PACMAN};
-		Hunter hunter;
 		
 	protected:
 		float cur_y;
@@ -78,5 +81,6 @@ class Figur {
 		SDL_Surface *LoadSurface(const char *filename, int transparent_color);
 		Labyrinth *labyrinth;
 		Screen *screen;
+		Hunter hunter;
 };
 #endif

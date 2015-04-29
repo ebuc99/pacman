@@ -133,3 +133,7 @@ int Figur::less(int a, int b) {
 int Figur::greater(int a, int b) {
 	return (a > b) ? a : b;
 }
+
+Figur::Hunter Figur::get_hunter() const {}
+
+void Figur::set_hunter(Hunter hunter) {}

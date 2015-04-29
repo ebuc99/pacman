@@ -8,10 +8,10 @@ Ghost::Ghost(int init_x, int init_y, int init_intelligence,
 	initial_intelligence(init_intelligence),
 	initial_richtung(init_richtung),
 	initial_up_down(init_up_down) {
-	hunter = GHOST;
 	richtung = init_richtung;
 	intelligence = init_intelligence;
 	up_down = init_up_down;
+	this->set_hunter(GHOST);
 
 	// Surfaces
 	if(ghost_ident == BLINKY) {
@@ -324,3 +324,14 @@ SDL_Surface* Ghost::get_Surface() const {
 	return ghost_sf;
 }
 
+Figur::Hunter Ghost::get_hunter() const {
+	return hunter;
+}
+
+void Ghost::set_hunter(Hunter hunter) {
+	if(hunter == PACMAN)
+		this->set_speed(0.1f);
+	else
+		this->set_speed(0.18f);
+	this->hunter = hunter;
+}

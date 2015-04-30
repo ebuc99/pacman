@@ -69,6 +69,7 @@ class Ghost : public Figur {
 		SDL_Surface *ghost_sf;
 		SDL_Surface *ghost_1, *ghost_2, *ar_ghost[2];
 		SDL_Surface *augen_0, *augen_1, *augen_2, *augen_3;
+		SDL_Surface *escape_1, *escape_2;
 		
 };
 #endif

@@ -45,7 +45,7 @@ class Figur {
 		void set_richtung(int p_richtung);
 
 		// return the surface, must be implemented by subclasses
-		virtual SDL_Surface* get_Surface() const;
+		virtual SDL_Surface* get_Surface() const = 0;  // makes the class abstract
 
 		// reset the figure
 		virtual void reset();

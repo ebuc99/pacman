@@ -7,7 +7,8 @@ Ghost::Ghost(int init_x, int init_y, int init_intelligence,
 	its_leader(0),
 	initial_intelligence(init_intelligence),
 	initial_richtung(init_richtung),
-	initial_up_down(init_up_down) {
+	initial_up_down(init_up_down)
+{
 	richtung = init_richtung;
 	intelligence = init_intelligence;
 	up_down = init_up_down;
@@ -16,24 +17,26 @@ Ghost::Ghost(int init_x, int init_y, int init_intelligence,
 	// Surfaces
 	if(ghost_ident == BLINKY) {
 		ghost_1 = LoadSurface("/usr/local/share/pacman/gfx/blinky_1.png", 255);
-        ghost_2 = LoadSurface("/usr/local/share/pacman/gfx/blinky_2.png", 255);
+		ghost_2 = LoadSurface("/usr/local/share/pacman/gfx/blinky_2.png", 255);
 	}
 	else if(ghost_ident == PINKY) {
 		ghost_1 = LoadSurface("/usr/local/share/pacman/gfx/pinky_1.png", 255);
-        ghost_2 = LoadSurface("/usr/local/share/pacman/gfx/pinky_2.png", 255);
+		ghost_2 = LoadSurface("/usr/local/share/pacman/gfx/pinky_2.png", 255);
 	}
 	else if(ghost_ident == INKY) {
 		ghost_1 = LoadSurface("/usr/local/share/pacman/gfx/inky_1.png", 255);
-        ghost_2 = LoadSurface("/usr/local/share/pacman/gfx/inky_2.png", 255);
+		ghost_2 = LoadSurface("/usr/local/share/pacman/gfx/inky_2.png", 255);
 	}
 	else if(ghost_ident == CLYDE) {
 		ghost_1 = LoadSurface("/usr/local/share/pacman/gfx/clyde_1.png", 255);
-        ghost_2 = LoadSurface("/usr/local/share/pacman/gfx/clyde_2.png", 255);
+		ghost_2 = LoadSurface("/usr/local/share/pacman/gfx/clyde_2.png", 255);
 	}
 	augen_0 = LoadSurface("/usr/local/share/pacman/gfx/augen_0.png", 0);
-    augen_1 = LoadSurface("/usr/local/share/pacman/gfx/augen_1.png", 0);
-    augen_2 = LoadSurface("/usr/local/share/pacman/gfx/augen_2.png", 0);
-    augen_3 = LoadSurface("/usr/local/share/pacman/gfx/augen_3.png", 0);
+	augen_1 = LoadSurface("/usr/local/share/pacman/gfx/augen_1.png", 0);
+	augen_2 = LoadSurface("/usr/local/share/pacman/gfx/augen_2.png", 0);
+	augen_3 = LoadSurface("/usr/local/share/pacman/gfx/augen_3.png", 0);
+	escape_1 = LoadSurface("/usr/local/share/pacman/gfx/escaping_ghost_1.png", 255);
+	escape_2 = LoadSurface("/usr/local/share/pacman/gfx/escaping_ghost_2.png", 255);
 	ar_ghost[0] = ghost_1;
 	ar_ghost[1] = ghost_2;
 	this->ghost_sf = ar_ghost[1];
@@ -49,24 +52,26 @@ Ghost::~Ghost() {
 }
 
 void Ghost::draw() {
-    this->screen->draw(this->ghost_sf, this->x, this->y);
-    switch(this->get_richtung()) {
-        case 0:
-            this->screen->draw(augen_0, this->x, this->y);
-            break;
-        case 1: 
-            this->screen->draw(augen_1, this->x, this->y);
-            break;
-        case 2:
-            this->screen->draw(augen_2, this->x, this->y);
-            break;
-        case 3: 
-            this->screen->draw(augen_3, this->x, this->y);
-            break;
-        default:
-            this->screen->draw(augen_0, this->x, this->y);
-            break;
-    }
+	this->screen->draw(this->ghost_sf, this->x, this->y);
+	if (this->get_hunter() != PACMAN) {
+		switch(this->get_richtung()) {
+			case 0:
+				this->screen->draw(augen_0, this->x, this->y);
+				break;
+			case 1: 
+				this->screen->draw(augen_1, this->x, this->y);
+				break;
+			case 2:
+				this->screen->draw(augen_2, this->x, this->y);
+				break;
+			case 3: 
+				this->screen->draw(augen_3, this->x, this->y);
+				break;
+			default:
+				this->screen->draw(augen_0, this->x, this->y);
+				break;
+		}
+	}
 }
 
 void Ghost::animation(int cnt_pic) {
@@ -307,6 +312,7 @@ void Ghost::reset() {
 	richtung = initial_richtung;
 	intelligence = initial_intelligence;
 	up_down = initial_up_down;
+	this->set_hunter(GHOST);
 }
 
 void Ghost::AddUpdateRects_ghost() {
@@ -329,9 +335,14 @@ Figur::Hunter Ghost::get_hunter() const {
 }
 
 void Ghost::set_hunter(Hunter hunter) {
-	if(hunter == PACMAN)
+	if(hunter == PACMAN) {
 		this->set_speed(0.1f);
-	else
+		ar_ghost[0] = escape_1;
+		ar_ghost[1] = escape_2;
+	} else {
 		this->set_speed(0.18f);
+		ar_ghost[0] = ghost_1;
+		ar_ghost[1] = ghost_2;
+	}
 	this->hunter = hunter;
 }

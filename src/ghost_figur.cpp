@@ -128,40 +128,36 @@ int Ghost::get_intelligence() const {
 }
 
 int Ghost::choose_direction(int * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence) {
-	int i;
-	int ist_richtung_pacman = -1;
+	int idx_dir_pacman = -1;
 	int zufallswert;
-	
-	for(i = 0;i < sammel_counter;i++) {
-		if(*(sammel_richtung + i) == richtung_pacman){
-			ist_richtung_pacman = i;
+	int idx_direction;
+
+	if(sammel_counter == 1)
+		return sammel_richtung[0];
+
+	for(int i = 0; i < sammel_counter; ++i) {
+		if(sammel_richtung[i] == richtung_pacman){
+			idx_dir_pacman = i;
 		}
 	}
-	if(sammel_counter == 1)
-		return *sammel_richtung;
 	zufallswert = (rand() % 100 + 1);
-	if(ist_richtung_pacman != -1) {
-		if(zufallswert <= intelligence) 
-			return richtung_pacman;
+	if (this->get_hunter() == PACMAN) {
+		if (idx_dir_pacman == -1 || zufallswert > intelligence) {
+			return sammel_richtung[zufallswert%sammel_counter];
+		} else {
+			idx_direction = zufallswert % (sammel_counter-1);
+			if (idx_direction == idx_dir_pacman)
+				++idx_direction;
+			return sammel_richtung[idx_direction];
+		}
+	} else {
+		if(idx_dir_pacman != -1) {
+			if(zufallswert <= intelligence) 
+				return richtung_pacman;
+		}
+		return sammel_richtung[zufallswert%sammel_counter];
 	}
-	if(sammel_counter == 2) {
-		if(zufallswert <= 50)
-			return *sammel_richtung;
-		else
-			return *(sammel_richtung + 1);
-	}
-	if(sammel_counter == 3) {
-	// first, define the static member variable
-		if(zufallswert <= 33)
-			return *sammel_richtung;
-		if((zufallswert > 33) && (zufallswert <= 66))
-			return *(sammel_richtung + 1);
-		if((zufallswert > 66) && (zufallswert <= 100))
-			return *(sammel_richtung + 2);
-	}
-	return *sammel_richtung; // suppress compiler warning
 }
-
 
 void Ghost::move_on_rails(Figur *pacman, float ms, int anz_schienen, Rail **ar_s) {
 	int i;

@@ -33,7 +33,7 @@ class Ghost : public Figur {
 		
 		// This is the A.I. of the ghosts: with a defined probability, they move to the direction where pacman is.
 		int choose_direction(int * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence);
-		
+
 		// moves a ghost on the defined rails
 		void move_on_rails(Figur *pacman, float ms, int anz_schienen, Rail **ar_s);
 		

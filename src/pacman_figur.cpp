@@ -273,13 +273,15 @@ int Pacman::touch(Figur **ghost_array) const{
 	int y_up_pacman = this->y;
 	int x_right_pacman = this->x + this->get_Surface()->w;
 	int y_down_pacman = this->y + this->get_Surface()->h;
-	
+	int touch_result = 0;
 	
     for(int i = 0; i <= 3; i++) {
     	int x_real_ghost = ghost_array[i]->x + (int)(ghost_array[i]->get_Surface()->w * 0.5);
 		int y_real_ghost = ghost_array[i]->y + (int)(ghost_array[i]->get_Surface()->h * 0.5);
 		if((x_real_ghost >= x_left_pacman) && (x_real_ghost <= x_right_pacman) && (y_real_ghost >= y_up_pacman) && (y_real_ghost <= y_down_pacman))
-			return 1;
+			touch_result = ghost_array[i]->touched();
+			if(touch_result != 0)
+				return 1;
 	}			
 	return 0;
 }

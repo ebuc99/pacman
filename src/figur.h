@@ -60,6 +60,8 @@ class Figur {
 		enum Hunter {GHOST, PACMAN, NONE};
 		virtual Hunter get_hunter() const;
 		virtual void set_hunter(Hunter hunter);
+
+		virtual int touched() { return 0; }
 		                        
 		//helper functions
 		int less(int a, int b);

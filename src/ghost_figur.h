@@ -50,6 +50,10 @@ class Ghost : public Figur {
 		Figur::Hunter get_hunter() const;
 		void set_hunter(Hunter hunter);
 
+		// Callback method when pacman has touched this ghost. Returns 1 if this was dangerous for
+		// pacman, 0 otherwise.
+		int touched();
+
 		// announce the end of the hunting mode by blinking
 		void blink();
 

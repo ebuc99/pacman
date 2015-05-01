@@ -62,7 +62,8 @@ Ghost::~Ghost() {
 }
 
 void Ghost::draw() {
-	this->screen->draw(this->ghost_sf, this->x, this->y);
+	if (this->get_hunter() != NONE)
+		this->screen->draw(this->ghost_sf, this->x, this->y);
 	if (this->get_hunter() != PACMAN) {
 		switch(this->get_richtung()) {
 			case 0:
@@ -353,6 +354,16 @@ void Ghost::set_hunter(Hunter hunter) {
 	}
 	num_animation_frames = 2;
 	this->hunter = hunter;
+}
+
+int Ghost::touched() {
+	if(this->get_hunter() == PACMAN) {
+		// ghost has been eaten by pacman
+		this->hunter = NONE;
+	}
+	if(this->get_hunter() == NONE)
+		return 0;  // no problem for pacman
+	return 1;
 }
 
 void Ghost::blink() {

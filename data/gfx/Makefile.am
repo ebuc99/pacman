@@ -38,4 +38,8 @@ dist_datadir_gfx_DATA = augen_0.png \
 	pinky_2.png \
 	superpille_1.png \
 	superpille_2.png \
-	superpille_3.png
+	superpille_3.png \
+	escaping_ghost_1.png \
+	escaping_ghost_2.png \
+	escaping_ghost_white_1.png \
+	escaping_ghost_white_2.png

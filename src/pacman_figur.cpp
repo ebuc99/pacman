@@ -295,10 +295,10 @@ void Pacman::check_eat_pills(int *punktestand, Figur **ghost_array) {
 				this->set_speed(PACMAN_V_SLOW);
 				(*punktestand)++;
 				if(this->labyrinth->pillen[i].superpille) {
-					ghost_array[0]->set_hunter(PACMAN);
-					ghost_array[1]->set_hunter(PACMAN);
-					ghost_array[2]->set_hunter(PACMAN);
-					ghost_array[3]->set_hunter(PACMAN);
+					for(int j = 0; j < 4; ++j) {
+						if(ghost_array[j]->get_hunter() != NONE)  // eaten ghosts stille have to return to the castle
+							ghost_array[j]->set_hunter(PACMAN);
+					}
 					this->labyrinth->cnt_hunting_mode += 7000;
 				}
 				break;

@@ -28,8 +28,10 @@ class Ghost : public Figur {
 		// has the leader moved?
 		static int was_moving_leader;
 		
-		// returns the relative position between pacman and the ghost, coded like this: 0 = left, 1 = up, 2 = right, 3 = down
-		int relative_pos_pacman(Figur *pacman);
+		// Returns the direction that has to be taken to reach the given target point (e.g. pacman's current position).
+		// The result is coded like this: 0 = left, 1 = up, 2 = right, 3 = down
+		int direction_to_point(int target_x, int target_y);
+		int alternative_direction_to_point(int target_x, int target_y);  // Returns an alternative direction. Use it, if the exact one is not available.
 		
 		// This is the A.I. of the ghosts: with a defined probability, they move to the direction where pacman is.
 		int choose_direction(int * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence);

@@ -22,6 +22,9 @@ Screen *screen;
 
 int stop_moving = 0;
 int refresh_ghosts = 0;
+uint16_t pause = 0;
+float speed_ghosts;
+float speed_pacman;
 
 static SDL_Surface *LoadSurface(const char *filename, int transparent_color = -1) {
 	SDL_Surface *surface, *temp;
@@ -60,8 +63,6 @@ static int moving() {
 
 /* stop all figures */
 static void stop_all(uint16_t stop, Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghost *clyde) {
-	static float speed_ghosts;
-	static float speed_pacman;
 	if(stop) {
 		speed_ghosts = blinky->get_speed();
 		speed_pacman = pacman->get_speed();
@@ -97,7 +98,6 @@ static void compute_score(SDL_Surface *punkte, char *char_punktestand, int int_p
 // SDL event loop: handle keyboard input events, and others
 static int eventloop(Pacman *pacman, Ghost *blinky, 
 Ghost *pinky, Ghost *inky, Ghost *clyde) {
-	static uint16_t pause;
 	SDL_Event event;
 	while(SDL_PollEvent(&event)) {
 		switch(event.type) {
@@ -126,6 +126,28 @@ Ghost *pinky, Ghost *inky, Ghost *clyde) {
 						pause = 0;
 					}
 				}
+			}
+			if(event.key.keysym.sym == SDLK_k) {
+				blinky->set_hunter(Figur::NONE);
+				pinky->set_hunter(Figur::NONE);
+				inky->set_hunter(Figur::NONE);
+				clyde->set_hunter(Figur::NONE);
+			}
+			if(event.key.keysym.sym == SDLK_v) {
+				blinky->set_hunter(Figur::PACMAN);
+				pinky->set_hunter(Figur::PACMAN);
+				inky->set_hunter(Figur::PACMAN);
+				clyde->set_hunter(Figur::PACMAN);
+			}
+			if(event.key.keysym.sym == SDLK_b) {
+				if(blinky->get_hunter() == Figur::PACMAN)
+					blinky->blink();
+				if(pinky->get_hunter() == Figur::PACMAN)
+					pinky->blink();
+				if(inky->get_hunter() == Figur::PACMAN)
+					inky->blink();
+				if(clyde->get_hunter() == Figur::PACMAN)
+					clyde->blink();
 			}
 			break;
 		case SDL_QUIT:
@@ -250,6 +272,7 @@ int main() {
 			// Pacman die animation
 			if(pacman->is_dying()) {
 				if(!pacman->die_animation()) {
+					labyrinth->cnt_hunting_mode = -1;
 					pacman->reset();
 					blinky->reset();
 					pinky->reset();
@@ -277,13 +300,19 @@ int main() {
 		animation_counter = animation_counter + ms;
 		pacman->check_eat_pills(&int_punktestand, ghost_array);
 		if(labyrinth->cnt_hunting_mode == 0) {
-			blinky->set_hunter(Figur::GHOST);
-			pinky->set_hunter(Figur::GHOST);
-			inky->set_hunter(Figur::GHOST);
-			clyde->set_hunter(Figur::GHOST);
+			if (!pacman->is_dying()) {
+				if (blinky->get_hunter() != Figur::NONE)  // eaten ghosts still have to return to the castle
+					blinky->set_hunter(Figur::GHOST);
+				if (pinky->get_hunter() != Figur::NONE)
+					pinky->set_hunter(Figur::GHOST);
+				if (inky->get_hunter() != Figur::NONE)
+					inky->set_hunter(Figur::GHOST);
+				if (clyde->get_hunter() != Figur::NONE)
+					clyde->set_hunter(Figur::GHOST);
+			}
 			labyrinth->cnt_hunting_mode--;
 		}
-		else if(labyrinth->cnt_hunting_mode > 0) {
+		else if(labyrinth->cnt_hunting_mode > 0 && !pause) {
 			labyrinth->cnt_hunting_mode--;
 			if(labyrinth->cnt_hunting_mode==2000) {
 				blinky->blink();

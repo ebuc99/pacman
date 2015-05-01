@@ -297,7 +297,7 @@ void Pacman::check_eat_pills(int *punktestand, Figur **ghost_array) {
 					ghost_array[1]->set_hunter(PACMAN);
 					ghost_array[2]->set_hunter(PACMAN);
 					ghost_array[3]->set_hunter(PACMAN);
-					this->labyrinth->cnt_hunting_mode += 6000;
+					this->labyrinth->cnt_hunting_mode += 7000;
 				}
 				break;
 			}	

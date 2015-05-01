@@ -15,8 +15,8 @@ class Ghost : public Figur {
 		/* draw ghost */
 		void draw();
 
-		/* ghost animation */
-		void animation(int cnt_pic);
+		// animate the ghost, i.e. switch to the next image of the animation array
+		void animation();
 		
 		// defines the leader (reference for redrawing)
 		void set_leader(int leader); 
@@ -50,6 +50,9 @@ class Ghost : public Figur {
 		Figur::Hunter get_hunter() const;
 		void set_hunter(Hunter hunter);
 
+		// announce the end of the hunting mode by blinking
+		void blink();
+
 		/* Idents for the ghosts */
 		static const int BLINKY = 0;
 		static const int PINKY = 1;
@@ -66,10 +69,12 @@ class Ghost : public Figur {
 		int initial_richtung;
 		int initial_intelligence;
 		int initial_up_down;
+		int num_animation_frames;
+		int idx_animation;
 		SDL_Surface *ghost_sf;
-		SDL_Surface *ghost_1, *ghost_2, *ar_ghost[2];
+		SDL_Surface *ghost_1, *ghost_2, *ar_ghost[4];
 		SDL_Surface *augen_0, *augen_1, *augen_2, *augen_3;
-		SDL_Surface *escape_1, *escape_2;
+		SDL_Surface *escape_1, *escape_2, *escape_white_1, *escape_white_2;
 		
 };
 #endif

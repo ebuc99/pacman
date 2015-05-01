@@ -145,7 +145,6 @@ int main() {
 	SDL_Color textweiss = {255, 255, 255, 0};
 	char char_punktestand[8] = "0";
 	int int_punktestand = 0;
-	int ghost_change = 0;
 	int loop = 1;
 	int start_offset = 10;
 	float startTicks;
@@ -243,11 +242,10 @@ int main() {
 		if(animation_counter > 50) {
 			// ghost animations
 			refresh_ghosts = 1;
-			ghost_change = !ghost_change;
-			blinky->animation(ghost_change);
-			pinky->animation(ghost_change);
-			inky->animation(ghost_change);
-			clyde->animation(ghost_change);
+			blinky->animation();
+			pinky->animation();
+			inky->animation();
+			clyde->animation();
 			
 			// Pacman die animation
 			if(pacman->is_dying()) {
@@ -285,8 +283,15 @@ int main() {
 			clyde->set_hunter(Figur::GHOST);
 			labyrinth->cnt_hunting_mode--;
 		}
-		else if(labyrinth->cnt_hunting_mode > 0)
+		else if(labyrinth->cnt_hunting_mode > 0) {
 			labyrinth->cnt_hunting_mode--;
+			if(labyrinth->cnt_hunting_mode==2000) {
+				blinky->blink();
+				pinky->blink();
+				inky->blink();
+				clyde->blink();
+			}
+		}
 			
 		if (moving()) {
 		    // redraw background and pills, but only if Blinky (=reference ghost for movement) has moved

@@ -117,21 +117,25 @@ void Ghost::move(int moving, Figur *pacman, float(ms)) {
 	this->move_on_rails(pacman, ms, this->labyrinth->number_rails(), labyrinth->array_rails);
 }
 
-int Ghost::relative_pos_pacman(Figur *pacman) {
-	int dx, dy;
-	dx = abs(pacman->x - this->x);
-	dy = abs(pacman->y - this->y);
-	if(dx > dy) {
-		if((pacman->x - this->x) > 0) 
-			return 2;	// to the right
-		else
-			return 0;	// to the left
+int Ghost::direction_to_point(int target_x, int target_y) {
+	int dx = abs(target_x - this->x);
+	int dy = abs(target_y - this->y);
+	if (dx > dy) {
+		return (target_x - this->x > 0) ? 2 /*to the right*/ : 0 /*to the left*/;
+	} else {
+		return (target_y - this->y > 0) ? 3 /*down*/ : 1 /*up*/;
 	}
-	else {
-		if((pacman->y - this->y) > 0) 
-			return 3;	// down
-		else
-			return 1;	// up
+}
+
+int Ghost::alternative_direction_to_point(int target_x, int target_y) {
+	int dx = abs(target_x - this->x);
+	int dy = abs(target_y - this->y);
+	if (dx > dy) {
+		// actually, here, a horizontal direction would be the best one, but what if it's not available?
+		return (target_y - this->y > 0) ? 3 /*down*/ : 1 /*up*/;
+	} else {
+		// actually vertical, alternative will be horizontal
+		return (target_x - this->x > 0) ? 2 /*to the right*/ : 0 /*to the left*/;
 	}
 }
 
@@ -143,9 +147,29 @@ int Ghost::choose_direction(int * sammel_richtung, int richtung_pacman, int samm
 	int idx_dir_pacman = -1;
 	int zufallswert;
 	int idx_direction;
+	int castle_direction;
+	int castle_x = 310, castle_y = 190;
 
 	if(sammel_counter == 1)
 		return sammel_richtung[0];
+
+	if (this->get_hunter() == NONE) {
+		// try to return to the ghost castle
+		castle_direction = this->direction_to_point(castle_x, castle_y);
+		for (int i = 0; i < sammel_counter; ++i) {
+			if (sammel_richtung[i] == castle_direction)
+				return castle_direction;
+		}
+		// try an alternative direction
+		castle_direction = this->alternative_direction_to_point(castle_x, castle_y);
+		for (int i = 0; i < sammel_counter; ++i) {
+			if (sammel_richtung[i] == castle_direction)
+				return castle_direction;
+		}
+		// if neither the exact nor the alternative direction can be taken, then choose randomly
+		zufallswert = (rand() % 100 + 1);
+		return sammel_richtung[zufallswert%sammel_counter];
+	}
 
 	for(int i = 0; i < sammel_counter; ++i) {
 		if(sammel_richtung[i] == richtung_pacman){
@@ -174,136 +198,147 @@ int Ghost::choose_direction(int * sammel_richtung, int richtung_pacman, int samm
 void Ghost::move_on_rails(Figur *pacman, float ms, int anz_schienen, Rail **ar_s) {
 	int i;
 	int richtung_ghost = this->get_richtung();
-	int richtung_pacman = this->relative_pos_pacman(pacman);
+	int richtung_pacman = this->direction_to_point(pacman->x, pacman->y);
 	int sammel_richtung[3];
 	int sammel_counter = 0;
 	float max_links = 999;							// maximum to the left (otherwise, the ghost will leave the rails)
 	float max_oben = 999;							// maximum up
 	float max_rechts = 999;							// maximum to the right
 	float max_unten = 999;							// maximum down
-	
-	
-		
-		for(i = 0; i <= anz_schienen - 1; i++) {	
-			// first, check the tunnel
-			if((richtung_ghost != 2) && (this->x <= 100) && (this->y == 215)) {
-		 		this->x = 515;
-		 		this->cur_x = 515;
-		 		richtung_ghost = 0;
-		 		break;
-			}
-			if((richtung_ghost != 0) && (this->x >= 515) && (this->y == 215)) {
-		 		this->x = 100;
-		 		this->cur_x = 100;
-		 		richtung_ghost = 2;
-		 		break;
-			}
+	int bridge;
 
-			// to the left
-			if ((richtung_ghost == 0) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
-				sammel_richtung[sammel_counter] = 1;
-				sammel_counter++;	
-				max_oben = this->cur_y - (float)ar_s[i]->y1;		
-			}
-			if ((richtung_ghost == 0) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
-				sammel_richtung[sammel_counter] = 3;
-				sammel_counter++;
-				max_unten = (float)ar_s[i]->y2 - this->cur_y;
-			}
-		  	if ((richtung_ghost == 0) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {		
+	for(i = 0; i <= anz_schienen - 1; i++) {
+		// first, check the tunnel
+		if((richtung_ghost != 2) && (this->x <= 100) && (this->y == 215)) {
+	 		this->x = 515;
+	 		this->cur_x = 515;
+	 		richtung_ghost = 0;
+	 		break;
+		}
+		if((richtung_ghost != 0) && (this->x >= 515) && (this->y == 215)) {
+	 		this->x = 100;
+	 		this->cur_x = 100;
+	 		richtung_ghost = 2;
+	 		break;
+		}
+
+		// for returning eyes-only ghosts, open the door to the castle
+		bridge = (i==45 && this->get_hunter()==NONE) ? 1 : 0;
+
+		// to the left
+		if ((richtung_ghost == 0) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
+			sammel_richtung[sammel_counter] = 1;
+			sammel_counter++;	
+			max_oben = this->cur_y - (float)ar_s[i]->y1;		
+		}
+		if ((richtung_ghost == 0) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1 - bridge)) {
+			sammel_richtung[sammel_counter] = 3;
+			sammel_counter++;
+			max_unten = (float)ar_s[i]->y2 - this->cur_y;
+		}
+	  	if ((richtung_ghost == 0) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {		
+			sammel_richtung[sammel_counter] = 0;
+			sammel_counter++;
+			max_links = this->cur_x - (float)ar_s[i]->x1;
+		}
+		if(sammel_counter == 3)
+			break;
+	
+		// up
+		if ((richtung_ghost == 1) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
+			if(!this->up_down) {
 				sammel_richtung[sammel_counter] = 0;
 				sammel_counter++;
 				max_links = this->cur_x - (float)ar_s[i]->x1;
 			}
-			if(sammel_counter == 3)
-				break;
-		
-			// up
-			if ((richtung_ghost == 1) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
-				if(!this->up_down) {
-					sammel_richtung[sammel_counter] = 0;
-					sammel_counter++;
-					max_links = this->cur_x - (float)ar_s[i]->x1;
-				}
-			}
-			if ((richtung_ghost == 1) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
-				if(!this->up_down) {
-					sammel_richtung[sammel_counter] = 2;
-					sammel_counter++;
-					max_rechts = (float)ar_s[i]->x2 - this->cur_x;
-				}
-			}
-			if ((richtung_ghost == 1) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
-				sammel_richtung[sammel_counter] = 1;
-				sammel_counter++;
-				max_oben = this->cur_y - (float)ar_s[i]->y1;
-			}
-		
-			if(sammel_counter == 3)
-				break;
-		
-			// to the right
-			if ((richtung_ghost == 2) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
-				sammel_richtung[sammel_counter] = 1;
-				sammel_counter++;
-				max_oben = this->cur_y - (float)ar_s[i]->y1;
-			}
-			if ((richtung_ghost == 2) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
-				sammel_richtung[sammel_counter] = 3;
-				sammel_counter++;
-				max_unten = (float)ar_s[i]->y2 - this->cur_y;
-			}
-			if ((richtung_ghost == 2) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
+		}
+		if ((richtung_ghost == 1) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
+			if(!this->up_down) {
 				sammel_richtung[sammel_counter] = 2;
 				sammel_counter++;
 				max_rechts = (float)ar_s[i]->x2 - this->cur_x;
 			}
-			
-			if(sammel_counter == 3)
-				break;
-		
-			// down
-			if ((richtung_ghost == 3) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
-				if(!this->up_down) {
-					sammel_richtung[sammel_counter] = 0;
-					sammel_counter++;
-					max_links = this->cur_x - (float)ar_s[i]->x1;
-				}
-			}
-			if ((richtung_ghost == 3) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
-				if(!this->up_down) {
-					sammel_richtung[sammel_counter] = 2;
-					sammel_counter++;
-					max_rechts = (float)ar_s[i]->x2 - this->cur_x;
-				}
-			}
-			if ((richtung_ghost == 3) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
-				sammel_richtung[sammel_counter] = 3;
-				sammel_counter++;
-				max_unten = (float)ar_s[i]->y2 - this->cur_y;
-			}
-		
-			if(sammel_counter == 3)
-				break;
 		}
-	
-	
-		if((richtung_ghost == 1) && (sammel_counter == 0) && (this->up_down)) {
-			sammel_richtung[sammel_counter] = 3;
-			sammel_counter++;
-			this->up_down--;
-		}
-	
-		if((richtung_ghost == 3) && (sammel_counter == 0) && (this->up_down)) {
+		if ((richtung_ghost == 1) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
 			sammel_richtung[sammel_counter] = 1;
 			sammel_counter++;
-			this->up_down--;
+			max_oben = this->cur_y - (float)ar_s[i]->y1;
 		}
 	
-		if(sammel_counter != 0){
-				if(this->was_moving())
-					richtung_ghost = choose_direction(sammel_richtung, richtung_pacman, sammel_counter, this->get_intelligence());
+		if(sammel_counter == 3)
+			break;
+	
+		// to the right
+		if ((richtung_ghost == 2) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
+			sammel_richtung[sammel_counter] = 1;
+			sammel_counter++;
+			max_oben = this->cur_y - (float)ar_s[i]->y1;
 		}
+		if ((richtung_ghost == 2) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1 - bridge)) {
+			sammel_richtung[sammel_counter] = 3;
+			sammel_counter++;
+			max_unten = (float)ar_s[i]->y2 - this->cur_y;
+		}
+		if ((richtung_ghost == 2) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
+			sammel_richtung[sammel_counter] = 2;
+			sammel_counter++;
+			max_rechts = (float)ar_s[i]->x2 - this->cur_x;
+		}
+		
+		if(sammel_counter == 3)
+			break;
+	
+		// down
+		if ((richtung_ghost == 3) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
+			if(!this->up_down) {
+				sammel_richtung[sammel_counter] = 0;
+				sammel_counter++;
+				max_links = this->cur_x - (float)ar_s[i]->x1;
+			}
+		}
+		if ((richtung_ghost == 3) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
+			if(!this->up_down) {
+				sammel_richtung[sammel_counter] = 2;
+				sammel_counter++;
+				max_rechts = (float)ar_s[i]->x2 - this->cur_x;
+			}
+		}
+		if ((richtung_ghost == 3) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
+			sammel_richtung[sammel_counter] = 3;
+			sammel_counter++;
+			max_unten = (float)ar_s[i]->y2 - this->cur_y;
+		}
+		if ((richtung_ghost == 3) && (i == 45) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y2)) {
+			// special case: at the bottom of the castle's vertical center rail, the ghost must invert it's direction (i.e. go up again)
+			sammel_richtung[0] = 1;
+			sammel_counter = 1;
+			max_oben = this->cur_y - (float)ar_s[i]->y1;
+			// also make an eyes-only ghost normal again
+			if (this->get_hunter() == NONE)
+				this->set_hunter(GHOST);
+			break;  // no more directions allowed
+		}
+	
+		if(sammel_counter == 3)
+			break;
+	}
+
+	if((richtung_ghost == 1) && (sammel_counter == 0) && (this->up_down)) {
+		sammel_richtung[sammel_counter] = 3;
+		sammel_counter++;
+		this->up_down--;
+	}
+
+	if((richtung_ghost == 3) && (sammel_counter == 0) && (this->up_down)) {
+		sammel_richtung[sammel_counter] = 1;
+		sammel_counter++;
+		this->up_down--;
+	}
+
+	if(sammel_counter != 0){
+			if(this->was_moving())
+				richtung_ghost = choose_direction(sammel_richtung, richtung_pacman, sammel_counter, this->get_intelligence());
+	}
 
 	this->move(ms,richtung_ghost, max_links, max_oben, max_rechts, max_unten);
 }
@@ -324,14 +359,7 @@ void Ghost::reset() {
 }
 
 void Ghost::AddUpdateRects_ghost() {
-	if(this->get_richtung() == 0)
-		this->screen->AddUpdateRects(this->x, this->y, (this->ghost_sf->w + abs(this->x - this->last_x)), this->ghost_sf->h);
-	if(this->get_richtung() == 1)
-		this->screen->AddUpdateRects(this->x, this->y, this->ghost_sf->w, (this->ghost_sf->h + abs(this->y - this->last_y)));
-	if(this->get_richtung() == 2)
-		this->screen->AddUpdateRects((this->x - abs(this->x - this->last_x)), this->y, this->ghost_sf->w, this->ghost_sf->h);
-	if(this->get_richtung() == 3)
-		this->screen->AddUpdateRects(this->x, (this->y - abs(this->y - this->last_y)), this->ghost_sf->w, this->ghost_sf->h);
+	screen->AddUpdateRects(less(x,last_x)-1, less(y,last_y)-1, ghost_sf->w + abs(x-last_x)+2, ghost_sf->h + abs(y-last_y)+2);
 }
 
 SDL_Surface* Ghost::get_Surface() const {
@@ -360,6 +388,7 @@ int Ghost::touched() {
 	if(this->get_hunter() == PACMAN) {
 		// ghost has been eaten by pacman
 		this->hunter = NONE;
+		this->set_speed(0.18f);
 	}
 	if(this->get_hunter() == NONE)
 		return 0;  // no problem for pacman

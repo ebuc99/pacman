@@ -83,18 +83,6 @@ static void stop_all(uint16_t stop, Pacman *pacman, Ghost *blinky, Ghost *pinky,
 	}
 }
 
-
-/* compute the score */
-static void compute_score(SDL_Surface *punkte, char *char_punktestand, int int_punktestand, TTF_Font *font, SDL_Color *textgelb) {
-	static int punktestand;
-	if((punktestand != int_punktestand) || moving()) {
-		sprintf(char_punktestand, "%d", int_punktestand * 10);
-		punkte = TTF_RenderText_Solid(font, char_punktestand, (*textgelb));
-		screen->draw_dynamic_content(punkte, 530, 60);
-		punktestand = int_punktestand;
-	}	
-}
-
 // SDL event loop: handle keyboard input events, and others
 static int eventloop(Pacman *pacman, Ghost *blinky, 
 Ghost *pinky, Ghost *inky, Ghost *clyde) {
@@ -326,7 +314,7 @@ int main() {
 		    // redraw background and pills, but only if Blinky (=reference ghost for movement) has moved
 		    screen->draw(hintergrund);
 		    labyrinth->draw_pillen();
-			compute_score(punkte, char_punktestand, int_punktestand, font, &textgelb); 
+			labyrinth->compute_score(punkte, int_punktestand, font, &textgelb);
 			screen->draw(score, 530, 30);
 			pacman->animate();
 		}

@@ -1,6 +1,7 @@
 #ifndef LABYRINTH_H
 #define LABYRINTH_H
 
+#include <SDL/SDL_ttf.h>
 #include "screen.h"
 #include "pille.h"
 #include "rail.h"
@@ -20,6 +21,8 @@ class Labyrinth {
 		//very bad, because the same method is in figur (and pacman)
 		// it must be in a basic class in future
 		SDL_Surface *LoadSurface(const char *filename, int transparent_color = -1);
+		int punktestand;
+		int bonus_stage; //200, 400, 800, 1600
 	public:
 		//constructor and destructor
 		Labyrinth(Screen *screen);
@@ -36,7 +39,10 @@ class Labyrinth {
 		/* draw pills, but only if Blinky has moved */
 		void draw_pillen();
 
+		// superpill animation
 		void pill_animation();
+
+		void compute_score(SDL_Surface *punkte, /*char *char_punktestand,*/ int int_punktestand, TTF_Font *font, SDL_Color *textgelb);
 
 		int number_rails() const;
 

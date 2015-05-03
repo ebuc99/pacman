@@ -2,7 +2,9 @@
 #include "string.h"
 
 Labyrinth::Labyrinth(Screen *screen):
-	cnt_pill_animation(0){
+	cnt_pill_animation(0),
+	punktestand(0),
+	bonus_stage(200){
 	this->screen = screen;
 	s0 = new Rail(207, 338, 412, 338);
 	s1 = new Rail(207, 37, 207, 380);
@@ -169,5 +171,14 @@ SDL_Surface *Labyrinth::LoadSurface(const char *filename, int transparent_color)
         }
     SDL_FreeSurface(temp);
     return surface;	
+}
+
+void Labyrinth::compute_score(SDL_Surface *punkte, /*char *char_punktestand,*/ int int_punktestand, TTF_Font *font, SDL_Color *textgelb) {
+	//static int punktestand;
+	char char_punktestand[8] = "0";
+	sprintf(char_punktestand, "%d", int_punktestand * 10);
+	punkte = TTF_RenderText_Solid(font, char_punktestand, (*textgelb));
+	screen->draw_dynamic_content(punkte, 530, 60);
+	punktestand = int_punktestand;	
 }
 	

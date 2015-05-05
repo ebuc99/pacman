@@ -2,7 +2,8 @@
 #include "math.h"
 
 
-Figur::Figur(int init_x, int init_y, float init_v):
+Figur::Figur(int init_x, int init_y, float init_v,
+             Screen *screen, Labyrinth *labyrinth):
 	initial_x(init_x),
 	initial_y(init_y),
 	initial_v(init_v) {
@@ -14,6 +15,8 @@ Figur::Figur(int init_x, int init_y, float init_v):
 	cur_y = (float)init_y;
 	dx = init_v;
 	dy = init_v;
+	this->screen = screen;
+	this->labyrinth = labyrinth;
 }
 
 Figur::~Figur() {
@@ -116,14 +119,6 @@ SDL_Surface* Figur::LoadSurface(const char *filename, int transparent_color = -1
 void Figur::reset() {
 }
 
-void Figur::set_labyrinth(Labyrinth *labyrinth) {
-	this->labyrinth = labyrinth;
-}
-
-void Figur::set_screen(Screen *screen) {
-	this->screen = screen;
-}
-
 int Figur::less(int a, int b) {
 	return (a < b) ? a : b;
 }
@@ -134,3 +129,7 @@ int Figur::greater(int a, int b) {
 Figur::Hunter Figur::get_hunter() const {}
 
 void Figur::set_hunter(Hunter hunter) {}
+
+void Figur::setGhostArray(Figur **ghost_array) {
+	this->ghost_array = ghost_array;
+}

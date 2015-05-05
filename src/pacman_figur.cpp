@@ -1,8 +1,8 @@
 #include "pacman_figur.h"
 #include "math.h"
 
-Pacman::Pacman(int init_x, int init_y):
-	Figur(init_x, init_y, PACMAN_V_FAST),
+Pacman::Pacman(int init_x, int init_y, Screen *screen, Labyrinth *labyrinth):
+	Figur(init_x, init_y, PACMAN_V_FAST, screen, labyrinth),
 	animation(0),
 	cnt_animation(0),
 	pacman_stopped(0),

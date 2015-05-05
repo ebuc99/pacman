@@ -2,12 +2,14 @@
 #include <stdlib.h>
 
 Ghost::Ghost(int init_x, int init_y, int init_intelligence, 
-             int init_richtung, int init_up_down, int ghost_ident):
-	Figur(init_x, init_y, GHOSTS_V),
+             int init_richtung, int init_up_down, int ghost_ident,
+             Screen *screen, Labyrinth *labyrinth):
+	Figur(init_x, init_y, GHOSTS_V, screen, labyrinth),
 	its_leader(0),
 	initial_intelligence(init_intelligence),
 	initial_richtung(init_richtung),
-	initial_up_down(init_up_down)
+	initial_up_down(init_up_down),
+	ghost_ident(ghost_ident)
 {
 	richtung = init_richtung;
 	intelligence = init_intelligence;
@@ -399,4 +401,8 @@ void Ghost::blink() {
 	if(this->get_hunter() == PACMAN) {
 		num_animation_frames = 4;
 	}
+}
+
+Ghost::Ghosts Ghost::getGhostIdent() const {
+	return (Ghosts)ghost_ident;
 }

@@ -173,33 +173,27 @@ int main() {
 	
 
 	// create an instance of pacman
-	Pacman *pacman = new Pacman(310, 338);
-	pacman->set_labyrinth(labyrinth);
-	pacman->set_screen(screen);
-
+	Pacman *pacman = new Pacman(310, 338, screen, labyrinth);
+	
 	// init ghosts
 	Ghost *blinky = new Ghost(310, 173, INTELLIGENCE_BLINKY, 
-	                          INIT_DIRECTION_LEFT, INIT_UP_DOWN, Ghost::BLINKY);
-	blinky->set_labyrinth(labyrinth);
-	blinky->set_screen(screen);
+	               			  INIT_DIRECTION_LEFT, INIT_UP_DOWN, Ghost::BLINKY,
+	                          screen, labyrinth);
 	
 	Ghost *pinky = new Ghost(310, 222, INTELLIGENCE_PINKY, 
-	                         INIT_DIRECTION_UP, INIT_UP_DOWN, Ghost::PINKY);
-	pinky->set_labyrinth(labyrinth);
-	pinky->set_screen(screen);
+	              			 INIT_DIRECTION_UP, INIT_UP_DOWN, Ghost::PINKY, 
+	                         screen, labyrinth);
 	
 	Ghost *inky = new Ghost(280, 222, INTELLIGENCE_INKY, 
-	                        INIT_DIRECTION_UP, INIT_UP_DOWN_INKY, Ghost::INKY);
-	inky->set_labyrinth(labyrinth);
-	inky->set_screen(screen);
+	             			INIT_DIRECTION_UP, INIT_UP_DOWN_INKY, Ghost::INKY, 
+	                        screen, labyrinth);
 	
 	Ghost *clyde = new Ghost(340, 222, INTELLIGENCE_CLYDE, 
-	                         INIT_DIRECTION_UP, INIT_UP_DOWN_CLYDE, Ghost::CLYDE);
-	clyde->set_labyrinth(labyrinth);
-	clyde->set_screen(screen);
-	
+	              			 INIT_DIRECTION_UP, INIT_UP_DOWN_CLYDE, Ghost::CLYDE,
+	                         screen, labyrinth);
+
+	// ghost array
 	Figur *ghost_array[4] = {blinky, pinky, inky, clyde};
-	
 
 	// initialize background graphic
     hintergrund = LoadSurface("/usr/local/share/pacman/gfx/hintergrund2.png");

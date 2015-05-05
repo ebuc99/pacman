@@ -8,7 +8,8 @@
 class Figur {
 	public:
 		// constructor and destructor
-		Figur(int init_x, int init_y, float init_v);
+		Figur(int init_x, int init_y, float init_v, 
+		      Screen *screen, Labyrinth *labyrinth);
 		virtual ~Figur();
 		
 		// position of the figure
@@ -50,18 +51,15 @@ class Figur {
 		// reset the figure
 		virtual void reset();
 
-		// set the Labyrinth
-		void set_labyrinth(Labyrinth *labyrinth);
-
-		// set the Screen
-		void set_screen(Screen *screen);
-
 		// hunting or hunted
 		enum Hunter {GHOST, PACMAN, NONE};
 		virtual Hunter get_hunter() const;
 		virtual void set_hunter(Hunter hunter);
 
 		virtual int touched() { return 0; }
+
+		// set ghost_array
+		void setGhostArray(Figur **ghost_array);
 		                        
 		//helper functions
 		int less(int a, int b);
@@ -84,5 +82,6 @@ class Figur {
 		Labyrinth *labyrinth;
 		Screen *screen;
 		Hunter hunter;
+		Figur **ghost_array;
 };
 #endif

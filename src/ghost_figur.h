@@ -9,7 +9,8 @@ class Ghost : public Figur {
 	public:
 		/* constructor and destructor */
 		Ghost(int init_x, int init_y, int init_intelligence, 
-		      int init_richtung, int init_up_down, int ghost_ident);
+		      int init_richtung, int init_up_down, int ghost_ident,
+		      Screen *screen, Labyrinth *labyrinth);
 		~Ghost();
 
 		/* draw ghost */
@@ -60,13 +61,12 @@ class Ghost : public Figur {
 		void blink();
 
 		/* Idents for the ghosts */
-		static const int BLINKY = 0;
-		static const int PINKY = 1;
-		static const int INKY = 2;
-		static const int CLYDE = 3;
+		enum Ghosts {BLINKY, PINKY, INKY, CLYDE};
 
 		// return the surface
 		SDL_Surface* get_Surface() const;
+
+		Ghosts getGhostIdent() const;
 		
 	private:
 		static const float GHOSTS_V = 0.18f; // normal speed of the ghosts
@@ -77,10 +77,12 @@ class Ghost : public Figur {
 		int initial_up_down;
 		int num_animation_frames;
 		int idx_animation;
+		int ghost_ident;
 		SDL_Surface *ghost_sf;
 		SDL_Surface *ghost_1, *ghost_2, *ar_ghost[4];
 		SDL_Surface *augen_0, *augen_1, *augen_2, *augen_3;
 		SDL_Surface *escape_1, *escape_2, *escape_white_1, *escape_white_2;
+		Figur **ghost_array;
 		
 };
 #endif

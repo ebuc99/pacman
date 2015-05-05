@@ -7,7 +7,7 @@
 class Pacman : public Figur {
 	public:
 		// constructor and destructor
-		Pacman(int init_x, int init_y);
+		Pacman(int init_x, int init_y, Screen *screen, Labyrinth *labyrinth);
 		~Pacman();
 		// draw pacman
 		void draw();

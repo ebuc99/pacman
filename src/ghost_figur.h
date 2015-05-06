@@ -21,6 +21,7 @@ class Ghost : public Figur {
 		
 		// defines the leader (reference for redrawing)
 		void set_leader(int leader); 
+		void set_leader();
 		
 		// overloaded move of class Figur
 		void move(float ms, int direction, float max_links = 999, float max_oben = 999, float max_rechts = 999, float max_unten = 999);
@@ -66,6 +67,9 @@ class Ghost : public Figur {
 		// return the surface
 		SDL_Surface* get_Surface() const;
 
+		// set ghost_array
+		void setGhostArray(Ghost **ghost_array);
+		
 		Ghosts getGhostIdent() const;
 		
 	private:
@@ -82,7 +86,6 @@ class Ghost : public Figur {
 		SDL_Surface *ghost_1, *ghost_2, *ar_ghost[4];
 		SDL_Surface *augen_0, *augen_1, *augen_2, *augen_3;
 		SDL_Surface *escape_1, *escape_2, *escape_white_1, *escape_white_2;
-		Figur **ghost_array;
-		
+		Ghost **ghost_array;
 };
 #endif

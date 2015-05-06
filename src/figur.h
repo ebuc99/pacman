@@ -58,8 +58,6 @@ class Figur {
 
 		virtual int touched() { return 0; }
 
-		// set ghost_array
-		void setGhostArray(Figur **ghost_array);
 		                        
 		//helper functions
 		int less(int a, int b);
@@ -82,6 +80,5 @@ class Figur {
 		Labyrinth *labyrinth;
 		Screen *screen;
 		Hunter hunter;
-		Figur **ghost_array;
 };
 #endif

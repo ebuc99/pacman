@@ -194,6 +194,13 @@ int main() {
 
 	// ghost array
 	Figur *ghost_array[4] = {blinky, pinky, inky, clyde};
+	Ghost *ghost_array_ghost[4] = {blinky, pinky, inky, clyde};
+
+
+	blinky->setGhostArray(ghost_array_ghost);
+	pinky->setGhostArray(ghost_array_ghost);
+	inky->setGhostArray(ghost_array_ghost);
+	clyde->setGhostArray(ghost_array_ghost);
 
 	// initialize background graphic
     hintergrund = LoadSurface("/usr/local/share/pacman/gfx/hintergrund2.png");
@@ -312,7 +319,6 @@ int main() {
 			screen->draw(score, 530, 30);
 			pacman->animate();
 		}
-		//pacman->animate();
 			
 	  	// if pacman stops, please set it to "normal"
 		if(pacman->is_pacman_stopped() && !pacman->is_dying()) {

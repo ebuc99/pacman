@@ -129,7 +129,3 @@ int Figur::greater(int a, int b) {
 Figur::Hunter Figur::get_hunter() const {}
 
 void Figur::set_hunter(Hunter hunter) {}
-
-void Figur::setGhostArray(Figur **ghost_array) {
-	this->ghost_array = ghost_array;
-}

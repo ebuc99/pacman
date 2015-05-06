@@ -96,6 +96,16 @@ void Ghost::set_leader(int leader) {
 	its_leader = leader;
 }
 
+void Ghost::set_leader() {
+	int i;
+	for(i = 0;i < 4; i++) {
+		if(ghost_array[i]->getGhostIdent() == this->getGhostIdent())
+			ghost_array[i]->set_leader(1);
+		else
+			ghost_array[i]->set_leader(0);
+	}
+}
+
 void Ghost::move(float ms, int direction, float max_links, float max_oben, float max_rechts, float max_unten) {
 	if(direction == 0)
 		move_left(ms, max_links);
@@ -361,7 +371,7 @@ void Ghost::reset() {
 }
 
 void Ghost::AddUpdateRects_ghost() {
-	screen->AddUpdateRects(less(x,last_x)-1, less(y,last_y)-1, ghost_sf->w + abs(x-last_x)+2, ghost_sf->h + abs(y-last_y)+2);
+	screen->AddUpdateRects(less(x,last_x), less(y,last_y), ghost_sf->w + abs(x-last_x), ghost_sf->h + abs(y-last_y));
 }
 
 SDL_Surface* Ghost::get_Surface() const {
@@ -391,6 +401,7 @@ int Ghost::touched() {
 		// ghost has been eaten by pacman
 		this->hunter = NONE;
 		this->set_speed(0.18f);
+		this->set_leader();
 	}
 	if(this->get_hunter() == NONE)
 		return 0;  // no problem for pacman
@@ -401,6 +412,10 @@ void Ghost::blink() {
 	if(this->get_hunter() == PACMAN) {
 		num_animation_frames = 4;
 	}
+}
+
+void Ghost::setGhostArray(Ghost **ghost_array) {
+	this->ghost_array = ghost_array;
 }
 
 Ghost::Ghosts Ghost::getGhostIdent() const {

@@ -6,7 +6,10 @@ Labyrinth::Labyrinth(Screen *screen):
 	punktestand(0),
 	bonus_stage(200),
 	cnt_hunting_mode(-1),
-	cnt_sleep(-1){
+	cnt_sleep(-1),
+	font(NULL),
+	smallFont(NULL),
+	smallScore(NULL) {
 	this->screen = screen;
 	s0 = new Rail(207, 338, 412, 338);
 	s1 = new Rail(207, 37, 207, 380);
@@ -73,6 +76,8 @@ Labyrinth::Labyrinth(Screen *screen):
 	ar_superpille[3] = this->LoadSurface("/usr/local/share/pacman/gfx/superpille_3.png", 0);
 	ar_superpille[4] = this->LoadSurface("/usr/local/share/pacman/gfx/superpille_2.png", 0);
 	superpille = ar_superpille[cnt_pill_animation];
+
+	textweiss = {255, 255, 255, 0};
 }   
 
 Labyrinth::~Labyrinth(){
@@ -173,8 +178,7 @@ SDL_Surface *Labyrinth::LoadSurface(const char *filename, int transparent_color)
     return surface;	
 }
 
-void Labyrinth::compute_score(SDL_Surface *punkte, TTF_Font *font, SDL_Color *textgelb) {
-	//static int punktestand;
+void Labyrinth::compute_score(SDL_Surface *punkte, SDL_Color *textgelb) {
 	char char_punktestand[8] = "0";
 	sprintf(char_punktestand, "%d", this->punktestand);
 	punkte = TTF_RenderText_Solid(font, char_punktestand, (*textgelb));
@@ -207,6 +211,30 @@ void Labyrinth::sleep(int frames) {
 
 void Labyrinth::addScore(int value, int show_x, int show_y) {
 	this->punktestand += value;
+	// show the score at the specified position
+	char ch[8] = "0";
+	sprintf(ch, "%d", value);
+	smallScore = TTF_RenderText_Solid(this->smallFont, ch, this->textweiss);
+	if (smallScore == NULL) {
+		printf("Unable to render text: %s\n", TTF_GetError());
+		return;
+	}
+	smallScore_x = show_x - (smallScore->w >> 1);
+	smallScore_y = show_y - (smallScore->h >> 1);
+	drawSmallScore();
+}
+
+void Labyrinth::drawSmallScore() {
+	if (smallScore)
+		screen->draw_dynamic_content(smallScore, smallScore_x, smallScore_y);
+}
+
+void Labyrinth::hideSmallScore() {
+	if (smallScore) {
+		screen->AddUpdateRects(smallScore_x, smallScore_y, smallScore->w, smallScore->h);
+		SDL_FreeSurface(smallScore);
+		smallScore = NULL;
+	}
 }
 
 void Labyrinth::addScore(int value) {
@@ -215,5 +243,10 @@ void Labyrinth::addScore(int value) {
 
 void Labyrinth::addBonusScore(int show_x, int show_y) {
 	this->addScore(this->bonus_stage, show_x, show_y);
+}
+
+void Labyrinth::setFonts(TTF_Font* font, TTF_Font* smallFont) {
+	this->font      = font;
+	this->smallFont = smallFont;
 }
 

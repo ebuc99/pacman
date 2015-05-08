@@ -6,7 +6,8 @@ Figur::Figur(int init_x, int init_y, float init_v,
              Screen *screen, Labyrinth *labyrinth):
 	initial_x(init_x),
 	initial_y(init_y),
-	initial_v(init_v) {
+	initial_v(init_v),
+	visible(1) {
 	x = init_x;
 	y = init_y;
 	last_x = init_x;
@@ -129,3 +130,12 @@ int Figur::greater(int a, int b) {
 Figur::Hunter Figur::get_hunter() const {}
 
 void Figur::set_hunter(Hunter hunter) {}
+
+void Figur::setVisibility(int v) {
+	int prev_value = this->visible;
+	this->visible = (v == 0) ? 0 : 1;
+	if (prev_value != this->visible)
+		draw();
+		addUpdateRect();
+}
+

@@ -7,7 +7,8 @@ Pacman::Pacman(int init_x, int init_y, Screen *screen, Labyrinth *labyrinth):
 	cnt_animation(0),
 	pacman_stopped(0),
 	dying(0),
-	die_counter(0) {
+	die_counter(0)
+{
     wechsel_rate = WECHSEL_RATE;
 	wechsel_x = init_x;
 	wechsel_y = init_y;
@@ -75,7 +76,8 @@ Pacman::~Pacman() {
 }
 
 void Pacman::draw() {
-    this->screen->draw(this->pacman_sf, this->x, this->y);
+	if (this->visible)
+	    this->screen->draw(this->pacman_sf, this->x, this->y);
 }
 
 void Pacman::move(int moving, float ms) {

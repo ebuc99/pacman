@@ -2,6 +2,7 @@
 #define GHOST_FIGUR_H
 
 #include "figur.h"
+#include "pacman_figur.h"
 #include "rail.h"
 #include <time.h>
 
@@ -10,11 +11,11 @@ class Ghost : public Figur {
 		/* constructor and destructor */
 		Ghost(int init_x, int init_y, int init_intelligence, 
 		      int init_richtung, int init_up_down, int ghost_ident,
-		      Screen *screen, Labyrinth *labyrinth);
+		      Screen *screen, Labyrinth *labyrinth, Pacman *pacman);
 		~Ghost();
 
 		/* draw ghost */
-		void draw();
+		virtual void draw();
 
 		// animate the ghost, i.e. switch to the next image of the animation array
 		void animation();
@@ -25,7 +26,7 @@ class Ghost : public Figur {
 		
 		// overloaded move of class Figur
 		void move(float ms, int direction, float max_links = 999, float max_oben = 999, float max_rechts = 999, float max_unten = 999);
-		void move(int moving, Figur *pacman, float(ms));
+		void move(int moving, float(ms));
 
 		// has the leader moved?
 		static int was_moving_leader;
@@ -39,7 +40,7 @@ class Ghost : public Figur {
 		int choose_direction(int * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence);
 
 		// moves a ghost on the defined rails
-		void move_on_rails(Figur *pacman, float ms, int anz_schienen, Rail **ar_s);
+		void move_on_rails(float ms, int anz_schienen, Rail **ar_s);
 		
 		// returns the intelligence of the ghost
 		int get_intelligence() const;
@@ -87,5 +88,6 @@ class Ghost : public Figur {
 		SDL_Surface *augen_0, *augen_1, *augen_2, *augen_3;
 		SDL_Surface *escape_1, *escape_2, *escape_white_1, *escape_white_2;
 		Ghost **ghost_array;
+		Pacman *pacman;
 };
 #endif

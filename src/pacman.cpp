@@ -131,7 +131,7 @@ Ghost *pinky, Ghost *inky, Ghost *clyde) {
 int main() {
 	SDL_Surface *hintergrund;
 	SDL_Surface *punkte, *score;
-	TTF_Font *font;
+	TTF_Font *font, *smallFont;
 	SDL_Color textgelb = {255, 247, 11, 0};
 	SDL_Color textweiss = {255, 255, 255, 0};
 	char char_punktestand[8] = "0";
@@ -158,19 +158,19 @@ int main() {
 	// init ghosts
 	Ghost *blinky = new Ghost(310, 173, INTELLIGENCE_BLINKY, 
 	               			  INIT_DIRECTION_LEFT, INIT_UP_DOWN, Ghost::BLINKY,
-	                          screen, labyrinth);
+	                          screen, labyrinth, pacman);
 	
 	Ghost *pinky = new Ghost(310, 222, INTELLIGENCE_PINKY, 
 	              			 INIT_DIRECTION_UP, INIT_UP_DOWN, Ghost::PINKY, 
-	                         screen, labyrinth);
+	                         screen, labyrinth, pacman);
 	
 	Ghost *inky = new Ghost(280, 222, INTELLIGENCE_INKY, 
 	             			INIT_DIRECTION_UP, INIT_UP_DOWN_INKY, Ghost::INKY, 
-	                        screen, labyrinth);
+	                        screen, labyrinth, pacman);
 	
 	Ghost *clyde = new Ghost(340, 222, INTELLIGENCE_CLYDE, 
 	              			 INIT_DIRECTION_UP, INIT_UP_DOWN_CLYDE, Ghost::CLYDE,
-	                         screen, labyrinth);
+	                         screen, labyrinth, pacman);
 
 	// ghost array
 	Figur *ghost_array[4] = {blinky, pinky, inky, clyde};
@@ -195,6 +195,12 @@ int main() {
 		printf("Unable to open TTF font: %s\n", TTF_GetError());
 		return -1;
 	}
+	smallFont = TTF_OpenFont("/usr/local/share/pacman/fonts/Cheapmot.TTF", 10);
+	if (!smallFont) {
+		printf("Unable to open TTF font: %s\n", TTF_GetError());
+		return -1;
+	}
+	labyrinth->setFonts(font, smallFont);
 	punkte = TTF_RenderText_Solid(font, char_punktestand, textgelb);
 	if(punkte == NULL) {
 		printf("Unable to render text: %s\n", TTF_GetError());
@@ -295,8 +301,9 @@ int main() {
 		    // redraw background and pills, but only if the reference ghost has moved
 		    screen->draw(hintergrund);
 		    labyrinth->draw_pillen();
-			labyrinth->compute_score(punkte, font, &textgelb);
+			labyrinth->compute_score(punkte, &textgelb);
 			screen->draw(score, 530, 30);
+			labyrinth->drawSmallScore();
 			pacman->animate();
 		}
 			
@@ -341,10 +348,10 @@ int main() {
 		// and move all figures
 		if (!pause && labyrinth->cnt_sleep <= 0) {
 			pacman->move(moving(), ms);
-			blinky->move(moving(), pacman, ms);
-			pinky->move(moving(), pacman, ms);
-			inky->move(moving(), pacman, ms);
-			clyde->move(moving(), pacman, ms);
+			blinky->move(moving(), ms);
+			pinky->move(moving(), ms);
+			inky->move(moving(), ms);
+			clyde->move(moving(), ms);
 		} else if (moving()) {
 			pacman->addUpdateRect();
 			blinky->addUpdateRect();
@@ -353,8 +360,17 @@ int main() {
 			clyde->addUpdateRect();
 		}
 
-		if (labyrinth->cnt_sleep > 0 && !pause)
+		if (labyrinth->cnt_sleep > 0 && !pause) {
 			labyrinth->cnt_sleep--;
+			if (labyrinth->cnt_sleep == 0) {
+				labyrinth->hideSmallScore();
+				pacman->setVisibility(1);
+				blinky->setVisibility(1);
+				pinky->setVisibility(1);
+				inky->setVisibility(1);
+				clyde->setVisibility(1);
+			}
+		}
 	}
 	
 	// clean up SDL

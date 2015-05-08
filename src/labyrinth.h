@@ -23,6 +23,10 @@ class Labyrinth {
 		SDL_Surface *LoadSurface(const char *filename, int transparent_color = -1);
 		int punktestand;
 		int bonus_stage; //200, 400, 800, 1600
+		TTF_Font *font, *smallFont;
+		SDL_Surface *smallScore;
+		int smallScore_x, smallScore_y;
+		SDL_Color textweiss;
 	public:
 		//constructor and destructor
 		Labyrinth(Screen *screen);
@@ -42,7 +46,7 @@ class Labyrinth {
 		// superpill animation
 		void pill_animation();
 
-		void compute_score(SDL_Surface *punkte, TTF_Font *font, SDL_Color *textgelb);
+		void compute_score(SDL_Surface *punkte, SDL_Color *textgelb);
 
 		int number_rails() const;
 
@@ -65,11 +69,16 @@ class Labyrinth {
 		// adds a value to the player's score
 		void addScore(int value, int show_x, int show_y);  // use this method if the score should be displayed
 		void addScore(int value);                          // use this method if the score should not be displayed
+		void drawSmallScore();
+		void hideSmallScore();
 		// adds the current bonus stage to the player's score
 		void addBonusScore(int show_x, int show_y);
 
 		// sleep for a short time - should be used after a ghost or a fruit has been eaten (display score, sleep shortly, remove score)
 		void sleep(int frames);
 		int cnt_sleep;
+
+		// assigns fonts
+		void setFonts(TTF_Font* font, TTF_Font* smallFont);
 };
 #endif

@@ -10,7 +10,7 @@ class Pacman : public Figur {
 		Pacman(int init_x, int init_y, Screen *screen, Labyrinth *labyrinth);
 		~Pacman();
 		// draw pacman
-		void draw();
+		virtual void draw();
 		
 		//move pacman
 		void move(int moving, float ms);

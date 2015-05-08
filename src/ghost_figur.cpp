@@ -125,7 +125,7 @@ void Ghost::move(float ms, int direction, float max_links, float max_oben, float
 
 void Ghost::move(int moving, Figur *pacman, float(ms)) {
 	if(moving)
-			this->AddUpdateRects_ghost();
+		this->addUpdateRect();
 	this->move_on_rails(pacman, ms, this->labyrinth->number_rails(), labyrinth->array_rails);
 }
 
@@ -370,7 +370,7 @@ void Ghost::reset() {
 	this->set_hunter(GHOST);
 }
 
-void Ghost::AddUpdateRects_ghost() {
+void Ghost::addUpdateRect() {
 	screen->AddUpdateRects(less(x,last_x), less(y,last_y), ghost_sf->w + abs(x-last_x), ghost_sf->h + abs(y-last_y));
 }
 
@@ -402,6 +402,9 @@ int Ghost::touched() {
 		this->hunter = NONE;
 		this->set_speed(0.18f);
 		this->set_leader();
+		this->labyrinth->addBonusScore(this->x, this->y);
+		this->labyrinth->increaseBonusStage();
+		this->labyrinth->sleep(1000);
 	}
 	if(this->get_hunter() == NONE)
 		return 0;  // no problem for pacman

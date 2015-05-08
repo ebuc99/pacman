@@ -26,7 +26,10 @@ class Figur {
 		
 		// wrapper for the directional movement functions
 		void move(float ms, int direction);
-		
+
+		// add an update rectangle to the screen
+		virtual void addUpdateRect() = 0;
+
 		// sets the speed of the figure
 		void set_speed(float v);
 		

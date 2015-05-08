@@ -45,13 +45,15 @@ class Pacman : public Figur {
 		// return the surface
 		SDL_Surface* get_Surface() const;
 
-		void check_eat_pills(int *punktestand, Figur **ghost_array);
+		void check_eat_pills(Figur **ghost_array);
 
 		// pacman dies
 		void set_dying(int dying);
 		int is_dying() const;
 		int die_animation();
-		
+
+		// registers pacman's rectangle (last and current position) for redrawing
+		virtual void addUpdateRect();
 
 	private:
 		static const float PACMAN_V_FAST = 0.2f; // pacman's speed when not eating

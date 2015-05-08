@@ -26,7 +26,7 @@ class Ghost : public Figur {
 		// overloaded move of class Figur
 		void move(float ms, int direction, float max_links = 999, float max_oben = 999, float max_rechts = 999, float max_unten = 999);
 		void move(int moving, Figur *pacman, float(ms));
-		
+
 		// has the leader moved?
 		static int was_moving_leader;
 		
@@ -47,8 +47,8 @@ class Ghost : public Figur {
 		// reset the ghost
 		void reset();
 
-		// this function registers the ghosts' graphics for redrawing, but only if they have changed
-		void AddUpdateRects_ghost();
+		// this function registers the ghosts' rectangle (last and current position) for redrawing
+		virtual void addUpdateRect();
 
 		// hunting or hunted
 		Figur::Hunter get_hunter() const;

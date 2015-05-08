@@ -94,6 +94,17 @@ void Figur::set_richtung(int p_richtung) {
 	richtung = p_richtung;
 }
 
+
+void Figur::set_stop(int stop) {
+	if(stop){
+		last_speed = this->get_speed();
+		this->set_speed(0);
+	} 
+	else {
+		this->set_speed(last_speed);
+	}
+}
+
 float Figur::least(float a, float b) {
 	return (a < b) ? a : b;
 }

@@ -36,7 +36,7 @@ class Figur {
 		// has the figure moved? (needed for performance tuning)
 		int was_moving();
 		
-		// is the figure parking?
+		// parking figur
 		void parking();
 		
 		// returns the direction
@@ -44,6 +44,9 @@ class Figur {
 		
 		// sets the direction of movement
 		void set_richtung(int p_richtung);
+
+		// start/stop the figure
+		void set_stop(int stop);
 
 		// return the surface, must be implemented by subclasses
 		virtual SDL_Surface* get_Surface() const = 0;  // makes the class abstract
@@ -76,6 +79,7 @@ class Figur {
 		int initial_x;
 		int initial_y;
 		float initial_v;
+		float last_speed;
 		SDL_Surface *LoadSurface(const char *filename, int transparent_color);
 		Labyrinth *labyrinth;
 		Screen *screen;

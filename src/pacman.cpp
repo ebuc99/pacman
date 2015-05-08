@@ -62,30 +62,27 @@ static int moving() {
 }
 
 /* stop all figures */
-static void stop_all(uint16_t stop, Pacman *pacman, Ghost *blinky, Ghost *pinky, Ghost *inky, Ghost *clyde) {
+static void stop_all(uint16_t stop, Pacman *pacman, Ghost **ghost_array) {
 	if(stop) {
-		speed_ghosts = blinky->get_speed();
-		speed_pacman = pacman->get_speed();
-		blinky->set_speed(0);
-		pinky->set_speed(0);
-		inky->set_speed(0);
-		clyde->set_speed(0);
-		pacman->set_speed(0);
+		ghost_array[0]->set_stop(true);
+		ghost_array[1]->set_stop(true);
+		ghost_array[2]->set_stop(true);
+		ghost_array[3]->set_stop(true);
+		pacman->set_stop(true);
 		stop_moving = 1;
 		
 	} else {
-		blinky->set_speed(speed_ghosts);
-		pinky->set_speed(speed_ghosts);
-		inky->set_speed(speed_ghosts);
-		clyde->set_speed(speed_ghosts);
-		pacman->set_speed(speed_pacman);
+		ghost_array[0]->set_stop(false);
+		ghost_array[1]->set_stop(false);
+		ghost_array[2]->set_stop(false);
+		ghost_array[3]->set_stop(false);
+		pacman->set_stop(false);
 		stop_moving = 0;
 	}
 }
 
 // SDL event loop: handle keyboard input events, and others
-static int eventloop(Pacman *pacman, Ghost *blinky, 
-Ghost *pinky, Ghost *inky, Ghost *clyde) {
+static int eventloop(Pacman *pacman, Ghost **ghost_array) {
 	SDL_Event event;
 	while(SDL_PollEvent(&event)) {
 		switch(event.type) {
@@ -106,36 +103,36 @@ Ghost *pinky, Ghost *inky, Ghost *clyde) {
 			if(event.key.keysym.sym == SDLK_p) {
 				if(!pacman->is_dying()) {
 					if(!stop_moving) {
-						stop_all(true, pacman, blinky, pinky, inky, clyde);  
+						stop_all(true, pacman, ghost_array);  
 						pause = 1;
 					}
 					else {
-						stop_all(false, pacman, blinky, pinky, inky, clyde);
+						stop_all(false, pacman, ghost_array);
 						pause = 0;
 					}
 				}
 			}
 			if(event.key.keysym.sym == SDLK_k) {
-				blinky->set_hunter(Figur::NONE);
-				pinky->set_hunter(Figur::NONE);
-				inky->set_hunter(Figur::NONE);
-				clyde->set_hunter(Figur::NONE);
+				ghost_array[0]->set_hunter(Figur::NONE);
+				ghost_array[1]->set_hunter(Figur::NONE);
+				ghost_array[2]->set_hunter(Figur::NONE);
+				ghost_array[3]->set_hunter(Figur::NONE);
 			}
 			if(event.key.keysym.sym == SDLK_v) {
-				blinky->set_hunter(Figur::PACMAN);
-				pinky->set_hunter(Figur::PACMAN);
-				inky->set_hunter(Figur::PACMAN);
-				clyde->set_hunter(Figur::PACMAN);
+				ghost_array[0]->set_hunter(Figur::PACMAN);
+				ghost_array[1]->set_hunter(Figur::PACMAN);
+				ghost_array[2]->set_hunter(Figur::PACMAN);
+				ghost_array[3]->set_hunter(Figur::PACMAN);
 			}
 			if(event.key.keysym.sym == SDLK_b) {
-				if(blinky->get_hunter() == Figur::PACMAN)
-					blinky->blink();
-				if(pinky->get_hunter() == Figur::PACMAN)
-					pinky->blink();
-				if(inky->get_hunter() == Figur::PACMAN)
-					inky->blink();
-				if(clyde->get_hunter() == Figur::PACMAN)
-					clyde->blink();
+				if(ghost_array[0]->get_hunter() == Figur::PACMAN)
+					ghost_array[0]->blink();
+				if(ghost_array[1]->get_hunter() == Figur::PACMAN)
+					ghost_array[1]->blink();
+				if(ghost_array[2]->get_hunter() == Figur::PACMAN)
+					ghost_array[2]->blink();
+				if(ghost_array[3]->get_hunter() == Figur::PACMAN)
+					ghost_array[3]->blink();
 			}
 			break;
 		case SDL_QUIT:
@@ -242,13 +239,12 @@ int main() {
 	startTicks = (float)SDL_GetTicks();
 	blinky->set_leader(1);	// Blinky will be the reference sprite for redrawing
 	// at first, stop all figures 
-	stop_all(true, pacman, blinky, pinky, inky, clyde); 
+	stop_all(true, pacman, ghost_array_ghost); 
 
 	// game loop
 	while(loop) {	
 		if(start_offset == -1)	
-			loop = eventloop(pacman, blinky, pinky, 
-			inky, clyde);
+			loop = eventloop(pacman, ghost_array_ghost);
 		
 		if(animation_counter > 50) {
 			// ghost animations
@@ -267,7 +263,7 @@ int main() {
 					pinky->reset();
 					inky->reset();
 					clyde->reset();
-					stop_all(true, pacman, blinky, pinky, inky, clyde);
+					stop_all(true, pacman, ghost_array_ghost);
 					start_offset = 10;
 				}
 			}
@@ -277,7 +273,7 @@ int main() {
 			if(start_offset > 0)
 				start_offset--;
 			else if (start_offset == 0) {
-				stop_all(false, pacman, blinky, pinky, inky, clyde);
+				stop_all(false, pacman, ghost_array_ghost);
 				start_offset = -1;
 		 	}
 				
@@ -343,7 +339,7 @@ int main() {
 		    labyrinth->draw_blocks();
 			screen->Refresh();
 			if(pacman->touch(ghost_array)  && !pacman->is_dying()) {
-				stop_all(true, pacman, blinky, pinky, inky, clyde);
+				stop_all(true, pacman, ghost_array_ghost);
 				pacman->set_dying(10);  
 			}
 		}

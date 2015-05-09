@@ -4,7 +4,12 @@
 Labyrinth::Labyrinth(Screen *screen):
 	cnt_pill_animation(0),
 	punktestand(0),
-	bonus_stage(200){
+	bonus_stage(200),
+	cnt_hunting_mode(-1),
+	cnt_sleep(-1),
+	font(NULL),
+	smallFont(NULL),
+	smallScore(NULL) {
 	this->screen = screen;
 	s0 = new Rail(207, 338, 412, 338);
 	s1 = new Rail(207, 37, 207, 380);
@@ -72,7 +77,7 @@ Labyrinth::Labyrinth(Screen *screen):
 	ar_superpille[4] = this->LoadSurface("/usr/local/share/pacman/gfx/superpille_2.png", 0);
 	superpille = ar_superpille[cnt_pill_animation];
 
-	cnt_hunting_mode = -1;
+	textweiss = {255, 255, 255, 0};
 }   
 
 Labyrinth::~Labyrinth(){
@@ -173,12 +178,75 @@ SDL_Surface *Labyrinth::LoadSurface(const char *filename, int transparent_color)
     return surface;	
 }
 
-void Labyrinth::compute_score(SDL_Surface *punkte, /*char *char_punktestand,*/ int int_punktestand, TTF_Font *font, SDL_Color *textgelb) {
-	//static int punktestand;
+void Labyrinth::compute_score(SDL_Surface *punkte, SDL_Color *textgelb) {
 	char char_punktestand[8] = "0";
-	sprintf(char_punktestand, "%d", int_punktestand * 10);
+	sprintf(char_punktestand, "%d", this->punktestand);
 	punkte = TTF_RenderText_Solid(font, char_punktestand, (*textgelb));
 	screen->draw_dynamic_content(punkte, 530, 60);
-	punktestand = int_punktestand;	
 }
-	
+
+void Labyrinth::startHuntingMode() {
+	if (cnt_hunting_mode < 0) {
+		this->bonus_stage = 200;
+		this->cnt_hunting_mode = 7000;
+	} else {
+		// hunting mode was still active - prolong the it's duration
+		this->cnt_hunting_mode += 7000;
+	}
+}
+
+void Labyrinth::stopHuntingMode() {
+	this->cnt_hunting_mode = -1;
+	this->bonus_stage = 200;
+}
+
+void Labyrinth::increaseBonusStage() {
+	if (this->bonus_stage < 1600)
+		bonus_stage <<= 1;  // bit shifting is faster than bonus_stage *= 2;
+}
+
+void Labyrinth::sleep(int frames) {
+	cnt_sleep = frames;
+}
+
+void Labyrinth::addScore(int value, int show_x, int show_y) {
+	this->punktestand += value;
+	// show the score at the specified position
+	char ch[8] = "0";
+	sprintf(ch, "%d", value);
+	smallScore = TTF_RenderText_Solid(this->smallFont, ch, this->textweiss);
+	if (smallScore == NULL) {
+		printf("Unable to render text: %s\n", TTF_GetError());
+		return;
+	}
+	smallScore_x = show_x - (smallScore->w >> 1);
+	smallScore_y = show_y - (smallScore->h >> 1);
+	drawSmallScore();
+}
+
+void Labyrinth::drawSmallScore() {
+	if (smallScore)
+		screen->draw_dynamic_content(smallScore, smallScore_x, smallScore_y);
+}
+
+void Labyrinth::hideSmallScore() {
+	if (smallScore) {
+		screen->AddUpdateRects(smallScore_x, smallScore_y, smallScore->w, smallScore->h);
+		SDL_FreeSurface(smallScore);
+		smallScore = NULL;
+	}
+}
+
+void Labyrinth::addScore(int value) {
+	this->punktestand += value;
+}
+
+void Labyrinth::addBonusScore(int show_x, int show_y) {
+	this->addScore(this->bonus_stage, show_x, show_y);
+}
+
+void Labyrinth::setFonts(TTF_Font* font, TTF_Font* smallFont) {
+	this->font      = font;
+	this->smallFont = smallFont;
+}
+

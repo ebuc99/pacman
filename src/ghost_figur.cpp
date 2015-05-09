@@ -3,7 +3,7 @@
 
 Ghost::Ghost(int init_x, int init_y, int init_intelligence, 
              int init_richtung, int init_up_down, int ghost_ident,
-             Screen *screen, Labyrinth *labyrinth):
+             Screen *screen, Labyrinth *labyrinth, Pacman *pacman):
 	Figur(init_x, init_y, GHOSTS_V, screen, labyrinth),
 	its_leader(0),
 	initial_intelligence(init_intelligence),
@@ -15,6 +15,7 @@ Ghost::Ghost(int init_x, int init_y, int init_intelligence,
 	intelligence = init_intelligence;
 	up_down = init_up_down;
 	this->set_hunter(GHOST);
+	this->pacman = pacman;
 
 	// Surfaces
 	if(ghost_ident == BLINKY) {
@@ -64,25 +65,27 @@ Ghost::~Ghost() {
 }
 
 void Ghost::draw() {
-	if (this->get_hunter() != NONE)
-		this->screen->draw(this->ghost_sf, this->x, this->y);
-	if (this->get_hunter() != PACMAN) {
-		switch(this->get_richtung()) {
-			case 0:
-				this->screen->draw(augen_0, this->x, this->y);
-				break;
-			case 1: 
-				this->screen->draw(augen_1, this->x, this->y);
-				break;
-			case 2:
-				this->screen->draw(augen_2, this->x, this->y);
-				break;
-			case 3: 
-				this->screen->draw(augen_3, this->x, this->y);
-				break;
-			default:
-				this->screen->draw(augen_0, this->x, this->y);
-				break;
+	if (this->visible) {
+		if (this->get_hunter() != NONE)
+			this->screen->draw(this->ghost_sf, this->x, this->y);
+		if (this->get_hunter() != PACMAN) {
+			switch(this->get_richtung()) {
+				case 0:
+					this->screen->draw(augen_0, this->x, this->y);
+					break;
+				case 1: 
+					this->screen->draw(augen_1, this->x, this->y);
+					break;
+				case 2:
+					this->screen->draw(augen_2, this->x, this->y);
+					break;
+				case 3: 
+					this->screen->draw(augen_3, this->x, this->y);
+					break;
+				default:
+					this->screen->draw(augen_0, this->x, this->y);
+					break;
+			}
 		}
 	}
 }
@@ -123,10 +126,10 @@ void Ghost::move(float ms, int direction, float max_links, float max_oben, float
 	}	
 }
 
-void Ghost::move(int moving, Figur *pacman, float(ms)) {
+void Ghost::move(int moving, float(ms)) {
 	if(moving)
-			this->AddUpdateRects_ghost();
-	this->move_on_rails(pacman, ms, this->labyrinth->number_rails(), labyrinth->array_rails);
+		this->addUpdateRect();
+	this->move_on_rails(ms, this->labyrinth->number_rails(), labyrinth->array_rails);
 }
 
 int Ghost::direction_to_point(int target_x, int target_y) {
@@ -207,7 +210,7 @@ int Ghost::choose_direction(int * sammel_richtung, int richtung_pacman, int samm
 	}
 }
 
-void Ghost::move_on_rails(Figur *pacman, float ms, int anz_schienen, Rail **ar_s) {
+void Ghost::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
 	int i;
 	int richtung_ghost = this->get_richtung();
 	int richtung_pacman = this->direction_to_point(pacman->x, pacman->y);
@@ -370,7 +373,7 @@ void Ghost::reset() {
 	this->set_hunter(GHOST);
 }
 
-void Ghost::AddUpdateRects_ghost() {
+void Ghost::addUpdateRect() {
 	screen->AddUpdateRects(less(x,last_x), less(y,last_y), ghost_sf->w + abs(x-last_x), ghost_sf->h + abs(y-last_y));
 }
 
@@ -402,6 +405,11 @@ int Ghost::touched() {
 		this->hunter = NONE;
 		this->set_speed(0.18f);
 		this->set_leader();
+		this->setVisibility(0);
+		this->pacman->setVisibility(0);
+		this->labyrinth->addBonusScore(this->x + (ghost_sf->w >> 1), this->y + (ghost_sf->h >> 1));
+		this->labyrinth->increaseBonusStage();
+		this->labyrinth->sleep(400);
 	}
 	if(this->get_hunter() == NONE)
 		return 0;  // no problem for pacman

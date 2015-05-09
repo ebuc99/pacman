@@ -26,7 +26,13 @@ class Figur {
 		
 		// wrapper for the directional movement functions
 		void move(float ms, int direction);
-		
+
+		// abstract draw method
+		virtual void draw() = 0;
+
+		// add an update rectangle to the screen
+		virtual void addUpdateRect() = 0;
+
 		// sets the speed of the figure
 		void set_speed(float v);
 		
@@ -65,7 +71,10 @@ class Figur {
 		//helper functions
 		int less(int a, int b);
 		int greater(int a, int b);
-		
+
+		// sets the figure's visibility (e.g. for pacman after eating a ghost or a fruit)
+		void setVisibility(int v);
+
 	protected:
 		float cur_y;
 		float cur_x;
@@ -84,5 +93,6 @@ class Figur {
 		Labyrinth *labyrinth;
 		Screen *screen;
 		Hunter hunter;
+		int visible;
 };
 #endif

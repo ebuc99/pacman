@@ -7,7 +7,8 @@ Pacman::Pacman(int init_x, int init_y, Screen *screen, Labyrinth *labyrinth):
 	cnt_animation(0),
 	pacman_stopped(0),
 	dying(0),
-	die_counter(0) {
+	die_counter(0)
+{
     wechsel_rate = WECHSEL_RATE;
 	wechsel_x = init_x;
 	wechsel_y = init_y;
@@ -75,12 +76,13 @@ Pacman::~Pacman() {
 }
 
 void Pacman::draw() {
-    this->screen->draw(this->pacman_sf, this->x, this->y);
+	if (this->visible)
+	    this->screen->draw(this->pacman_sf, this->x, this->y);
 }
 
 void Pacman::move(int moving, float ms) {
 	if(moving)
-		this->screen->AddUpdateRects(this->x, this->y, this->get_Surface()->w, this->get_Surface()->h);
+		this->addUpdateRect();
 	this->move_on_rails(ms, this->labyrinth->number_rails(), this->labyrinth->array_rails);		
 }
 void Pacman::move_left(float ms, float max_step) {
@@ -286,20 +288,20 @@ int Pacman::touch(Figur **ghost_array) const{
 	return 0;
 }
 
-void Pacman::check_eat_pills(int *punktestand, Figur **ghost_array) {
+void Pacman::check_eat_pills(Figur **ghost_array) {
 	if(this->was_moving()){
 		for(int i = 0; i < this->labyrinth->NUMBER_PILLS; i++) {
 			if(this->labyrinth->pillen[i].sichtbar && ((this->labyrinth->pillen[i].x - 10) >= less(this->x,this->last_x)) && ((this->labyrinth->pillen[i].x - 10) <= greater(this->x,this->last_x)) && ((this->labyrinth->pillen[i].y - 10) >= less(this->y,this->last_y)) && ((this->labyrinth->pillen[i].y - 10) <= greater(this->y,this->last_y))) {
 				cnt_slow = 15;
 				this->labyrinth->pillen[i].sichtbar = 0;
 				this->set_speed(PACMAN_V_SLOW);
-				(*punktestand)++;
+				this->labyrinth->addScore(10);
 				if(this->labyrinth->pillen[i].superpille) {
 					for(int j = 0; j < 4; ++j) {
-						if(ghost_array[j]->get_hunter() != NONE)  // eaten ghosts stille have to return to the castle
+						if(ghost_array[j]->get_hunter() != NONE)  // eaten ghosts still have to return to the castle
 							ghost_array[j]->set_hunter(PACMAN);
 					}
-					this->labyrinth->cnt_hunting_mode += 7000;
+					this->labyrinth->startHuntingMode();
 				}
 				break;
 			}	
@@ -332,3 +334,8 @@ int Pacman::die_animation() {
 		return die_counter;
 	}
 }
+
+void Pacman::addUpdateRect() {
+	screen->AddUpdateRects(less(x,last_x), less(y,last_y), pacman_sf->w + abs(x-last_x), pacman_sf->h + abs(y-last_y));
+}
+

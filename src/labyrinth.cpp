@@ -85,13 +85,6 @@ Labyrinth::~Labyrinth(){
 	free(ar_superpille);
 }
 
-/*int Labyrinth::less(int a, int b) {
-	return (a < b) ? a : b;
-}
-int Labyrinth::greater(int a, int b) {
-	return (a > b) ? a : b;
-}*/
-
 void Labyrinth::draw_blocks() {
   	SDL_Rect b1, b2;
   	b1.x = 100;
@@ -110,6 +103,7 @@ void Labyrinth::draw_blocks() {
 
 void Labyrinth::init_pillen() {
 	int m = 0;
+	this->cnt_pills = this->NUMBER_PILLS;
 	int i_ar_pille_x[26] = {148,162,176,190,204,217,231,245,259,273,287,300,314,327,340,354,368,381,395,409,422,436,449,462,476,490};
 	int i_ar_pille_y[29] = {47,61,75,89,102,116,130,143,157,170,184,197,211,225,239,252,266,280,294,308,321,335,348,362,376,390,404,417,430};
 		for(int i = 0; i < 26; i++) {
@@ -119,8 +113,9 @@ void Labyrinth::init_pillen() {
 						pillen[m].x = i_ar_pille_x[i];
 						pillen[m].y = i_ar_pille_y[j];
 						pillen[m].sichtbar = 1;
-						if(((i_ar_pille_x[i] == 148) && (i_ar_pille_y[j] == 75)) || ((i_ar_pille_x[i] == 490) && (i_ar_pille_y[j] == 75)) || ((i_ar_pille_x[i] == 148) && (i_ar_pille_y[j] == 348)) || ((i_ar_pille_x[i] == 490) && (i_ar_pille_y[j] == 348)))
+						if(((i_ar_pille_x[i] == 148) && (i_ar_pille_y[j] == 75)) || ((i_ar_pille_x[i] == 490) && (i_ar_pille_y[j] == 75)) || ((i_ar_pille_x[i] == 148) && (i_ar_pille_y[j] == 348)) || ((i_ar_pille_x[i] == 490) && (i_ar_pille_y[j] == 348))) {
 							pillen[m].superpille = 1;
+						}
 						else
 							pillen[m].superpille = 0;
 						m++;
@@ -248,5 +243,14 @@ void Labyrinth::addBonusScore(int show_x, int show_y) {
 void Labyrinth::setFonts(TTF_Font* font, TTF_Font* smallFont) {
 	this->font      = font;
 	this->smallFont = smallFont;
+}
+
+// decrease pills
+void Labyrinth::decreasePills() {
+	--cnt_pills;
+}
+// get exisiting pills
+int Labyrinth::getExisitingPills() const {
+	return cnt_pills;
 }
 

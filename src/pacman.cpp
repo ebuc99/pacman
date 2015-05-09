@@ -49,6 +49,13 @@ static int moving() {
 	return (Ghost::was_moving_leader || refresh_ghosts) ? 1 : 0;
 }
 
+/* reset all figures */
+static void reset_all(Pacman *pacman, Figur **ghost_array) {
+	int i;
+	for(i = 0; i <= 3; ++i)
+		ghost_array[i]->reset();
+	pacman->reset();
+}
 /* stop all figures */
 static void stop_all(uint16_t stop, Pacman *pacman, Ghost **ghost_array) {
 	if(stop) {
@@ -244,11 +251,7 @@ int main() {
 			if(pacman->is_dying()) {
 				if(!pacman->die_animation()) {
 					labyrinth->stopHuntingMode();
-					pacman->reset();
-					blinky->reset();
-					pinky->reset();
-					inky->reset();
-					clyde->reset();
+					reset_all(pacman, ghost_array);
 					stop_all(true, pacman, ghost_array_ghost);
 					start_offset = 10;
 				}
@@ -270,6 +273,19 @@ int main() {
 
 		animation_counter = animation_counter + ms;
 		pacman->check_eat_pills(ghost_array);
+		if(labyrinth->getExisitingPills() <= 0) { 
+			// init new level
+			labyrinth->stopHuntingMode();
+			reset_all(pacman, ghost_array);
+			stop_all(true, pacman, ghost_array_ghost);
+			screen->draw(hintergrund);
+			labyrinth->init_pillen();
+			labyrinth->draw_pillen();
+			screen->AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
+			screen->Refresh();
+			start_offset = 10;
+			continue;
+		}
 		if(labyrinth->cnt_hunting_mode == 0) {
 			if (!pacman->is_dying()) {
 				if (blinky->get_hunter() != Figur::NONE)  // eaten ghosts still have to return to the castle

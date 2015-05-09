@@ -27,6 +27,7 @@ class Labyrinth {
 		SDL_Surface *smallScore;
 		int smallScore_x, smallScore_y;
 		SDL_Color textweiss;
+		int cnt_pills;
 	public:
 		//constructor and destructor
 		Labyrinth(Screen *screen);
@@ -80,5 +81,11 @@ class Labyrinth {
 
 		// assigns fonts
 		void setFonts(TTF_Font* font, TTF_Font* smallFont);
+
+		// decrease pills
+		void decreasePills();
+
+		// get exisiting pills
+		int getExisitingPills() const;
 };
 #endif

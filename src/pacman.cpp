@@ -139,6 +139,7 @@ int main() {
 	SDL_Color textgelb = {255, 247, 11, 0};
 	SDL_Color textweiss = {255, 255, 255, 0};
 	char char_punktestand[8] = "0";
+	char char_level[20];
 	int loop = 1;
 	int start_offset = 10;
 	float startTicks;
@@ -199,7 +200,7 @@ int main() {
 		printf("Unable to open TTF font: %s\n", TTF_GetError());
 		return -1;
 	}
-	smallFont = TTF_OpenFont("/usr/local/share/pacman/fonts/Cheapmot.TTF", 10);
+	smallFont = TTF_OpenFont("/usr/local/share/pacman/fonts/Cheapmot.TTF", 12);
 	if (!smallFont) {
 		printf("Unable to open TTF font: %s\n", TTF_GetError());
 		return -1;
@@ -215,10 +216,11 @@ int main() {
 		printf("Unable to render text: %s\n", TTF_GetError());
 		return EXIT_FAILURE;
 	}
-        
+   
 	screen->draw(hintergrund);
 	labyrinth->init_pillen();
 	labyrinth->draw_pillen();
+	labyrinth->setInitText("Get Ready!");
 	pacman->draw();
 	blinky->draw();
 	pinky->draw();
@@ -233,7 +235,6 @@ int main() {
 	blinky->set_leader(1);	// Blinky will be the reference sprite for redrawing
 	// at first, stop all figures 
 	stop_all(true, pacman, ghost_array_ghost); 
-
 	// game loop
 	while(loop) {	
 		if(start_offset == -1)	
@@ -252,6 +253,7 @@ int main() {
 				if(!pacman->die_animation()) {
 					labyrinth->stopHuntingMode();
 					reset_all(pacman, ghost_array);
+					labyrinth->setInitText("Get Ready!");
 					stop_all(true, pacman, ghost_array_ghost);
 					start_offset = 10;
 				}
@@ -262,6 +264,7 @@ int main() {
 			if(start_offset > 0)
 				start_offset--;
 			else if (start_offset == 0) {
+				labyrinth->hideInitText();
 				stop_all(false, pacman, ghost_array_ghost);
 				start_offset = -1;
 		 	}
@@ -275,13 +278,21 @@ int main() {
 		pacman->check_eat_pills(ghost_array);
 		if(labyrinth->getExisitingPills() <= 0) { 
 			// init new level
-			labyrinth->stopHuntingMode();
 			reset_all(pacman, ghost_array);
 			stop_all(true, pacman, ghost_array_ghost);
 			screen->draw(hintergrund);
+			screen->draw(score, 530, 30);
+			labyrinth->stopHuntingMode();
+			labyrinth->compute_score(punkte, &textgelb);
+			screen->AddUpdateRects(0, 0, 680, 512);
+			screen->Refresh();
 			labyrinth->init_pillen();
 			labyrinth->draw_pillen();
-			screen->AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
+			labyrinth->setNextLevel();
+			sprintf(char_level, "  Level %d", labyrinth->getLevel());
+			labyrinth->setInitText(char_level);
+			SDL_Delay(1000);
+			screen->AddUpdateRects(0, 0, 680, 512);
 			screen->Refresh();
 			start_offset = 10;
 			continue;
@@ -314,6 +325,7 @@ int main() {
 		    screen->draw(hintergrund);
 		    labyrinth->draw_pillen();
 			labyrinth->compute_score(punkte, &textgelb);
+			labyrinth->drawInitText();
 			screen->draw(score, 530, 30);
 			labyrinth->drawSmallScore();
 			pacman->animate();

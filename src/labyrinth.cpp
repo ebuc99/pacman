@@ -9,7 +9,9 @@ Labyrinth::Labyrinth(Screen *screen):
 	cnt_sleep(-1),
 	font(NULL),
 	smallFont(NULL),
-	smallScore(NULL) {
+	smallScore(NULL),
+	initText(NULL),
+	level(1){
 	this->screen = screen;
 	s0 = new Rail(207, 338, 412, 338);
 	s1 = new Rail(207, 37, 207, 380);
@@ -254,3 +256,31 @@ int Labyrinth::getExisitingPills() const {
 	return cnt_pills;
 }
 
+void Labyrinth::setInitText(char *text) {
+	char c_restartText[10] = "Get Ready";
+	initText = TTF_RenderText_Solid(font, /*c_restartText*/text, this->textweiss);
+}
+
+void Labyrinth::drawInitText() {
+	if(initText)
+		screen->draw_dynamic_content(initText, 254, 258);
+}
+
+void Labyrinth::hideInitText() {
+	if (initText) {
+		screen->AddUpdateRects(254, 258, initText->w, initText->h);
+		SDL_FreeSurface(initText);
+		initText = NULL;
+	}
+}
+
+void Labyrinth::initNewLevel() {
+
+}
+void Labyrinth::setNextLevel() {
+	++level;
+}
+
+int Labyrinth::getLevel() const {
+	return level;
+}

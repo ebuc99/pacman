@@ -24,10 +24,11 @@ class Labyrinth {
 		int punktestand;
 		int bonus_stage; //200, 400, 800, 1600
 		TTF_Font *font, *smallFont;
-		SDL_Surface *smallScore;
+		SDL_Surface *smallScore, *initText;
 		int smallScore_x, smallScore_y;
-		SDL_Color textweiss;
+		SDL_Color textweiss, textgelb;
 		int cnt_pills;
+		int level;
 	public:
 		//constructor and destructor
 		Labyrinth(Screen *screen);
@@ -87,5 +88,23 @@ class Labyrinth {
 
 		// get exisiting pills
 		int getExisitingPills() const;
+
+		// set init text
+		void setInitText(char *text);
+		
+		// level init text
+		void drawInitText();
+
+		// hide init text
+		void hideInitText();
+
+		// init new level
+		void initNewLevel();
+		
+		// set next level
+		void setNextLevel();
+
+		// get level
+		int getLevel() const;
 };
 #endif

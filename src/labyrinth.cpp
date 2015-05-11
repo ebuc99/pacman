@@ -80,11 +80,12 @@ Labyrinth::Labyrinth(Screen *screen):
 	superpille = ar_superpille[cnt_pill_animation];
 
 	textweiss = {255, 255, 255, 0};
+	textgelb = {255, 247, 11, 0};
 }   
 
 Labyrinth::~Labyrinth(){
 	SDL_FreeSurface(pille);
-	free(ar_superpille);
+	SDL_FreeSurface(punkte);
 }
 
 void Labyrinth::draw_blocks() {
@@ -175,10 +176,10 @@ SDL_Surface *Labyrinth::LoadSurface(const char *filename, int transparent_color)
     return surface;	
 }
 
-void Labyrinth::compute_score(SDL_Surface *punkte, SDL_Color *textgelb) {
+void Labyrinth::compute_score(/*SDL_Surface *punkte, SDL_Color *textgelb*/) {
 	char char_punktestand[8] = "0";
 	sprintf(char_punktestand, "%d", this->punktestand);
-	punkte = TTF_RenderText_Solid(font, char_punktestand, (*textgelb));
+	this->punkte = TTF_RenderText_Solid(font, char_punktestand, textgelb);
 	screen->draw_dynamic_content(punkte, 530, 60);
 }
 
@@ -275,10 +276,19 @@ void Labyrinth::hideInitText() {
 }
 
 void Labyrinth::initNewLevel() {
-
-}
-void Labyrinth::setNextLevel() {
+	this->stopHuntingMode();
+	this->compute_score();
+	screen->AddUpdateRects(0, 0, 500, 512);
+	screen->Refresh();
+	this->init_pillen();
+	this->draw_pillen();
 	++level;
+	char char_level[20];
+	sprintf(char_level, "  Level %d", this->getLevel());
+	this->setInitText(char_level);
+	SDL_Delay(1000);
+	screen->AddUpdateRects(0, 0, 500, 512);
+	screen->Refresh();
 }
 
 int Labyrinth::getLevel() const {

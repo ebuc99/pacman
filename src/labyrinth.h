@@ -24,7 +24,7 @@ class Labyrinth {
 		int punktestand;
 		int bonus_stage; //200, 400, 800, 1600
 		TTF_Font *font, *smallFont;
-		SDL_Surface *smallScore, *initText;
+		SDL_Surface *smallScore, *initText, *punkte;
 		int smallScore_x, smallScore_y;
 		SDL_Color textweiss, textgelb;
 		int cnt_pills;
@@ -48,7 +48,7 @@ class Labyrinth {
 		// superpill animation
 		void pill_animation();
 
-		void compute_score(SDL_Surface *punkte, SDL_Color *textgelb);
+		void compute_score(/*SDL_Surface *punkte, SDL_Color *textgelb*/);
 
 		int number_rails() const;
 
@@ -100,9 +100,6 @@ class Labyrinth {
 
 		// init new level
 		void initNewLevel();
-		
-		// set next level
-		void setNextLevel();
 
 		// get level
 		int getLevel() const;

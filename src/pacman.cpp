@@ -14,6 +14,7 @@ const uint16_t INIT_UP_DOWN = 0;		// initial up/down cycles before the ghost wil
 const uint16_t INIT_UP_DOWN_INKY = 5;
 const uint16_t INIT_UP_DOWN_CLYDE = 11;
 const float WAIT_IN_MS = 2.0;				// duration of a loop (i.e. minimum time between frames)
+const uint16_t START_OFFSET = 10;
 
 // initialize static member variables
 int Ghost::was_moving_leader = 1;
@@ -134,14 +135,11 @@ static int eventloop(Pacman *pacman, Ghost **ghost_array) {
 // main function, contains the game loop
 int main() {
 	SDL_Surface *hintergrund;
-	SDL_Surface *punkte, *score;
+	SDL_Surface *score;
 	TTF_Font *font, *smallFont;
-	SDL_Color textgelb = {255, 247, 11, 0};
 	SDL_Color textweiss = {255, 255, 255, 0};
-	char char_punktestand[8] = "0";
-	char char_level[20];
 	int loop = 1;
-	int start_offset = 10;
+	int start_offset = START_OFFSET;
 	float startTicks;
 	float lastTickstemp;
 	float ms = 1.0;
@@ -194,7 +192,6 @@ int main() {
 	if(TTF_Init() == -1) {
 		return EXIT_FAILURE;
 	}
-	//font = TTF_OpenFont("comicbd.ttf", 20);
 	font = TTF_OpenFont("/usr/local/share/pacman/fonts/Cheapmot.TTF", 20);
 	if(!font) {
 		printf("Unable to open TTF font: %s\n", TTF_GetError());
@@ -206,11 +203,6 @@ int main() {
 		return -1;
 	}
 	labyrinth->setFonts(font, smallFont);
-	punkte = TTF_RenderText_Solid(font, char_punktestand, textgelb);
-	if(punkte == NULL) {
-		printf("Unable to render text: %s\n", TTF_GetError());
-		return EXIT_FAILURE;
-	}
 	score = TTF_RenderText_Solid(font, "Score", textweiss);
 	if(score == NULL) {
 		printf("Unable to render text: %s\n", TTF_GetError());
@@ -228,7 +220,6 @@ int main() {
 	clyde->draw();
 	
 	screen->draw(score, 530, 30);
-	screen->draw(punkte, 530, 60);
 	screen->AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
 	screen->Refresh();
 	startTicks = (float)SDL_GetTicks();
@@ -255,7 +246,7 @@ int main() {
 					reset_all(pacman, ghost_array);
 					labyrinth->setInitText("Get Ready!");
 					stop_all(true, pacman, ghost_array_ghost);
-					start_offset = 10;
+					start_offset = START_OFFSET;
 				}
 			}
 			labyrinth->pill_animation();
@@ -281,20 +272,8 @@ int main() {
 			reset_all(pacman, ghost_array);
 			stop_all(true, pacman, ghost_array_ghost);
 			screen->draw(hintergrund);
-			screen->draw(score, 530, 30);
-			labyrinth->stopHuntingMode();
-			labyrinth->compute_score(punkte, &textgelb);
-			screen->AddUpdateRects(0, 0, 680, 512);
-			screen->Refresh();
-			labyrinth->init_pillen();
-			labyrinth->draw_pillen();
-			labyrinth->setNextLevel();
-			sprintf(char_level, "  Level %d", labyrinth->getLevel());
-			labyrinth->setInitText(char_level);
-			SDL_Delay(1000);
-			screen->AddUpdateRects(0, 0, 680, 512);
-			screen->Refresh();
-			start_offset = 10;
+			labyrinth->initNewLevel();
+			start_offset = START_OFFSET;
 			continue;
 		}
 		if(labyrinth->cnt_hunting_mode == 0) {
@@ -324,7 +303,7 @@ int main() {
 		    // redraw background and pills, but only if the reference ghost has moved
 		    screen->draw(hintergrund);
 		    labyrinth->draw_pillen();
-			labyrinth->compute_score(punkte, &textgelb);
+			labyrinth->compute_score();
 			labyrinth->drawInitText();
 			screen->draw(score, 530, 30);
 			labyrinth->drawSmallScore();
@@ -407,6 +386,7 @@ int main() {
 	delete pinky;
 	delete inky;
 	delete clyde;
+	delete labyrinth;
 	delete screen;
 
 	return EXIT_SUCCESS;

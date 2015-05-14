@@ -24,11 +24,15 @@ class Labyrinth {
 		int punktestand;
 		int bonus_stage; //200, 400, 800, 1600
 		TTF_Font *font, *smallFont;
-		SDL_Surface *smallScore, *initText, *punkte;
+		SDL_Surface *smallScore, *initText, *punkte, *fruit;
 		int smallScore_x, smallScore_y;
 		SDL_Color textweiss, textgelb;
 		int cnt_pills;
 		int level;
+		int next_fruit;
+		uint32_t fruit_display_time;
+		int cnt_displayed_fruits;
+		int fruit_displayed;
 	public:
 		//constructor and destructor
 		Labyrinth(Screen *screen);
@@ -103,5 +107,21 @@ class Labyrinth {
 
 		// get level
 		int getLevel() const;
+
+		// start the fruit randomizer 
+		// first fruit after 60, 70 or 80
+		// eaten pills
+		void startFruitRandomizer(int new_level);
+
+		// display fruit, if the number of
+		// pills was eaten or don't display
+		// if 10 s are over
+		void setFruit(uint32_t time);
+
+		// dont show fruit
+		void hideFruit();
+		
+		// dont show surface
+		void hideSurface(SDL_Surface *surface, int x, int y);
 };
 #endif

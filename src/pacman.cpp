@@ -135,7 +135,7 @@ static int eventloop(Pacman *pacman, Ghost **ghost_array) {
 // main function, contains the game loop
 int main() {
 	SDL_Surface *hintergrund;
-	SDL_Surface *score, *fruit;
+	SDL_Surface *score;
 	TTF_Font *font, *smallFont;
 	SDL_Color textweiss = {255, 255, 255, 0};
 	int loop = 1;
@@ -208,12 +208,12 @@ int main() {
 		printf("Unable to render text: %s\n", TTF_GetError());
 		return EXIT_FAILURE;
 	}
-	fruit = LoadSurface("/usr/local/share/pacman/gfx/cherry.png",255);
    
 	screen->draw(hintergrund);
 	labyrinth->init_pillen();
 	labyrinth->draw_pillen();
 	labyrinth->setInitText("Get Ready!");
+	labyrinth->startFruitRandomizer(true);
 	pacman->draw();
 	blinky->draw();
 	pinky->draw();
@@ -245,6 +245,7 @@ int main() {
 				if(!pacman->die_animation()) {
 					labyrinth->stopHuntingMode();
 					reset_all(pacman, ghost_array);
+					labyrinth->hideFruit();
 					labyrinth->setInitText("Get Ready!");
 					stop_all(true, pacman, ghost_array_ghost);
 					start_offset = START_OFFSET;
@@ -307,8 +308,8 @@ int main() {
 			labyrinth->compute_score();
 			labyrinth->drawInitText();
 			screen->draw(score, 530, 30);
-			screen->draw_dynamic_content(fruit, 310, 257);
 			labyrinth->drawSmallScore();
+			labyrinth->setFruit(SDL_GetTicks());
 			pacman->animate();
 		}
 			

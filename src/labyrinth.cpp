@@ -282,6 +282,8 @@ void Labyrinth::initNewLevel() {
 	screen->Refresh();
 	this->init_pillen();
 	this->draw_pillen();
+	this->hideFruit();
+	this->startFruitRandomizer(true);
 	++level;
 	char char_level[20];
 	sprintf(char_level, "  Level %d", this->getLevel());
@@ -293,4 +295,58 @@ void Labyrinth::initNewLevel() {
 
 int Labyrinth::getLevel() const {
 	return level;
+}
+
+void Labyrinth::startFruitRandomizer(int new_level) {
+	if(new_level) 
+		cnt_displayed_fruits = 0;
+	if(cnt_displayed_fruits >= 2)
+		return;
+	fruit_display_time = 0;
+	switch(rand() % 3) {
+		case 0:
+			next_fruit = 60;
+			break;
+		case 1:
+			next_fruit = 70;
+			break;
+		default:
+			next_fruit = 80;
+	}
+	next_fruit = getExisitingPills() - next_fruit;
+}
+
+void Labyrinth::setFruit(uint32_t time) {
+	if(cnt_displayed_fruits > 2)
+		return;
+	if(!fruit_display_time) {
+		if(getExisitingPills() <= next_fruit) {
+			fruit = LoadSurface("/usr/local/share/pacman/gfx/cherry.png",255);
+			screen->draw_dynamic_content(fruit, 310, 257);
+			fruit_display_time = time + 10000;
+		}
+	}
+	else {
+		if(time > fruit_display_time) {
+			this->hideFruit();
+		} else {
+			screen->draw(fruit, 310, 257);
+		}
+	}	
+}
+
+void Labyrinth::hideFruit() {
+	if(cnt_displayed_fruits > 2 || !fruit_display_time)
+		return;
+	if(fruit) {
+		screen->AddUpdateRects(310, 257, fruit->w, fruit->h);
+		SDL_FreeSurface(fruit);
+		fruit = NULL;
+	}
+	fruit_display_time = 0;
+	++cnt_displayed_fruits;
+	startFruitRandomizer(false);
+}
+
+void Labyrinth::hideSurface(SDL_Surface *surface, int x, int y) {
 }

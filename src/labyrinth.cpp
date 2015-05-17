@@ -303,21 +303,12 @@ void Labyrinth::startFruitRandomizer(int new_level) {
 	if(cnt_displayed_fruits >= 2)
 		return;
 	fruit_display_time = 0;
-	switch(rand() % 3) {
-		case 0:
-			next_fruit = 60;
-			break;
-		case 1:
-			next_fruit = 70;
-			break;
-		default:
-			next_fruit = 80;
-	}
+	next_fruit = ((rand() % 4) + 5) * 10;
 	next_fruit = getExisitingPills() - next_fruit;
 }
 
 void Labyrinth::setFruit(uint32_t time) {
-	if(cnt_displayed_fruits > 2)
+	if(cnt_displayed_fruits >= 2)
 		return;
 	if(!fruit_display_time) {
 		if(getExisitingPills() <= next_fruit) {
@@ -336,8 +327,9 @@ void Labyrinth::setFruit(uint32_t time) {
 }
 
 void Labyrinth::hideFruit() {
-	if(cnt_displayed_fruits > 2 || !fruit_display_time)
+	if(cnt_displayed_fruits > 3 || !fruit_display_time)
 		return;
+	//hideSurface(fruit, 310, 257);
 	if(fruit) {
 		screen->AddUpdateRects(310, 257, fruit->w, fruit->h);
 		SDL_FreeSurface(fruit);
@@ -346,7 +338,9 @@ void Labyrinth::hideFruit() {
 	fruit_display_time = 0;
 	++cnt_displayed_fruits;
 	startFruitRandomizer(false);
+
 }
 
-void Labyrinth::hideSurface(SDL_Surface *surface, int x, int y) {
+int Labyrinth::fruitIsDisplayed() {
+	return fruit_display_time;
 }

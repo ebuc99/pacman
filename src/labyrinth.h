@@ -109,7 +109,7 @@ class Labyrinth {
 		int getLevel() const;
 
 		// start the fruit randomizer 
-		// first fruit after 60, 70 or 80
+		// first fruit after 50, 60, 70 or 80
 		// eaten pills
 		void startFruitRandomizer(int new_level);
 
@@ -120,8 +120,9 @@ class Labyrinth {
 
 		// dont show fruit
 		void hideFruit();
-		
-		// dont show surface
-		void hideSurface(SDL_Surface *surface, int x, int y);
+
+		// fruit is displayed
+		int fruitIsDisplayed();
+
 };
 #endif

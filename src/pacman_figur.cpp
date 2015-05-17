@@ -312,6 +312,14 @@ void Pacman::check_eat_pills(Figur **ghost_array) {
 			cnt_slow--; 
 		if(cnt_slow <= 0)
 			this->set_speed(PACMAN_V_FAST); // make pacman fast again
+
+		// fruit eaten?
+		if(labyrinth->fruitIsDisplayed() && this->x == 310 && this->y == 257) {
+			labyrinth->hideFruit();
+			labyrinth->addScore(100, this->x + 10, this->y + 10);
+			this->setVisibility(0);
+			labyrinth->sleep(400);
+		}
 	}
 }
 

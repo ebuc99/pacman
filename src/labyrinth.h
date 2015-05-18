@@ -33,6 +33,8 @@ class Labyrinth {
 		uint32_t fruit_display_time;
 		int cnt_displayed_fruits;
 		int fruit_displayed;
+		int fruit_bonus;
+		char fruit_file[255];
 	public:
 		//constructor and destructor
 		Labyrinth(Screen *screen);
@@ -108,6 +110,9 @@ class Labyrinth {
 		// get level
 		int getLevel() const;
 
+		// set level
+		void setLevel(int level);
+
 		// start the fruit randomizer 
 		// first fruit after 50, 60, 70 or 80
 		// eaten pills
@@ -124,5 +129,10 @@ class Labyrinth {
 		// fruit is displayed
 		int fruitIsDisplayed();
 
+		// set fruit bonus
+		void setFruitBonus(int fruit_bonus);
+
+		// get fruit bonus
+		int getFruitBonus() const;
 };
 #endif

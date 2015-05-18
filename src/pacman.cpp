@@ -214,6 +214,7 @@ int main() {
 	labyrinth->draw_pillen();
 	labyrinth->setInitText("Get Ready!");
 	labyrinth->startFruitRandomizer(true);
+	labyrinth->setLevel(1);
 	pacman->draw();
 	blinky->draw();
 	pinky->draw();

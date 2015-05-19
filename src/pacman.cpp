@@ -15,6 +15,7 @@ const uint16_t INIT_UP_DOWN_INKY = 5;
 const uint16_t INIT_UP_DOWN_CLYDE = 11;
 const float WAIT_IN_MS = 2.0;				// duration of a loop (i.e. minimum time between frames)
 const uint16_t START_OFFSET = 10;
+const int INITIAL_LIVES = 3;            // number of times the player must die to get the "game over"
 
 // initialize static member variables
 int Ghost::was_moving_leader = 1;
@@ -156,7 +157,7 @@ int main() {
 	
 
 	// create an instance of pacman
-	Pacman *pacman = new Pacman(310, 338, screen, labyrinth);
+	Pacman *pacman = new Pacman(310, 338, screen, labyrinth, INITIAL_LIVES);
 	
 	// init ghosts
 	Ghost *blinky = new Ghost(310, 173, INTELLIGENCE_BLINKY, 
@@ -220,8 +221,9 @@ int main() {
 	pinky->draw();
 	inky->draw();
 	clyde->draw();
-	
+
 	screen->draw(score, 530, 30);
+	pacman->drawLives();
 	screen->AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
 	screen->Refresh();
 	startTicks = (float)SDL_GetTicks();
@@ -309,6 +311,7 @@ int main() {
 			labyrinth->compute_score();
 			labyrinth->drawInitText();
 			screen->draw(score, 530, 30);
+			pacman->drawLives();
 			labyrinth->drawSmallScore();
 			labyrinth->setFruit(SDL_GetTicks());
 			pacman->animate();

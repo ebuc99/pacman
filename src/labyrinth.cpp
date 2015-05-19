@@ -284,7 +284,7 @@ void Labyrinth::initNewLevel() {
 	this->draw_pillen();
 	this->hideFruit();
 	this->startFruitRandomizer(true);
-	setLevel(++level);
+	setLevel(level + 1);
 	char char_level[20];
 	sprintf(char_level, "  Level %d", this->getLevel());
 	this->setInitText(char_level);
@@ -299,7 +299,7 @@ int Labyrinth::getLevel() const {
 
 void Labyrinth::setLevel(int level) {
 	char gfx_file[255] = "/usr/local/share/pacman/gfx/";
-	this->level == level;
+	this->level = level;
 	switch(this->level) {
 		case 1:
 			setFruitBonus(100);
@@ -311,11 +311,11 @@ void Labyrinth::setLevel(int level) {
 			break;
 		case 3:
 			setFruitBonus(500);
-			strcat(gfx_file, "cherry.png");
+			strcat(gfx_file, "orange.png");
 			break;
 		case 4:
 			setFruitBonus(500);
-			strcat(gfx_file, "cherry.png");
+			strcat(gfx_file, "orange.png");
 			break;
 		case 5:
 			setFruitBonus(700);

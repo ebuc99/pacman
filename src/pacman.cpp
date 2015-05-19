@@ -16,6 +16,7 @@ const uint16_t INIT_UP_DOWN_CLYDE = 11;
 const float WAIT_IN_MS = 2.0;				// duration of a loop (i.e. minimum time between frames)
 const uint16_t START_OFFSET = 10;
 const int INITIAL_LIVES = 3;            // number of times the player must die to get the "game over"
+const int RED = 2;  // color red for init text
 
 // initialize static member variables
 int Ghost::was_moving_leader = 1;
@@ -251,8 +252,18 @@ int main() {
 					reset_all(pacman, ghost_array);
 					stop_all(true, pacman, ghost_array_ghost);
 					pacman->addLives(-1);
-					labyrinth->setInitText("Get Ready!");
-					start_offset = START_OFFSET;
+					if (pacman->getRemainingLives() <= 0) {
+						labyrinth->setInitText("Game over", RED);
+						start_offset = -1;  // do not start again
+						pacman->setVisibility(0);  // Pacman does not exist anymore
+						blinky->setVisibility(0);  // Ghosts should not be shown
+						pinky->setVisibility(0);
+						inky->setVisibility(0);
+						clyde->setVisibility(0);
+					} else {
+						labyrinth->setInitText("Get Ready!");
+						start_offset = START_OFFSET;
+					}
 				}
 			}
 			labyrinth->pill_animation();

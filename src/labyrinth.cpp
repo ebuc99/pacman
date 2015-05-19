@@ -81,6 +81,7 @@ Labyrinth::Labyrinth(Screen *screen):
 
 	textweiss = {255, 255, 255, 0};
 	textgelb = {255, 247, 11, 0};
+	textrot = {255, 0, 0, 0};
 }   
 
 Labyrinth::~Labyrinth(){
@@ -257,19 +258,19 @@ int Labyrinth::getExisitingPills() const {
 	return cnt_pills;
 }
 
-void Labyrinth::setInitText(char *text) {
+void Labyrinth::setInitText(char *text, int color /*default 0*/) {
 	char c_restartText[10] = "Get Ready";
-	initText = TTF_RenderText_Solid(font, /*c_restartText*/text, this->textweiss);
+	initText = TTF_RenderText_Solid(font, /*c_restartText*/text, (color==1) ? this->textgelb : ((color==2)?this->textrot:this->textweiss));
 }
 
 void Labyrinth::drawInitText() {
 	if(initText)
-		screen->draw_dynamic_content(initText, 254, 258);
+		screen->draw_dynamic_content(initText, 320-(initText->w >> 1), 268-(initText->h >> 1));
 }
 
 void Labyrinth::hideInitText() {
 	if (initText) {
-		screen->AddUpdateRects(254, 258, initText->w, initText->h);
+		screen->AddUpdateRects(320-(initText->w >> 1), 268-(initText->h >> 1), initText->w, initText->h);
 		SDL_FreeSurface(initText);
 		initText = NULL;
 	}

@@ -26,7 +26,7 @@ class Labyrinth {
 		TTF_Font *font, *smallFont;
 		SDL_Surface *smallScore, *initText, *punkte, *fruit;
 		int smallScore_x, smallScore_y;
-		SDL_Color textweiss, textgelb;
+		SDL_Color textweiss, textgelb, textrot;
 		int cnt_pills;
 		int level;
 		int next_fruit;
@@ -95,8 +95,8 @@ class Labyrinth {
 		// get exisiting pills
 		int getExisitingPills() const;
 
-		// set init text
-		void setInitText(char *text);
+		// set init text, color is 1=yellow, 2=red, white otherwise.
+		void setInitText(char *text, int color = 0);
 		
 		// level init text
 		void drawInitText();

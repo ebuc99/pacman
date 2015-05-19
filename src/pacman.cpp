@@ -247,10 +247,11 @@ int main() {
 			if(pacman->is_dying()) {
 				if(!pacman->die_animation()) {
 					labyrinth->stopHuntingMode();
-					reset_all(pacman, ghost_array);
 					labyrinth->hideFruit();
-					labyrinth->setInitText("Get Ready!");
+					reset_all(pacman, ghost_array);
 					stop_all(true, pacman, ghost_array_ghost);
+					pacman->addLives(-1);
+					labyrinth->setInitText("Get Ready!");
 					start_offset = START_OFFSET;
 				}
 			}

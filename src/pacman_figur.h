@@ -58,6 +58,11 @@ class Pacman : public Figur {
 		// draw the number of lives (as small pacman images) to the screen
 		void drawLives();
 
+		// Add lives. num should be -1 if pacman died, 1 if a bonus life is granted
+		void addLives(int num);
+		// returns the remaining number of lives
+		int getRemainingLives();
+
 	private:
 		static const float PACMAN_V_FAST = 0.2f; // pacman's speed when not eating
 		static const float PACMAN_V_SLOW = 0.18f; // pacman's speed while eating

@@ -358,3 +358,11 @@ void Pacman::drawLives() {
 	screen->AddUpdateRects(X_POS, Y_POS, (remainingLives*X_OFFSET)+pacman_links_1->w, pacman_links_1->h);
 }
 
+void Pacman::addLives(int num) {
+	remainingLives += num;
+}
+
+int Pacman::getRemainingLives() {
+	return remainingLives;
+}
+

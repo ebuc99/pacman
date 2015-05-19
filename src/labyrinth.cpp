@@ -244,6 +244,10 @@ void Labyrinth::addBonusScore(int show_x, int show_y) {
 	this->addScore(this->bonus_stage, show_x, show_y);
 }
 
+int Labyrinth::getScore() {
+	return this->punktestand;
+}
+
 void Labyrinth::setFonts(TTF_Font* font, TTF_Font* smallFont) {
 	this->font      = font;
 	this->smallFont = smallFont;

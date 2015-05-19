@@ -81,6 +81,8 @@ class Labyrinth {
 		void hideSmallScore();
 		// adds the current bonus stage to the player's score
 		void addBonusScore(int show_x, int show_y);
+		// retrieve current score
+		int getScore();
 
 		// sleep for a short time - should be used after a ghost or a fruit has been eaten (display score, sleep shortly, remove score)
 		void sleep(int frames);

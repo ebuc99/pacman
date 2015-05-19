@@ -140,6 +140,7 @@ int main() {
 	SDL_Surface *score;
 	TTF_Font *font, *smallFont;
 	SDL_Color textweiss = {255, 255, 255, 0};
+	int currentScore = 0, lastScore = 0;
 	int loop = 1;
 	int start_offset = START_OFFSET;
 	float startTicks;
@@ -315,7 +316,13 @@ int main() {
 				clyde->blink();
 			}
 		}
-			
+
+		lastScore = currentScore;
+		currentScore = labyrinth->getScore();
+		if (lastScore < 10000 && currentScore >= 10000) {
+			pacman->addLives(1);
+		}
+
 		if (moving()) {
 		    // redraw background and pills, but only if the reference ghost has moved
 		    screen->draw(hintergrund);

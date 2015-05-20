@@ -11,6 +11,7 @@ Labyrinth::Labyrinth(Screen *screen):
 	smallFont(NULL),
 	smallScore(NULL),
 	initText(NULL),
+	fruit(NULL),
 	level(1){
 	this->screen = screen;
 	s0 = new Rail(207, 338, 412, 338);
@@ -87,6 +88,8 @@ Labyrinth::Labyrinth(Screen *screen):
 Labyrinth::~Labyrinth(){
 	SDL_FreeSurface(pille);
 	SDL_FreeSurface(punkte);
+	SDL_FreeSurface(fruit);
+	SDL_FreeSurface(initText);
 }
 
 void Labyrinth::draw_blocks() {
@@ -303,62 +306,64 @@ int Labyrinth::getLevel() const {
 }
 
 void Labyrinth::setLevel(int level) {
-	char gfx_file[255] = "/usr/local/share/pacman/gfx/";
+	char fruit_file[255] = "/usr/local/share/pacman/gfx/";
 	this->level = level;
 	switch(this->level) {
 		case 1:
 			setFruitBonus(100);
-			strcat(gfx_file, "cherry.png");
+			strcat(fruit_file, "cherry.png");
 			break;
 		case 2:
 			setFruitBonus(300);
-			strcat(gfx_file, "strawberry.png");
+			strcat(fruit_file, "strawberry.png");
 			break;
 		case 3:
 			setFruitBonus(500);
-			strcat(gfx_file, "orange.png");
+			strcat(fruit_file, "orange.png");
 			break;
 		case 4:
 			setFruitBonus(500);
-			strcat(gfx_file, "orange.png");
+			strcat(fruit_file, "orange.png");
 			break;
 		case 5:
 			setFruitBonus(700);
-			strcat(gfx_file, "cherry.png");
+			strcat(fruit_file, "apple.png");
 			break;
 		case 6:
 			setFruitBonus(700);
-			strcat(gfx_file, "cherry.png");
+			strcat(fruit_file, "apple.png");
 			break;
 		case 7:
 			setFruitBonus(1000);
-			strcat(gfx_file, "cherry.png");
+			strcat(fruit_file, "cherry.png");
 			break;
 		case 8:
 			setFruitBonus(1000);
-			strcat(gfx_file, "cherry.png");
+			strcat(fruit_file, "cherry.png");
 			break;
 		case 9:
 			setFruitBonus(2000);
-			strcat(gfx_file, "cherry.png");
+			strcat(fruit_file, "cherry.png");
 			break;
 		case 10:
 			setFruitBonus(2000);
-			strcat(gfx_file, "cherry.png");
+			strcat(fruit_file, "cherry.png");
 			break;
 		case 11:
 			setFruitBonus(3000);
-			strcat(gfx_file, "cherry.png");
+			strcat(fruit_file, "cherry.png");
 			break;
 		case 12:
 			setFruitBonus(3000);
-			strcat(gfx_file, "cherry.png");
+			strcat(fruit_file, "cherry.png");
 			break;
 		default:
 			setFruitBonus(5000);
-			strcat(gfx_file, "cherry.png");
-	}
-	strcpy(this->fruit_file, gfx_file);
+			strcat(fruit_file, "cherry.png");
+	};
+	fruit = LoadSurface(fruit_file, 255);
+	screen->draw(fruit, 525, 430);
+	screen->AddUpdateRects(525, 430, fruit->w, fruit->h);
 }
 
 void Labyrinth::startFruitRandomizer(int new_level) {
@@ -376,7 +381,6 @@ void Labyrinth::setFruit(uint32_t time) {
 		return;
 	if(!fruitIsDisplayed()) {
 		if(getExisitingPills() <= next_fruit) {
-			fruit = LoadSurface(this->fruit_file/*"/usr/local/share/pacman/gfx/cherry.png"*/,255);
 			screen->draw_dynamic_content(fruit, 310, 257);
 			fruit_display_time = time + 10000;
 		}
@@ -395,8 +399,6 @@ void Labyrinth::hideFruit() {
 		return;
 	if(fruit) {
 		screen->AddUpdateRects(310, 257, fruit->w, fruit->h);
-		SDL_FreeSurface(fruit);
-		fruit = NULL;
 	}
 	fruit_display_time = 0;
 	++cnt_displayed_fruits;

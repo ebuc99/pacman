@@ -45,4 +45,5 @@ dist_datadir_gfx_DATA = augen_0.png \
 	escaping_ghost_white_2.png \
 	cherry.png \
 	strawberry.png \
-	orange.png
+	orange.png \
+	apple.png

@@ -34,7 +34,6 @@ class Labyrinth {
 		int cnt_displayed_fruits;
 		int fruit_displayed;
 		int fruit_bonus;
-		char fruit_file[255];
 	public:
 		//constructor and destructor
 		Labyrinth(Screen *screen);

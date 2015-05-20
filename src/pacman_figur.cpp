@@ -1,13 +1,14 @@
 #include "pacman_figur.h"
 #include "math.h"
 
-Pacman::Pacman(int init_x, int init_y, Screen *screen, Labyrinth *labyrinth):
+Pacman::Pacman(int init_x, int init_y, Screen *screen, Labyrinth *labyrinth, int lives):
 	Figur(init_x, init_y, PACMAN_V_FAST, screen, labyrinth),
 	animation(0),
 	cnt_animation(0),
 	pacman_stopped(0),
 	dying(0),
-	die_counter(0)
+	die_counter(0),
+	remainingLives(lives)
 {
     wechsel_rate = WECHSEL_RATE;
 	wechsel_x = init_x;
@@ -346,5 +347,22 @@ int Pacman::die_animation() {
 
 void Pacman::addUpdateRect() {
 	screen->AddUpdateRects(less(x,last_x), less(y,last_y), pacman_sf->w + abs(x-last_x), pacman_sf->h + abs(y-last_y));
+}
+
+void Pacman::drawLives() {
+	const int X_POS = 530;
+	const int Y_POS = 110;
+	const int X_OFFSET = pacman_links_1->w + 3;
+	for (int i = 0; i < remainingLives-1; ++i)
+		screen->draw(pacman_links_1, X_POS+(i*X_OFFSET), Y_POS);
+	screen->AddUpdateRects(X_POS, Y_POS, (remainingLives*X_OFFSET)+pacman_links_1->w, pacman_links_1->h);
+}
+
+void Pacman::addLives(int num) {
+	remainingLives += num;
+}
+
+int Pacman::getRemainingLives() {
+	return remainingLives;
 }
 

@@ -7,7 +7,7 @@
 class Pacman : public Figur {
 	public:
 		// constructor and destructor
-		Pacman(int init_x, int init_y, Screen *screen, Labyrinth *labyrinth);
+		Pacman(int init_x, int init_y, Screen *screen, Labyrinth *labyrinth, int lives);
 		~Pacman();
 		// draw pacman
 		virtual void draw();
@@ -55,6 +55,14 @@ class Pacman : public Figur {
 		// registers pacman's rectangle (last and current position) for redrawing
 		virtual void addUpdateRect();
 
+		// draw the number of lives (as small pacman images) to the screen
+		void drawLives();
+
+		// Add lives. num should be -1 if pacman died, 1 if a bonus life is granted
+		void addLives(int num);
+		// returns the remaining number of lives
+		int getRemainingLives();
+
 	private:
 		static const float PACMAN_V_FAST = 0.2f; // pacman's speed when not eating
 		static const float PACMAN_V_SLOW = 0.18f; // pacman's speed while eating
@@ -70,6 +78,7 @@ class Pacman : public Figur {
 		int cnt_slow; // number of loops that pacman will stay slow
 		int dying; // saves whether pacman is dying at the moment
 		int die_counter; // counter for die animation
+		int remainingLives;  // remaining lives of the player
 		SDL_Surface *pacman_sf;
 		SDL_Surface *pacman_normal;
 		SDL_Surface *pacman_links_1, *pacman_links_2, *ar_pacman_links[4];

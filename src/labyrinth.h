@@ -135,5 +135,8 @@ class Labyrinth {
 
 		// get fruit bonus
 		int getFruitBonus() const;
+
+		// draw fruit in info area
+		void drawInfoFruit();
 };
 #endif

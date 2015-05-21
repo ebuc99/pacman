@@ -332,6 +332,7 @@ int main() {
 			screen->draw(score, 530, 30);
 			pacman->drawLives();
 			labyrinth->drawSmallScore();
+			labyrinth->drawInfoFruit();
 			labyrinth->setFruit(SDL_GetTicks());
 			pacman->animate();
 		}

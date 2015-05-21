@@ -304,6 +304,7 @@ void Pacman::check_eat_pills(Figur **ghost_array) {
 							ghost_array[j]->set_hunter(PACMAN);
 					}
 					this->labyrinth->startHuntingMode();
+					this->labyrinth->addScore(40);
 				}
 				break;
 			}	

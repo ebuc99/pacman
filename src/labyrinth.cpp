@@ -335,19 +335,19 @@ void Labyrinth::setLevel(int level) {
 			break;
 		case 7:
 			setFruitBonus(1000);
-			strcat(fruit_file, "cherry.png");
+			strcat(fruit_file, "grapes.png");
 			break;
 		case 8:
 			setFruitBonus(1000);
-			strcat(fruit_file, "cherry.png");
+			strcat(fruit_file, "grapes.png");
 			break;
 		case 9:
 			setFruitBonus(2000);
-			strcat(fruit_file, "cherry.png");
+			strcat(fruit_file, "banana.png");
 			break;
 		case 10:
 			setFruitBonus(2000);
-			strcat(fruit_file, "cherry.png");
+			strcat(fruit_file, "banana.png");
 			break;
 		case 11:
 			setFruitBonus(3000);
@@ -362,7 +362,7 @@ void Labyrinth::setLevel(int level) {
 			strcat(fruit_file, "cherry.png");
 	};
 	fruit = LoadSurface(fruit_file, 255);
-	screen->draw(fruit, 525, 430);
+	drawInfoFruit();
 	screen->AddUpdateRects(525, 430, fruit->w, fruit->h);
 }
 
@@ -418,4 +418,8 @@ void Labyrinth::setFruitBonus(int fruit_bonus) {
 // get fruit bonus
 int Labyrinth::getFruitBonus() const {
 	return fruit_bonus;
+}
+
+void Labyrinth::drawInfoFruit() {
+	screen->draw(fruit, 525, 430);
 }

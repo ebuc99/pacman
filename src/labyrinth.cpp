@@ -309,7 +309,7 @@ void Labyrinth::setLevel(int level) {
 	switch(this->level) {
 		case 1:
 			setFruitBonus(100);
-			strcat(fruit_file, "strawberry.png");
+			strcat(fruit_file, "cherry.png");
 			break;
 		case 2:
 			setFruitBonus(300);

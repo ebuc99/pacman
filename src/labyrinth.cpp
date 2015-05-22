@@ -188,13 +188,11 @@ void Labyrinth::compute_score(/*SDL_Surface *punkte, SDL_Color *textgelb*/) {
 }
 
 void Labyrinth::startHuntingMode() {
-	if (cnt_hunting_mode < 0) {
-		this->bonus_stage = 200;
+	this->bonus_stage = 200;
+	if (cnt_hunting_mode < 0)
 		this->cnt_hunting_mode = 7000;
-	} else {
-		// hunting mode was still active - prolong the it's duration
+	else // hunting mode was still active - prolong the it's duration
 		this->cnt_hunting_mode += 7000;
-	}
 }
 
 void Labyrinth::stopHuntingMode() {
@@ -311,7 +309,7 @@ void Labyrinth::setLevel(int level) {
 	switch(this->level) {
 		case 1:
 			setFruitBonus(100);
-			strcat(fruit_file, "cherry.png");
+			strcat(fruit_file, "strawberry.png");
 			break;
 		case 2:
 			setFruitBonus(300);

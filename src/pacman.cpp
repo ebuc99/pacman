@@ -376,7 +376,7 @@ int main() {
 			ms = (float)(lastTickstemp/WAIT_IN_MS);
 		
 		// and move all figures
-		if (!pause && labyrinth->cnt_sleep <= 0) {
+		if ((ms > 0.0) && !pause && labyrinth->cnt_sleep <= 0) {
 			pacman->move(moving(), ms);
 			blinky->move(moving(), ms);
 			pinky->move(moving(), ms);

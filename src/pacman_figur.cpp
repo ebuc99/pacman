@@ -160,14 +160,19 @@ void Pacman::die_pic(int cnt_pic) {
 void Pacman::animate() {
 	if (animation) {
 		animation = 0;
-		if(this->get_richtung() == 0)
-	  		this->left_pic(cnt_animation); 
-	  	if(this->get_richtung() == 1) 
-	   		this->up_pic(cnt_animation); 
-	  	if(this->get_richtung() == 2) 
-	    	this->right_pic(cnt_animation); 
-	  	if(this->get_richtung() == 3) 
-    		this->down_pic(cnt_animation); 
+		switch(this->get_richtung()) {
+			case 0:
+				this->left_pic(cnt_animation);
+				break;
+			case 1:
+				this->up_pic(cnt_animation);
+				break;
+			case 2:
+				this->right_pic(cnt_animation);
+				break;
+			case 3:
+				this->down_pic(cnt_animation);
+		}
 	  	cnt_animation++;
 	}
 	if(cnt_animation > 3)
@@ -215,26 +220,31 @@ void Pacman::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
 		}
 		
 		// now the "normal" rails
-	  	if ((this->get_richtung() == 0) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
-			this->move_left(ms, (float)(this->x - ar_s[i]->x1));
-			check_move = 1;
-			break;
+		if(this->get_richtung() == 0) {
+		  	if ((this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
+				this->move_left(ms, (float)(this->x - ar_s[i]->x1));
+				check_move = 1;
+				break;
+			}
+		} else if(this->get_richtung() == 1) {
+			if ((this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
+				this->move_up(ms, (float)(this->y - ar_s[i]->y1));
+				check_move = 1;
+				break;
+			}
+		} else if(this->get_richtung() == 2) { 
+			if ((this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
+				this->move_right(ms, (float)(ar_s[i]->x2 - this->x));
+				check_move = 1;
+				break;
+			}
+		} else if(this->get_richtung() == 3) {
+			if ((this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
+				this->move_down(ms, (float)(ar_s[i]->y2 - this->y));
+				check_move = 1;
+				break;
+			}
 		}
-		if ((this->get_richtung() == 1) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
-			this->move_up(ms, (float)(this->y - ar_s[i]->y1));
-			check_move = 1;
-			break;
-		}
-		if ((this->get_richtung() == 2) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
-			this->move_right(ms, (float)(ar_s[i]->x2 - this->x));
-			check_move = 1;
-			break;
-		}
-		if ((this->get_richtung() == 3) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
-			this->move_down(ms, (float)(ar_s[i]->y2 - this->y));
-			check_move = 1;
-			break;
-		}			
 	}
 	
 	if(!check_move) 

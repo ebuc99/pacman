@@ -357,7 +357,7 @@ void Labyrinth::setLevel(int level) {
 			break;
 		default:
 			setFruitBonus(5000);
-			strcat(fruit_file, "cherry.png");
+			strcat(fruit_file, "key.png");
 	};
 	fruit = LoadSurface(fruit_file, 255);
 	drawInfoFruit();

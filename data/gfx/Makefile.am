@@ -49,4 +49,5 @@ dist_datadir_gfx_DATA = augen_0.png \
 	apple.png \
 	grapes.png \
 	banana.png \
-	pear.png
+	pear.png \
+	key.png

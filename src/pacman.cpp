@@ -333,7 +333,7 @@ int main() {
 			pacman->drawLives();
 			labyrinth->drawSmallScore();
 			labyrinth->drawInfoFruit();
-			labyrinth->setFruit(SDL_GetTicks());
+			labyrinth->setFruit();
 			pacman->animate();
 		}
 			

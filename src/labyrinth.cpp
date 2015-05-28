@@ -374,17 +374,17 @@ void Labyrinth::startFruitRandomizer(int new_level) {
 	next_fruit = getExisitingPills() - next_fruit;
 }
 
-void Labyrinth::setFruit(uint32_t time) {
+void Labyrinth::setFruit() {
 	if(cnt_displayed_fruits >= 2)
 		return;
 	if(!fruitIsDisplayed()) {
 		if(getExisitingPills() <= next_fruit) {
 			screen->draw_dynamic_content(fruit, 310, 257);
-			fruit_display_time = time + 10000;
+			fruit_display_time = 1200;
 		}
 	}
 	else {
-		if(time > fruit_display_time) {
+		if(--fruit_display_time == 1) {
 			this->hideFruit();
 		} else {
 			screen->draw(fruit, 310, 257);

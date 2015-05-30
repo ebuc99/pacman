@@ -28,7 +28,7 @@ void Figur::move_left(float ms, float max_step) {
 	last_y = y; 
 	cur_x = (cur_x - least(dx*ms, max_step));
 	x = int(cur_x);
-	richtung = 0;
+	direction = LEFT;
 }
 
 void Figur::move_up(float ms, float max_step) {
@@ -36,7 +36,7 @@ void Figur::move_up(float ms, float max_step) {
 	last_y = y; 
 	cur_y = (cur_y - least(dy*ms, max_step));
 	y = int(cur_y); 
-	richtung = 1;
+	direction = UP;
 }
 
 void Figur::move_right(float ms, float max_step) {
@@ -44,7 +44,7 @@ void Figur::move_right(float ms, float max_step) {
 	last_y = y; 
 	cur_x = (cur_x + least(dx*ms, max_step));
 	x = int(cur_x); 
-	richtung = 2;
+	direction = RIGHT;
 }
 
 void Figur::move_down(float ms, float max_step) {
@@ -52,17 +52,17 @@ void Figur::move_down(float ms, float max_step) {
 	last_y = y;
 	cur_y = (cur_y + least(dy*ms, max_step));
 	y = int(cur_y); 
-	richtung = 3;
+	direction = DOWN;
 }
 
-void Figur::move(float ms, int direction) {
-	if(direction == 0)
+void Figur::move(float ms, Direction direction) {
+	if(direction == LEFT)
 		move_left(ms);
-	if(direction == 1)
+	if(direction == UP)
 		move_up(ms);
-	if(direction == 2)
+	if(direction == RIGHT)
 		move_right(ms);
-	if(direction == 3)
+	if(direction == DOWN)
 		move_down(ms);		
 }
 void Figur::set_speed(float v) {
@@ -87,12 +87,12 @@ void Figur::parking() {
 
 }
 
-int Figur::get_richtung() const {
-	return richtung;
+Figur::Direction Figur::get_direction() const {
+	return direction;
 }
 
-void Figur::set_richtung(int p_richtung) {
-	richtung = p_richtung;
+void Figur::set_direction(Direction direction) {
+	this->direction = direction;
 }
 
 

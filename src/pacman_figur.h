@@ -34,7 +34,7 @@ class Pacman : public Figur {
 		int is_pacman_stopped();
 		
 		// direction that pacman will next go to
-		int richtung_pre;
+		Direction direction_pre;
 		
 		// reset pacman
 		void reset();

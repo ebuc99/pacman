@@ -13,8 +13,8 @@ Pacman::Pacman(int init_x, int init_y, Screen *screen, Labyrinth *labyrinth, int
     wechsel_rate = WECHSEL_RATE;
 	wechsel_x = init_x;
 	wechsel_y = init_y;
-	richtung = 0;
-	richtung_pre = 0;
+	direction = LEFT;
+	direction_pre = LEFT;
 	pacman_normal = Figur::LoadSurface("/usr/local/share/pacman/gfx/pacman.png", 255);
 	pacman_links_1 = LoadSurface("/usr/local/share/pacman/gfx/pacman_links_1.png", 255);
     pacman_links_2 = LoadSurface("/usr/local/share/pacman/gfx/pacman_links_2.png", 255);
@@ -96,7 +96,7 @@ void Pacman::move_left(float ms, float max_step) {
 		wechsel_y = y;
 		animation = 1;
 	}
-	richtung = 0;
+	direction = LEFT;
 }
 
 void Pacman::move_up(float ms, float max_step) {
@@ -109,7 +109,7 @@ void Pacman::move_up(float ms, float max_step) {
 		wechsel_y = y;
 		animation = 1;
 	}
-	richtung = 1;
+	direction = UP;
 }
 
 void Pacman::move_right(float ms, float max_step) {
@@ -122,7 +122,7 @@ void Pacman::move_right(float ms, float max_step) {
 		wechsel_y = y;
 		animation = 1;
 	}
-	richtung = 2;
+	direction = RIGHT;
 }
 
 void Pacman::move_down(float ms, float max_step) {
@@ -135,7 +135,7 @@ void Pacman::move_down(float ms, float max_step) {
 		wechsel_y = y;
 		animation = 1;
 	}
-	richtung = 3;
+	direction = DOWN;
 }
 
 void Pacman::left_pic(int cnt_pic) {
@@ -160,7 +160,7 @@ void Pacman::die_pic(int cnt_pic) {
 void Pacman::animate() {
 	if (animation) {
 		animation = 0;
-		switch(this->get_richtung()) {
+		switch(this->get_direction()) {
 			case 0:
 				this->left_pic(cnt_animation);
 				break;
@@ -184,61 +184,61 @@ void Pacman::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
 	int check_move = 0;
 	// check if the pre selected direction is
 	// not equal to the current direction and pacman is on a cross road
-	if(this->get_richtung() != this->richtung_pre) {
+	if(this->get_direction() != this->direction_pre) {
 		for(i = 0; i <= anz_schienen - 1; i++) {
-			if((this->richtung_pre == 0) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
+			if((this->direction_pre == LEFT) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
 				this->animation = 1;
-				this->set_richtung(this->richtung_pre);
+				this->set_direction(this->direction_pre);
 			}
-			if((this->richtung_pre == 1) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
+			if((this->direction_pre == UP) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
 				this->animation = 1;
-				this->set_richtung(this->richtung_pre);
+				this->set_direction(this->direction_pre);
 			}
-			if((this->richtung_pre == 2) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
+			if((this->direction_pre == RIGHT) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
 				this->animation = 1;
-				this->set_richtung(this->richtung_pre);
+				this->set_direction(this->direction_pre);
 			}
-			if((this->richtung_pre == 3) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
+			if((this->direction_pre == DOWN) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
 				this->animation = 1;
-				this->set_richtung(this->richtung_pre);
+				this->set_direction(this->direction_pre);
 			}
 		}
 	}
 	for(i = 0; i <= anz_schienen - 1; i++) {	
 		// first, check the tunnel
-		if((this->richtung_pre != 2) && (this->x <= 100) && (this->y == 215)) {
+		if((this->direction_pre != RIGHT) && (this->x <= 100) && (this->y == 215)) {
 	 		this->x = 515;
 	 		this->cur_x = 515;
-	 		this->richtung_pre = 0;
+	 		this->direction_pre = LEFT;
 	 		break;
 		}
-		if((this->richtung_pre != 0) && (this->x >= 515) && (this->y == 215)) {
+		if((this->direction_pre != LEFT) && (this->x >= 515) && (this->y == 215)) {
 	 		this->x = 100;
 	 		this->cur_x = 100;
-	 		this->richtung_pre = 2;
+	 		this->direction_pre = RIGHT;
 	 		break;
 		}
 		
 		// now the "normal" rails
-		if(this->get_richtung() == 0) {
+		if(this->get_direction() == LEFT) {
 		  	if ((this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
 				this->move_left(ms, (float)(this->x - ar_s[i]->x1));
 				check_move = 1;
 				break;
 			}
-		} else if(this->get_richtung() == 1) {
+		} else if(this->get_direction() == UP) {
 			if ((this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
 				this->move_up(ms, (float)(this->y - ar_s[i]->y1));
 				check_move = 1;
 				break;
 			}
-		} else if(this->get_richtung() == 2) { 
+		} else if(this->get_direction() == RIGHT) { 
 			if ((this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
 				this->move_right(ms, (float)(ar_s[i]->x2 - this->x));
 				check_move = 1;
 				break;
 			}
-		} else if(this->get_richtung() == 3) {
+		} else if(this->get_direction() == DOWN) {
 			if ((this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
 				this->move_down(ms, (float)(ar_s[i]->y2 - this->y));
 				check_move = 1;
@@ -270,8 +270,8 @@ void Pacman::reset() {
 	cur_y = (float)initial_y;
 	wechsel_x = initial_x;
 	wechsel_y = initial_y;
-	richtung = 0;
-	richtung_pre = 0;
+	direction = LEFT;
+	direction_pre = LEFT;
 	animation = 1;
 	cnt_animation = 0;
 	pacman_stopped = 0;

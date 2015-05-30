@@ -8,8 +8,8 @@ const uint16_t INTELLIGENCE_BLINKY = 90;	// intelligence for each ghost
 const uint16_t INTELLIGENCE_PINKY = 60;
 const uint16_t INTELLIGENCE_INKY = 30;
 const uint16_t INTELLIGENCE_CLYDE = 0;
-const uint16_t INIT_DIRECTION_LEFT = 0;	// initial direction of movement (only used for Blinky)
-const uint16_t INIT_DIRECTION_UP = 1;	// initial direction of movement (used for the other ghosts)
+//const uint16_t INIT_DIRECTION_LEFT = 0;	// initial direction of movement (only used for Blinky)
+//const uint16_t INIT_DIRECTION_UP = 1;	// initial direction of movement (used for the other ghosts)
 const uint16_t INIT_UP_DOWN = 0;		// initial up/down cycles before the ghost will be allowed to leave the castle
 const uint16_t INIT_UP_DOWN_INKY = 5;
 const uint16_t INIT_UP_DOWN_CLYDE = 11;
@@ -87,13 +87,13 @@ static int eventloop(Pacman *pacman, Ghost **ghost_array) {
 		case SDL_KEYDOWN:
 			if(!pacman->is_dying() && !pause) {
 				if(event.key.keysym.sym == SDLK_LEFT)
-					pacman->richtung_pre = 0;
+					pacman->direction_pre = Figur::LEFT;
 				if(event.key.keysym.sym == SDLK_UP) 
-					pacman->richtung_pre = 1; 
+					pacman->direction_pre = Figur::UP; 
 				if(event.key.keysym.sym == SDLK_RIGHT) 
-					pacman->richtung_pre = 2;
+					pacman->direction_pre = Figur::RIGHT;
 				if(event.key.keysym.sym == SDLK_DOWN) 
-					pacman->richtung_pre = 3; 
+					pacman->direction_pre = Figur::DOWN; 
 			}
 			if(event.key.keysym.sym == SDLK_f) {
 			    screen->toggleFullscreen();				
@@ -163,19 +163,19 @@ int main() {
 	
 	// init ghosts
 	Ghost *blinky = new Ghost(310, 173, INTELLIGENCE_BLINKY, 
-	               			  INIT_DIRECTION_LEFT, INIT_UP_DOWN, Ghost::BLINKY,
+	               			  Figur::LEFT, INIT_UP_DOWN, Ghost::BLINKY,
 	                          screen, labyrinth, pacman);
 	
 	Ghost *pinky = new Ghost(310, 222, INTELLIGENCE_PINKY, 
-	              			 INIT_DIRECTION_UP, INIT_UP_DOWN, Ghost::PINKY, 
+	              			 Figur::UP, INIT_UP_DOWN, Ghost::PINKY, 
 	                         screen, labyrinth, pacman);
 	
 	Ghost *inky = new Ghost(280, 222, INTELLIGENCE_INKY, 
-	             			INIT_DIRECTION_UP, INIT_UP_DOWN_INKY, Ghost::INKY, 
+	             			Figur::UP, INIT_UP_DOWN_INKY, Ghost::INKY, 
 	                        screen, labyrinth, pacman);
 	
 	Ghost *clyde = new Ghost(340, 222, INTELLIGENCE_CLYDE, 
-	              			 INIT_DIRECTION_UP, INIT_UP_DOWN_CLYDE, Ghost::CLYDE,
+	              			 Figur::UP, INIT_UP_DOWN_CLYDE, Ghost::CLYDE,
 	                         screen, labyrinth, pacman);
 
 	// ghost array
@@ -339,13 +339,13 @@ int main() {
 			
 	  	// if pacman stops, please set it to "normal"
 		if(pacman->is_pacman_stopped() && !pacman->is_dying()) {
-			if(pacman->get_richtung() == 0)
+			if(pacman->get_direction() == Figur::LEFT)
 		  		pacman->left_pic(0); 
-		  	if(pacman->get_richtung() == 1) 
+		  	if(pacman->get_direction() == Figur::UP) 
 		   		pacman->up_pic(0); 
-		 	if(pacman->get_richtung() == 2) 
+		 	if(pacman->get_direction() == Figur::RIGHT) 
 		    	pacman->right_pic(0); 
-		  	if(pacman->get_richtung() == 3) 
+		  	if(pacman->get_direction() == Figur::DOWN) 
 	    		pacman->down_pic(0); 
 			pacman->parking();
 		}		

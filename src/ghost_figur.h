@@ -10,7 +10,7 @@ class Ghost : public Figur {
 	public:
 		/* constructor and destructor */
 		Ghost(int init_x, int init_y, int init_intelligence, 
-		      int init_richtung, int init_up_down, int ghost_ident,
+		      Direction init_direction, int init_up_down, int ghost_ident,
 		      Screen *screen, Labyrinth *labyrinth, Pacman *pacman);
 		~Ghost();
 
@@ -77,7 +77,7 @@ class Ghost : public Figur {
 		static const float GHOSTS_V = 0.18f; // normal speed of the ghosts
 		int its_leader;
 		int up_down;
-		int initial_richtung;
+		Direction initial_direction;
 		int initial_intelligence;
 		int initial_up_down;
 		int num_animation_frames;

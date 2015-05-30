@@ -11,6 +11,9 @@ class Figur {
 		Figur(int init_x, int init_y, float init_v, 
 		      Screen *screen, Labyrinth *labyrinth);
 		virtual ~Figur();
+
+		// direction
+		enum Direction{LEFT, UP, RIGHT, DOWN};
 		
 		// position of the figure
 		int x, y; 
@@ -25,7 +28,7 @@ class Figur {
 		void move_down(float ms, float max_step = 999);
 		
 		// wrapper for the directional movement functions
-		void move(float ms, int direction);
+		void move(float ms, Direction direction);
 
 		// abstract draw method
 		virtual void draw() = 0;
@@ -46,10 +49,10 @@ class Figur {
 		void parking();
 		
 		// returns the direction
-		int get_richtung() const;
+		Direction get_direction() const;
 		
 		// sets the direction of movement
-		void set_richtung(int p_richtung);
+		void set_direction(Direction direction);
 
 		// start/stop the figure
 		void set_stop(int stop);
@@ -82,7 +85,7 @@ class Figur {
 		int wechsel_y;
 		int wechsel_rate;
 		float dx, dy;
-		int richtung;
+		Direction direction;
 		int intelligence;
 		float least(float a, float b);
 		int initial_x;

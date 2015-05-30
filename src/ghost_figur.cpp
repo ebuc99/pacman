@@ -2,16 +2,16 @@
 #include <stdlib.h>
 
 Ghost::Ghost(int init_x, int init_y, int init_intelligence, 
-             int init_richtung, int init_up_down, int ghost_ident,
+             Direction init_direction, int init_up_down, int ghost_ident,
              Screen *screen, Labyrinth *labyrinth, Pacman *pacman):
 	Figur(init_x, init_y, GHOSTS_V, screen, labyrinth),
 	its_leader(0),
 	initial_intelligence(init_intelligence),
-	initial_richtung(init_richtung),
+	initial_direction(init_direction),
 	initial_up_down(init_up_down),
 	ghost_ident(ghost_ident)
 {
-	richtung = init_richtung;
+	direction = init_direction;
 	intelligence = init_intelligence;
 	up_down = init_up_down;
 	this->set_hunter(GHOST);
@@ -69,7 +69,7 @@ void Ghost::draw() {
 		if (this->get_hunter() != NONE)
 			this->screen->draw(this->ghost_sf, this->x, this->y);
 		if (this->get_hunter() != PACMAN) {
-			switch(this->get_richtung()) {
+			switch(this->get_direction()) {
 				case 0:
 					this->screen->draw(augen_0, this->x, this->y);
 					break;
@@ -136,9 +136,9 @@ int Ghost::direction_to_point(int target_x, int target_y) {
 	int dx = abs(target_x - this->x);
 	int dy = abs(target_y - this->y);
 	if (dx > dy) {
-		return (target_x - this->x > 0) ? 2 /*to the right*/ : 0 /*to the left*/;
+		return (target_x - this->x > 0) ? RIGHT : LEFT;
 	} else {
-		return (target_y - this->y > 0) ? 3 /*down*/ : 1 /*up*/;
+		return (target_y - this->y > 0) ? DOWN : UP;
 	}
 }
 
@@ -212,7 +212,7 @@ int Ghost::choose_direction(int * sammel_richtung, int richtung_pacman, int samm
 
 void Ghost::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
 	int i;
-	int richtung_ghost = this->get_richtung();
+	int richtung_ghost = this->get_direction();
 	int richtung_pacman = this->direction_to_point(pacman->x, pacman->y);
 	int sammel_richtung[3];
 	int sammel_counter = 0;
@@ -367,7 +367,7 @@ void Ghost::reset() {
 	last_y = initial_y;
 	cur_x = (float)initial_x;
 	cur_y = (float)initial_y;
-	richtung = initial_richtung;
+	direction = initial_direction;
 	intelligence = initial_intelligence;
 	up_down = initial_up_down;
 	this->set_hunter(GHOST);

@@ -380,14 +380,17 @@ void Labyrinth::setFruit() {
 	if(!fruitIsDisplayed()) {
 		if(getExisitingPills() <= next_fruit) {
 			screen->draw_dynamic_content(fruit, 310, 257);
-			fruit_display_time = 1200;
+			fruit_display_time = 900;
 		}
 	}
 	else {
-		if(--fruit_display_time == 1) {
-			this->hideFruit();
-		} else {
-			screen->draw(fruit, 310, 257);
+		if(this->cnt_sleep<= 0) {
+			--fruit_display_time;
+			if(fruit_display_time == 1) {
+				this->hideFruit();
+			} else {
+				screen->draw(fruit, 310, 257);
+			}
 		}
 	}	
 }

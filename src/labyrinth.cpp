@@ -396,7 +396,7 @@ void Labyrinth::setFruit() {
 }
 
 void Labyrinth::hideFruit() {
-	if(cnt_displayed_fruits > 3 || !fruitIsDisplayed())
+	if(cnt_displayed_fruits > 2 || !fruitIsDisplayed())
 		return;
 	if(fruit) {
 		screen->AddUpdateRects(310, 257, fruit->w, fruit->h);

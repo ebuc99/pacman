@@ -399,7 +399,7 @@ void Ghost::set_hunter(Hunter hunter) {
 	this->hunter = hunter;
 }
 
-int Ghost::touched() {
+bool Ghost::touched() {
 	if(this->get_hunter() == PACMAN) {
 		// ghost has been eaten by pacman
 		this->hunter = NONE;
@@ -412,8 +412,8 @@ int Ghost::touched() {
 		this->labyrinth->sleep(400);
 	}
 	if(this->get_hunter() == NONE)
-		return 0;  // no problem for pacman
-	return 1;
+		return false;  // no problem for pacman
+	return true;
 }
 
 void Ghost::blink() {

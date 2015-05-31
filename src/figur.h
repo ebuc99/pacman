@@ -43,7 +43,7 @@ class Figur {
 		float get_speed() const;
 		
 		// has the figure moved? (needed for performance tuning)
-		int was_moving();
+		bool was_moving();
 		
 		// parking figur
 		void parking();
@@ -68,7 +68,7 @@ class Figur {
 		virtual Hunter get_hunter() const;
 		virtual void set_hunter(Hunter hunter);
 
-		virtual int touched() { return 0; }
+		virtual bool touched() { return false; }
 
 		                        
 		//helper functions
@@ -76,7 +76,7 @@ class Figur {
 		int greater(int a, int b);
 
 		// sets the figure's visibility (e.g. for pacman after eating a ghost or a fruit)
-		void setVisibility(int v);
+		void setVisibility(bool v);
 
 	protected:
 		float cur_y;

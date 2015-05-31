@@ -57,7 +57,7 @@ class Ghost : public Figur {
 
 		// Callback method when pacman has touched this ghost. Returns 1 if this was dangerous for
 		// pacman, 0 otherwise.
-		int touched();
+		bool touched();
 
 		// announce the end of the hunting mode by blinking
 		void blink();

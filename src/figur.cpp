@@ -74,11 +74,11 @@ float Figur::get_speed() const {
 	return dx;
 }
 
-int Figur::was_moving() {
+bool Figur::was_moving() {
 	if((x != last_x) || (y != last_y))
-		return 1;
+		return true;
 	else
-		return 0;
+		return false;
 }
 
 void Figur::parking() {
@@ -142,9 +142,9 @@ Figur::Hunter Figur::get_hunter() const {}
 
 void Figur::set_hunter(Hunter hunter) {}
 
-void Figur::setVisibility(int v) {
+void Figur::setVisibility(bool v) {
 	int prev_value = this->visible;
-	this->visible = (v == 0) ? 0 : 1;
+	this->visible = (v == false) ? false : true;
 	if (prev_value != this->visible)
 		draw();
 		addUpdateRect();

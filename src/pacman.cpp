@@ -8,8 +8,6 @@ const uint16_t INTELLIGENCE_BLINKY = 90;	// intelligence for each ghost
 const uint16_t INTELLIGENCE_PINKY = 60;
 const uint16_t INTELLIGENCE_INKY = 30;
 const uint16_t INTELLIGENCE_CLYDE = 0;
-//const uint16_t INIT_DIRECTION_LEFT = 0;	// initial direction of movement (only used for Blinky)
-//const uint16_t INIT_DIRECTION_UP = 1;	// initial direction of movement (used for the other ghosts)
 const uint16_t INIT_UP_DOWN = 0;		// initial up/down cycles before the ghost will be allowed to leave the castle
 const uint16_t INIT_UP_DOWN_INKY = 5;
 const uint16_t INIT_UP_DOWN_CLYDE = 11;
@@ -339,14 +337,19 @@ int main() {
 			
 	  	// if pacman stops, please set it to "normal"
 		if(pacman->is_pacman_stopped() && !pacman->is_dying()) {
-			if(pacman->get_direction() == Figur::LEFT)
-		  		pacman->left_pic(0); 
-		  	if(pacman->get_direction() == Figur::UP) 
-		   		pacman->up_pic(0); 
-		 	if(pacman->get_direction() == Figur::RIGHT) 
-		    	pacman->right_pic(0); 
-		  	if(pacman->get_direction() == Figur::DOWN) 
-	    		pacman->down_pic(0); 
+			switch(pacman->get_direction()) {
+				case Figur::LEFT:
+					pacman->left_pic(0);
+					break;
+				case Figur::UP:
+					pacman->up_pic(0);
+					break;
+				case Figur::RIGHT:
+					pacman->right_pic(0);
+					break;
+				case Figur::DOWN:
+					pacman->down_pic(0);
+			}
 			pacman->parking();
 		}		
 
@@ -394,11 +397,11 @@ int main() {
 			labyrinth->cnt_sleep--;
 			if (labyrinth->cnt_sleep == 0) {
 				labyrinth->hideSmallScore();
-				pacman->setVisibility(1);
-				blinky->setVisibility(1);
-				pinky->setVisibility(1);
-				inky->setVisibility(1);
-				clyde->setVisibility(1);
+				pacman->setVisibility(true);
+				blinky->setVisibility(true);
+				pinky->setVisibility(true);
+				inky->setVisibility(true);
+				clyde->setVisibility(true);
 			}
 		}
 	}

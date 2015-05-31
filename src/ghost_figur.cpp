@@ -4,7 +4,7 @@
 Ghost::Ghost(int init_x, int init_y, int init_intelligence, 
              Direction init_direction, int init_up_down, int ghost_ident,
              Screen *screen, Labyrinth *labyrinth, Pacman *pacman):
-	Figur(init_x, init_y, GHOSTS_V, screen, labyrinth),
+	Figur(init_x, init_y, GHOSTS_V_NORMAL, screen, labyrinth),
 	its_leader(0),
 	initial_intelligence(init_intelligence),
 	initial_direction(init_direction),
@@ -70,16 +70,16 @@ void Ghost::draw() {
 			this->screen->draw(this->ghost_sf, this->x, this->y);
 		if (this->get_hunter() != PACMAN) {
 			switch(this->get_direction()) {
-				case 0:
+				case LEFT:
 					this->screen->draw(augen_0, this->x, this->y);
 					break;
-				case 1: 
+				case UP: 
 					this->screen->draw(augen_1, this->x, this->y);
 					break;
-				case 2:
+				case RIGHT:
 					this->screen->draw(augen_2, this->x, this->y);
 					break;
-				case 3: 
+				case DOWN: 
 					this->screen->draw(augen_3, this->x, this->y);
 					break;
 				default:
@@ -95,7 +95,7 @@ void Ghost::animation() {
 	this->ghost_sf = ar_ghost[idx_animation];
 }
 
-void Ghost::set_leader(int leader) {
+void Ghost::set_leader(bool leader) {
 	its_leader = leader;
 }
 
@@ -103,20 +103,20 @@ void Ghost::set_leader() {
 	int i;
 	for(i = 0;i < 4; i++) {
 		if(ghost_array[i]->getGhostIdent() == this->getGhostIdent())
-			ghost_array[i]->set_leader(1);
+			ghost_array[i]->set_leader(true);
 		else
-			ghost_array[i]->set_leader(0);
+			ghost_array[i]->set_leader(false);
 	}
 }
 
 void Ghost::move(float ms, int direction, float max_links, float max_oben, float max_rechts, float max_unten) {
-	if(direction == 0)
+	if(direction == LEFT)
 		move_left(ms, max_links);
-	if(direction == 1)
+	if(direction == UP)
 		move_up(ms, max_oben);
-	if(direction == 2)
+	if(direction == RIGHT)
 		move_right(ms, max_rechts);
-	if(direction == 3)
+	if(direction == DOWN)
 		move_down(ms, max_unten);	
 	if(its_leader) {
 		if(this->was_moving())
@@ -158,7 +158,7 @@ int Ghost::get_intelligence() const {
 	return intelligence;
 }
 
-int Ghost::choose_direction(int * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence) {
+int Ghost::choose_direction(Direction * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence) {
 	int idx_dir_pacman = -1;
 	int zufallswert;
 	int idx_direction;
@@ -214,7 +214,7 @@ void Ghost::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
 	int i;
 	int richtung_ghost = this->get_direction();
 	int richtung_pacman = this->direction_to_point(pacman->x, pacman->y);
-	int sammel_richtung[3];
+	Direction sammel_richtung[3];
 	int sammel_counter = 0;
 	float max_links = 999;							// maximum to the left (otherwise, the ghost will leave the rails)
 	float max_oben = 999;							// maximum up
@@ -224,16 +224,16 @@ void Ghost::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
 
 	for(i = 0; i <= anz_schienen - 1; i++) {
 		// first, check the tunnel
-		if((richtung_ghost != 2) && (this->x <= 100) && (this->y == 215)) {
+		if((richtung_ghost != RIGHT) && (this->x <= 100) && (this->y == 215)) {
 	 		this->x = 515;
 	 		this->cur_x = 515;
-	 		richtung_ghost = 0;
+	 		richtung_ghost = LEFT;
 	 		break;
 		}
-		if((richtung_ghost != 0) && (this->x >= 515) && (this->y == 215)) {
+		if((richtung_ghost != LEFT) && (this->x >= 515) && (this->y == 215)) {
 	 		this->x = 100;
 	 		this->cur_x = 100;
-	 		richtung_ghost = 2;
+	 		richtung_ghost = RIGHT;
 	 		break;
 		}
 
@@ -241,18 +241,18 @@ void Ghost::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
 		bridge = (i==45 && this->get_hunter()==NONE) ? 1 : 0;
 
 		// to the left
-		if ((richtung_ghost == 0) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
-			sammel_richtung[sammel_counter] = 1;
+		if ((richtung_ghost == LEFT) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
+			sammel_richtung[sammel_counter] = UP;
 			sammel_counter++;	
 			max_oben = this->cur_y - (float)ar_s[i]->y1;		
 		}
-		if ((richtung_ghost == 0) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1 - bridge)) {
-			sammel_richtung[sammel_counter] = 3;
+		if ((richtung_ghost == LEFT) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1 - bridge)) {
+			sammel_richtung[sammel_counter] = DOWN;
 			sammel_counter++;
 			max_unten = (float)ar_s[i]->y2 - this->cur_y;
 		}
-	  	if ((richtung_ghost == 0) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {		
-			sammel_richtung[sammel_counter] = 0;
+	  	if ((richtung_ghost == LEFT) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {		
+			sammel_richtung[sammel_counter] = LEFT;
 			sammel_counter++;
 			max_links = this->cur_x - (float)ar_s[i]->x1;
 		}
@@ -260,22 +260,22 @@ void Ghost::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
 			break;
 	
 		// up
-		if ((richtung_ghost == 1) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
+		if ((richtung_ghost == UP) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
 			if(!this->up_down) {
-				sammel_richtung[sammel_counter] = 0;
+				sammel_richtung[sammel_counter] = LEFT;
 				sammel_counter++;
 				max_links = this->cur_x - (float)ar_s[i]->x1;
 			}
 		}
-		if ((richtung_ghost == 1) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
+		if ((richtung_ghost == UP) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
 			if(!this->up_down) {
-				sammel_richtung[sammel_counter] = 2;
+				sammel_richtung[sammel_counter] = RIGHT;
 				sammel_counter++;
 				max_rechts = (float)ar_s[i]->x2 - this->cur_x;
 			}
 		}
-		if ((richtung_ghost == 1) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
-			sammel_richtung[sammel_counter] = 1;
+		if ((richtung_ghost == UP) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
+			sammel_richtung[sammel_counter] = UP;
 			sammel_counter++;
 			max_oben = this->cur_y - (float)ar_s[i]->y1;
 		}
@@ -284,18 +284,18 @@ void Ghost::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
 			break;
 	
 		// to the right
-		if ((richtung_ghost == 2) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
-			sammel_richtung[sammel_counter] = 1;
+		if ((richtung_ghost == RIGHT) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
+			sammel_richtung[sammel_counter] = UP;
 			sammel_counter++;
 			max_oben = this->cur_y - (float)ar_s[i]->y1;
 		}
-		if ((richtung_ghost == 2) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1 - bridge)) {
-			sammel_richtung[sammel_counter] = 3;
+		if ((richtung_ghost == RIGHT) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1 - bridge)) {
+			sammel_richtung[sammel_counter] = DOWN;
 			sammel_counter++;
 			max_unten = (float)ar_s[i]->y2 - this->cur_y;
 		}
-		if ((richtung_ghost == 2) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
-			sammel_richtung[sammel_counter] = 2;
+		if ((richtung_ghost == RIGHT) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
+			sammel_richtung[sammel_counter] = RIGHT;
 			sammel_counter++;
 			max_rechts = (float)ar_s[i]->x2 - this->cur_x;
 		}
@@ -304,28 +304,28 @@ void Ghost::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
 			break;
 	
 		// down
-		if ((richtung_ghost == 3) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
+		if ((richtung_ghost == DOWN) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
 			if(!this->up_down) {
-				sammel_richtung[sammel_counter] = 0;
+				sammel_richtung[sammel_counter] = LEFT;
 				sammel_counter++;
 				max_links = this->cur_x - (float)ar_s[i]->x1;
 			}
 		}
-		if ((richtung_ghost == 3) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
+		if ((richtung_ghost == DOWN) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
 			if(!this->up_down) {
-				sammel_richtung[sammel_counter] = 2;
+				sammel_richtung[sammel_counter] = RIGHT;
 				sammel_counter++;
 				max_rechts = (float)ar_s[i]->x2 - this->cur_x;
 			}
 		}
-		if ((richtung_ghost == 3) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
-			sammel_richtung[sammel_counter] = 3;
+		if ((richtung_ghost == DOWN) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
+			sammel_richtung[sammel_counter] = DOWN;
 			sammel_counter++;
 			max_unten = (float)ar_s[i]->y2 - this->cur_y;
 		}
-		if ((richtung_ghost == 3) && (i == 45) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y2)) {
+		if ((richtung_ghost == DOWN) && (i == 45) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y2)) {
 			// special case: at the bottom of the castle's vertical center rail, the ghost must invert it's direction (i.e. go up again)
-			sammel_richtung[0] = 1;
+			sammel_richtung[0] = UP;
 			sammel_counter = 1;
 			max_oben = this->cur_y - (float)ar_s[i]->y1;
 			// also make an eyes-only ghost normal again
@@ -338,14 +338,14 @@ void Ghost::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
 			break;
 	}
 
-	if((richtung_ghost == 1) && (sammel_counter == 0) && (this->up_down)) {
-		sammel_richtung[sammel_counter] = 3;
+	if((richtung_ghost == UP) && (sammel_counter == 0) && (this->up_down)) {
+		sammel_richtung[sammel_counter] = DOWN;
 		sammel_counter++;
 		this->up_down--;
 	}
 
-	if((richtung_ghost == 3) && (sammel_counter == 0) && (this->up_down)) {
-		sammel_richtung[sammel_counter] = 1;
+	if((richtung_ghost == DOWN) && (sammel_counter == 0) && (this->up_down)) {
+		sammel_richtung[sammel_counter] = UP;
 		sammel_counter++;
 		this->up_down--;
 	}
@@ -387,11 +387,11 @@ Figur::Hunter Ghost::get_hunter() const {
 
 void Ghost::set_hunter(Hunter hunter) {
 	if(hunter == PACMAN) {
-		this->set_speed(0.1f);
+		this->set_speed(GHOSTS_V_SLOW);
 		ar_ghost[0] = escape_1;
 		ar_ghost[1] = escape_2;
 	} else {
-		this->set_speed(0.18f);
+		this->set_speed(GHOSTS_V_NORMAL);
 		ar_ghost[0] = ghost_1;
 		ar_ghost[1] = ghost_2;
 	}
@@ -403,7 +403,7 @@ bool Ghost::touched() {
 	if(this->get_hunter() == PACMAN) {
 		// ghost has been eaten by pacman
 		this->hunter = NONE;
-		this->set_speed(0.18f);
+		this->set_speed(GHOSTS_V_NORMAL);
 		this->set_leader();
 		this->setVisibility(0);
 		this->pacman->setVisibility(0);

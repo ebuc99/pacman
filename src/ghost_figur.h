@@ -21,7 +21,7 @@ class Ghost : public Figur {
 		void animation();
 		
 		// defines the leader (reference for redrawing)
-		void set_leader(int leader); 
+		void set_leader(bool leader); 
 		void set_leader();
 		
 		// overloaded move of class Figur
@@ -37,7 +37,7 @@ class Ghost : public Figur {
 		int alternative_direction_to_point(int target_x, int target_y);  // Returns an alternative direction. Use it, if the exact one is not available.
 		
 		// This is the A.I. of the ghosts: with a defined probability, they move to the direction where pacman is.
-		int choose_direction(int * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence);
+		int choose_direction(Direction * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence);
 
 		// moves a ghost on the defined rails
 		void move_on_rails(float ms, int anz_schienen, Rail **ar_s);
@@ -74,8 +74,9 @@ class Ghost : public Figur {
 		Ghosts getGhostIdent() const;
 		
 	private:
-		static const float GHOSTS_V = 0.18f; // normal speed of the ghosts
-		int its_leader;
+		static const float GHOSTS_V_NORMAL = 0.18f; // normal speed of the ghosts
+		static const float GHOSTS_V_SLOW = 0.1f; // speed at hunting mode
+		bool its_leader;
 		int up_down;
 		Direction initial_direction;
 		int initial_intelligence;

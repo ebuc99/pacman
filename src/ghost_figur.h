@@ -25,8 +25,8 @@ class Ghost : public Figur {
 		void set_leader();
 		
 		// overloaded move of class Figur
-		void move(float ms, int direction, float max_links = 999, float max_oben = 999, float max_rechts = 999, float max_unten = 999);
-		void move(int moving, float(ms));
+		void move_dir(int ms, int direction, int max_links = 999, int max_oben = 999, int max_rechts = 999, int max_unten = 999);
+		void move(int moving, int ms);
 
 		// has the leader moved?
 		static int was_moving_leader;
@@ -40,7 +40,7 @@ class Ghost : public Figur {
 		int choose_direction(Direction * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence);
 
 		// moves a ghost on the defined rails
-		void move_on_rails(float ms, int anz_schienen, Rail **ar_s);
+		void move_on_rails(int ms, int anz_schienen, Rail **ar_s);
 		
 		// returns the intelligence of the ghost
 		int get_intelligence() const;
@@ -74,8 +74,8 @@ class Ghost : public Figur {
 		Ghosts getGhostIdent() const;
 		
 	private:
-		static const float GHOSTS_V_NORMAL = 0.18f; // normal speed of the ghosts
-		static const float GHOSTS_V_SLOW = 0.1f; // speed at hunting mode
+		static const int GHOSTS_V_NORMAL = 90; // normal speed of the ghosts
+		static const int GHOSTS_V_SLOW   = 50; // speed at hunting mode
 		bool its_leader;
 		int up_down;
 		Direction initial_direction;

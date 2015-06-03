@@ -2,7 +2,7 @@
 #include "math.h"
 
 
-Figur::Figur(int init_x, int init_y, float init_v,
+Figur::Figur(int init_x, int init_y, int init_v,
              Screen *screen, Labyrinth *labyrinth):
 	initial_x(init_x),
 	initial_y(init_y),
@@ -12,8 +12,8 @@ Figur::Figur(int init_x, int init_y, float init_v,
 	y = init_y;
 	last_x = init_x;
 	last_y = init_y;
-	cur_x = (float)init_x;
-	cur_y = (float)init_y;
+	cur_x = init_x << 10;
+	cur_y = init_y << 10;
 	dx = init_v;
 	dy = init_v;
 	this->screen = screen;
@@ -23,39 +23,55 @@ Figur::Figur(int init_x, int init_y, float init_v,
 Figur::~Figur() {
 }
 
-void Figur::move_left(float ms, float max_step) {
+void Figur::move_left(int ms, int stop_at) {
 	last_x = x;
-	last_y = y; 
-	cur_x = (cur_x - least(dx*ms, max_step));
-	x = int(cur_x);
+	last_y = y;
+	cur_x -= dx*ms;
+	x = cur_x >> 10;
+	if (x < stop_at) {
+		x = stop_at;
+		cur_x = stop_at << 10;
+	}
 	direction = LEFT;
 }
 
-void Figur::move_up(float ms, float max_step) {
+void Figur::move_up(int ms, int stop_at) {
 	last_x = x;
 	last_y = y; 
-	cur_y = (cur_y - least(dy*ms, max_step));
-	y = int(cur_y); 
+	cur_y -= dy*ms;
+	y = cur_y >> 10;
+	if (y < stop_at) {
+		y = stop_at;
+		cur_y = stop_at << 10;
+	}
 	direction = UP;
 }
 
-void Figur::move_right(float ms, float max_step) {
+void Figur::move_right(int ms, int stop_at) {
 	last_x = x;
 	last_y = y; 
-	cur_x = (cur_x + least(dx*ms, max_step));
-	x = int(cur_x); 
+	cur_x += dx*ms;
+	x = cur_x >> 10;
+	if (x > stop_at) {
+		x = stop_at;
+		cur_x = stop_at << 10;
+	} 
 	direction = RIGHT;
 }
 
-void Figur::move_down(float ms, float max_step) {
+void Figur::move_down(int ms, int stop_at) {
 	last_x = x;
 	last_y = y;
-	cur_y = (cur_y + least(dy*ms, max_step));
-	y = int(cur_y); 
+	cur_y += dy*ms;
+	y = cur_y >> 10;
+	if (y > stop_at) {
+		y = stop_at;
+		cur_y = stop_at << 10;
+	}
 	direction = DOWN;
 }
 
-void Figur::move(float ms, Direction direction) {
+void Figur::move_dir(int ms, Direction direction) {
 	if(direction == LEFT)
 		move_left(ms);
 	if(direction == UP)
@@ -65,12 +81,12 @@ void Figur::move(float ms, Direction direction) {
 	if(direction == DOWN)
 		move_down(ms);		
 }
-void Figur::set_speed(float v) {
+void Figur::set_speed(int v) {
 	dx = v;
 	dy = v;
 }
 
-float Figur::get_speed() const {
+int Figur::get_speed() const {
 	return dx;
 }
 
@@ -106,8 +122,12 @@ void Figur::set_stop(int stop) {
 	}
 }
 
-float Figur::least(float a, float b) {
+int Figur::least(int a, int b) {
 	return (a < b) ? a : b;
+}
+
+int Figur::greatest(int a, int b) {
+	return (a > b) ? a : b;
 }
 
 SDL_Surface* Figur::LoadSurface(const char *filename, int transparent_color = -1) {
@@ -131,14 +151,9 @@ SDL_Surface* Figur::LoadSurface(const char *filename, int transparent_color = -1
 void Figur::reset() {
 }
 
-int Figur::less(int a, int b) {
-	return (a < b) ? a : b;
+Figur::Hunter Figur::get_hunter() const {
+	return NONE;
 }
-int Figur::greater(int a, int b) {
-	return (a > b) ? a : b;
-}
-
-Figur::Hunter Figur::get_hunter() const {}
 
 void Figur::set_hunter(Hunter hunter) {}
 

@@ -81,61 +81,41 @@ void Pacman::draw() {
 	    this->screen->draw(this->pacman_sf, this->x, this->y);
 }
 
-void Pacman::move(int moving, float ms) {
+void Pacman::checkAnimationChange() {
+	if ((wechsel_rate > 0) && ((abs(x-wechsel_x)>=wechsel_rate)||(abs(y-wechsel_y)>=wechsel_rate))) {
+		wechsel_x = x;
+		wechsel_y = y;
+		animation = 1;
+	}
+}
+
+void Pacman::move(int moving, int ms) {
 	if(moving)
 		this->addUpdateRect();
 	this->move_on_rails(ms, this->labyrinth->number_rails(), this->labyrinth->array_rails);		
 }
-void Pacman::move_left(float ms, float max_step) {
-	last_x = x;
-	last_y = y;
-	cur_x = (cur_x - least(dx*ms, max_step));
-	x = int(cur_x); 
-	if ((wechsel_rate > 0) && ((fabs(x - wechsel_x) >= wechsel_rate)||(fabs(y - wechsel_y) >= wechsel_rate))) {
-		wechsel_x = x;
-		wechsel_y = y;
-		animation = 1;
-	}
+void Pacman::move_left(int ms, int stop_at) {
+	Figur::move_left(ms, stop_at);
 	direction = LEFT;
+	checkAnimationChange();
 }
 
-void Pacman::move_up(float ms, float max_step) {
-	last_x = x;
-	last_y = y;
-	cur_y = (cur_y - least(dy*ms, max_step));
-	y = int(cur_y); 
-	if ((wechsel_rate > 0) && ((fabs(x - wechsel_x) >= wechsel_rate)||(fabs(y - wechsel_y) >= wechsel_rate))) {
-		wechsel_x = x;
-		wechsel_y = y;
-		animation = 1;
-	}
+void Pacman::move_up(int ms, int stop_at) {
+	Figur::move_up(ms, stop_at);
 	direction = UP;
+	checkAnimationChange();
 }
 
-void Pacman::move_right(float ms, float max_step) {
-	last_x = x;
-	last_y = y;
-	cur_x = (cur_x + least(dx*ms, max_step));
-	x = int(cur_x); 
-	if ((wechsel_rate > 0) && ((fabs(x - wechsel_x) >= wechsel_rate)||(fabs(y - wechsel_y) >= wechsel_rate))) {
-		wechsel_x = x;
-		wechsel_y = y;
-		animation = 1;
-	}
+void Pacman::move_right(int ms, int stop_at) {
+	Figur::move_right(ms, stop_at);
 	direction = RIGHT;
+	checkAnimationChange();
 }
 
-void Pacman::move_down(float ms, float max_step) {
-	last_x = x;
-	last_y = y;
-	cur_y = (cur_y + least(dy*ms, max_step));
-	y = int(cur_y); 
-	if ((wechsel_rate > 0) && ((fabs(x - wechsel_x) >= wechsel_rate)||(fabs(y - wechsel_y) >= wechsel_rate))) {
-		wechsel_x = x;
-		wechsel_y = y;
-		animation = 1;
-	}
+void Pacman::move_down(int ms, int stop_at) {
+	Figur::move_down(ms, stop_at);
 	direction = DOWN;
+	checkAnimationChange();
 }
 
 void Pacman::left_pic(int cnt_pic) {
@@ -179,7 +159,7 @@ void Pacman::animate() {
 			cnt_animation = 0;
 }
 
-void Pacman::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
+void Pacman::move_on_rails(int ms, int anz_schienen, Rail **ar_s) {
 	int i;
 	int check_move = 0;
 	// check if the pre selected direction is
@@ -208,13 +188,13 @@ void Pacman::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
 		// first, check the tunnel
 		if((this->direction_pre != RIGHT) && (this->x <= 100) && (this->y == 215)) {
 	 		this->x = 515;
-	 		this->cur_x = 515;
+	 		this->cur_x = this->x << 10;
 	 		this->direction_pre = LEFT;
 	 		break;
 		}
 		if((this->direction_pre != LEFT) && (this->x >= 515) && (this->y == 215)) {
 	 		this->x = 100;
-	 		this->cur_x = 100;
+	 		this->cur_x = this->x << 10;
 	 		this->direction_pre = RIGHT;
 	 		break;
 		}
@@ -222,25 +202,25 @@ void Pacman::move_on_rails(float ms, int anz_schienen, Rail **ar_s) {
 		// now the "normal" rails
 		if(this->get_direction() == LEFT) {
 		  	if ((this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
-				this->move_left(ms, (float)(this->x - ar_s[i]->x1));
+				this->move_left(ms, ar_s[i]->x1);
 				check_move = 1;
 				break;
 			}
 		} else if(this->get_direction() == UP) {
 			if ((this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
-				this->move_up(ms, (float)(this->y - ar_s[i]->y1));
+				this->move_up(ms, ar_s[i]->y1);
 				check_move = 1;
 				break;
 			}
 		} else if(this->get_direction() == RIGHT) { 
 			if ((this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
-				this->move_right(ms, (float)(ar_s[i]->x2 - this->x));
+				this->move_right(ms, ar_s[i]->x2);
 				check_move = 1;
 				break;
 			}
 		} else if(this->get_direction() == DOWN) {
 			if ((this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
-				this->move_down(ms, (float)(ar_s[i]->y2 - this->y));
+				this->move_down(ms, ar_s[i]->y2);
 				check_move = 1;
 				break;
 			}
@@ -266,8 +246,8 @@ void Pacman::reset() {
 	dy = initial_v;
 	last_x = initial_x;
 	last_y = initial_y;
-	cur_x = (float)initial_x;
-	cur_y = (float)initial_y;
+	cur_x = initial_x << 10;
+	cur_y = initial_y << 10;
 	wechsel_x = initial_x;
 	wechsel_y = initial_y;
 	direction = LEFT;
@@ -302,7 +282,7 @@ int Pacman::touch(Figur **ghost_array) const{
 void Pacman::check_eat_pills(Figur **ghost_array) {
 	if(this->was_moving()){
 		for(int i = 0; i < this->labyrinth->NUMBER_PILLS; i++) {
-			if(this->labyrinth->pillen[i].sichtbar && ((this->labyrinth->pillen[i].x - 10) >= less(this->x,this->last_x)) && ((this->labyrinth->pillen[i].x - 10) <= greater(this->x,this->last_x)) && ((this->labyrinth->pillen[i].y - 10) >= less(this->y,this->last_y)) && ((this->labyrinth->pillen[i].y - 10) <= greater(this->y,this->last_y))) {
+			if(this->labyrinth->pillen[i].sichtbar && ((this->labyrinth->pillen[i].x - 10) >= least(this->x,this->last_x)) && ((this->labyrinth->pillen[i].x - 10) <= greatest(this->x,this->last_x)) && ((this->labyrinth->pillen[i].y - 10) >= least(this->y,this->last_y)) && ((this->labyrinth->pillen[i].y - 10) <= greatest(this->y,this->last_y))) {
 				cnt_slow = 15;
 				this->labyrinth->pillen[i].sichtbar = 0;
 				this->set_speed(PACMAN_V_SLOW);
@@ -357,7 +337,7 @@ int Pacman::die_animation() {
 }
 
 void Pacman::addUpdateRect() {
-	screen->AddUpdateRects(less(x,last_x), less(y,last_y), pacman_sf->w + abs(x-last_x), pacman_sf->h + abs(y-last_y));
+	screen->AddUpdateRects(least(x,last_x), least(y,last_y), pacman_sf->w + abs(x-last_x), pacman_sf->h + abs(y-last_y));
 }
 
 void Pacman::drawLives() {

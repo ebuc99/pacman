@@ -316,41 +316,26 @@ void Labyrinth::setLevel(int level) {
 			strcat(fruit_file, "strawberry.png");
 			break;
 		case 3:
-			setFruitBonus(500);
-			strcat(fruit_file, "orange.png");
-			break;
 		case 4:
 			setFruitBonus(500);
 			strcat(fruit_file, "orange.png");
 			break;
 		case 5:
-			setFruitBonus(700);
-			strcat(fruit_file, "apple.png");
-			break;
 		case 6:
 			setFruitBonus(700);
 			strcat(fruit_file, "apple.png");
 			break;
 		case 7:
-			setFruitBonus(1000);
-			strcat(fruit_file, "grapes.png");
-			break;
 		case 8:
 			setFruitBonus(1000);
 			strcat(fruit_file, "grapes.png");
 			break;
 		case 9:
-			setFruitBonus(2000);
-			strcat(fruit_file, "banana.png");
-			break;
 		case 10:
 			setFruitBonus(2000);
 			strcat(fruit_file, "banana.png");
 			break;
 		case 11:
-			setFruitBonus(3000);
-			strcat(fruit_file, "pear.png");
-			break;
 		case 12:
 			setFruitBonus(3000);
 			strcat(fruit_file, "pear.png");
@@ -374,22 +359,22 @@ void Labyrinth::startFruitRandomizer(int new_level) {
 	next_fruit = getExisitingPills() - next_fruit;
 }
 
-void Labyrinth::setFruit() {
+void Labyrinth::setFruit(int ms) {
 	if(cnt_displayed_fruits >= 2)
 		return;
 	if(!fruitIsDisplayed()) {
 		if(getExisitingPills() <= next_fruit) {
 			screen->draw_dynamic_content(fruit, 310, 257);
-			fruit_display_time = 900;
+			fruit_display_time = 10000;
 		}
 	}
 	else {
-		if(this->cnt_sleep<= 0) {
-			--fruit_display_time;
-			if(fruit_display_time == 1) {
+		if (this->cnt_sleep <= 0) {
+			if(fruit_display_time - ms <= 1) {
 				this->hideFruit();
 			} else {
-				screen->draw(fruit, 310, 257);
+				fruit_display_time -= ms;
+				screen->draw_dynamic_content(fruit, 310, 257);
 			}
 		}
 	}	

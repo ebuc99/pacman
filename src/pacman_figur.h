@@ -13,7 +13,7 @@ class Pacman : public Figur {
 		virtual void draw();
 		
 		//move pacman
-		void move(int moving, float ms);
+		void move(int moving, int ms);
 
 		// pacman all direction animation
 		void left_pic(int cnt_pic);
@@ -28,7 +28,7 @@ class Pacman : public Figur {
 		void animate();
 		
 		// moves a ghost on the defined rails
-		void move_on_rails(float ms, int anz_schienen, Rail **ar_s);
+		void move_on_rails(int ms, int anz_schienen, Rail **ar_s);
 		
 		// returns whether pacman has stopped
 		int is_pacman_stopped();
@@ -64,14 +64,14 @@ class Pacman : public Figur {
 		int getRemainingLives();
 
 	private:
-		static const float PACMAN_V_FAST = 0.2f; // pacman's speed when not eating
-		static const float PACMAN_V_SLOW = 0.18f; // pacman's speed while eating
+		static const int PACMAN_V_FAST = 100;   // pacman's speed when not eating
+		static const int PACMAN_V_SLOW = 90;    // pacman's speed while eating
 		static const uint16_t WECHSEL_RATE = 7; // load a new image for pacman after a movement of this number of pixels
 		// four directions for movement
-		void move_left(float ms, float max_step = 999);
-		void move_up(float ms, float max_step = 999);
-		void move_right(float ms, float max_step = 999);
-		void move_down(float ms, float max_step = 999);
+		void move_left(int ms, int stop_at = 999);
+		void move_up(int ms, int stop_at = 999);
+		void move_right(int ms, int stop_at = 999);
+		void move_down(int ms, int stop_at = 999);
 		int pacman_stopped; 
 		int animation;
 		int cnt_animation;
@@ -86,5 +86,6 @@ class Pacman : public Figur {
 		SDL_Surface *pacman_rechts_1, *pacman_rechts_2, *ar_pacman_rechts[4];
 		SDL_Surface *pacman_unten_1, *pacman_unten_2, *ar_pacman_unten[4];
 		SDL_Surface *ar_pacman_die[13];
+		void checkAnimationChange();
 };
 #endif

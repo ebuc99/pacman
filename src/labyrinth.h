@@ -122,7 +122,7 @@ class Labyrinth {
 		// display fruit, if the number of
 		// pills was eaten or don't display
 		// if 10 s are over
-		void setFruit();
+		void setFruit(int ms);
 
 		// dont show fruit
 		void hideFruit();

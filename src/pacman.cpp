@@ -4,17 +4,18 @@
 
 
 // Constants
-const uint16_t INTELLIGENCE_BLINKY = 90;	// intelligence for each ghost
+const uint16_t INTELLIGENCE_BLINKY = 90;  // intelligence for each ghost
 const uint16_t INTELLIGENCE_PINKY = 60;
 const uint16_t INTELLIGENCE_INKY = 30;
 const uint16_t INTELLIGENCE_CLYDE = 0;
-const uint16_t INIT_UP_DOWN = 0;		// initial up/down cycles before the ghost will be allowed to leave the castle
+const uint16_t INIT_UP_DOWN = 0;          // initial up/down cycles before the ghost will be allowed to leave the castle
 const uint16_t INIT_UP_DOWN_INKY = 5;
 const uint16_t INIT_UP_DOWN_CLYDE = 11;
-const float WAIT_IN_MS = 2.0;				// duration of a loop (i.e. minimum time between frames)
-const uint16_t START_OFFSET = 10;
-const int INITIAL_LIVES = 3;            // number of times the player must die to get the "game over"
-const int RED = 2;  // color red for init text
+const uint32_t MIN_FRAME_DURATION = 10;        // duration of a loop in milliseconds (i.e. minimum time between frames)
+const uint16_t START_OFFSET   = 4500;
+const uint16_t START_OFFSET_2 = 1500;
+const int INITIAL_LIVES = 3;              // number of times the player must die to get the "game over"
+const int RED = 2;                        // color red for init text
 
 // initialize static member variables
 int Ghost::was_moving_leader = 1;
@@ -141,10 +142,9 @@ int main() {
 	int currentScore = 0, lastScore = 0;
 	int loop = 1;
 	int start_offset = START_OFFSET;
-	float startTicks;
-	float lastTickstemp;
-	float ms = 1.0;
-	float animation_counter = 0;
+	Uint32 currentTicks, lastTicks;
+	int deltaT;
+	int animation_counter = 0;
 	srand((unsigned int)time(0)); // init randomize
 	
 	// create the window 
@@ -226,7 +226,8 @@ int main() {
 	pacman->drawLives();
 	screen->AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
 	screen->Refresh();
-	startTicks = (float)SDL_GetTicks();
+	currentTicks = SDL_GetTicks();
+	deltaT = MIN_FRAME_DURATION;
 	blinky->set_leader(1);	// Blinky will be the reference sprite for redrawing
 	// at first, stop all figures 
 	stop_all(true, pacman, ghost_array_ghost); 
@@ -235,7 +236,8 @@ int main() {
 		if(start_offset == -1)	
 			loop = eventloop(pacman, ghost_array_ghost);
 		
-		if(animation_counter > 50) {
+		animation_counter += deltaT;
+		if(animation_counter > 100) {
 			// ghost animations
 			refresh_ghosts = 1;
 			blinky->animation();
@@ -261,27 +263,26 @@ int main() {
 						clyde->setVisibility(0);
 					} else {
 						labyrinth->setInitText("Get Ready!");
-						start_offset = START_OFFSET;
+						start_offset = START_OFFSET_2;
 					}
 				}
 			}
 			labyrinth->pill_animation();
-			
-			// handle start offset 
-			if(start_offset > 0)
-				start_offset--;
-			else if (start_offset == 0) {
-				labyrinth->hideInitText();
-				stop_all(false, pacman, ghost_array_ghost);
-				start_offset = -1;
-		 	}
-				
 			animation_counter = 0;
 		}
 		else
 			refresh_ghosts = 0;
 
-		animation_counter = animation_counter + ms;
+		// handle start offset 
+		if(start_offset > 0) {
+			start_offset -= deltaT;
+			if (start_offset <= 0) {
+				start_offset = -1;
+				labyrinth->hideInitText();
+				stop_all(false, pacman, ghost_array_ghost);
+			}
+	 	}
+
 		pacman->check_eat_pills(ghost_array);
 		if(labyrinth->getExisitingPills() <= 0) { 
 			// init new level
@@ -292,26 +293,27 @@ int main() {
 			start_offset = START_OFFSET;
 			continue;
 		}
-		if(labyrinth->cnt_hunting_mode == 0) {
-			if (!pacman->is_dying()) {
-				if (blinky->get_hunter() != Figur::NONE)  // eaten ghosts still have to return to the castle
-					blinky->set_hunter(Figur::GHOST);
-				if (pinky->get_hunter() != Figur::NONE)
-					pinky->set_hunter(Figur::GHOST);
-				if (inky->get_hunter() != Figur::NONE)
-					inky->set_hunter(Figur::GHOST);
-				if (clyde->get_hunter() != Figur::NONE)
-					clyde->set_hunter(Figur::GHOST);
-			}
-			labyrinth->stopHuntingMode();
-		}
-		else if(labyrinth->cnt_hunting_mode > 0 && !pause && labyrinth->cnt_sleep <= 0) {
-			labyrinth->cnt_hunting_mode--;
-			if(labyrinth->cnt_hunting_mode==2000) {
+
+		if(labyrinth->cnt_hunting_mode > 0 && !pause && labyrinth->cnt_sleep <= 0) {
+			if (labyrinth->cnt_hunting_mode > 2000 && labyrinth->cnt_hunting_mode-deltaT <= 2000) {
 				blinky->blink();
 				pinky->blink();
 				inky->blink();
 				clyde->blink();
+			}
+			labyrinth->cnt_hunting_mode -= deltaT;
+			if (labyrinth->cnt_hunting_mode <= 0) {
+				if (!pacman->is_dying()) {
+					if (blinky->get_hunter() != Figur::NONE)  // eaten ghosts still have to return to the castle
+						blinky->set_hunter(Figur::GHOST);
+					if (pinky->get_hunter() != Figur::NONE)
+						pinky->set_hunter(Figur::GHOST);
+					if (inky->get_hunter() != Figur::NONE)
+						inky->set_hunter(Figur::GHOST);
+					if (clyde->get_hunter() != Figur::NONE)
+						clyde->set_hunter(Figur::GHOST);
+				}
+				labyrinth->stopHuntingMode();
 			}
 		}
 
@@ -331,10 +333,12 @@ int main() {
 			pacman->drawLives();
 			labyrinth->drawSmallScore();
 			labyrinth->drawInfoFruit();
-			labyrinth->setFruit();
 			pacman->animate();
 		}
-			
+		if (!pause && labyrinth->cnt_sleep <= 0) {
+			labyrinth->setFruit(deltaT);
+		}
+
 	  	// if pacman stops, please set it to "normal"
 		if(pacman->is_pacman_stopped() && !pacman->is_dying()) {
 			switch(pacman->get_direction()) {
@@ -368,23 +372,22 @@ int main() {
 		}
 				
 		// determine the correct game speed
-		lastTickstemp = startTicks;
-		startTicks = (float)SDL_GetTicks();
-		lastTickstemp = startTicks - lastTickstemp;
-		if(lastTickstemp <= WAIT_IN_MS) {
-		  	SDL_Delay((int)(WAIT_IN_MS - lastTickstemp));
-			ms = (float)(lastTickstemp/WAIT_IN_MS);
+		lastTicks = currentTicks;
+		currentTicks = SDL_GetTicks();
+		deltaT = (int) (currentTicks - lastTicks);
+		if (deltaT < MIN_FRAME_DURATION) {
+			SDL_Delay(MIN_FRAME_DURATION - deltaT);
+			deltaT = MIN_FRAME_DURATION;
+			currentTicks = lastTicks + MIN_FRAME_DURATION;  // otherwise, the waiting time would cause problems within the next frame
 		}
-		else 
-			ms = (float)(lastTickstemp/WAIT_IN_MS);
 		
 		// and move all figures
-		if ((ms > 0.0) && !pause && labyrinth->cnt_sleep <= 0) {
-			pacman->move(moving(), ms);
-			blinky->move(moving(), ms);
-			pinky->move(moving(), ms);
-			inky->move(moving(), ms);
-			clyde->move(moving(), ms);
+		if (!pause && labyrinth->cnt_sleep <= 0) {
+			pacman->move(moving(), deltaT);
+			blinky->move(moving(), deltaT);
+			pinky->move(moving(), deltaT);
+			inky->move(moving(), deltaT);
+			clyde->move(moving(), deltaT);
 		} else if (moving()) {
 			pacman->addUpdateRect();
 			blinky->addUpdateRect();
@@ -394,8 +397,9 @@ int main() {
 		}
 
 		if (labyrinth->cnt_sleep > 0 && !pause) {
-			labyrinth->cnt_sleep--;
-			if (labyrinth->cnt_sleep == 0) {
+			labyrinth->cnt_sleep -= deltaT;
+			if (labyrinth->cnt_sleep <= 0) {
+				labyrinth->cnt_sleep = 0;
 				labyrinth->hideSmallScore();
 				pacman->setVisibility(true);
 				blinky->setVisibility(true);

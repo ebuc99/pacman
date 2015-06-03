@@ -5,6 +5,7 @@
 #include "screen.h"
 #include "pille.h"
 #include "rail.h"
+#include "sounds.h"
 
 class Labyrinth {
 	private: 
@@ -17,10 +18,10 @@ class Labyrinth {
 				*s32, *s33, *s34, *s35, *s36, *s37, *s38, *s39, *s40, *s41,
 				*s42, *s43, *s44, *s45, *s46, *s47, *s48, *s49;
 		SDL_Surface *pille, *superpille, *ar_superpille[5];
-		
 		//very bad, because the same method is in figur (and pacman)
 		// it must be in a basic class in future
 		SDL_Surface *LoadSurface(const char *filename, int transparent_color = -1);
+		Sounds *sounds;
 		int punktestand;
 		int bonus_stage; //200, 400, 800, 1600
 		TTF_Font *font, *smallFont;
@@ -138,5 +139,8 @@ class Labyrinth {
 
 		// draw fruit in info area
 		void drawInfoFruit();
+
+		//play sound munch
+		void playSoundMunch();
 };
 #endif

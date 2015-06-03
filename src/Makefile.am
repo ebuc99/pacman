@@ -28,7 +28,9 @@ pacman_SOURCES =  \
 	screen.h \
 	screen.cpp \
 	rail.h \
-	rail.cpp
+	rail.cpp \
+	sounds.h \
+	sounds.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \

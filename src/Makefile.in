@@ -94,7 +94,7 @@ am_pacman_OBJECTS = pacman-figur.$(OBJEXT) \
 	pacman-ghost_figur.$(OBJEXT) pacman-pacman.$(OBJEXT) \
 	pacman-pacman_figur.$(OBJEXT) pacman-pille.$(OBJEXT) \
 	pacman-labyrinth.$(OBJEXT) pacman-screen.$(OBJEXT) \
-	pacman-rail.$(OBJEXT)
+	pacman-rail.$(OBJEXT) pacman-sounds.$(OBJEXT)
 pacman_OBJECTS = $(am_pacman_OBJECTS)
 am__DEPENDENCIES_1 =
 pacman_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -293,7 +293,9 @@ pacman_SOURCES = \
 	screen.h \
 	screen.cpp \
 	rail.h \
-	rail.cpp
+	rail.cpp \
+	sounds.h \
+	sounds.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \
@@ -416,6 +418,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-pille.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-rail.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-screen.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-sounds.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -542,6 +545,20 @@ pacman-rail.obj: rail.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='rail.cpp' object='pacman-rail.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-rail.obj `if test -f 'rail.cpp'; then $(CYGPATH_W) 'rail.cpp'; else $(CYGPATH_W) '$(srcdir)/rail.cpp'; fi`
+
+pacman-sounds.o: sounds.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-sounds.o -MD -MP -MF $(DEPDIR)/pacman-sounds.Tpo -c -o pacman-sounds.o `test -f 'sounds.cpp' || echo '$(srcdir)/'`sounds.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-sounds.Tpo $(DEPDIR)/pacman-sounds.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='sounds.cpp' object='pacman-sounds.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-sounds.o `test -f 'sounds.cpp' || echo '$(srcdir)/'`sounds.cpp
+
+pacman-sounds.obj: sounds.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-sounds.obj -MD -MP -MF $(DEPDIR)/pacman-sounds.Tpo -c -o pacman-sounds.obj `if test -f 'sounds.cpp'; then $(CYGPATH_W) 'sounds.cpp'; else $(CYGPATH_W) '$(srcdir)/sounds.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-sounds.Tpo $(DEPDIR)/pacman-sounds.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='sounds.cpp' object='pacman-sounds.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-sounds.obj `if test -f 'sounds.cpp'; then $(CYGPATH_W) 'sounds.cpp'; else $(CYGPATH_W) '$(srcdir)/sounds.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

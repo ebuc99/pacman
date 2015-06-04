@@ -53,12 +53,14 @@ pacman_CXXFLAGS = -ansi \
 pacman_LDFLAGS = $(SDL_CFLAGS) 
 
 pacman_LDADD =  \
-	$(SDL_LIBS)
+	$(SDL_LIBS) \
+	-lSDL_mixer
  
 
 pacmanEXTRA_DIST = libsdl \
 	sdl-image \
-	sdl-ttf 
+	sdl-ttf \
+	sdl-mixer 
 
   
 

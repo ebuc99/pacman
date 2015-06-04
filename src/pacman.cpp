@@ -79,12 +79,13 @@ static void stop_all(uint16_t stop, Pacman *pacman, Ghost **ghost_array) {
 }
 
 // SDL event loop: handle keyboard input events, and others
-static int eventloop(Pacman *pacman, Ghost **ghost_array) {
+static int eventloop(Pacman *pacman, Ghost **ghost_array, bool allowPacmanControl, int *neededTime) {
+	*neededTime = 0;
 	SDL_Event event;
 	while(SDL_PollEvent(&event)) {
 		switch(event.type) {
 		case SDL_KEYDOWN:
-			if(!pacman->is_dying() && !pause) {
+			if(allowPacmanControl && !pacman->is_dying() && !pause) {
 				if(event.key.keysym.sym == SDLK_LEFT)
 					pacman->direction_pre = Figur::LEFT;
 				if(event.key.keysym.sym == SDLK_UP) 
@@ -95,34 +96,14 @@ static int eventloop(Pacman *pacman, Ghost **ghost_array) {
 					pacman->direction_pre = Figur::DOWN; 
 			}
 			if(event.key.keysym.sym == SDLK_f) {
-			    screen->toggleFullscreen();				
+				Uint32 ticksBefore = SDL_GetTicks();
+			    screen->toggleFullscreen();
+			    *neededTime = (int) (SDL_GetTicks() - ticksBefore);
 			}
 			if(event.key.keysym.sym == SDLK_p) {
 				if(!pacman->is_dying()) {
 					pause = (pause == 0) ? 1 : 0;
 				}
-			}
-			if(event.key.keysym.sym == SDLK_k) {
-				ghost_array[0]->set_hunter(Figur::NONE);
-				ghost_array[1]->set_hunter(Figur::NONE);
-				ghost_array[2]->set_hunter(Figur::NONE);
-				ghost_array[3]->set_hunter(Figur::NONE);
-			}
-			if(event.key.keysym.sym == SDLK_v) {
-				ghost_array[0]->set_hunter(Figur::PACMAN);
-				ghost_array[1]->set_hunter(Figur::PACMAN);
-				ghost_array[2]->set_hunter(Figur::PACMAN);
-				ghost_array[3]->set_hunter(Figur::PACMAN);
-			}
-			if(event.key.keysym.sym == SDLK_b) {
-				if(ghost_array[0]->get_hunter() == Figur::PACMAN)
-					ghost_array[0]->blink();
-				if(ghost_array[1]->get_hunter() == Figur::PACMAN)
-					ghost_array[1]->blink();
-				if(ghost_array[2]->get_hunter() == Figur::PACMAN)
-					ghost_array[2]->blink();
-				if(ghost_array[3]->get_hunter() == Figur::PACMAN)
-					ghost_array[3]->blink();
 			}
 			break;
 		case SDL_QUIT:
@@ -144,6 +125,7 @@ int main() {
 	int start_offset = START_OFFSET;
 	Uint32 currentTicks, lastTicks;
 	int deltaT;
+	int specialEventTime;
 	int animation_counter = 0;
 	srand((unsigned int)time(0)); // init randomize
 	
@@ -233,9 +215,10 @@ int main() {
 	stop_all(true, pacman, ghost_array_ghost); 
 	// game loop
 	while(loop) {	
-		if(start_offset == -1)	
-			loop = eventloop(pacman, ghost_array_ghost);
-		
+		loop = eventloop(pacman, ghost_array_ghost, start_offset<0, &specialEventTime);
+		if (specialEventTime > 0)
+			currentTicks += specialEventTime;
+
 		animation_counter += deltaT;
 		if(animation_counter > 100) {
 			// ghost animations

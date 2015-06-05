@@ -140,7 +140,10 @@ class Labyrinth {
 		// draw fruit in info area
 		void drawInfoFruit();
 
-		//play sound munch
+		// play sound munch
 		void playSoundMunch();
+
+		// play sound intro
+		void playSoundIntro();
 };
 #endif

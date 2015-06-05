@@ -415,3 +415,7 @@ void Labyrinth::drawInfoFruit() {
 void Labyrinth::playSoundMunch() {
 	sounds->munch();
 }
+
+void Labyrinth::playSoundIntro() {
+	sounds->intro();
+}

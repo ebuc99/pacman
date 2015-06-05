@@ -213,6 +213,7 @@ int main() {
 	blinky->set_leader(1);	// Blinky will be the reference sprite for redrawing
 	// at first, stop all figures 
 	stop_all(true, pacman, ghost_array_ghost); 
+	labyrinth->playSoundIntro();
 	// game loop
 	while(loop) {	
 		loop = eventloop(pacman, ghost_array_ghost, start_offset<0, &specialEventTime);

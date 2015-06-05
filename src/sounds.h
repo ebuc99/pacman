@@ -8,11 +8,13 @@ class Sounds {
 		Sounds();
 		~Sounds();
 		void munch();
+		void intro();
 	protected:
-		Mix_Chunk *sound_munch_a = NULL;
-		Mix_Chunk *sound_munch_b = NULL;
+		Mix_Chunk *chunk_munch_a = NULL;
+		Mix_Chunk *chunk_munch_b = NULL;
 		int channel_munch;
 		bool munch_toggle;
+		Mix_Chunk *chunk_intro = NULL;
 };
 
 #endif

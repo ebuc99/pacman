@@ -5,11 +5,12 @@ Screen::Screen() {
 	this->sdl_init_error = 0;
 	this->rect_num = 0;
 	this->fullscreen = false;
-	if(SDL_Init(SDL_INIT_VIDEO) != 0) {
+	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
         printf("SDL initialization failed: %s\n", SDL_GetError());
         this->sdl_init_error = EXIT_FAILURE;
     }
 	atexit(SDL_Quit);
+	atexit(SDL_CloseAudio);
 	this->screen_surface = SDL_SetVideoMode(680, 512, 24, SDL_HWSURFACE);
     if(this->screen_surface == 0) {
         printf("Setting video mode failed: %s\n",SDL_GetError());

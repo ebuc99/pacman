@@ -83,6 +83,7 @@ Labyrinth::Labyrinth(Screen *screen):
 	textweiss = {255, 255, 255, 0};
 	textgelb = {255, 247, 11, 0};
 	textrot = {255, 0, 0, 0};
+	sounds = new Sounds();
 }   
 
 Labyrinth::~Labyrinth(){
@@ -90,6 +91,7 @@ Labyrinth::~Labyrinth(){
 	SDL_FreeSurface(punkte);
 	SDL_FreeSurface(fruit);
 	SDL_FreeSurface(initText);
+	delete sounds;
 }
 
 void Labyrinth::draw_blocks() {
@@ -408,4 +410,8 @@ int Labyrinth::getFruitBonus() const {
 
 void Labyrinth::drawInfoFruit() {
 	screen->draw(fruit, 525, 430);
+}
+
+void Labyrinth::playSoundMunch() {
+	sounds->munch();
 }

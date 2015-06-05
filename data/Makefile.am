@@ -3,4 +3,5 @@
 
 SUBDIRS = \
 	fonts \
-	gfx
+	gfx \
+	sounds

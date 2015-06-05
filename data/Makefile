@@ -197,7 +197,7 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LDFLAGS = 
 LIBOBJS = 
-LIBS = -lSDL_ttf -lSDL_image 
+LIBS = -lSDL_mixer -lSDL_ttf -lSDL_image 
 LN_S = ln -s
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} /home/daniel/Programmierung/c/pacman/missing makeinfo
@@ -264,7 +264,8 @@ top_builddir = ..
 top_srcdir = ..
 SUBDIRS = \
 	fonts \
-	gfx
+	gfx \
+	sounds
 
 all: all-recursive
 

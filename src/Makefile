@@ -94,7 +94,7 @@ am_pacman_OBJECTS = pacman-figur.$(OBJEXT) \
 	pacman-ghost_figur.$(OBJEXT) pacman-pacman.$(OBJEXT) \
 	pacman-pacman_figur.$(OBJEXT) pacman-pille.$(OBJEXT) \
 	pacman-labyrinth.$(OBJEXT) pacman-screen.$(OBJEXT) \
-	pacman-rail.$(OBJEXT)
+	pacman-rail.$(OBJEXT) pacman-sounds.$(OBJEXT)
 pacman_OBJECTS = $(am_pacman_OBJECTS)
 am__DEPENDENCIES_1 =
 pacman_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -203,7 +203,7 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LDFLAGS = 
 LIBOBJS = 
-LIBS = -lSDL_ttf -lSDL_image 
+LIBS = -lSDL_mixer -lSDL_ttf -lSDL_image 
 LN_S = ln -s
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} /home/daniel/Programmierung/c/pacman/missing makeinfo
@@ -293,7 +293,9 @@ pacman_SOURCES = \
 	screen.h \
 	screen.cpp \
 	rail.h \
-	rail.cpp
+	rail.cpp \
+	sounds.h \
+	sounds.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \
@@ -315,11 +317,13 @@ pacman_CXXFLAGS = -ansi \
 
 pacman_LDFLAGS = $(SDL_CFLAGS) 
 pacman_LDADD = \
-	$(SDL_LIBS)
+	$(SDL_LIBS) \
+	-lSDL_mixer
 
 pacmanEXTRA_DIST = libsdl \
 	sdl-image \
-	sdl-ttf 
+	sdl-ttf \
+	sdl-mixer 
 
 all: all-am
 
@@ -416,6 +420,7 @@ include ./$(DEPDIR)/pacman-pacman_figur.Po
 include ./$(DEPDIR)/pacman-pille.Po
 include ./$(DEPDIR)/pacman-rail.Po
 include ./$(DEPDIR)/pacman-screen.Po
+include ./$(DEPDIR)/pacman-sounds.Po
 
 .cpp.o:
 	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -542,6 +547,20 @@ pacman-rail.obj: rail.cpp
 #	$(AM_V_CXX)source='rail.cpp' object='pacman-rail.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-rail.obj `if test -f 'rail.cpp'; then $(CYGPATH_W) 'rail.cpp'; else $(CYGPATH_W) '$(srcdir)/rail.cpp'; fi`
+
+pacman-sounds.o: sounds.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-sounds.o -MD -MP -MF $(DEPDIR)/pacman-sounds.Tpo -c -o pacman-sounds.o `test -f 'sounds.cpp' || echo '$(srcdir)/'`sounds.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-sounds.Tpo $(DEPDIR)/pacman-sounds.Po
+#	$(AM_V_CXX)source='sounds.cpp' object='pacman-sounds.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-sounds.o `test -f 'sounds.cpp' || echo '$(srcdir)/'`sounds.cpp
+
+pacman-sounds.obj: sounds.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-sounds.obj -MD -MP -MF $(DEPDIR)/pacman-sounds.Tpo -c -o pacman-sounds.obj `if test -f 'sounds.cpp'; then $(CYGPATH_W) 'sounds.cpp'; else $(CYGPATH_W) '$(srcdir)/sounds.cpp'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-sounds.Tpo $(DEPDIR)/pacman-sounds.Po
+#	$(AM_V_CXX)source='sounds.cpp' object='pacman-sounds.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-sounds.obj `if test -f 'sounds.cpp'; then $(CYGPATH_W) 'sounds.cpp'; else $(CYGPATH_W) '$(srcdir)/sounds.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

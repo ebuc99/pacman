@@ -28,7 +28,9 @@ pacman_SOURCES =  \
 	screen.h \
 	screen.cpp \
 	rail.h \
-	rail.cpp
+	rail.cpp \
+	sounds.h \
+	sounds.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \
@@ -51,12 +53,14 @@ pacman_CXXFLAGS = -ansi \
 pacman_LDFLAGS = $(SDL_CFLAGS) 
 
 pacman_LDADD =  \
-	$(SDL_LIBS)
+	$(SDL_LIBS) \
+	-lSDL_mixer
  
 
 pacmanEXTRA_DIST = libsdl \
 	sdl-image \
-	sdl-ttf 
+	sdl-ttf \
+	sdl-mixer 
 
   
 

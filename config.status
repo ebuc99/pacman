@@ -393,7 +393,7 @@ on `(hostname || uname -n) 2>/dev/null | sed 1q`
 "
 
 # Files that config.status was made for.
-config_files=" Makefile data/Makefile data/fonts/Makefile data/gfx/Makefile src/Makefile"
+config_files=" Makefile data/Makefile data/fonts/Makefile data/gfx/Makefile data/sounds/Makefile src/Makefile"
 config_headers=" config.h"
 config_commands=" depfiles"
 
@@ -552,6 +552,7 @@ do
     "data/Makefile") CONFIG_FILES="$CONFIG_FILES data/Makefile" ;;
     "data/fonts/Makefile") CONFIG_FILES="$CONFIG_FILES data/fonts/Makefile" ;;
     "data/gfx/Makefile") CONFIG_FILES="$CONFIG_FILES data/gfx/Makefile" ;;
+    "data/sounds/Makefile") CONFIG_FILES="$CONFIG_FILES data/sounds/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
@@ -683,7 +684,7 @@ S["INSTALL_PROGRAM"]="${INSTALL}"
 S["target_alias"]=""
 S["host_alias"]=""
 S["build_alias"]=""
-S["LIBS"]="-lSDL_ttf -lSDL_image "
+S["LIBS"]="-lSDL_mixer -lSDL_ttf -lSDL_image "
 S["ECHO_T"]=""
 S["ECHO_N"]="-n"
 S["ECHO_C"]=""
@@ -769,6 +770,7 @@ D["PACKAGE"]=" \"pacman\""
 D["VERSION"]=" \"0.5\""
 D["HAVE_LIBSDL_IMAGE"]=" 1"
 D["HAVE_LIBSDL_TTF"]=" 1"
+D["HAVE_LIBSDL_MIXER"]=" 1"
 D["STDC_HEADERS"]=" 1"
 D["HAVE_SYS_TYPES_H"]=" 1"
 D["HAVE_SYS_STAT_H"]=" 1"

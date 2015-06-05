@@ -4862,7 +4862,6 @@ rm -f core conftest.err conftest.$ac_objext \
   
   rm -f conf.sdltest
 
-# FIXME: Replace `main' with a function in `-lSDL_image':
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lSDL_image" >&5
 $as_echo_n "checking for main in -lSDL_image... " >&6; }
 if ${ac_cv_lib_SDL_image_main+:} false; then :
@@ -4904,7 +4903,6 @@ else
   as_fn_error $? "SDL_image is required to compile pacman" "$LINENO" 5
 fi
 
-# FIXME: Replace `main' with a function in `-lSDL_ttf':
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lSDL_ttf" >&5
 $as_echo_n "checking for main in -lSDL_ttf... " >&6; }
 if ${ac_cv_lib_SDL_ttf_main+:} false; then :
@@ -4944,6 +4942,47 @@ _ACEOF
 
 else
   as_fn_error $? "SDL_ttf is required to compile pacman" "$LINENO" 5
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lSDL_mixer" >&5
+$as_echo_n "checking for main in -lSDL_mixer... " >&6; }
+if ${ac_cv_lib_SDL_mixer_main+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lSDL_mixer  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+
+int
+main ()
+{
+return main ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_SDL_mixer_main=yes
+else
+  ac_cv_lib_SDL_mixer_main=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_SDL_mixer_main" >&5
+$as_echo "$ac_cv_lib_SDL_mixer_main" >&6; }
+if test "x$ac_cv_lib_SDL_mixer_main" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+@%:@define HAVE_LIBSDL_MIXER 1
+_ACEOF
+
+  LIBS="-lSDL_mixer $LIBS"
+
+else
+  as_fn_error $? "SDL_mixer is required to compile pacman" "$LINENO" 5
 fi
 
 
@@ -5323,7 +5362,7 @@ fi
 done
 
 
-ac_config_files="$ac_config_files Makefile data/Makefile data/fonts/Makefile data/gfx/Makefile src/Makefile"
+ac_config_files="$ac_config_files Makefile data/Makefile data/fonts/Makefile data/gfx/Makefile data/sounds/Makefile src/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -6060,6 +6099,7 @@ do
     "data/Makefile") CONFIG_FILES="$CONFIG_FILES data/Makefile" ;;
     "data/fonts/Makefile") CONFIG_FILES="$CONFIG_FILES data/fonts/Makefile" ;;
     "data/gfx/Makefile") CONFIG_FILES="$CONFIG_FILES data/gfx/Makefile" ;;
+    "data/sounds/Makefile") CONFIG_FILES="$CONFIG_FILES data/sounds/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

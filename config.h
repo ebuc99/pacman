@@ -10,6 +10,9 @@
 /* Define to 1 if you have the `SDL_image' library (-lSDL_image). */
 #define HAVE_LIBSDL_IMAGE 1
 
+/* Define to 1 if you have the `SDL_mixer' library (-lSDL_mixer). */
+#define HAVE_LIBSDL_MIXER 1
+
 /* Define to 1 if you have the `SDL_ttf' library (-lSDL_ttf). */
 #define HAVE_LIBSDL_TTF 1
 

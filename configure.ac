@@ -26,10 +26,9 @@ AM_PATH_SDL($SDL_VERSION,
 	    :, 
 	    AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
 	   )
-# FIXME: Replace `main' with a function in `-lSDL_image':
 AC_CHECK_LIB([SDL_image], [main],,[AC_MSG_ERROR([SDL_image is required to compile pacman])])
-# FIXME: Replace `main' with a function in `-lSDL_ttf':
 AC_CHECK_LIB([SDL_ttf], [main],,[AC_MSG_ERROR([SDL_ttf is required to compile pacman])])
+AC_CHECK_LIB([SDL_mixer], [main],,[AC_MSG_ERROR([SDL_mixer is required to compile pacman])])
 
 # Checks for header files.
 AC_CHECK_HEADERS([stdlib.h])

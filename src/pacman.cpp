@@ -139,7 +139,7 @@ int main() {
 	
 
 	// create an instance of pacman
-	Pacman *pacman = new Pacman(310, 338, screen, labyrinth, INITIAL_LIVES);
+	Pacman *pacman = new Pacman(310, 339, screen, labyrinth, INITIAL_LIVES);
 	
 	// init ghosts
 	Ghost *blinky = new Ghost(310, 173, INTELLIGENCE_BLINKY, 

@@ -37,10 +37,10 @@ Labyrinth::Labyrinth(Screen *screen):
 
 	s14 = new Rail(412, 133, 480, 133);
 
-	s15 = new Rail(249, 173, 290, 173);
-	s16 = new Rail(290, 173, 310, 173);
-	s17 = new Rail(310, 173, 330, 173);
-	s18 = new Rail(330, 173, 371, 173);
+	s15 = new Rail(249, 174, 290, 174);
+	s16 = new Rail(290, 174, 310, 174);
+	s17 = new Rail(310, 174, 330, 174);
+	s18 = new Rail(330, 174, 371, 174);
 
 	s19 = new Rail(100, 215, 207, 215);  // tunnel left
 	s20 = new Rail(207, 215, 249, 215);
@@ -58,15 +58,15 @@ Labyrinth::Labyrinth(Screen *screen):
 	s28 = new Rail(371, 298, 412, 298);
 	s29 = new Rail(412, 298, 480, 298);
 
-	s30 = new Rail(138, 338, 166, 338);
+	s30 = new Rail(138, 339, 166, 339);
 
-	s31 = new Rail(207, 338, 249, 338);
-	s32 = new Rail(249, 338, 290, 338);
-	s33 = new Rail(290, 338, 330, 338);
-	s34 = new Rail(330, 338, 371, 338);
-	s35 = new Rail(371, 338, 412, 338);
+	s31 = new Rail(207, 339, 249, 339);
+	s32 = new Rail(249, 339, 290, 339);
+	s33 = new Rail(290, 339, 330, 339);
+	s34 = new Rail(330, 339, 371, 339);
+	s35 = new Rail(371, 339, 412, 339);
 
-	s36 = new Rail(452, 338, 480, 338);
+	s36 = new Rail(452, 339, 480, 339);
 
 	s37 = new Rail(138, 380, 166, 380);
 	s38 = new Rail(166, 380, 207, 380);
@@ -78,80 +78,80 @@ Labyrinth::Labyrinth(Screen *screen):
 	s41 = new Rail(412, 380, 452, 380);
 	s42 = new Rail(452, 380, 480, 380);
 
-	s43 = new Rail(138, 420, 290, 420);
-	s44 = new Rail(290, 420, 330, 420);
-	s45 = new Rail(330, 420, 480, 420);
+	s43 = new Rail(138, 421, 290, 421);
+	s44 = new Rail(290, 421, 330, 421);
+	s45 = new Rail(330, 421, 480, 421);
 
 	// vertical rails, column by column, from top to bottom
 	s46 = new Rail(138,  37, 138,  92);
 	s47 = new Rail(138,  92, 138, 133);
 
-	s48 = new Rail(138, 298, 138, 338);
+	s48 = new Rail(138, 298, 138, 339);
 
-	s49 = new Rail(138, 380, 138, 420);
+	s49 = new Rail(138, 380, 138, 421);
 
-	s50 = new Rail(166, 338, 166, 380);
+	s50 = new Rail(166, 339, 166, 380);
 
 	s51 = new Rail(207,  37, 207,  92);
 	s52 = new Rail(207,  92, 207, 133);
 	s53 = new Rail(207, 133, 207, 215);
 	s54 = new Rail(207, 215, 207, 298);
-	s55 = new Rail(207, 298, 207, 338);
-	s56 = new Rail(207, 338, 207, 380);
+	s55 = new Rail(207, 298, 207, 339);
+	s56 = new Rail(207, 339, 207, 380);
 
 	s57 = new Rail(249,  92, 249, 133);
 
-	s58 = new Rail(249, 173, 249, 215);
+	s58 = new Rail(249, 174, 249, 215);
 	s59 = new Rail(249, 215, 249, 257);
 	s60 = new Rail(249, 257, 249, 298);
 
-	s61 = new Rail(249, 338, 249, 380);
+	s61 = new Rail(249, 339, 249, 380);
 
 	s62 = new Rail(290,  37, 290,  92);
 
-	s63 = new Rail(290, 133, 290, 173);
+	s63 = new Rail(290, 133, 290, 174);
 
-	s64 = new Rail(290, 298, 290, 338);
+	s64 = new Rail(290, 298, 290, 339);
 
-	s65 = new Rail(290, 380, 290, 420);
+	s65 = new Rail(290, 380, 290, 421);
 
 	s66 = new Rail(330,  37, 330,  92);
 
-	s67 = new Rail(330, 133, 330, 173);
+	s67 = new Rail(330, 133, 330, 174);
 
-	s68 = new Rail(330, 298, 330, 338);
+	s68 = new Rail(330, 298, 330, 339);
 
-	s69 = new Rail(330, 380, 330, 420);
+	s69 = new Rail(330, 380, 330, 421);
 
 	s70 = new Rail(371,  92, 371, 133);
 
-	s71 = new Rail(371, 173, 371, 215);
+	s71 = new Rail(371, 174, 371, 215);
 	s72 = new Rail(371, 215, 371, 257);
 	s73 = new Rail(371, 257, 371, 298);
 
-	s74 = new Rail(371, 338, 371, 380);
+	s74 = new Rail(371, 339, 371, 380);
 
 	s75 = new Rail(412,  37, 412,  92);
 	s76 = new Rail(412,  92, 412, 133);
 	s77 = new Rail(412, 133, 412, 215);
 	s78 = new Rail(412, 215, 412, 298);
-	s79 = new Rail(412, 298, 412, 338);
-	s80 = new Rail(412, 338, 412, 380);
+	s79 = new Rail(412, 298, 412, 339);
+	s80 = new Rail(412, 339, 412, 380);
 
-	s81 = new Rail(452, 338, 452, 380);
+	s81 = new Rail(452, 339, 452, 380);
 
 	s82 = new Rail(480,  37, 480,  92);
 	s83 = new Rail(480,  92, 480, 133);
 
-	s84 = new Rail(480, 298, 480, 338);
+	s84 = new Rail(480, 298, 480, 339);
 
-	s85 = new Rail(480, 380, 480, 420);
+	s85 = new Rail(480, 380, 480, 421);
 
 	// ghost castle
 	s86 = new Rail(280, 222, 309, 222);  // horizontal, the left one - 1 pixel too short, so it is a one-way outwards
 	s87 = new Rail(311, 222, 340, 222);  // horizontal, the right one - 1 pixel too short, so it is a one-way outwards
 	s88 = new Rail(280, 200, 280, 222);  // vertical, the left one
-	s89 = new Rail(310, 174, 310, 222);  // vertical, the middle (long) one - 1 pixel too short, so it usually is a one-way outwards
+	s89 = new Rail(310, 175, 310, 222);  // vertical, the middle (long) one - 1 pixel too short, so it usually is a one-way outwards
 	s90 = new Rail(340, 200, 340, 222);  // vertical, the right one
 
 	/* // the old definition, see data/gfx/hintergrund_schienen.png
@@ -272,7 +272,7 @@ void Labyrinth::init_pillen() {
 	int m = 0;
 	this->cnt_pills = this->NUMBER_PILLS;
 	int i_ar_pille_x[26] = {148,162,176,190,204,217,231,245,259,273,287,300,314,327,340,354,368,381,395,409,422,436,449,462,476,490};
-	int i_ar_pille_y[29] = {47,61,75,89,102,116,130,143,157,170,184,197,211,225,239,252,266,280,294,308,321,335,348,362,376,390,404,417,430};
+	int i_ar_pille_y[29] = {47,61,75,89,102,116,130,143,157,170,184,197,211,225,239,252,266,280,294,308,321,335,349,362,376,390,404,417,431};
 		for(int i = 0; i < 26; i++) {
 			for(int j = 0; j < 29; j++) {
 				for(int k = 0; k < NUMBER_RAILS_PILLS; k++) {
@@ -280,7 +280,7 @@ void Labyrinth::init_pillen() {
 						pillen[m].x = i_ar_pille_x[i];
 						pillen[m].y = i_ar_pille_y[j];
 						pillen[m].sichtbar = 1;
-						if (((i_ar_pille_x[i]==148)||(i_ar_pille_x[i] == 490)) && ((i_ar_pille_y[j] == 75)||(i_ar_pille_y[j] == 348))) {
+						if (((i_ar_pille_x[i]==148)||(i_ar_pille_x[i] == 490)) && ((i_ar_pille_y[j] == 75)||(i_ar_pille_y[j] == 349))) {
 							pillen[m].superpille = 1;
 						}
 						else

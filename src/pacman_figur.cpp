@@ -51,13 +51,16 @@ Pacman::Pacman(int init_x, int init_y, Screen *screen, Labyrinth *labyrinth, int
     ar_pacman_die[3] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_4.png", 255);
     ar_pacman_die[4] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_5.png", 255);
     ar_pacman_die[5] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_6.png", 255);
-    ar_pacman_die[6] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_7.png", 255);
-    ar_pacman_die[7] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_8.png", 255);
-    ar_pacman_die[8] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_9.png", 255);
-    ar_pacman_die[9] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_7.png", 255);
+	ar_pacman_die[6] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_10.png", 255);
+	ar_pacman_die[7] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_10.png", 255);
+	ar_pacman_die[8] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_10.png", 255);	
+	ar_pacman_die[9] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_7.png", 255);
     ar_pacman_die[10] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_8.png", 255);
     ar_pacman_die[11] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_9.png", 255);
-    ar_pacman_die[12] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_9.png", 255);
+    ar_pacman_die[12] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_7.png", 255);
+    ar_pacman_die[13] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_8.png", 255);
+    ar_pacman_die[14] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_9.png", 255);
+    ar_pacman_die[15] = LoadSurface("/usr/local/share/pacman/gfx/pacman_die_9.png", 255);
 	
 	this->pacman_sf = ar_pacman_links[0];
 }
@@ -325,11 +328,13 @@ int Pacman::is_dying() const {
 }
 
 int Pacman::die_animation() {
-	if(dying > 1)
+	if(dying > 1) 
 		return dying--;
 	else {
+		if(!die_counter)
+			labyrinth->playSoundDying();
 		this->die_pic(die_counter++);
-		if(die_counter == 13) {
+		if(die_counter == 16) {
 			die_counter = 0;
 			dying = 0;
 		}

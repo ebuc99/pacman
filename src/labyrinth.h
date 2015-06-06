@@ -145,5 +145,20 @@ class Labyrinth {
 
 		// play sound intro
 		void playSoundIntro();
+
+		// play sound siren
+		void startPlaySoundSiren();
+
+		// stop sound siren
+		void stopPlaySoundSiren();
+
+		// pause all
+		void pausePlaySoundAll();
+
+		// resume all
+		void resumePlaySoundAll();
+
+		// play sound dying
+		void playSoundDying();
 };
 #endif

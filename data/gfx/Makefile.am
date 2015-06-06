@@ -50,4 +50,5 @@ dist_datadir_gfx_DATA = augen_0.png \
 	grapes.png \
 	banana.png \
 	pear.png \
-	key.png
+	key.png \
+	pacman_die_10.png

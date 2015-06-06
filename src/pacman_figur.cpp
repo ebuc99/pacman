@@ -281,8 +281,15 @@ int Pacman::touch(Figur **ghost_array) const{
 
 void Pacman::check_eat_pills(Figur **ghost_array) {
 	if(this->was_moving()){
+		int tmp_last_x = this->last_x;
+		if (this->y == 215) {
+			if (this->last_x < 310 && this->x > 310)  // tunnel crossed - gone out to the left and coming in from the right
+				tmp_last_x = 516;  // if we did not pretend something like this, a pill would be eaten that Pacman did not really pass
+			if (this->last_x > 310 && this->x < 310)  // tunnel crossed - gone out to the right and coming in from the left
+				tmp_last_x = 99;  // if we did not pretend something like this, a pill would be eaten that Pacman did not really pass
+		}
 		for(int i = 0; i < this->labyrinth->NUMBER_PILLS; i++) {
-			if(this->labyrinth->pillen[i].sichtbar && ((this->labyrinth->pillen[i].x - 10) >= least(this->x,this->last_x)) && ((this->labyrinth->pillen[i].x - 10) <= greatest(this->x,this->last_x)) && ((this->labyrinth->pillen[i].y - 10) >= least(this->y,this->last_y)) && ((this->labyrinth->pillen[i].y - 10) <= greatest(this->y,this->last_y))) {
+			if(this->labyrinth->pillen[i].sichtbar && ((this->labyrinth->pillen[i].x - 10) >= least(this->x,tmp_last_x)) && ((this->labyrinth->pillen[i].x - 10) <= greatest(this->x,tmp_last_x)) && ((this->labyrinth->pillen[i].y - 10) >= least(this->y,this->last_y)) && ((this->labyrinth->pillen[i].y - 10) <= greatest(this->y,this->last_y))) {
 				cnt_slow = 15;
 				this->labyrinth->pillen[i].sichtbar = 0;
 				this->set_speed(PACMAN_V_SLOW);

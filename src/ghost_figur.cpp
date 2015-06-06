@@ -239,7 +239,7 @@ void Ghost::move_on_rails(int ms, int anz_schienen, Rail **ar_s) {
 		}
 
 		// for returning eyes-only ghosts, open the door to the castle
-		bridge = (i==45 && this->get_hunter()==NONE) ? 1 : 0;
+		bridge = (i==89 && this->get_hunter()==NONE) ? 1 : 0;
 
 		if (richtung_ghost == LEFT) {
 			if (this->x == ar_s[i]->x1 && this->x == ar_s[i]->x2) {  // vertical rail
@@ -302,7 +302,7 @@ void Ghost::move_on_rails(int ms, int anz_schienen, Rail **ar_s) {
 			if(sammel_counter == 3)
 				break;
 		} else if (richtung_ghost == DOWN) {
-			if ((i == 45) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y2)) {
+			if ((i == 89) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y2)) {
 				// special case: at the bottom of the castle's vertical center rail, the ghost must invert it's direction (i.e. go up again)
 				sammel_richtung[0] = UP;
 				sammel_counter = 1;

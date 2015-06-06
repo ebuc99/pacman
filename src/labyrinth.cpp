@@ -14,6 +14,147 @@ Labyrinth::Labyrinth(Screen *screen):
 	fruit(NULL),
 	level(1){
 	this->screen = screen;
+	// horizontal rails, row by row, from left to right
+	s0  = new Rail(138,  37, 207,  37);
+	s1  = new Rail(207,  37, 290,  37);
+
+	s2  = new Rail(330,  37, 412,  37);
+	s3  = new Rail(412,  37, 480,  37);
+
+	s4  = new Rail(138,  92, 207,  92);
+	s5  = new Rail(207,  92, 249,  92);
+	s6  = new Rail(249,  92, 290,  92);
+	s7  = new Rail(290,  92, 330,  92);
+	s8  = new Rail(330,  92, 371,  92);
+	s9  = new Rail(371,  92, 412,  92);
+	s10 = new Rail(412,  92, 480,  92);
+
+	s11 = new Rail(138, 133, 207, 133);
+
+	s12 = new Rail(249, 133, 290, 133);
+
+	s13 = new Rail(330, 133, 371, 133);
+
+	s14 = new Rail(412, 133, 480, 133);
+
+	s15 = new Rail(249, 173, 290, 173);
+	s16 = new Rail(290, 173, 310, 173);
+	s17 = new Rail(310, 173, 330, 173);
+	s18 = new Rail(330, 173, 371, 173);
+
+	s19 = new Rail(100, 215, 207, 215);  // tunnel left
+	s20 = new Rail(207, 215, 249, 215);
+
+	s21 = new Rail(371, 215, 412, 215);
+	s22 = new Rail(412, 215, 515, 215);  // tunnel right
+
+	s23 = new Rail(249, 257, 371, 257);
+
+	s24 = new Rail(138, 298, 207, 298);
+	s25 = new Rail(207, 298, 249, 298);
+	s26 = new Rail(249, 298, 290, 298);
+
+	s27 = new Rail(330, 298, 371, 298);
+	s28 = new Rail(371, 298, 412, 298);
+	s29 = new Rail(412, 298, 480, 298);
+
+	s30 = new Rail(138, 338, 166, 338);
+
+	s31 = new Rail(207, 338, 249, 338);
+	s32 = new Rail(249, 338, 290, 338);
+	s33 = new Rail(290, 338, 330, 338);
+	s34 = new Rail(330, 338, 371, 338);
+	s35 = new Rail(371, 338, 412, 338);
+
+	s36 = new Rail(452, 338, 480, 338);
+
+	s37 = new Rail(138, 380, 166, 380);
+	s38 = new Rail(166, 380, 207, 380);
+
+	s39 = new Rail(249, 380, 290, 380);
+
+	s40 = new Rail(330, 380, 371, 380);
+
+	s41 = new Rail(412, 380, 452, 380);
+	s42 = new Rail(452, 380, 480, 380);
+
+	s43 = new Rail(138, 420, 290, 420);
+	s44 = new Rail(290, 420, 330, 420);
+	s45 = new Rail(330, 420, 480, 420);
+
+	// vertical rails, column by column, from top to bottom
+	s46 = new Rail(138,  37, 138,  92);
+	s47 = new Rail(138,  92, 138, 133);
+
+	s48 = new Rail(138, 298, 138, 338);
+
+	s49 = new Rail(138, 380, 138, 420);
+
+	s50 = new Rail(166, 338, 166, 380);
+
+	s51 = new Rail(207,  37, 207,  92);
+	s52 = new Rail(207,  92, 207, 133);
+	s53 = new Rail(207, 133, 207, 215);
+	s54 = new Rail(207, 215, 207, 298);
+	s55 = new Rail(207, 298, 207, 338);
+	s56 = new Rail(207, 338, 207, 380);
+
+	s57 = new Rail(249,  92, 249, 133);
+
+	s58 = new Rail(249, 173, 249, 215);
+	s59 = new Rail(249, 215, 249, 257);
+	s60 = new Rail(249, 257, 249, 298);
+
+	s61 = new Rail(249, 338, 249, 380);
+
+	s62 = new Rail(290,  37, 290,  92);
+
+	s63 = new Rail(290, 133, 290, 173);
+
+	s64 = new Rail(290, 298, 290, 338);
+
+	s65 = new Rail(290, 380, 290, 420);
+
+	s66 = new Rail(330,  37, 330,  92);
+
+	s67 = new Rail(330, 133, 330, 173);
+
+	s68 = new Rail(330, 298, 330, 338);
+
+	s69 = new Rail(330, 380, 330, 420);
+
+	s70 = new Rail(371,  92, 371, 133);
+
+	s71 = new Rail(371, 173, 371, 215);
+	s72 = new Rail(371, 215, 371, 257);
+	s73 = new Rail(371, 257, 371, 298);
+
+	s74 = new Rail(371, 338, 371, 380);
+
+	s75 = new Rail(412,  37, 412,  92);
+	s76 = new Rail(412,  92, 412, 133);
+	s77 = new Rail(412, 133, 412, 215);
+	s78 = new Rail(412, 215, 412, 298);
+	s79 = new Rail(412, 298, 412, 338);
+	s80 = new Rail(412, 338, 412, 380);
+
+	s81 = new Rail(452, 338, 452, 380);
+
+	s82 = new Rail(480,  37, 480,  92);
+	s83 = new Rail(480,  92, 480, 133);
+
+	s84 = new Rail(480, 298, 480, 338);
+
+	s85 = new Rail(480, 380, 480, 420);
+
+	// ghost castle
+	s86 = new Rail(280, 222, 309, 222);  // horizontal, the left one - 1 pixel too short, so it is a one-way outwards
+	s87 = new Rail(311, 222, 340, 222);  // horizontal, the right one - 1 pixel too short, so it is a one-way outwards
+	s88 = new Rail(280, 200, 280, 222);  // vertical, the left one
+	s89 = new Rail(310, 174, 310, 222);  // vertical, the middle (long) one - 1 pixel too short, so it usually is a one-way outwards
+	s90 = new Rail(340, 200, 340, 222);  // vertical, the right one
+
+	/* // the old definition, see data/gfx/hintergrund_schienen.png
 	s0 = new Rail(207, 338, 412, 338);
 	s1 = new Rail(207, 37, 207, 380);
 	s2 = new Rail(138, 92, 480, 92);
@@ -59,17 +200,34 @@ Labyrinth::Labyrinth(Screen *screen):
 	s42 = new Rail(330, 380, 371, 380);
 	s43 = new Rail(290, 380, 290, 420);
 	s44 = new Rail(330, 380, 330, 420);
-
 	// ghost castle
 	s45 = new Rail(310, 174, 310, 222);
 	s46 = new Rail(280, 222, 309, 222);
 	s47 = new Rail(311, 222, 340, 222);
 	s48 = new Rail(280, 200, 280, 222);
 	s49 = new Rail(340, 200, 340, 222);
+	*/
 
-	Rail *array_rails_temp[this->NUMBER_RAILS] = {s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s21, s22, s23, s24, s25, s26, s27, s28, s29, s30, s31, s32, s33, s34, s35, s36, s37, s38, s39, s40, s41, s42, s43, s44, s45, s46, s47, s48, s49};
+	Rail *array_rails_temp[this->NUMBER_RAILS] = {s0,  s1,  s2,  s3,  s4,  s5,  s6,  s7,  s8,  s9,
+	                                             s10, s11, s12, s13, s14, s15, s16, s17, s18, s19,
+	                                             s20, s21, s22, s23, s24, s25, s26, s27, s28, s29,
+	                                             s30, s31, s32, s33, s34, s35, s36, s37, s38, s39,
+	                                             s40, s41, s42, s43, s44, s45, s46, s47, s48, s49,
+	                                             s50, s51, s52, s53, s54, s55, s56, s57, s58, s59,
+	                                             s60, s61, s62, s63, s64, s65, s66, s67, s68, s69,
+	                                             s70, s71, s72, s73, s74, s75, s76, s77, s78, s79,
+	                                             s80, s81, s82, s83, s84, s85, s86, s87, s88, s89,
+	                                             s90};
 	memcpy(array_rails, array_rails_temp, sizeof(array_rails_temp));
-	Rail *array_rails_pills_temp[this->NUMBER_RAILS_PILLS] = {s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s24, s25, s26, s27, s28, s29, s30, s31, s32, s33, s34, s35, s36, s37, s38, s39, s40, s41, s42, s43, s44};
+	Rail *array_rails_pills_temp[this->NUMBER_RAILS_PILLS] = {s0,  s1,  s2,  s3,  s4,  s5,  s6,  s7,  s8,  s9,
+	                                                         s10, s11, s12, s13, s14,
+	                                                                             s24, s25, s26, s27, s28, s29, 
+	                                                         s30, s31, s32, s33, s34, s35, s36, s37, s38, s39,
+	                                                         s40, s41, s42, s43, s44, s45, s46, s47, s48, s49,
+	                                                         s50, s51, s52, s53, s54, s55, s56, s57,
+	                                                              s61, s62,      s64, s65, s66,      s68, s69,
+	                                                         s70,                s74, s75, s76, s77, s78, s79, 
+	                                                         s80, s81, s82, s83, s84, s85};
 	memcpy(array_rails_pills, array_rails_pills_temp, sizeof(array_rails_pills_temp));
 
 	pille = this->LoadSurface("/usr/local/share/pacman/gfx/pille.png");	
@@ -122,7 +280,7 @@ void Labyrinth::init_pillen() {
 						pillen[m].x = i_ar_pille_x[i];
 						pillen[m].y = i_ar_pille_y[j];
 						pillen[m].sichtbar = 1;
-						if(((i_ar_pille_x[i] == 148) && (i_ar_pille_y[j] == 75)) || ((i_ar_pille_x[i] == 490) && (i_ar_pille_y[j] == 75)) || ((i_ar_pille_x[i] == 148) && (i_ar_pille_y[j] == 348)) || ((i_ar_pille_x[i] == 490) && (i_ar_pille_y[j] == 348))) {
+						if (((i_ar_pille_x[i]==148)||(i_ar_pille_x[i] == 490)) && ((i_ar_pille_y[j] == 75)||(i_ar_pille_y[j] == 348))) {
 							pillen[m].superpille = 1;
 						}
 						else
@@ -150,6 +308,14 @@ void Labyrinth::draw_pillen() {
 			screen->AddUpdateRects(dest.x , dest.y, superpille->w, superpille->h);
 		}
 	}
+	// temporarily also draw the rails
+	for (int i = 0; i < NUMBER_RAILS; ++i) {
+		if (array_rails[i]->y1 == array_rails[i]->y2)
+			screen->drawHorizontalLine(array_rails[i]->x1+1, array_rails[i]->x2-1, array_rails[i]->y1, 0, 255, 0);
+		else if (array_rails[i]->x1 == array_rails[i]->x2)
+			screen->drawVerticalLine(array_rails[i]->x1, array_rails[i]->y1+1, array_rails[i]->y2-1, 0, 0, 255);
+	}
+	screen->AddUpdateRects(0, 0, 640, 480);
 }
 
 int Labyrinth::number_rails() const {

@@ -71,7 +71,6 @@ void Screen::draw(SDL_Surface* graphic, int offset_x, int offset_y) {
     }
 }
 
-
 void Screen::setFullscreen(bool fs) {
     if (fs == fullscreen)
         return;  // the desired mode already has been activated, so do nothing
@@ -87,3 +86,36 @@ void Screen::setFullscreen(bool fs) {
         fullscreen = fs;
     }
 }
+
+void Screen::drawHorizontalLine(int x1, int x2, int y, Uint8 r, Uint8 g, Uint8 b) {
+	if (SDL_MUSTLOCK(this->screen_surface))
+		SDL_LockSurface(this->screen_surface);
+	Uint8* p;
+	for (int i = x1; i <= x2; ++i) {
+		p = (Uint8*) this->screen_surface->pixels + (y * this->screen_surface->pitch) + (i * sizeof(Uint8) * 3);
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+		p[0] = r; p[1] = g; p[2] = b;
+#else
+		p[0] = b; p[1] = g; p[2] = r;
+#endif
+	}
+	if (SDL_MUSTLOCK(this->screen_surface))
+		SDL_UnlockSurface(this->screen_surface);
+}
+
+void Screen::drawVerticalLine(int x, int y1, int y2, Uint8 r, Uint8 g, Uint8 b) {
+	if (SDL_MUSTLOCK(this->screen_surface))
+		SDL_LockSurface(this->screen_surface);
+	Uint8* p;
+	for (int i = y1; i <= y2; ++i) {
+		p = (Uint8*) this->screen_surface->pixels + (i * this->screen_surface->pitch) + (x * sizeof(Uint8) * 3);
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+		p[0] = r; p[1] = g; p[2] = b;
+#else
+		p[0] = b; p[1] = g; p[2] = r;
+#endif
+	}
+	if (SDL_MUSTLOCK(this->screen_surface))
+		SDL_UnlockSurface(this->screen_surface);
+}
+

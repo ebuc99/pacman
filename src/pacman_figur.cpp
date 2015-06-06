@@ -89,10 +89,10 @@ void Pacman::checkAnimationChange() {
 	}
 }
 
-void Pacman::move(int moving, int ms) {
-	if(moving)
-		this->addUpdateRect();
+void Pacman::move(int ms) {
 	this->move_on_rails(ms, this->labyrinth->number_rails(), this->labyrinth->array_rails);		
+	if (last_x != x || last_y != y)
+		this->addUpdateRect();
 }
 void Pacman::move_left(int ms, int stop_at) {
 	Figur::move_left(ms, stop_at);
@@ -314,9 +314,9 @@ void Pacman::check_eat_pills(Figur **ghost_array) {
 			this->set_speed(PACMAN_V_FAST); // make pacman fast again
 
 		// fruit eaten?
-		if(labyrinth->fruitIsDisplayed() && this->x == 310 && this->y == 257) {
+		if(labyrinth->fruitIsDisplayed() && this->y == 257 && (this->x>=310 && this->last_x<=310 || this->x<=310 && this->last_x>=310)) {
 			labyrinth->hideFruit();
-			labyrinth->addScore(labyrinth->getFruitBonus(), this->x + 10, this->y + 10);
+			labyrinth->addScore(labyrinth->getFruitBonus(), 310 + 10, 257 + 10);
 			this->setVisibility(0);
 			labyrinth->sleep(400);
 		}

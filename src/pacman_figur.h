@@ -13,7 +13,7 @@ class Pacman : public Figur {
 		virtual void draw();
 		
 		//move pacman
-		void move(int moving, int ms);
+		void move(int ms);
 
 		// pacman all direction animation
 		void left_pic(int cnt_pic);

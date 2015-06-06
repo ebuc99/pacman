@@ -30,7 +30,7 @@ class Labyrinth {
 		int punktestand;
 		int bonus_stage; //200, 400, 800, 1600
 		TTF_Font *font, *smallFont;
-		SDL_Surface *smallScore, *initText, *punkte, *fruit;
+		SDL_Surface *smallScore, *initText, *punkte, *infoFruit, *fruit;
 		int smallScore_x, smallScore_y;
 		SDL_Color textweiss, textgelb, textrot;
 		int cnt_pills;
@@ -125,10 +125,10 @@ class Labyrinth {
 		// eaten pills
 		void startFruitRandomizer(int new_level);
 
-		// display fruit, if the number of
-		// pills was eaten or don't display
-		// if 10 s are over
-		void setFruit(int ms);
+		// Check whether enough pills have been eaten to display the next fruit.
+		// If the fruit is displayed, decrement it's display time, and hide it
+		// if 10 s are over.
+		void checkFruit(int ms);
 
 		// dont show fruit
 		void hideFruit();
@@ -141,6 +141,9 @@ class Labyrinth {
 
 		// get fruit bonus
 		int getFruitBonus() const;
+
+		// draws the fruit, if it is displayed
+		void drawFruit();
 
 		// draw fruit in info area
 		void drawInfoFruit();

@@ -26,7 +26,7 @@ class Ghost : public Figur {
 		
 		// overloaded move of class Figur
 		void move_dir(int ms, int direction, int max_links = 999, int max_oben = 999, int max_rechts = 999, int max_unten = 999);
-		void move(int moving, int ms);
+		void move(int ms);
 
 		// has the leader moved?
 		static int was_moving_leader;

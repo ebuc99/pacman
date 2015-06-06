@@ -11,7 +11,7 @@ const uint16_t INTELLIGENCE_CLYDE = 0;
 const uint16_t INIT_UP_DOWN = 0;          // initial up/down cycles before the ghost will be allowed to leave the castle
 const uint16_t INIT_UP_DOWN_INKY = 5;
 const uint16_t INIT_UP_DOWN_CLYDE = 11;
-const uint32_t MIN_FRAME_DURATION = 10;        // duration of a loop in milliseconds (i.e. minimum time between frames)
+const uint32_t MIN_FRAME_DURATION = 30;        // duration of a loop in milliseconds (i.e. minimum time between frames)
 const uint16_t START_OFFSET   = 4500;
 const uint16_t START_OFFSET_2 = 1500;
 const int INITIAL_LIVES = 3;              // number of times the player must die to get the "game over"
@@ -142,7 +142,7 @@ int main() {
 	Pacman *pacman = new Pacman(310, 339, screen, labyrinth, INITIAL_LIVES);
 	
 	// init ghosts
-	Ghost *blinky = new Ghost(310, 173, INTELLIGENCE_BLINKY, 
+	Ghost *blinky = new Ghost(310, 174, INTELLIGENCE_BLINKY, 
 	               			  Figur::LEFT, INIT_UP_DOWN, Ghost::BLINKY,
 	                          screen, labyrinth, pacman);
 	
@@ -248,15 +248,18 @@ int main() {
 						labyrinth->setInitText("Get Ready!");
 						start_offset = START_OFFSET_2;
 					}
+				    screen->draw(hintergrund);
+				    screen->AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
 				}
 			}
 			labyrinth->pill_animation();
-			animation_counter = 0;
+			animation_counter -= 100;
 		}
 		else
 			refresh_ghosts = 0;
 
-		// handle start offset 
+		// handle time based counters
+		// start offset - wait a short time before the game begins, so the player may prepare to play
 		if(start_offset > 0) {
 			start_offset -= deltaT;
 			if (start_offset <= 0) {
@@ -265,18 +268,7 @@ int main() {
 				stop_all(false, pacman, ghost_array_ghost);
 			}
 	 	}
-
-		pacman->check_eat_pills(ghost_array);
-		if(labyrinth->getExisitingPills() <= 0) { 
-			// init new level
-			reset_all(pacman, ghost_array);
-			stop_all(true, pacman, ghost_array_ghost);
-			screen->draw(hintergrund);
-			labyrinth->initNewLevel();
-			start_offset = START_OFFSET;
-			continue;
-		}
-
+	 	// hunting mode - ghosts can be eaten after eating a superpill, but only for a defined time
 		if(labyrinth->cnt_hunting_mode > 0 && !pause && labyrinth->cnt_sleep <= 0) {
 			if (labyrinth->cnt_hunting_mode > 2000 && labyrinth->cnt_hunting_mode-deltaT <= 2000) {
 				blinky->blink();
@@ -299,27 +291,53 @@ int main() {
 				labyrinth->stopHuntingMode();
 			}
 		}
+		// sleep counter - wait a short time when the player gets a special score (e.g. after eating a ghost or a fruit)
+		if (labyrinth->cnt_sleep > 0 && !pause) {
+			labyrinth->cnt_sleep -= deltaT;
+			if (labyrinth->cnt_sleep <= 0) {
+				labyrinth->cnt_sleep = 0;
+				labyrinth->hideSmallScore();
+				pacman->setVisibility(true);
+				blinky->setVisibility(true);
+				pinky->setVisibility(true);
+				inky->setVisibility(true);
+				clyde->setVisibility(true);
+			}
+		}
 
+		// move all figures
+		if (!pause && labyrinth->cnt_sleep <= 0) {
+			pacman->move(deltaT);
+			blinky->move(deltaT);
+			pinky->move(deltaT);
+			inky->move(deltaT);
+			clyde->move(deltaT);
+		}
+
+		// did something special happen during the move?
+		pacman->check_eat_pills(ghost_array);
+		if(labyrinth->getExisitingPills() <= 0) { 
+			// init new level
+			reset_all(pacman, ghost_array);
+			stop_all(true, pacman, ghost_array_ghost);
+			screen->draw(hintergrund);
+			labyrinth->initNewLevel();
+			start_offset = START_OFFSET;
+		    screen->draw(hintergrund);
+		    screen->AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
+			continue;
+		}
 		lastScore = currentScore;
 		currentScore = labyrinth->getScore();
 		if (lastScore < 10000 && currentScore >= 10000) {
 			pacman->addLives(1);
 		}
-
-		if (moving()) {
-		    // redraw background and pills, but only if the reference ghost has moved
-		    screen->draw(hintergrund);
-		    labyrinth->draw_pillen();
-			labyrinth->compute_score();
-			labyrinth->drawInitText();
-			screen->draw(score, 530, 30);
-			pacman->drawLives();
-			labyrinth->drawSmallScore();
-			labyrinth->drawInfoFruit();
-			pacman->animate();
+		if(pacman->touch(ghost_array)  && !pacman->is_dying()) {
+			stop_all(true, pacman, ghost_array_ghost);
+			pacman->set_dying(10);  
 		}
 		if (!pause && labyrinth->cnt_sleep <= 0) {
-			labyrinth->setFruit(deltaT);
+			labyrinth->checkFruit(deltaT);
 		}
 
 	  	// if pacman stops, please set it to "normal"
@@ -340,20 +358,38 @@ int main() {
 			pacman->parking();
 		}		
 
-		if(moving()) {
+		// redrawing
+		if (moving()) {
+			// background
+		    screen->draw(hintergrund);
+		    // objects within the level
+		    labyrinth->draw_pillen();
+			labyrinth->drawFruit();
+			// figures
+			pacman->animate();
 			pacman->draw();
+			pacman->addUpdateRect();
 			blinky->draw();
+			blinky->addUpdateRect();
 			pinky->draw();
+			pinky->addUpdateRect();
 			inky->draw();
+			inky->addUpdateRect();
 			clyde->draw();
+			clyde->addUpdateRect();
+			// topmost things within the level
 		    labyrinth->draw_blocks();
+			labyrinth->drawSmallScore();
+			labyrinth->drawInitText();
+			// information area: score, lives, the level's fruit
+			labyrinth->compute_score();
+			screen->draw(score, 530, 30);
+			pacman->drawLives();
+			labyrinth->drawInfoFruit();
+		    // bring it to the screen, really
 			screen->Refresh();
-			if(pacman->touch(ghost_array)  && !pacman->is_dying()) {
-				stop_all(true, pacman, ghost_array_ghost);
-				pacman->set_dying(10);  
-			}
 		}
-				
+
 		// determine the correct game speed
 		lastTicks = currentTicks;
 		currentTicks = SDL_GetTicks();
@@ -362,34 +398,6 @@ int main() {
 			SDL_Delay(MIN_FRAME_DURATION - deltaT);
 			deltaT = MIN_FRAME_DURATION;
 			currentTicks = lastTicks + MIN_FRAME_DURATION;  // otherwise, the waiting time would cause problems within the next frame
-		}
-		
-		// and move all figures
-		if (!pause && labyrinth->cnt_sleep <= 0) {
-			pacman->move(moving(), deltaT);
-			blinky->move(moving(), deltaT);
-			pinky->move(moving(), deltaT);
-			inky->move(moving(), deltaT);
-			clyde->move(moving(), deltaT);
-		} else if (moving()) {
-			pacman->addUpdateRect();
-			blinky->addUpdateRect();
-			pinky->addUpdateRect();
-			inky->addUpdateRect();
-			clyde->addUpdateRect();
-		}
-
-		if (labyrinth->cnt_sleep > 0 && !pause) {
-			labyrinth->cnt_sleep -= deltaT;
-			if (labyrinth->cnt_sleep <= 0) {
-				labyrinth->cnt_sleep = 0;
-				labyrinth->hideSmallScore();
-				pacman->setVisibility(true);
-				blinky->setVisibility(true);
-				pinky->setVisibility(true);
-				inky->setVisibility(true);
-				clyde->setVisibility(true);
-			}
 		}
 	}
 	

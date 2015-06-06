@@ -11,6 +11,7 @@ Labyrinth::Labyrinth(Screen *screen):
 	smallFont(NULL),
 	smallScore(NULL),
 	initText(NULL),
+	infoFruit(NULL),
 	fruit(NULL),
 	level(1){
 	this->screen = screen;
@@ -247,7 +248,7 @@ Labyrinth::Labyrinth(Screen *screen):
 Labyrinth::~Labyrinth(){
 	SDL_FreeSurface(pille);
 	SDL_FreeSurface(punkte);
-	SDL_FreeSurface(fruit);
+	SDL_FreeSurface(infoFruit);
 	SDL_FreeSurface(initText);
 	delete sounds;
 }
@@ -308,14 +309,14 @@ void Labyrinth::draw_pillen() {
 			screen->AddUpdateRects(dest.x , dest.y, superpille->w, superpille->h);
 		}
 	}
-	// temporarily also draw the rails
+	/*// temporarily also draw the rails
 	for (int i = 0; i < NUMBER_RAILS; ++i) {
 		if (array_rails[i]->y1 == array_rails[i]->y2)
 			screen->drawHorizontalLine(array_rails[i]->x1+1, array_rails[i]->x2-1, array_rails[i]->y1, 0, 255, 0);
 		else if (array_rails[i]->x1 == array_rails[i]->x2)
 			screen->drawVerticalLine(array_rails[i]->x1, array_rails[i]->y1+1, array_rails[i]->y2-1, 0, 0, 255);
 	}
-	screen->AddUpdateRects(0, 0, 640, 480);
+	screen->AddUpdateRects(0, 0, 640, 480);*/
 }
 
 int Labyrinth::number_rails() const {
@@ -512,9 +513,10 @@ void Labyrinth::setLevel(int level) {
 			setFruitBonus(5000);
 			strcat(fruit_file, "key.png");
 	};
-	fruit = LoadSurface(fruit_file, 255);
+	infoFruit = LoadSurface(fruit_file, 255);
+	fruit = NULL;
 	drawInfoFruit();
-	screen->AddUpdateRects(525, 430, fruit->w, fruit->h);
+	screen->AddUpdateRects(525, 430, infoFruit->w, infoFruit->h);
 }
 
 void Labyrinth::startFruitRandomizer(int new_level) {
@@ -527,41 +529,37 @@ void Labyrinth::startFruitRandomizer(int new_level) {
 	next_fruit = getExisitingPills() - next_fruit;
 }
 
-void Labyrinth::setFruit(int ms) {
-	if(cnt_displayed_fruits >= 2)
-		return;
-	if(!fruitIsDisplayed()) {
+void Labyrinth::checkFruit(int ms) {
+	if(fruit) {
+		if (this->cnt_sleep <= 0) {
+			fruit_display_time -= ms;
+			if (fruit_display_time <= 0)
+				this->hideFruit();
+		}
+	} else {
 		if(getExisitingPills() <= next_fruit) {
-			screen->draw_dynamic_content(fruit, 310, 257);
+			fruit = infoFruit;
 			fruit_display_time = 10000;
+			++cnt_displayed_fruits;
 		}
 	}
-	else {
-		if (this->cnt_sleep <= 0) {
-			if(fruit_display_time - ms <= 1) {
-				this->hideFruit();
-			} else {
-				fruit_display_time -= ms;
-				screen->draw_dynamic_content(fruit, 310, 257);
-			}
-		}
-	}	
 }
 
 void Labyrinth::hideFruit() {
-	if(cnt_displayed_fruits > 2 || !fruitIsDisplayed())
-		return;
-	if(fruit) {
+	if (fruit) {
 		screen->AddUpdateRects(310, 257, fruit->w, fruit->h);
+		fruit = NULL;
+		fruit_display_time = 0;
+		if (cnt_displayed_fruits < 2) {
+			startFruitRandomizer(false);
+		} else {
+			next_fruit = -1;  // never again in this level
+		}
 	}
-	fruit_display_time = 0;
-	++cnt_displayed_fruits;
-	startFruitRandomizer(false);
-
 }
 
 int Labyrinth::fruitIsDisplayed() {
-	return fruit_display_time;
+	return (fruit != NULL);
 }
 
 // set fruit bonus
@@ -574,8 +572,14 @@ int Labyrinth::getFruitBonus() const {
 	return fruit_bonus;
 }
 
+void Labyrinth::drawFruit() {
+	if (fruit)
+		screen->draw_dynamic_content(fruit, 310, 257);
+}
+
 void Labyrinth::drawInfoFruit() {
-	screen->draw(fruit, 525, 430);
+	if (infoFruit)
+		screen->draw(infoFruit, 525, 430);
 }
 
 void Labyrinth::playSoundMunch() {

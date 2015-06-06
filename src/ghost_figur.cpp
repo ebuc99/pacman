@@ -126,10 +126,10 @@ void Ghost::move_dir(int ms, int direction, int max_links, int max_oben, int max
 	}	
 }
 
-void Ghost::move(int moving, int ms) {
-	if(moving)
-		this->addUpdateRect();
+void Ghost::move(int ms) {
 	this->move_on_rails(ms, this->labyrinth->number_rails(), labyrinth->array_rails);
+	if (last_x != x || last_y != y)
+		this->addUpdateRect();
 }
 
 int Ghost::direction_to_point(int target_x, int target_y) {
@@ -238,8 +238,15 @@ void Ghost::move_on_rails(int ms, int anz_schienen, Rail **ar_s) {
 	 		break;
 		}
 
-		// for returning eyes-only ghosts, open the door to the castle
-		bridge = (i==89 && this->get_hunter()==NONE) ? 1 : 0;
+		if (i==89 && (this->get_hunter()==NONE || richtung_ghost==UP)) {
+			bridge = 1;  // for returning eyes-only ghosts, open the door to the castle
+		} else if (i==86 && richtung_ghost==RIGHT) {
+			bridge = 1;  // allow to leave the castle, but do not return to this rail
+		} else if (i==87 && richtung_ghost==LEFT) {
+			bridge = 1;  // allow to leave the castle, but do not return to this rail
+		} else {
+			bridge = 0;
+		}
 
 		if (richtung_ghost == LEFT) {
 			if (this->x == ar_s[i]->x1 && this->x == ar_s[i]->x2) {  // vertical rail
@@ -254,10 +261,10 @@ void Ghost::move_on_rails(int ms, int anz_schienen, Rail **ar_s) {
 					max_unten = ar_s[i]->y2;
 				}
 			}
-			if (this->y == ar_s[i]->y1 && this->y == ar_s[i]->y2 && this->x > ar_s[i]->x1 && this->x <= ar_s[i]->x2) {  // horizontal rail, space to the left
+			if (this->y == ar_s[i]->y1 && this->y == ar_s[i]->y2 && this->x > ar_s[i]->x1-bridge && this->x <= ar_s[i]->x2) {  // horizontal rail, space to the left
 				sammel_richtung[sammel_counter] = LEFT;
 				++sammel_counter;
-				max_links = ar_s[i]->x1;
+				max_links = ar_s[i]->x1-bridge;
 			}
 			if(sammel_counter == 3)
 				break;
@@ -274,10 +281,10 @@ void Ghost::move_on_rails(int ms, int anz_schienen, Rail **ar_s) {
 					max_rechts = ar_s[i]->x2;
 				}
 			}
-			if (this->x == ar_s[i]->x1 && this->x == ar_s[i]->x2 && this->y > ar_s[i]->y1 && this->y <= ar_s[i]->y2) {  // vertical rail, space above
+			if (this->x == ar_s[i]->x1 && this->x == ar_s[i]->x2 && this->y > ar_s[i]->y1-bridge && this->y <= ar_s[i]->y2) {  // vertical rail, space above
 				sammel_richtung[sammel_counter] = UP;
 				++sammel_counter;
-				max_oben = ar_s[i]->y1;
+				max_oben = ar_s[i]->y1 - bridge;
 			}
 			if(sammel_counter == 3)
 				break;
@@ -294,10 +301,10 @@ void Ghost::move_on_rails(int ms, int anz_schienen, Rail **ar_s) {
 					max_unten = ar_s[i]->y2;
 				}
 			}
-			if (this->y == ar_s[i]->y1 && this->y == ar_s[i]->y2 && this->x < ar_s[i]->x2 && this->x >= ar_s[i]->x1) {  // horizontal rail, space to the right
+			if (this->y == ar_s[i]->y1 && this->y == ar_s[i]->y2 && this->x < ar_s[i]->x2+bridge && this->x >= ar_s[i]->x1) {  // horizontal rail, space to the right
 				sammel_richtung[sammel_counter] = RIGHT;
 				++sammel_counter;
-				max_rechts = ar_s[i]->x2;
+				max_rechts = ar_s[i]->x2+bridge;
 			}
 			if(sammel_counter == 3)
 				break;
@@ -344,9 +351,10 @@ void Ghost::move_on_rails(int ms, int anz_schienen, Rail **ar_s) {
 			this->up_down--;
 		}
 	}
-	if (sammel_counter != 0 && this->was_moving())
+	if (sammel_counter > 0) {
 		richtung_ghost = choose_direction(sammel_richtung, richtung_pacman, sammel_counter, this->get_intelligence());
-	this->move_dir(ms, richtung_ghost, max_links, max_oben, max_rechts, max_unten);
+		this->move_dir(ms, richtung_ghost, max_links, max_oben, max_rechts, max_unten);
+	}
 }
 
 void Ghost::reset() {

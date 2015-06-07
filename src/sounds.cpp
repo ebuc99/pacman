@@ -58,15 +58,6 @@ void Sounds::munch() {
 	}
 }
 
-void Sounds::intro() {
-	int channel;
-	channel = Mix_PlayChannel(-1, chunk_intro, 0);
-		
-	if(channel == -1) {
-		fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
-	}
-}
-
 void Sounds::siren_start() {
 	if(!Mix_Playing(channel_siren)) {
 		channel_siren = Mix_PlayChannel(-1, chunk_siren_slow, -1);
@@ -90,10 +81,17 @@ void Sounds::resume_all() {
 	Mix_Resume(-1);
 }
 
-void Sounds::dying() {
+void Sounds::playSingleSound(SingleSounds singlesounds) {
 	int channel;
-	channel = Mix_PlayChannel(-1, chunk_dying, 0);
-		
+	if(singlesounds == INTRO)
+		channel = Mix_PlayChannel(-1, chunk_intro, 0);
+	else if(singlesounds == DYING)
+		channel = Mix_PlayChannel(-1, chunk_dying, 0);
+	/*else if(singlesounds == EXTRA_MAN)
+		chunk = chunk_extra_man;*/
+	else
+		return;
+	
 	if(channel == -1) {
 		fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
 	}

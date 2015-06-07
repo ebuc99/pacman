@@ -160,5 +160,8 @@ class Labyrinth {
 
 		// play sound dying
 		void playSoundDying();
+
+		// play sound extra man
+		void playSoundExtraMan();
 };
 #endif

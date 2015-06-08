@@ -20,9 +20,10 @@ class Sounds {
 		int channel_munch;
 		bool munch_toggle;
 		Mix_Chunk *chunk_intro = NULL;
-		Mix_Chunk *chunk_siren_slow = NULL;
+		Mix_Music *chunk_siren_slow = NULL;
 		int channel_siren;
 		Mix_Chunk *chunk_dying = NULL;
+		Mix_Chunk *test = NULL;
 };
 
 #endif

@@ -2,10 +2,10 @@
 
 Sounds::Sounds():
 	munch_toggle(true){
-	int audio_rate = 22050;
+	int audio_rate = 44100;
 	Uint16 audio_format = AUDIO_S16SYS;
 	int audio_channels = 2;
-	int audio_buffers = 4096;
+	int audio_buffers = 1024;
 	 
 	if(Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers) != 0) {
 		fprintf(stderr, "Unable to initialize audio: %s\n", Mix_GetError());
@@ -23,7 +23,7 @@ Sounds::Sounds():
 	if(chunk_intro == NULL) {
 		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
 	}
-	chunk_siren_slow = Mix_LoadWAV("/usr/local/share/pacman/sounds/siren_slow.wav");
+	chunk_siren_slow = Mix_LoadMUS("/usr/local/share/pacman/sounds/siren_slow.wav");
 	if(chunk_siren_slow == NULL) {
 		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
 	}
@@ -38,7 +38,7 @@ Sounds::~Sounds() {
 	Mix_FreeChunk(chunk_munch_a);
 	Mix_FreeChunk(chunk_munch_b);
 	Mix_FreeChunk(chunk_intro);
-	Mix_FreeChunk(chunk_siren_slow);
+	Mix_FreeMusic(chunk_siren_slow);
 	Mix_FreeChunk(chunk_dying);
 	Mix_CloseAudio();
 }
@@ -59,26 +59,24 @@ void Sounds::munch() {
 }
 
 void Sounds::siren_start() {
-	if(!Mix_Playing(channel_siren)) {
-		channel_siren = Mix_PlayChannel(-1, chunk_siren_slow, -1);
-		
-		if(channel_siren == -1) {
+	if(!Mix_PlayingMusic())
+		if((Mix_PlayMusic(chunk_siren_slow, -1)) == -1)
 			fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
-		}
-	}
 }
 	
 void Sounds::siren_stop() {
-	if(Mix_Playing(channel_siren)) 
-		Mix_HaltChannel(channel_siren);
+	if(Mix_PlayingMusic()) 
+		Mix_HaltMusic();
 }
 
 void Sounds::pause_all() {
 	Mix_Pause(-1);
+	Mix_PauseMusic();
 }
 
 void Sounds::resume_all() {
 	Mix_Resume(-1);
+	Mix_ResumeMusic();
 }
 
 void Sounds::playSingleSound(SingleSounds singlesounds) {
@@ -87,8 +85,6 @@ void Sounds::playSingleSound(SingleSounds singlesounds) {
 		channel = Mix_PlayChannel(-1, chunk_intro, 0);
 	else if(singlesounds == DYING)
 		channel = Mix_PlayChannel(-1, chunk_dying, 0);
-	/*else if(singlesounds == EXTRA_MAN)
-		chunk = chunk_extra_man;*/
 	else
 		return;
 	

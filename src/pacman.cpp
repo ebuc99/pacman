@@ -67,7 +67,7 @@ static void stop_all(uint16_t stop, Pacman *pacman, Ghost **ghost_array, Labyrin
 		ghost_array[3]->set_stop(true);
 		pacman->set_stop(true);
 		stop_moving = 1;
-		labyrinth->stopPlaySoundSiren();
+		labyrinth->stopPlayMusic();
 		
 	} else {
 		ghost_array[0]->set_stop(false);
@@ -353,6 +353,7 @@ int main() {
 		currentScore = labyrinth->getScore();
 		if (lastScore < 10000 && currentScore >= 10000) {
 			pacman->addLives(1);
+			labyrinth->playSoundExtraMan();
 		}
 		if(pacman->touch(ghost_array)  && !pacman->is_dying()) {
 			stop_all(true, pacman, ghost_array_ghost, labyrinth);

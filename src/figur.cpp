@@ -26,48 +26,32 @@ Figur::~Figur() {
 void Figur::move_left(int ms, int stop_at) {
 	last_x = x;
 	last_y = y;
-	cur_x -= dx*ms;
+	cur_x = greatest(cur_x - dx*ms, stop_at << 10);
 	x = cur_x >> 10;
-	if (x < stop_at) {
-		x = stop_at;
-		cur_x = stop_at << 10;
-	}
 	direction = LEFT;
 }
 
 void Figur::move_up(int ms, int stop_at) {
 	last_x = x;
-	last_y = y; 
-	cur_y -= dy*ms;
+	last_y = y;
+	cur_y = greatest(cur_y - dy*ms, stop_at << 10);
 	y = cur_y >> 10;
-	if (y < stop_at) {
-		y = stop_at;
-		cur_y = stop_at << 10;
-	}
 	direction = UP;
 }
 
 void Figur::move_right(int ms, int stop_at) {
 	last_x = x;
-	last_y = y; 
-	cur_x += dx*ms;
+	last_y = y;
+	cur_x = least(cur_x + dx*ms, stop_at << 10);
 	x = cur_x >> 10;
-	if (x > stop_at) {
-		x = stop_at;
-		cur_x = stop_at << 10;
-	} 
 	direction = RIGHT;
 }
 
 void Figur::move_down(int ms, int stop_at) {
 	last_x = x;
 	last_y = y;
-	cur_y += dy*ms;
+	cur_y = least(cur_y + dy*ms, stop_at << 10);
 	y = cur_y >> 10;
-	if (y > stop_at) {
-		y = stop_at;
-		cur_y = stop_at << 10;
-	}
 	direction = DOWN;
 }
 

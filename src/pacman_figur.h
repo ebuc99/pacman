@@ -87,5 +87,6 @@ class Pacman : public Figur {
 		SDL_Surface *pacman_unten_1, *pacman_unten_2, *ar_pacman_unten[4];
 		SDL_Surface *ar_pacman_die[13];
 		void checkAnimationChange();
+		int idxCurrentRail;
 };
 #endif

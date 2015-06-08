@@ -585,3 +585,29 @@ void Labyrinth::drawInfoFruit() {
 void Labyrinth::playSoundMunch() {
 	sounds->munch();
 }
+
+void Labyrinth::getRailsForPoint(int x, int y, int *left, int *right, int *up, int *down) {
+	*left = *right = *up = *down = -1;
+	for (int i = 0; i < NUMBER_RAILS; ++i) {
+		if (array_rails[i]->y1 == y && array_rails[i]->y2 == y) {
+			if (array_rails[i]->x1 <= x && x <= array_rails[i]->x2) {
+				// overlapping horizontal rail - left or right or both
+				if (array_rails[i]->x1 < x)
+					*left = i;
+				if (x < array_rails[i]->x2)
+					*right = i;
+			}
+		} else if (array_rails[i]->x1 == x && array_rails[i]->x2 == x) {
+			if (array_rails[i]->y1 <= y && y <= array_rails[i]->y2) {
+				// overlapping vertical rail - up or down or both
+				if (array_rails[i]->y1 < y)
+					*up = i;
+				if (y < array_rails[i]->y2)
+					*down = i;
+			}
+		}
+		if (*left>=0 && *right>=0 && *up>=0 && *down>=0)
+			return;
+	}
+}
+

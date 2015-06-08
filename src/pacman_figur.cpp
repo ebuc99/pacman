@@ -8,7 +8,8 @@ Pacman::Pacman(int init_x, int init_y, Screen *screen, Labyrinth *labyrinth, int
 	pacman_stopped(0),
 	dying(0),
 	die_counter(0),
-	remainingLives(lives)
+	remainingLives(lives),
+	idxCurrentRail(-1)  // should first be determined
 {
     wechsel_rate = WECHSEL_RATE;
 	wechsel_x = init_x;
@@ -96,25 +97,21 @@ void Pacman::move(int ms) {
 }
 void Pacman::move_left(int ms, int stop_at) {
 	Figur::move_left(ms, stop_at);
-	direction = LEFT;
 	checkAnimationChange();
 }
 
 void Pacman::move_up(int ms, int stop_at) {
 	Figur::move_up(ms, stop_at);
-	direction = UP;
 	checkAnimationChange();
 }
 
 void Pacman::move_right(int ms, int stop_at) {
 	Figur::move_right(ms, stop_at);
-	direction = RIGHT;
 	checkAnimationChange();
 }
 
 void Pacman::move_down(int ms, int stop_at) {
 	Figur::move_down(ms, stop_at);
-	direction = DOWN;
 	checkAnimationChange();
 }
 
@@ -160,75 +157,104 @@ void Pacman::animate() {
 }
 
 void Pacman::move_on_rails(int ms, int anz_schienen, Rail **ar_s) {
-	int i;
-	int check_move = 0;
-	// check if the pre selected direction is
-	// not equal to the current direction and pacman is on a cross road
-	if(this->get_direction() != this->direction_pre) {
-		for(i = 0; i <= anz_schienen - 1; i++) {
-			if((this->direction_pre == LEFT) && (this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
-				this->animation = 1;
-				this->set_direction(this->direction_pre);
+	bool moved = false;
+	Direction old_dir, new_dir;
+	new_dir = old_dir = get_direction();
+	if (idxCurrentRail >= 0) {
+		// first, try to keep moving on the current rail
+		if (ar_s[idxCurrentRail]->y1 == ar_s[idxCurrentRail]->y2) {
+			// horizontal rail
+			if ((this->direction_pre==LEFT || (old_dir==LEFT && this->direction_pre!=RIGHT)) && this->x > ar_s[idxCurrentRail]->x1) {
+				new_dir = LEFT;
+				this->move_left(ms, ar_s[idxCurrentRail]->x1);
+				moved = true;
+			} else if ((this->direction_pre==RIGHT || (old_dir==RIGHT && this->direction_pre!=LEFT)) && this->x < ar_s[idxCurrentRail]->x2) {
+				new_dir = RIGHT;
+				this->move_right(ms, ar_s[idxCurrentRail]->x2);
+				moved = true;
 			}
-			if((this->direction_pre == UP) && (this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
-				this->animation = 1;
-				this->set_direction(this->direction_pre);
-			}
-			if((this->direction_pre == RIGHT) && (this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
-				this->animation = 1;
-				this->set_direction(this->direction_pre);
-			}
-			if((this->direction_pre == DOWN) && (this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
-				this->animation = 1;
-				this->set_direction(this->direction_pre);
+		} else {
+			// vertical rail
+			if ((this->direction_pre==UP || (old_dir==UP && this->direction_pre!=DOWN)) && this->y > ar_s[idxCurrentRail]->y1) {
+				new_dir = UP;
+				this->move_up(ms, ar_s[idxCurrentRail]->y1);
+				moved = true;
+			} else if ((this->direction_pre==DOWN || (old_dir==DOWN && this->direction_pre!=UP)) && this->y < ar_s[idxCurrentRail]->y2) {
+				new_dir = DOWN;
+				this->move_down(ms, ar_s[idxCurrentRail]->y2);
+				moved = true;
 			}
 		}
+	} else {
+		this->direction_pre = old_dir;
 	}
-	for(i = 0; i <= anz_schienen - 1; i++) {	
-		// first, check the tunnel
+	if (!moved) {
+		// check the tunnel
 		if((this->direction_pre != RIGHT) && (this->x <= 100) && (this->y == 215)) {
 	 		this->x = 515;
 	 		this->cur_x = this->x << 10;
 	 		this->direction_pre = LEFT;
-	 		break;
-		}
-		if((this->direction_pre != LEFT) && (this->x >= 515) && (this->y == 215)) {
+	 		idxCurrentRail = 22;
+	 		moved = true;
+		} else if((this->direction_pre != LEFT) && (this->x >= 515) && (this->y == 215)) {
 	 		this->x = 100;
 	 		this->cur_x = this->x << 10;
 	 		this->direction_pre = RIGHT;
-	 		break;
-		}
-		
-		// now the "normal" rails
-		if(this->get_direction() == LEFT) {
-		  	if ((this->x > ar_s[i]->x1) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x <= ar_s[i]->x2)) {
-				this->move_left(ms, ar_s[i]->x1);
-				check_move = 1;
-				break;
-			}
-		} else if(this->get_direction() == UP) {
-			if ((this->y > ar_s[i]->y1) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && this->y <= ar_s[i]->y2) {
-				this->move_up(ms, ar_s[i]->y1);
-				check_move = 1;
-				break;
-			}
-		} else if(this->get_direction() == RIGHT) { 
-			if ((this->x < ar_s[i]->x2) && (this->y == ar_s[i]->y1) && (this->y == ar_s[i]->y2) && (this->x >= ar_s[i]->x1)) {
-				this->move_right(ms, ar_s[i]->x2);
-				check_move = 1;
-				break;
-			}
-		} else if(this->get_direction() == DOWN) {
-			if ((this->y < ar_s[i]->y2) && (this->x == ar_s[i]->x1) && (this->x == ar_s[i]->x2) && (this->y >= ar_s[i]->y1)) {
-				this->move_down(ms, ar_s[i]->y2);
-				check_move = 1;
-				break;
-			}
+	 		idxCurrentRail = 19;
+	 		moved = true;
 		}
 	}
-	
-	if(!check_move) 
-		pacman_stopped = 1;
+	if (!moved) {
+		// Find the rail that pacman is positioned on. Also, consider the direction that the player wants to move.
+		int idxLeft, idxRight, idxUp, idxDown;
+		this->labyrinth->getRailsForPoint(this->x, this->y, &idxLeft, &idxRight, &idxUp, &idxDown);
+		if (idxLeft>=0 && this->x <= ar_s[idxLeft]->x1)
+			idxLeft = -1;
+		if (idxRight>=0 && ar_s[idxRight]->x2 <= this->x)
+			idxRight = -1;
+		if (idxUp>=0 && this->y <= ar_s[idxUp]->y1)
+			idxUp = NULL;
+		if (idxDown>=0 && ar_s[idxDown]->y2 <= this->y)
+			idxDown = NULL;
+		bool use_old_dir = false;
+		if ((this->direction_pre==LEFT && idxLeft<0) || (this->direction_pre==RIGHT && idxRight<0) || (this->direction_pre==UP && idxUp<0) || (this->direction_pre==DOWN && idxDown<0))
+			use_old_dir = true;
+		new_dir = use_old_dir ? old_dir : this->direction_pre;
+		switch (new_dir) {
+		case LEFT:
+			if (idxLeft >= 0) {
+				move_left(ms, ar_s[idxLeft]->x1);
+				idxCurrentRail = idxLeft;
+				moved = true;
+			}
+			break;
+		case RIGHT:
+			if (idxRight >= 0) {
+				move_right(ms, ar_s[idxRight]->x2);
+				idxCurrentRail = idxRight;
+				moved = true;
+			}
+			break;
+		case UP:
+			if (idxUp >= 0) {
+				move_up(ms, ar_s[idxUp]->y1);
+				idxCurrentRail = idxUp;
+				moved = true;
+			}
+			break;
+		case DOWN:
+			if (idxDown >= 0) {
+				move_down(ms, ar_s[idxDown]->y2);
+				idxCurrentRail = idxDown;
+				moved = true;
+			}
+			break;
+		}
+	}
+	if (new_dir != old_dir)
+		this->animation = 1;
+	if (!moved) 
+		this->pacman_stopped = 1;
 }
 
 int Pacman::is_pacman_stopped() {

@@ -417,7 +417,7 @@ void Labyrinth::playSoundMunch() {
 }
 
 void Labyrinth::playSoundIntro() {
-	sounds->playSingleSound(Sounds::INTRO);
+	sounds->intro();
 }
 
 void Labyrinth::startPlaySoundSiren() {

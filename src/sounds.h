@@ -11,6 +11,7 @@ class Sounds {
 		void pause_all();
 		void resume_all();
 		void munch();
+		void intro();
 		void siren_start();
 		void siren_stop();
 		void playSingleSound(SingleSounds singlesounds);
@@ -19,8 +20,8 @@ class Sounds {
 		Mix_Chunk *chunk_munch_b = NULL;
 		int channel_munch;
 		bool munch_toggle;
-		Mix_Chunk *chunk_intro = NULL;
-		Mix_Music *chunk_siren_slow = NULL;
+		Mix_Music *music_intro = NULL;
+		Mix_Music *music_siren_slow = NULL;
 		int channel_siren;
 		Mix_Chunk *chunk_dying = NULL;
 		Mix_Chunk *test = NULL;

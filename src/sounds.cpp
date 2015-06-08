@@ -19,12 +19,12 @@ Sounds::Sounds():
 	if(chunk_munch_a == NULL) {
 		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
 	}	
-	chunk_intro = Mix_LoadWAV("/usr/local/share/pacman/sounds/intro.wav");
-	if(chunk_intro == NULL) {
+	music_intro = Mix_LoadMUS("/usr/local/share/pacman/sounds/intro.wav");
+	if(music_intro == NULL) {
 		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
 	}
-	chunk_siren_slow = Mix_LoadMUS("/usr/local/share/pacman/sounds/siren_slow.wav");
-	if(chunk_siren_slow == NULL) {
+	music_siren_slow = Mix_LoadMUS("/usr/local/share/pacman/sounds/siren_slow.wav");
+	if(music_siren_slow == NULL) {
 		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
 	}
 	chunk_dying = Mix_LoadWAV("/usr/local/share/pacman/sounds/death_1.wav");
@@ -35,10 +35,11 @@ Sounds::Sounds():
 
 Sounds::~Sounds() {
 	Mix_HaltChannel(-1);
+	Mix_HaltMusic();
 	Mix_FreeChunk(chunk_munch_a);
 	Mix_FreeChunk(chunk_munch_b);
-	Mix_FreeChunk(chunk_intro);
-	Mix_FreeMusic(chunk_siren_slow);
+	Mix_FreeMusic(music_intro);
+	Mix_FreeMusic(music_siren_slow);
 	Mix_FreeChunk(chunk_dying);
 	Mix_CloseAudio();
 }
@@ -58,9 +59,14 @@ void Sounds::munch() {
 	}
 }
 
+void Sounds::intro() {
+	if(!Mix_PlayingMusic())
+		if((Mix_PlayMusic(music_intro, 1)) == -1)
+			fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+}
 void Sounds::siren_start() {
 	if(!Mix_PlayingMusic())
-		if((Mix_PlayMusic(chunk_siren_slow, -1)) == -1)
+		if((Mix_PlayMusic(music_siren_slow, -1)) == -1)
 			fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
 }
 	
@@ -81,9 +87,7 @@ void Sounds::resume_all() {
 
 void Sounds::playSingleSound(SingleSounds singlesounds) {
 	int channel;
-	if(singlesounds == INTRO)
-		channel = Mix_PlayChannel(-1, chunk_intro, 0);
-	else if(singlesounds == DYING)
+	if(singlesounds == DYING)
 		channel = Mix_PlayChannel(-1, chunk_dying, 0);
 	else
 		return;

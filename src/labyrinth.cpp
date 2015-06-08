@@ -585,3 +585,31 @@ void Labyrinth::drawInfoFruit() {
 void Labyrinth::playSoundMunch() {
 	sounds->munch();
 }
+
+void Labyrinth::playSoundIntro() {
+	sounds->intro();
+}
+
+void Labyrinth::startPlaySoundSiren() {
+	sounds->siren_start();
+}
+
+void Labyrinth::stopPlaySoundSiren() {
+	sounds->siren_stop();
+}
+
+void Labyrinth::pausePlaySoundAll() {
+	sounds->pause_all();
+}
+
+void Labyrinth::resumePlaySoundAll() {
+	sounds->resume_all();
+}
+
+void Labyrinth::playSoundDying() {
+	sounds->playSingleSound(Sounds::DYING);
+}
+
+void Labyrinth::playSoundExtraMan() {
+	sounds->playSingleSound(Sounds::EXTRA_MAN);
+}

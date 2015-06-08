@@ -85,7 +85,7 @@ class Pacman : public Figur {
 		SDL_Surface *pacman_oben_1, *pacman_oben_2, *ar_pacman_oben[4];
 		SDL_Surface *pacman_rechts_1, *pacman_rechts_2, *ar_pacman_rechts[4];
 		SDL_Surface *pacman_unten_1, *pacman_unten_2, *ar_pacman_unten[4];
-		SDL_Surface *ar_pacman_die[13];
+		SDL_Surface *ar_pacman_die[16];
 		void checkAnimationChange();
 };
 #endif

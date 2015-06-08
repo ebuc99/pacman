@@ -59,7 +59,7 @@ static void reset_all(Pacman *pacman, Figur **ghost_array) {
 	pacman->reset();
 }
 /* stop all figures */
-static void stop_all(uint16_t stop, Pacman *pacman, Ghost **ghost_array) {
+static void stop_all(uint16_t stop, Pacman *pacman, Ghost **ghost_array, Labyrinth *labyrinth) {
 	if(stop) {
 		ghost_array[0]->set_stop(true);
 		ghost_array[1]->set_stop(true);
@@ -67,6 +67,7 @@ static void stop_all(uint16_t stop, Pacman *pacman, Ghost **ghost_array) {
 		ghost_array[3]->set_stop(true);
 		pacman->set_stop(true);
 		stop_moving = 1;
+		labyrinth->stopPlaySoundSiren();
 		
 	} else {
 		ghost_array[0]->set_stop(false);
@@ -75,11 +76,13 @@ static void stop_all(uint16_t stop, Pacman *pacman, Ghost **ghost_array) {
 		ghost_array[3]->set_stop(false);
 		pacman->set_stop(false);
 		stop_moving = 0;
+		labyrinth->startPlaySoundSiren();
 	}
 }
 
 // SDL event loop: handle keyboard input events, and others
-static int eventloop(Pacman *pacman, Ghost **ghost_array, bool allowPacmanControl, int *neededTime) {
+static int eventloop(Pacman *pacman, Ghost **ghost_array, bool allowPacmanControl, 
+                     int *neededTime, Labyrinth *labyrinth) {
 	*neededTime = 0;
 	SDL_Event event;
 	while(SDL_PollEvent(&event)) {
@@ -102,7 +105,14 @@ static int eventloop(Pacman *pacman, Ghost **ghost_array, bool allowPacmanContro
 			}
 			if(event.key.keysym.sym == SDLK_p) {
 				if(!pacman->is_dying()) {
-					pause = (pause == 0) ? 1 : 0;
+					//pause = (pause == 0) ? 1 : 0;
+					if(pause) {
+						pause = 0;
+						labyrinth->resumePlaySoundAll();
+					} else {
+						pause = 1;
+						labyrinth->pausePlaySoundAll();
+					}
 				}
 			}
 			break;
@@ -212,10 +222,11 @@ int main() {
 	deltaT = MIN_FRAME_DURATION;
 	blinky->set_leader(1);	// Blinky will be the reference sprite for redrawing
 	// at first, stop all figures 
-	stop_all(true, pacman, ghost_array_ghost); 
+	stop_all(true, pacman, ghost_array_ghost, labyrinth); 
+	labyrinth->playSoundIntro();
 	// game loop
 	while(loop) {	
-		loop = eventloop(pacman, ghost_array_ghost, start_offset<0, &specialEventTime);
+		loop = eventloop(pacman, ghost_array_ghost, start_offset<0, &specialEventTime, labyrinth);
 		if (specialEventTime > 0)
 			currentTicks += specialEventTime;
 
@@ -234,7 +245,7 @@ int main() {
 					labyrinth->stopHuntingMode();
 					labyrinth->hideFruit();
 					reset_all(pacman, ghost_array);
-					stop_all(true, pacman, ghost_array_ghost);
+					stop_all(true, pacman, ghost_array_ghost, labyrinth);
 					pacman->addLives(-1);
 					if (pacman->getRemainingLives() <= 0) {
 						labyrinth->setInitText("Game over", RED);
@@ -265,10 +276,21 @@ int main() {
 			if (start_offset <= 0) {
 				start_offset = -1;
 				labyrinth->hideInitText();
-				stop_all(false, pacman, ghost_array_ghost);
+				stop_all(false, pacman, ghost_array_ghost, labyrinth);
 			}
 	 	}
 	 	// hunting mode - ghosts can be eaten after eating a superpill, but only for a defined time
+		pacman->check_eat_pills(ghost_array);
+		if(labyrinth->getExisitingPills() <= 0) { 
+			// init new level
+			reset_all(pacman, ghost_array);
+			stop_all(true, pacman, ghost_array_ghost, labyrinth);
+			screen->draw(hintergrund);
+			labyrinth->initNewLevel();
+			start_offset = START_OFFSET;
+			continue;
+		}
+
 		if(labyrinth->cnt_hunting_mode > 0 && !pause && labyrinth->cnt_sleep <= 0) {
 			if (labyrinth->cnt_hunting_mode > 2000 && labyrinth->cnt_hunting_mode-deltaT <= 2000) {
 				blinky->blink();
@@ -319,7 +341,7 @@ int main() {
 		if(labyrinth->getExisitingPills() <= 0) { 
 			// init new level
 			reset_all(pacman, ghost_array);
-			stop_all(true, pacman, ghost_array_ghost);
+			stop_all(true, pacman, ghost_array_ghost,  labyrinth);
 			screen->draw(hintergrund);
 			labyrinth->initNewLevel();
 			start_offset = START_OFFSET;
@@ -333,7 +355,7 @@ int main() {
 			pacman->addLives(1);
 		}
 		if(pacman->touch(ghost_array)  && !pacman->is_dying()) {
-			stop_all(true, pacman, ghost_array_ghost);
+			stop_all(true, pacman, ghost_array_ghost, labyrinth);
 			pacman->set_dying(10);  
 		}
 		if (!pause && labyrinth->cnt_sleep <= 0) {
@@ -388,6 +410,10 @@ int main() {
 			labyrinth->drawInfoFruit();
 		    // bring it to the screen, really
 			screen->Refresh();
+			if(pacman->touch(ghost_array)  && !pacman->is_dying()) {
+				stop_all(true, pacman, ghost_array_ghost, labyrinth);
+				pacman->set_dying(10);
+			}
 		}
 
 		// determine the correct game speed

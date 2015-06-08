@@ -148,7 +148,28 @@ class Labyrinth {
 		// draw fruit in info area
 		void drawInfoFruit();
 
-		//play sound munch
+		// play sound munch
 		void playSoundMunch();
+
+		// play sound intro
+		void playSoundIntro();
+
+		// play sound siren
+		void startPlaySoundSiren();
+
+		// stop sound siren
+		void stopPlaySoundSiren();
+
+		// pause all
+		void pausePlaySoundAll();
+
+		// resume all
+		void resumePlaySoundAll();
+
+		// play sound dying
+		void playSoundDying();
+
+		// play sound extra man
+		void playSoundExtraMan();
 };
 #endif

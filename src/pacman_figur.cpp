@@ -9,7 +9,7 @@ Pacman::Pacman(int init_x, int init_y, Screen *screen, Labyrinth *labyrinth, int
 	dying(0),
 	die_counter(0),
 	remainingLives(lives),
-	idxCurrentRail(-1)  // should first be determined
+	idxCurrentRail(33)
 {
     wechsel_rate = WECHSEL_RATE;
 	wechsel_x = init_x;
@@ -281,6 +281,7 @@ void Pacman::reset() {
 	animation = 1;
 	cnt_animation = 0;
 	pacman_stopped = 0;
+	idxCurrentRail = 33;
 }
 
 SDL_Surface* Pacman::get_Surface() const {

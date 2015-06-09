@@ -90,5 +90,6 @@ class Ghost : public Figur {
 		SDL_Surface *escape_1, *escape_2, *escape_white_1, *escape_white_2;
 		Ghost **ghost_array;
 		Pacman *pacman;
+		int idxCurrentRail;
 };
 #endif

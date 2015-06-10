@@ -67,8 +67,7 @@ static void stop_all(uint16_t stop, Pacman *pacman, Ghost **ghost_array, Labyrin
 		ghost_array[3]->set_stop(true);
 		pacman->set_stop(true);
 		stop_moving = 1;
-		labyrinth->stopPlayMusic();
-		
+		labyrinth->getSounds()->music_stop();	
 	} else {
 		ghost_array[0]->set_stop(false);
 		ghost_array[1]->set_stop(false);
@@ -76,7 +75,7 @@ static void stop_all(uint16_t stop, Pacman *pacman, Ghost **ghost_array, Labyrin
 		ghost_array[3]->set_stop(false);
 		pacman->set_stop(false);
 		stop_moving = 0;
-		labyrinth->startPlaySoundSiren();
+		labyrinth->getSounds()->siren_start();
 	}
 }
 
@@ -108,10 +107,10 @@ static int eventloop(Pacman *pacman, Ghost **ghost_array, bool allowPacmanContro
 					//pause = (pause == 0) ? 1 : 0;
 					if(pause) {
 						pause = 0;
-						labyrinth->resumePlaySoundAll();
+						labyrinth->getSounds()->resume_all();
 					} else {
 						pause = 1;
-						labyrinth->pausePlaySoundAll();
+						labyrinth->getSounds()->pause_all();
 					}
 				}
 			}
@@ -223,7 +222,8 @@ int main() {
 	blinky->set_leader(1);	// Blinky will be the reference sprite for redrawing
 	// at first, stop all figures 
 	stop_all(true, pacman, ghost_array_ghost, labyrinth); 
-	labyrinth->playSoundIntro();
+	//labyrinth->playSoundIntro();
+	labyrinth->getSounds()->intro();
 	// game loop
 	while(loop) {	
 		loop = eventloop(pacman, ghost_array_ghost, start_offset<0, &specialEventTime, labyrinth);

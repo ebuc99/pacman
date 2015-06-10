@@ -582,10 +582,6 @@ void Labyrinth::drawInfoFruit() {
 		screen->draw(infoFruit, 525, 430);
 }
 
-void Labyrinth::playSoundMunch() {
-	sounds->munch();
-}
-
 void Labyrinth::getRailsForPoint(int x, int y, int *left, int *right, int *up, int *down) {
 	*left = *right = *up = *down = -1;
 	for (int i = 0; i < NUMBER_RAILS; ++i) {
@@ -611,22 +607,6 @@ void Labyrinth::getRailsForPoint(int x, int y, int *left, int *right, int *up, i
 	}
 }
 
-void Labyrinth::startPlaySoundSiren() {
-	sounds->siren_start();
-}
-
-void Labyrinth::stopPlayMusic() {
-	sounds->music_stop();
-}
-
-void Labyrinth::pausePlaySoundAll() {
-	sounds->pause_all();
-}
-
-void Labyrinth::resumePlaySoundAll() {
-	sounds->resume_all();
-}
-
 void Labyrinth::playSoundDying() {
 	sounds->playSingleSound(Sounds::DYING);
 }
@@ -639,6 +619,6 @@ void Labyrinth::playSoundFruit() {
 	sounds->playSingleSound(Sounds::FRUIT);
 }
 
-void Labyrinth::playSoundIntro() {
-	sounds->intro();
+Sounds* Labyrinth::getSounds() {
+	return sounds;
 }

@@ -310,7 +310,7 @@ int Pacman::touch(Figur **ghost_array) const{
 }
 
 void Pacman::check_eat_pills(Figur **ghost_array) {
-	if(this->was_moving()){
+	if(was_moving() && !is_dying()){
 		int tmp_last_x = this->last_x;
 		if (this->y == 215) {
 			if (this->last_x < 310 && this->x > 310)  // tunnel crossed - gone out to the left and coming in from the right

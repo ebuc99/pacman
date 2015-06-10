@@ -7,13 +7,13 @@ class Sounds {
 	public:
 		Sounds();
 		~Sounds();
-		enum SingleSounds{INTRO, DYING, EXTRA_MAN};
+		enum SingleSounds{DYING, EXTRA_MAN, FRUIT};
 		void pause_all();
 		void resume_all();
 		void munch();
 		void intro();
 		void siren_start();
-		void siren_stop();
+		void music_stop();
 		void playSingleSound(SingleSounds singlesounds);
 	protected:
 		Mix_Chunk *chunk_munch_a = NULL;
@@ -22,9 +22,11 @@ class Sounds {
 		bool munch_toggle;
 		Mix_Music *music_intro = NULL;
 		Mix_Music *music_siren_slow = NULL;
+		Mix_Music *music_superpill_loop = NULL;
 		int channel_siren;
 		Mix_Chunk *chunk_dying = NULL;
-		Mix_Chunk *test = NULL;
+		Mix_Chunk *chunk_extra_man = NULL;
+		Mix_Chunk *chunk_fruit = NULL;
 };
 
 #endif

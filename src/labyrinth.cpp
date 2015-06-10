@@ -594,8 +594,8 @@ void Labyrinth::startPlaySoundSiren() {
 	sounds->siren_start();
 }
 
-void Labyrinth::stopPlaySoundSiren() {
-	sounds->siren_stop();
+void Labyrinth::stopPlayMusic() {
+	sounds->music_stop();
 }
 
 void Labyrinth::pausePlaySoundAll() {
@@ -612,4 +612,8 @@ void Labyrinth::playSoundDying() {
 
 void Labyrinth::playSoundExtraMan() {
 	sounds->playSingleSound(Sounds::EXTRA_MAN);
+}
+
+void Labyrinth::playSoundFruit() {
+	sounds->playSingleSound(Sounds::FRUIT);
 }

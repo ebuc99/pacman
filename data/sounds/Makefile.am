@@ -7,4 +7,6 @@ dist_datadir_sounds_DATA = munch_a.wav \
 	intro.wav \
 	siren_slow.wav \
 	death_1.wav \
-	extra_man.wav
+	extra_man.wav \
+	fruit.wav \
+	large_pellet_loop.wav

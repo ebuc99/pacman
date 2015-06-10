@@ -158,7 +158,7 @@ class Labyrinth {
 		void startPlaySoundSiren();
 
 		// stop sound siren
-		void stopPlaySoundSiren();
+		void stopPlayMusic();
 
 		// pause all
 		void pausePlaySoundAll();
@@ -171,5 +171,8 @@ class Labyrinth {
 
 		// play sound extra man
 		void playSoundExtraMan();
+
+		// play sound fruit
+		void playSoundFruit();
 };
 #endif

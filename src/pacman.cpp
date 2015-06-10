@@ -280,17 +280,6 @@ int main() {
 			}
 	 	}
 	 	// hunting mode - ghosts can be eaten after eating a superpill, but only for a defined time
-		pacman->check_eat_pills(ghost_array);
-		if(labyrinth->getExisitingPills() <= 0) { 
-			// init new level
-			reset_all(pacman, ghost_array);
-			stop_all(true, pacman, ghost_array_ghost, labyrinth);
-			screen->draw(hintergrund);
-			labyrinth->initNewLevel();
-			start_offset = START_OFFSET;
-			continue;
-		}
-
 		if(labyrinth->cnt_hunting_mode > 0 && !pause && labyrinth->cnt_sleep <= 0) {
 			if (labyrinth->cnt_hunting_mode > 2000 && labyrinth->cnt_hunting_mode-deltaT <= 2000) {
 				blinky->blink();
@@ -410,10 +399,6 @@ int main() {
 			labyrinth->drawInfoFruit();
 		    // bring it to the screen, really
 			screen->Refresh();
-			if(pacman->touch(ghost_array)  && !pacman->is_dying()) {
-				stop_all(true, pacman, ghost_array_ghost, labyrinth);
-				pacman->set_dying(10);
-			}
 		}
 
 		// determine the correct game speed

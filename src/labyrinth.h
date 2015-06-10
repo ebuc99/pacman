@@ -36,7 +36,7 @@ class Labyrinth {
 		int cnt_pills;
 		int level;
 		int next_fruit;
-		uint32_t fruit_display_time;
+		int fruit_display_time;
 		int cnt_displayed_fruits;
 		int fruit_displayed;
 		int fruit_bonus;
@@ -151,28 +151,29 @@ class Labyrinth {
 		// play sound munch
 		void playSoundMunch();
 
-		// play sound intro
-		void playSoundIntro();
-
-		// play sound siren
-		void startPlaySoundSiren();
-
-		// stop sound siren
+		// stop play music	
 		void stopPlayMusic();
 
-		// pause all
-		void pausePlaySoundAll();
+		// start playing siren
+		void startPlaySoundSiren();
 
-		// resume all
+		// resuming sound play
 		void resumePlaySoundAll();
 
-		// play sound dying
-		void playSoundDying();
-
+		// pause all sound
+		void pausePlaySoundAll();
+			
 		// play sound extra man
 		void playSoundExtraMan();
 
-		// play sound fruit
+		// play the intro sound
+		void playSoundIntro();
+
 		void playSoundFruit();
+
+		void playSoundDying();
+
+		// Return indexes of the Rails from the specified point (x,y), -1 if there is no such rail.
+		void getRailsForPoint(int x, int y, int *left, int *right, int *up, int *down);
 };
 #endif

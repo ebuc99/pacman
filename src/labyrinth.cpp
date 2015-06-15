@@ -619,6 +619,10 @@ void Labyrinth::playSoundFruit() {
 	sounds->playSingleSound(Sounds::FRUIT);
 }
 
+void Labyrinth::playEatGhost() {
+	sounds->playSingleSound(Sounds::EAT_GHOST);
+}
+
 Sounds* Labyrinth::getSounds() {
 	return sounds;
 }

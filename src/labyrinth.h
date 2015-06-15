@@ -156,6 +156,9 @@ class Labyrinth {
 	
 		// the sound of dying
 		void playSoundDying();
+
+		// pacman eats ghost
+		void playEatGhost();
 	
 		// get all the fancy sounds
 		Sounds* getSounds();

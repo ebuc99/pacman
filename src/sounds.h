@@ -13,6 +13,7 @@ class Sounds {
 		void munch();
 		void intro();
 		void siren_start();
+		void superpill_start();
 		void music_stop();
 		void playSingleSound(SingleSounds singlesounds);
 	protected:

@@ -358,6 +358,8 @@ void Labyrinth::compute_score(/*SDL_Surface *punkte, SDL_Color *textgelb*/) {
 
 void Labyrinth::startHuntingMode() {
 	this->bonus_stage = 200;
+	this->sounds->music_stop();
+	this->sounds->superpill_start();
 	if (cnt_hunting_mode < 0)
 		this->cnt_hunting_mode = 7000;
 	else // hunting mode was still active - prolong the it's duration
@@ -367,6 +369,8 @@ void Labyrinth::startHuntingMode() {
 void Labyrinth::stopHuntingMode() {
 	this->cnt_hunting_mode = -1;
 	this->bonus_stage = 200;
+	this->sounds->music_stop();
+	this->sounds->siren_start();
 }
 
 void Labyrinth::increaseBonusStage() {

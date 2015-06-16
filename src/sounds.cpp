@@ -85,7 +85,12 @@ void Sounds::siren_start() {
 		if((Mix_PlayMusic(music_siren_slow, -1)) == -1)
 			fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
 }
-	
+void Sounds::superpill_start() {
+	if(!Mix_PlayingMusic())
+		if((Mix_PlayMusic(music_superpill_loop, -1)) == -1)
+			fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+}
+
 void Sounds::music_stop() {
 	if(Mix_PlayingMusic()) 
 		Mix_HaltMusic();

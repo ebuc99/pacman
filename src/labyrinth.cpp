@@ -10,6 +10,7 @@ Labyrinth::Labyrinth(Screen *screen):
 	font(NULL),
 	smallFont(NULL),
 	smallScore(NULL),
+	score(NULL),
 	initText(NULL),
 	infoFruit(NULL),
 	fruit(NULL),
@@ -247,7 +248,7 @@ Labyrinth::Labyrinth(Screen *screen):
 
 Labyrinth::~Labyrinth(){
 	SDL_FreeSurface(pille);
-	SDL_FreeSurface(punkte);
+	SDL_FreeSurface(score);
 	SDL_FreeSurface(infoFruit);
 	SDL_FreeSurface(initText);
 	delete sounds;
@@ -352,8 +353,10 @@ SDL_Surface *Labyrinth::LoadSurface(const char *filename, int transparent_color)
 void Labyrinth::compute_score(/*SDL_Surface *punkte, SDL_Color *textgelb*/) {
 	char char_punktestand[8] = "0";
 	sprintf(char_punktestand, "%d", this->punktestand);
-	this->punkte = TTF_RenderText_Solid(font, char_punktestand, textgelb);
-	screen->draw_dynamic_content(punkte, 530, 60);
+	if(this->score)
+		SDL_FreeSurface(this->score);
+	this->score = TTF_RenderText_Solid(font, char_punktestand, textgelb);
+	screen->draw_dynamic_content(this->score, 530, 60);
 }
 
 void Labyrinth::startHuntingMode() {

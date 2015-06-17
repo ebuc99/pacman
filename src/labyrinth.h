@@ -30,7 +30,7 @@ class Labyrinth {
 		int punktestand;
 		int bonus_stage; //200, 400, 800, 1600
 		TTF_Font *font, *smallFont;
-		SDL_Surface *smallScore, *initText, *punkte, *infoFruit, *fruit;
+		SDL_Surface *smallScore, *initText, *score, *infoFruit, *fruit;
 		int smallScore_x, smallScore_y;
 		SDL_Color textweiss, textgelb, textrot;
 		int cnt_pills;

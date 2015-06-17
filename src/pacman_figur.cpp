@@ -325,7 +325,7 @@ void Pacman::check_eat_pills(Figur **ghost_array) {
 				this->set_speed(PACMAN_V_SLOW);
 				this->labyrinth->addScore(10);
 				this->labyrinth->decreasePills();
-				this->labyrinth->playSoundMunch();
+				this->labyrinth->getSounds()->munch();
 				if(this->labyrinth->pillen[i].superpille) {
 					for(int j = 0; j < 4; ++j) {
 						if(ghost_array[j]->get_hunter() != NONE)  // eaten ghosts still have to return to the castle

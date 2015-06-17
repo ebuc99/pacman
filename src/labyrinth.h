@@ -148,30 +148,20 @@ class Labyrinth {
 		// draw fruit in info area
 		void drawInfoFruit();
 
-		// play sound munch
-		void playSoundMunch();
-
-		// stop play music	
-		void stopPlayMusic();
-
-		// start playing siren
-		void startPlaySoundSiren();
-
-		// resuming sound play
-		void resumePlaySoundAll();
-
-		// pause all sound
-		void pausePlaySoundAll();
-			
 		// play sound extra man
 		void playSoundExtraMan();
 
-		// play the intro sound
-		void playSoundIntro();
-
+		// eating the fruit sound
 		void playSoundFruit();
-
+	
+		// the sound of dying
 		void playSoundDying();
+
+		// pacman eats ghost
+		void playEatGhost();
+	
+		// get all the fancy sounds
+		Sounds* getSounds();
 
 		// Return indexes of the Rails from the specified point (x,y), -1 if there is no such rail.
 		void getRailsForPoint(int x, int y, int *left, int *right, int *up, int *down);

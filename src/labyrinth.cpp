@@ -358,6 +358,8 @@ void Labyrinth::compute_score(/*SDL_Surface *punkte, SDL_Color *textgelb*/) {
 
 void Labyrinth::startHuntingMode() {
 	this->bonus_stage = 200;
+	this->sounds->music_stop();
+	this->sounds->superpill_start();
 	if (cnt_hunting_mode < 0)
 		this->cnt_hunting_mode = 7000;
 	else // hunting mode was still active - prolong the it's duration
@@ -367,6 +369,8 @@ void Labyrinth::startHuntingMode() {
 void Labyrinth::stopHuntingMode() {
 	this->cnt_hunting_mode = -1;
 	this->bonus_stage = 200;
+	this->sounds->music_stop();
+	this->sounds->siren_start();
 }
 
 void Labyrinth::increaseBonusStage() {
@@ -582,10 +586,6 @@ void Labyrinth::drawInfoFruit() {
 		screen->draw(infoFruit, 525, 430);
 }
 
-void Labyrinth::playSoundMunch() {
-	sounds->munch();
-}
-
 void Labyrinth::getRailsForPoint(int x, int y, int *left, int *right, int *up, int *down) {
 	*left = *right = *up = *down = -1;
 	for (int i = 0; i < NUMBER_RAILS; ++i) {
@@ -611,22 +611,6 @@ void Labyrinth::getRailsForPoint(int x, int y, int *left, int *right, int *up, i
 	}
 }
 
-void Labyrinth::startPlaySoundSiren() {
-	sounds->siren_start();
-}
-
-void Labyrinth::stopPlayMusic() {
-	sounds->music_stop();
-}
-
-void Labyrinth::pausePlaySoundAll() {
-	sounds->pause_all();
-}
-
-void Labyrinth::resumePlaySoundAll() {
-	sounds->resume_all();
-}
-
 void Labyrinth::playSoundDying() {
 	sounds->playSingleSound(Sounds::DYING);
 }
@@ -639,6 +623,10 @@ void Labyrinth::playSoundFruit() {
 	sounds->playSingleSound(Sounds::FRUIT);
 }
 
-void Labyrinth::playSoundIntro() {
-	sounds->intro();
+void Labyrinth::playEatGhost() {
+	sounds->playSingleSound(Sounds::EAT_GHOST);
+}
+
+Sounds* Labyrinth::getSounds() {
+	return sounds;
 }

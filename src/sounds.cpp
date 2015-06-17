@@ -42,7 +42,11 @@ Sounds::Sounds():
 	music_superpill_loop = Mix_LoadMUS("/usr/local/share/pacman/sounds/large_pellet_loop.wav");
 	if(music_superpill_loop == NULL) {
 		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
-	}	
+	}
+	chunk_eat_ghost = Mix_LoadWAV("/usr/local/share/pacman/sounds/ghost_eat_3.wav");
+	if(chunk_eat_ghost == NULL) {
+		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
+	}
 }
 
 Sounds::~Sounds() {
@@ -81,20 +85,27 @@ void Sounds::siren_start() {
 		if((Mix_PlayMusic(music_siren_slow, -1)) == -1)
 			fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
 }
-	
+void Sounds::superpill_start() {
+	if(!Mix_PlayingMusic())
+		if((Mix_PlayMusic(music_superpill_loop, -1)) == -1)
+			fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+}
+
 void Sounds::music_stop() {
 	if(Mix_PlayingMusic()) 
 		Mix_HaltMusic();
 }
 
 void Sounds::pause_all() {
+	if(!Mix_PausedMusic())
+		Mix_PauseMusic();
 	Mix_Pause(-1);
-	Mix_PauseMusic();
 }
 
 void Sounds::resume_all() {
+	if(Mix_PausedMusic())
+		Mix_ResumeMusic();
 	Mix_Resume(-1);
-	Mix_ResumeMusic();
 }
 
 void Sounds::playSingleSound(SingleSounds singlesounds) {
@@ -105,6 +116,8 @@ void Sounds::playSingleSound(SingleSounds singlesounds) {
 		channel = Mix_PlayChannel(-1, chunk_extra_man, 0);
 	else if(singlesounds == FRUIT)
 		channel = Mix_PlayChannel(-1, chunk_fruit, 0);
+	else if(singlesounds == EAT_GHOST)
+		channel = Mix_PlayChannel(-1, chunk_eat_ghost, 0);
 	else
 		return;
 	

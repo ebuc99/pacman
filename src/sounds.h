@@ -7,12 +7,13 @@ class Sounds {
 	public:
 		Sounds();
 		~Sounds();
-		enum SingleSounds{DYING, EXTRA_MAN, FRUIT};
+		enum SingleSounds{DYING, EXTRA_MAN, FRUIT, EAT_GHOST};
 		void pause_all();
 		void resume_all();
 		void munch();
 		void intro();
 		void siren_start();
+		void superpill_start();
 		void music_stop();
 		void playSingleSound(SingleSounds singlesounds);
 	protected:
@@ -27,6 +28,7 @@ class Sounds {
 		Mix_Chunk *chunk_dying = NULL;
 		Mix_Chunk *chunk_extra_man = NULL;
 		Mix_Chunk *chunk_fruit = NULL;
+		Mix_Chunk *chunk_eat_ghost = NULL;
 };
 
 #endif

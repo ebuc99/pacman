@@ -94,7 +94,8 @@ am_pacman_OBJECTS = pacman-figur.$(OBJEXT) \
 	pacman-ghost_figur.$(OBJEXT) pacman-pacman.$(OBJEXT) \
 	pacman-pacman_figur.$(OBJEXT) pacman-pille.$(OBJEXT) \
 	pacman-labyrinth.$(OBJEXT) pacman-screen.$(OBJEXT) \
-	pacman-rail.$(OBJEXT) pacman-sounds.$(OBJEXT)
+	pacman-rail.$(OBJEXT) pacman-sounds.$(OBJEXT) \
+	pacman-platform.$(OBJEXT)
 pacman_OBJECTS = $(am_pacman_OBJECTS)
 am__DEPENDENCIES_1 =
 pacman_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -295,7 +296,9 @@ pacman_SOURCES = \
 	rail.h \
 	rail.cpp \
 	sounds.h \
-	sounds.cpp
+	sounds.cpp \
+	platform.h \
+	platform.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \
@@ -418,6 +421,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-pacman.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-pacman_figur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-pille.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-platform.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-rail.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-screen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-sounds.Po@am__quote@
@@ -561,6 +565,20 @@ pacman-sounds.obj: sounds.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='sounds.cpp' object='pacman-sounds.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-sounds.obj `if test -f 'sounds.cpp'; then $(CYGPATH_W) 'sounds.cpp'; else $(CYGPATH_W) '$(srcdir)/sounds.cpp'; fi`
+
+pacman-platform.o: platform.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-platform.o -MD -MP -MF $(DEPDIR)/pacman-platform.Tpo -c -o pacman-platform.o `test -f 'platform.cpp' || echo '$(srcdir)/'`platform.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-platform.Tpo $(DEPDIR)/pacman-platform.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='platform.cpp' object='pacman-platform.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-platform.o `test -f 'platform.cpp' || echo '$(srcdir)/'`platform.cpp
+
+pacman-platform.obj: platform.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-platform.obj -MD -MP -MF $(DEPDIR)/pacman-platform.Tpo -c -o pacman-platform.obj `if test -f 'platform.cpp'; then $(CYGPATH_W) 'platform.cpp'; else $(CYGPATH_W) '$(srcdir)/platform.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-platform.Tpo $(DEPDIR)/pacman-platform.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='platform.cpp' object='pacman-platform.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-platform.obj `if test -f 'platform.cpp'; then $(CYGPATH_W) 'platform.cpp'; else $(CYGPATH_W) '$(srcdir)/platform.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

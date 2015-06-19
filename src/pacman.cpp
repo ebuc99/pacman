@@ -104,7 +104,6 @@ static int eventloop(Pacman *pacman, Ghost **ghost_array, bool allowPacmanContro
 			}
 			if(event.key.keysym.sym == SDLK_p) {
 				if(!pacman->is_dying()) {
-					//pause = (pause == 0) ? 1 : 0;
 					if(pause) {
 						pause = 0;
 						labyrinth->getSounds()->resume_all();
@@ -178,18 +177,21 @@ int main() {
 	clyde->setGhostArray(ghost_array_ghost);
 
 	// initialize background graphic
-    hintergrund = LoadSurface("/usr/local/share/pacman/gfx/hintergrund2.png");
+	char filePath[256];
+	getFilePath(filePath, "gfx/hintergrund2.png");
+    hintergrund = LoadSurface(filePath);
 	
 	// initialize TTF so we are able to write texts to the screen
 	if(TTF_Init() == -1) {
 		return EXIT_FAILURE;
 	}
-	font = TTF_OpenFont("/usr/local/share/pacman/fonts/Cheapmot.TTF", 20);
+	getFilePath(filePath, "fonts/Cheapmot.TTF");
+	font = TTF_OpenFont(filePath, 20);
 	if(!font) {
 		printf("Unable to open TTF font: %s\n", TTF_GetError());
 		return -1;
 	}
-	smallFont = TTF_OpenFont("/usr/local/share/pacman/fonts/Cheapmot.TTF", 12);
+	smallFont = TTF_OpenFont(filePath, 12);
 	if (!smallFont) {
 		printf("Unable to open TTF font: %s\n", TTF_GetError());
 		return -1;

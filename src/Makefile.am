@@ -30,7 +30,9 @@ pacman_SOURCES =  \
 	rail.h \
 	rail.cpp \
 	sounds.h \
-	sounds.cpp
+	sounds.cpp \
+	platform.h \
+	platform.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \

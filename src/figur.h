@@ -4,6 +4,7 @@
 #include <SDL/SDL_image.h>
 #include "screen.h"
 #include "labyrinth.h"
+#include "platform.h"
 
 class Figur {
 	public:

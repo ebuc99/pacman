@@ -1,5 +1,5 @@
 #include "labyrinth.h"
-#include "string.h"
+#include <string.h>
 
 Labyrinth::Labyrinth(Screen *screen):
 	cnt_pill_animation(0),
@@ -156,60 +156,6 @@ Labyrinth::Labyrinth(Screen *screen):
 	s89 = new Rail(310, 175, 310, 222);  // vertical, the middle (long) one - 1 pixel too short, so it usually is a one-way outwards
 	s90 = new Rail(340, 200, 340, 222);  // vertical, the right one
 
-	/* // the old definition, see data/gfx/hintergrund_schienen.png
-	s0 = new Rail(207, 338, 412, 338);
-	s1 = new Rail(207, 37, 207, 380);
-	s2 = new Rail(138, 92, 480, 92);
-	s3 = new Rail(412, 37, 412, 380);
-	s4 = new Rail(138, 37, 290, 37);
-	s5 = new Rail(330, 37, 480, 37);
-	s6 = new Rail(138, 37, 138, 133);
-	s7 = new Rail(480, 37, 480, 133);
-	s8 = new Rail(138, 133, 207, 133);
-	s9 = new Rail(412, 133, 480, 133);
-	s10 = new Rail(290, 37, 290, 92);
-	s11 = new Rail(330, 37, 330, 92);
-	s12 = new Rail(249, 92, 249, 133);
-	s13 = new Rail(371, 92, 371, 133);
-	s14 = new Rail(249, 133, 290, 133);
-	s15 = new Rail(330, 133, 371, 133);
-	s16 = new Rail(290, 133, 290, 173);
-	s17 = new Rail(330, 133, 330, 173);
-	s18 = new Rail(249, 173, 371, 173);
-	s19 = new Rail(249, 173, 249, 298);
-	s20 = new Rail(371, 173, 371, 298);
-	s21 = new Rail(249, 257, 371, 257);
-	s22 = new Rail(100, 215, 249, 215);
-	s23 = new Rail(371, 215, 515, 215);
-	s24 = new Rail(138, 298, 290, 298);
-	s25 = new Rail(330, 298, 480, 298);
-	s26 = new Rail(290, 298, 290, 338);
-	s27 = new Rail(330, 298, 330, 338);
-	s28 = new Rail(138, 298, 138, 338);
-	s29 = new Rail(480, 298, 480, 338);
-	s30 = new Rail(138, 338, 166, 338);
-	s31 = new Rail(452, 338, 480, 338);
-	s32 = new Rail(166, 338, 166, 380);
-	s33 = new Rail(452, 338, 452, 380);
-	s34 = new Rail(138, 380, 207, 380);
-	s35 = new Rail(412, 380, 480, 380);
-	s36 = new Rail(138, 380, 138, 420);
-	s37 = new Rail(480, 380, 480, 420);
-	s38 = new Rail(138, 420, 480, 420);
-	s39 = new Rail(249, 338, 249, 380);
-	s40 = new Rail(371, 338, 371, 380);
-	s41 = new Rail(249, 380, 290, 380);
-	s42 = new Rail(330, 380, 371, 380);
-	s43 = new Rail(290, 380, 290, 420);
-	s44 = new Rail(330, 380, 330, 420);
-	// ghost castle
-	s45 = new Rail(310, 174, 310, 222);
-	s46 = new Rail(280, 222, 309, 222);
-	s47 = new Rail(311, 222, 340, 222);
-	s48 = new Rail(280, 200, 280, 222);
-	s49 = new Rail(340, 200, 340, 222);
-	*/
-
 	Rail *array_rails_temp[this->NUMBER_RAILS] = {s0,  s1,  s2,  s3,  s4,  s5,  s6,  s7,  s8,  s9,
 	                                             s10, s11, s12, s13, s14, s15, s16, s17, s18, s19,
 	                                             s20, s21, s22, s23, s24, s25, s26, s27, s28, s29,
@@ -232,12 +178,19 @@ Labyrinth::Labyrinth(Screen *screen):
 	                                                         s80, s81, s82, s83, s84, s85};
 	memcpy(array_rails_pills, array_rails_pills_temp, sizeof(array_rails_pills_temp));
 
-	pille = this->LoadSurface("/usr/local/share/pacman/gfx/pille.png");	
-	ar_superpille[0] = this->LoadSurface("/usr/local/share/pacman/gfx/superpille_1.png", 0);
-	ar_superpille[1] = this->LoadSurface("/usr/local/share/pacman/gfx/superpille_2.png", 0);
-	ar_superpille[2] = this->LoadSurface("/usr/local/share/pacman/gfx/superpille_3.png", 0);
-	ar_superpille[3] = this->LoadSurface("/usr/local/share/pacman/gfx/superpille_3.png", 0);
-	ar_superpille[4] = this->LoadSurface("/usr/local/share/pacman/gfx/superpille_2.png", 0);
+	char filePath[256];
+	getFilePath(filePath, "gfx/pille.png");
+	pille = this->LoadSurface(filePath, 0);
+	getFilePath(filePath, "gfx/superpille_1.png");
+	ar_superpille[0] = this->LoadSurface(filePath, 0);
+	getFilePath(filePath, "gfx/superpille_2.png");
+	ar_superpille[1] = this->LoadSurface(filePath, 0);
+	getFilePath(filePath, "gfx/superpille_3.png");
+	ar_superpille[2] = this->LoadSurface(filePath, 0);
+	getFilePath(filePath, "gfx/superpille_3.png");
+	ar_superpille[3] = this->LoadSurface(filePath, 0);
+	getFilePath(filePath, "gfx/superpille_2.png");
+	ar_superpille[4] = this->LoadSurface(filePath, 0);
 	superpille = ar_superpille[cnt_pill_animation];
 
 	textweiss = {255, 255, 255, 0};
@@ -310,14 +263,6 @@ void Labyrinth::draw_pillen() {
 			screen->AddUpdateRects(dest.x , dest.y, superpille->w, superpille->h);
 		}
 	}
-	/*// temporarily also draw the rails
-	for (int i = 0; i < NUMBER_RAILS; ++i) {
-		if (array_rails[i]->y1 == array_rails[i]->y2)
-			screen->drawHorizontalLine(array_rails[i]->x1+1, array_rails[i]->x2-1, array_rails[i]->y1, 0, 255, 0);
-		else if (array_rails[i]->x1 == array_rails[i]->x2)
-			screen->drawVerticalLine(array_rails[i]->x1, array_rails[i]->y1+1, array_rails[i]->y2-1, 0, 0, 255);
-	}
-	screen->AddUpdateRects(0, 0, 640, 480);*/
 }
 
 int Labyrinth::number_rails() const {
@@ -350,7 +295,7 @@ SDL_Surface *Labyrinth::LoadSurface(const char *filename, int transparent_color)
     return surface;	
 }
 
-void Labyrinth::compute_score(/*SDL_Surface *punkte, SDL_Color *textgelb*/) {
+void Labyrinth::compute_score() {
 	char char_punktestand[8] = "0";
 	sprintf(char_punktestand, "%d", this->punktestand);
 	if(this->score)
@@ -439,9 +384,9 @@ int Labyrinth::getExisitingPills() const {
 	return cnt_pills;
 }
 
-void Labyrinth::setInitText(char *text, int color /*default 0*/) {
+void Labyrinth::setInitText(char *text, int color) {
 	char c_restartText[10] = "Get Ready";
-	initText = TTF_RenderText_Solid(font, /*c_restartText*/text, (color==1) ? this->textgelb : ((color==2)?this->textrot:this->textweiss));
+	initText = TTF_RenderText_Solid(font, text, (color==1) ? this->textgelb : ((color==2)?this->textrot:this->textweiss));
 }
 
 void Labyrinth::drawInitText() {
@@ -480,45 +425,45 @@ int Labyrinth::getLevel() const {
 }
 
 void Labyrinth::setLevel(int level) {
-	char fruit_file[255] = "/usr/local/share/pacman/gfx/";
+	char fruit_file[256];
 	this->level = level;
 	switch(this->level) {
 		case 1:
 			setFruitBonus(100);
-			strcat(fruit_file, "cherry.png");
+			getFilePath(fruit_file, "gfx/cherry.png");
 			break;
 		case 2:
 			setFruitBonus(300);
-			strcat(fruit_file, "strawberry.png");
+			getFilePath(fruit_file, "gfx/strawberry.png");
 			break;
 		case 3:
 		case 4:
 			setFruitBonus(500);
-			strcat(fruit_file, "orange.png");
+			getFilePath(fruit_file, "gfx/orange.png");
 			break;
 		case 5:
 		case 6:
 			setFruitBonus(700);
-			strcat(fruit_file, "apple.png");
+			getFilePath(fruit_file, "gfx/apple.png");
 			break;
 		case 7:
 		case 8:
 			setFruitBonus(1000);
-			strcat(fruit_file, "grapes.png");
+			getFilePath(fruit_file, "gfx/grapes.png");
 			break;
 		case 9:
 		case 10:
 			setFruitBonus(2000);
-			strcat(fruit_file, "banana.png");
+			getFilePath(fruit_file, "gfx/banana.png");
 			break;
 		case 11:
 		case 12:
 			setFruitBonus(3000);
-			strcat(fruit_file, "pear.png");
+			getFilePath(fruit_file, "gfx/pear.png");
 			break;
 		default:
 			setFruitBonus(5000);
-			strcat(fruit_file, "key.png");
+			getFilePath(fruit_file, "gfx/key.png");
 	};
 	infoFruit = LoadSurface(fruit_file, 255);
 	fruit = NULL;

@@ -2,6 +2,7 @@
 #define SOUNDS_H
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
+#include "platform.h"
 
 class Sounds {
 	public:

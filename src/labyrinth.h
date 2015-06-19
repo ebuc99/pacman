@@ -6,6 +6,7 @@
 #include "pille.h"
 #include "rail.h"
 #include "sounds.h"
+#include "platform.h"
 
 class Labyrinth {
 	private: 

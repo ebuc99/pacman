@@ -6,44 +6,54 @@ Sounds::Sounds():
 	Uint16 audio_format = AUDIO_S16SYS;
 	int audio_channels = 2;
 	int audio_buffers = 1024;
+	char filePath[256];
 	 
 	if(Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers) != 0) {
 		fprintf(stderr, "Unable to initialize audio: %s\n", Mix_GetError());
 		exit(1);
 	}
-	chunk_munch_a = Mix_LoadWAV("/usr/local/share/pacman/sounds/munch_a.wav");
+	getFilePath(filePath, "sounds/munch_a.wav");
+	chunk_munch_a = Mix_LoadWAV(filePath);
 	if(chunk_munch_a == NULL) {
 		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
 	}
-	chunk_munch_b = Mix_LoadWAV("/usr/local/share/pacman/sounds/munch_b.wav");
+	getFilePath(filePath, "sounds/munch_b.wav");	
+	chunk_munch_b = Mix_LoadWAV(filePath);
 	if(chunk_munch_a == NULL) {
 		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
-	}	
-	music_intro = Mix_LoadMUS("/usr/local/share/pacman/sounds/intro.wav");
+	}
+	getFilePath(filePath, "sounds/intro.wav");	
+	music_intro = Mix_LoadMUS(filePath);
 	if(music_intro == NULL) {
 		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
 	}
-	music_siren_slow = Mix_LoadMUS("/usr/local/share/pacman/sounds/siren_slow.wav");
+	getFilePath(filePath, "sounds/siren_slow.wav");	
+	music_siren_slow = Mix_LoadMUS(filePath);
 	if(music_siren_slow == NULL) {
 		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
 	}
-	chunk_dying = Mix_LoadWAV("/usr/local/share/pacman/sounds/death_1.wav");
+	getFilePath(filePath, "sounds/death_1.wav");	
+	chunk_dying = Mix_LoadWAV(filePath);
 	if(chunk_dying == NULL) {
 		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
 	}
-	chunk_extra_man = Mix_LoadWAV("/usr/local/share/pacman/sounds/extra_man.wav");
+	getFilePath(filePath, "sounds/extra_man.wav");	
+	chunk_extra_man = Mix_LoadWAV(filePath);
 	if(chunk_extra_man == NULL) {
 		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
 	}
-	chunk_fruit = Mix_LoadWAV("/usr/local/share/pacman/sounds/fruit.wav");
+	getFilePath(filePath, "sounds/fruit.wav");	
+	chunk_fruit = Mix_LoadWAV(filePath);
 	if(chunk_fruit == NULL) {
 		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
 	}
-	music_superpill_loop = Mix_LoadMUS("/usr/local/share/pacman/sounds/large_pellet_loop.wav");
+	getFilePath(filePath, "sounds/large_pellet_loop.wav");	
+	music_superpill_loop = Mix_LoadMUS(filePath);
 	if(music_superpill_loop == NULL) {
 		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
 	}
-	chunk_eat_ghost = Mix_LoadWAV("/usr/local/share/pacman/sounds/ghost_eat_3.wav");
+	getFilePath(filePath, "sounds/ghost_eat_3.wav");	
+	chunk_eat_ghost = Mix_LoadWAV(filePath);
 	if(chunk_eat_ghost == NULL) {
 		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
 	}

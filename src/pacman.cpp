@@ -302,6 +302,7 @@ int main() {
 						clyde->set_hunter(Figur::GHOST);
 				}
 				labyrinth->stopHuntingMode();
+				labyrinth->getSounds()->siren_start();
 			}
 		}
 		// sleep counter - wait a short time when the player gets a special score (e.g. after eating a ghost or a fruit)

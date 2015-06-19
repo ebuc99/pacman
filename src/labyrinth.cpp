@@ -318,7 +318,6 @@ void Labyrinth::stopHuntingMode() {
 	this->cnt_hunting_mode = -1;
 	this->bonus_stage = 200;
 	this->sounds->music_stop();
-	this->sounds->siren_start();
 }
 
 void Labyrinth::increaseBonusStage() {

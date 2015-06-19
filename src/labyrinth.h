@@ -31,7 +31,7 @@ class Labyrinth {
 		int punktestand;
 		int bonus_stage; //200, 400, 800, 1600
 		TTF_Font *font, *smallFont;
-		SDL_Surface *smallScore, *initText, *score, *infoFruit, *fruit;
+		SDL_Surface *smallScore, *initText, *score, *infoFruit, *fruit, *pillSurface, *bgSurface;
 		int smallScore_x, smallScore_y;
 		SDL_Color textweiss, textgelb, textrot;
 		int cnt_pills;
@@ -41,6 +41,7 @@ class Labyrinth {
 		int cnt_displayed_fruits;
 		int fruit_displayed;
 		int fruit_bonus;
+		int idxSuperpills[4];
 	public:
 		//constructor and destructor
 		Labyrinth(Screen *screen);
@@ -52,7 +53,7 @@ class Labyrinth {
 		void draw_blocks();
 
 		/* initially, throw some pills across the level */
-		void init_pillen();
+		void init_pillen(SDL_Surface *background);
 
 		/* draw pills, but only if Blinky has moved */
 		void draw_pillen();
@@ -96,6 +97,9 @@ class Labyrinth {
 
 		// assigns fonts
 		void setFonts(TTF_Font* font, TTF_Font* smallFont);
+
+		// hide the pill having the specified index
+		void hidePill(int idxPill);
 
 		// decrease pills
 		void decreasePills();

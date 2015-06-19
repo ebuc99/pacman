@@ -344,7 +344,7 @@ void Pacman::check_eat_pills(Figur **ghost_array) {
 		for(int i = 0; i < this->labyrinth->NUMBER_PILLS; i++) {
 			if(this->labyrinth->pillen[i].sichtbar && ((this->labyrinth->pillen[i].x - 10) >= least(this->x,tmp_last_x)) && ((this->labyrinth->pillen[i].x - 10) <= greatest(this->x,tmp_last_x)) && ((this->labyrinth->pillen[i].y - 10) >= least(this->y,this->last_y)) && ((this->labyrinth->pillen[i].y - 10) <= greatest(this->y,this->last_y))) {
 				cnt_slow = 15;
-				this->labyrinth->pillen[i].sichtbar = 0;
+				this->labyrinth->hidePill(i);
 				this->set_speed(PACMAN_V_SLOW);
 				this->labyrinth->addScore(10);
 				this->labyrinth->decreasePills();

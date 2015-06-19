@@ -204,7 +204,7 @@ int main() {
 	}
    
 	screen->draw(hintergrund);
-	labyrinth->init_pillen();
+	labyrinth->init_pillen(hintergrund);
 	labyrinth->draw_pillen();
 	labyrinth->setInitText("Get Ready!");
 	labyrinth->startFruitRandomizer(true);

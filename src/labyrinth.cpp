@@ -14,6 +14,8 @@ Labyrinth::Labyrinth(Screen *screen):
 	initText(NULL),
 	infoFruit(NULL),
 	fruit(NULL),
+	pillSurface(NULL),
+	bgSurface(NULL),
 	level(1){
 	this->screen = screen;
 	// horizontal rails, row by row, from left to right
@@ -204,6 +206,7 @@ Labyrinth::~Labyrinth(){
 	SDL_FreeSurface(score);
 	SDL_FreeSurface(infoFruit);
 	SDL_FreeSurface(initText);
+	SDL_FreeSurface(pillSurface);
 	delete sounds;
 }
 
@@ -223,44 +226,60 @@ void Labyrinth::draw_blocks() {
   	SDL_FillRect(this->screen->getSurface(), &b2, SDL_MapRGB(this->screen->getSurface()->format, 0, 0, 0));
 }
 
-void Labyrinth::init_pillen() {
+void Labyrinth::init_pillen(SDL_Surface *background) {
 	int m = 0;
+	int s = 0;
 	this->cnt_pills = this->NUMBER_PILLS;
 	int i_ar_pille_x[26] = {148,162,176,190,204,217,231,245,259,273,287,300,314,327,340,354,368,381,395,409,422,436,449,462,476,490};
 	int i_ar_pille_y[29] = {47,61,75,89,102,116,130,143,157,170,184,197,211,225,239,252,266,280,294,308,321,335,349,362,376,390,404,417,431};
-		for(int i = 0; i < 26; i++) {
-			for(int j = 0; j < 29; j++) {
-				for(int k = 0; k < NUMBER_RAILS_PILLS; k++) {
-					if(((array_rails_pills[k]->x1 <= (i_ar_pille_x[i] - 10)) && (array_rails_pills[k]->x2 >= (i_ar_pille_x[i] - 10)) && (array_rails_pills[k]->y1 == (i_ar_pille_y[j] - 10)) && (array_rails_pills[k]->y2 == (i_ar_pille_y[j] - 10))) || ((array_rails_pills[k]->x1 == (i_ar_pille_x[i] - 10)) && (array_rails_pills[k]->x2 == (i_ar_pille_x[i] - 10)) && (array_rails_pills[k]->y1 <= (i_ar_pille_y[j] - 10)) && (array_rails_pills[k]->y2 >= (i_ar_pille_y[j] - 10)))) {
-						pillen[m].x = i_ar_pille_x[i];
-						pillen[m].y = i_ar_pille_y[j];
-						pillen[m].sichtbar = 1;
-						if (((i_ar_pille_x[i]==148)||(i_ar_pille_x[i] == 490)) && ((i_ar_pille_y[j] == 75)||(i_ar_pille_y[j] == 349))) {
-							pillen[m].superpille = 1;
-						}
-						else
-							pillen[m].superpille = 0;
-						m++;
-						break;
+	for(int i = 0; i < 26; i++) {
+		for(int j = 0; j < 29; j++) {
+			for(int k = 0; k < NUMBER_RAILS_PILLS; k++) {
+				if (array_rails_pills[k]->x1 <= i_ar_pille_x[i]-10 && i_ar_pille_x[i]-10 <= array_rails_pills[k]->x2 && array_rails_pills[k]->y1 <= i_ar_pille_y[j]-10 && i_ar_pille_y[j]-10 <= array_rails_pills[k]->y2) {
+					pillen[m].x = i_ar_pille_x[i];
+					pillen[m].y = i_ar_pille_y[j];
+					pillen[m].sichtbar = 1;
+					if (((i_ar_pille_x[i]==148)||(i_ar_pille_x[i] == 490)) && ((i_ar_pille_y[j] == 75)||(i_ar_pille_y[j] == 349))) {
+						pillen[m].superpille = 1;
+						idxSuperpills[s] = m;
+						s++;
 					}
+					else
+						pillen[m].superpille = 0;
+					m++;
+					break;
 				}
 			}
 		}
+	}
+	if (background)
+		bgSurface = background;
+	if (bgSurface) {
+		if (!pillSurface) {
+			pillSurface = SDL_CreateRGBSurface(0, bgSurface->w, bgSurface->h, bgSurface->format->BitsPerPixel,
+			  bgSurface->format->Rmask, bgSurface->format->Gmask, bgSurface->format->Bmask, bgSurface->format->Amask);
+		}
+		SDL_BlitSurface(bgSurface, NULL, pillSurface, NULL);
+		SDL_Rect dest;
+		for (int i = 0; i < NUMBER_PILLS; i++) {
+			if (!pillen[i].superpille) {
+				dest.x = (short int) pillen[i].x;
+				dest.y = (short int) pillen[i].y;
+				SDL_BlitSurface(pille, NULL, pillSurface, &dest);
+			}
+		}
+	}
 }
 
 void Labyrinth::draw_pillen() {
+	SDL_BlitSurface(pillSurface, NULL, screen->getSurface(), NULL);
 	SDL_Rect dest;
-	for(int i = 0; i < NUMBER_PILLS; i++) {
-		if(pillen[i].sichtbar && !pillen[i].superpille) {
-			dest.x = (short int)pillen[i].x;
-			dest.y = (short int)pillen[i].y;
-			SDL_BlitSurface(pille, NULL, screen->getSurface(), &dest);
-		}
-		if(pillen[i].sichtbar && pillen[i].superpille) {
-			dest.x = (short int)(pillen[i].x - 4);
-			dest.y = (short int)(pillen[i].y - 4);
+	for (int i = 0; i < 4; i++) {
+		if (pillen[idxSuperpills[i]].sichtbar) {
+			dest.x = (short int) (pillen[idxSuperpills[i]].x - 4);
+			dest.y = (short int) (pillen[idxSuperpills[i]].y - 4);
 			SDL_BlitSurface(superpille, NULL, screen->getSurface(), &dest);
-			screen->AddUpdateRects(dest.x , dest.y, superpille->w, superpille->h);
+			screen->AddUpdateRects(dest.x, dest.y, superpille->w, superpille->h);
 		}
 	}
 }
@@ -374,6 +393,20 @@ void Labyrinth::setFonts(TTF_Font* font, TTF_Font* smallFont) {
 	this->smallFont = smallFont;
 }
 
+void Labyrinth::hidePill(int idxPill) {
+	if (idxPill >= 0) {
+		pillen[idxPill].sichtbar = 0;
+		if (pillSurface && bgSurface) {
+			SDL_Rect dest;
+			dest.x = (short int) pillen[idxPill].x;
+			dest.y = (short int) pillen[idxPill].y;
+			dest.w = (short int) pille->w;
+			dest.h = (short int) pille->h;
+			SDL_BlitSurface(bgSurface, &dest, pillSurface, &dest);
+		}
+	}
+}
+
 // decrease pills
 void Labyrinth::decreasePills() {
 	--cnt_pills;
@@ -406,7 +439,7 @@ void Labyrinth::initNewLevel() {
 	this->compute_score();
 	screen->AddUpdateRects(0, 0, 500, 512);
 	screen->Refresh();
-	this->init_pillen();
+	this->init_pillen(NULL);
 	this->draw_pillen();
 	this->hideFruit();
 	this->startFruitRandomizer(true);

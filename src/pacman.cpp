@@ -123,7 +123,7 @@ static int eventloop(Pacman *pacman, Ghost **ghost_array, bool allowPacmanContro
 
 
 // main function, contains the game loop
-int main() {
+int main(int argc, char *argv[]) {
 	SDL_Surface *hintergrund;
 	SDL_Surface *score;
 	TTF_Font *font, *smallFont;

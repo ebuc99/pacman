@@ -66,7 +66,11 @@ Sounds::~Sounds() {
 	Mix_FreeChunk(chunk_munch_b);
 	Mix_FreeMusic(music_intro);
 	Mix_FreeMusic(music_siren_slow);
+	Mix_FreeMusic(music_superpill_loop);
+	Mix_FreeChunk(chunk_extra_man);
 	Mix_FreeChunk(chunk_dying);
+	Mix_FreeChunk(chunk_fruit);
+	Mix_FreeChunk(chunk_eat_ghost);
 	Mix_CloseAudio();
 }
 

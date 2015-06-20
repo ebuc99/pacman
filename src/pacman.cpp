@@ -203,9 +203,8 @@ int main() {
 		return EXIT_FAILURE;
 	}
    
-	screen->draw(hintergrund);
 	labyrinth->init_pillen(hintergrund);
-	labyrinth->draw_pillen();
+	labyrinth->draw_pillen();  // including background
 	labyrinth->setInitText("Get Ready!");
 	labyrinth->startFruitRandomizer(true);
 	labyrinth->setLevel(1);
@@ -261,7 +260,6 @@ int main() {
 						labyrinth->setInitText("Get Ready!");
 						start_offset = START_OFFSET_2;
 					}
-				    screen->draw(hintergrund);
 				    screen->AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
 				}
 			}
@@ -334,10 +332,9 @@ int main() {
 			// init new level
 			reset_all(pacman, ghost_array);
 			stop_all(true, pacman, ghost_array_ghost,  labyrinth);
-			screen->draw(hintergrund);
 			labyrinth->initNewLevel();
 			start_offset = START_OFFSET;
-		    screen->draw(hintergrund);
+		    labyrinth->draw_pillen();  // including background
 		    screen->AddUpdateRects(0, 0, hintergrund->w, hintergrund->h);
 			continue;
 		}
@@ -375,10 +372,8 @@ int main() {
 
 		// redrawing
 		if (moving()) {
-			// background
-		    screen->draw(hintergrund);
 		    // objects within the level
-		    labyrinth->draw_pillen();
+		    labyrinth->draw_pillen();  // including background
 			labyrinth->drawFruit();
 			// figures
 			pacman->animate();

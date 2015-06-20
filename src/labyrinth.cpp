@@ -206,6 +206,7 @@ Labyrinth::~Labyrinth(){
 	SDL_FreeSurface(score);
 	SDL_FreeSurface(infoFruit);
 	SDL_FreeSurface(initText);
+	SDL_FreeSurface(pillSurface);
 	delete sounds;
 }
 

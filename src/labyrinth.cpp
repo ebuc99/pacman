@@ -227,15 +227,19 @@ void Labyrinth::draw_blocks() {
 }
 
 void Labyrinth::init_pillen(SDL_Surface *background) {
-	int m = 0;
+	int m = -1;
 	int s = 0;
 	this->cnt_pills = this->NUMBER_PILLS;
 	int i_ar_pille_x[26] = {148,162,176,190,204,217,231,245,259,273,287,300,314,327,340,354,368,381,395,409,422,436,449,462,476,490};
 	int i_ar_pille_y[29] = {47,61,75,89,102,116,130,143,157,170,184,197,211,225,239,252,266,280,294,308,321,335,349,362,376,390,404,417,431};
+	for(int k = 0; k < NUMBER_RAILS_PILLS; k++)
+		array_rails_pills[k]->numPills = 0;
 	for(int i = 0; i < 26; i++) {
 		for(int j = 0; j < 29; j++) {
+			bool created = false;
 			for(int k = 0; k < NUMBER_RAILS_PILLS; k++) {
 				if (array_rails_pills[k]->x1 <= i_ar_pille_x[i]-10 && i_ar_pille_x[i]-10 <= array_rails_pills[k]->x2 && array_rails_pills[k]->y1 <= i_ar_pille_y[j]-10 && i_ar_pille_y[j]-10 <= array_rails_pills[k]->y2) {
+					m++;
 					pillen[m].x = i_ar_pille_x[i];
 					pillen[m].y = i_ar_pille_y[j];
 					pillen[m].sichtbar = 1;
@@ -243,11 +247,18 @@ void Labyrinth::init_pillen(SDL_Surface *background) {
 						pillen[m].superpille = 1;
 						idxSuperpills[s] = m;
 						s++;
-					}
-					else
+					} else
 						pillen[m].superpille = 0;
-					m++;
+					created = true;
 					break;
+				}
+			}
+			if (created) {
+				for(int k = 0; k < NUMBER_RAILS; k++) {
+					if (array_rails[k]->x1 <= i_ar_pille_x[i]-10 && i_ar_pille_x[i]-10 <= array_rails[k]->x2 && array_rails[k]->y1 <= i_ar_pille_y[j]-10 && i_ar_pille_y[j]-10 <= array_rails[k]->y2) {
+						array_rails[k]->idxPills[array_rails[k]->numPills] = m;
+						array_rails[k]->numPills++;
+					}
 				}
 			}
 		}

@@ -5,7 +5,7 @@
 #else
 #define WINDOWS 0
 #endif
-void getFilePath(char filePath[], char file[]) {
+void getFilePath(char filePath[], const char file[]) {
      char installDir[256];
      if(WINDOWS)
          strcpy(installDir, "");

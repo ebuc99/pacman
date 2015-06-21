@@ -148,7 +148,7 @@ void Ghost::move_dir(int ms, int direction, int max_links, int max_oben, int max
 }
 
 void Ghost::move(int ms) {
-	this->move_on_rails(ms, this->labyrinth->number_rails(), labyrinth->array_rails);
+	this->move_on_rails(ms, labyrinth->array_rails);
 	if (last_x != x || last_y != y)
 		this->addUpdateRect();
 }
@@ -231,7 +231,7 @@ int Ghost::choose_direction(Direction * sammel_richtung, int richtung_pacman, in
 	}
 }
 
-void Ghost::move_on_rails(int ms, int anz_schienen, Rail **ar_s) {
+void Ghost::move_on_rails(int ms, Rail **ar_s) {
 	bool moved = false;
 	Direction old_dir = get_direction();
 	Direction sammel_richtung[3];

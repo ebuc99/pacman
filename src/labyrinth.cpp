@@ -434,8 +434,7 @@ int Labyrinth::getExisitingPills() const {
 	return cnt_pills;
 }
 
-void Labyrinth::setInitText(char *text, int color) {
-	char c_restartText[10] = "Get Ready";
+void Labyrinth::setInitText(const char *text, int color) {
 	initText = TTF_RenderText_Solid(font, text, (color==1) ? this->textgelb : ((color==2)?this->textrot:this->textweiss));
 }
 

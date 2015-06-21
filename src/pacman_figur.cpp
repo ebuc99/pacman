@@ -117,7 +117,7 @@ void Pacman::checkAnimationChange() {
 }
 
 void Pacman::move(int ms) {
-	this->move_on_rails(ms, this->labyrinth->number_rails(), this->labyrinth->array_rails);		
+	this->move_on_rails(ms, this->labyrinth->array_rails);		
 	if (last_x != x || last_y != y)
 		this->addUpdateRect();
 }
@@ -182,7 +182,7 @@ void Pacman::animate() {
 			cnt_animation = 0;
 }
 
-void Pacman::move_on_rails(int ms, int anz_schienen, Rail **ar_s) {
+void Pacman::move_on_rails(int ms, Rail **ar_s) {
 	bool moved = false;
 	Direction old_dir, new_dir;
 	new_dir = old_dir = get_direction();
@@ -239,9 +239,9 @@ void Pacman::move_on_rails(int ms, int anz_schienen, Rail **ar_s) {
 		if (idxRight>=0 && ar_s[idxRight]->x2 <= this->x)
 			idxRight = -1;
 		if (idxUp>=0 && this->y <= ar_s[idxUp]->y1)
-			idxUp = NULL;
+			idxUp = 0;
 		if (idxDown>=0 && ar_s[idxDown]->y2 <= this->y)
-			idxDown = NULL;
+			idxDown = 0;
 		bool use_old_dir = false;
 		if ((this->direction_pre==LEFT && idxLeft<0) || (this->direction_pre==RIGHT && idxRight<0) || (this->direction_pre==UP && idxUp<0) || (this->direction_pre==DOWN && idxDown<0))
 			use_old_dir = true;

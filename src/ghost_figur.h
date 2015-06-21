@@ -40,7 +40,7 @@ class Ghost : public Figur {
 		int choose_direction(Direction * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence);
 
 		// moves a ghost on the defined rails
-		void move_on_rails(int ms, int anz_schienen, Rail **ar_s);
+		void move_on_rails(int ms, Rail **ar_s);
 		
 		// returns the intelligence of the ghost
 		int get_intelligence() const;

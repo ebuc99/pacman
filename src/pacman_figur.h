@@ -28,7 +28,7 @@ class Pacman : public Figur {
 		void animate();
 		
 		// moves a ghost on the defined rails
-		void move_on_rails(int ms, int anz_schienen, Rail **ar_s);
+		void move_on_rails(int ms, Rail **ar_s);
 		
 		// returns whether pacman has stopped
 		int is_pacman_stopped();

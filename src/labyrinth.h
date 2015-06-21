@@ -108,7 +108,7 @@ class Labyrinth {
 		int getExisitingPills() const;
 
 		// set init text, color is 1=yellow, 2=red, white otherwise.
-		void setInitText(char *text, int color = 0);
+		void setInitText(const char *text, int color = 0);
 		
 		// level init text
 		void drawInitText();

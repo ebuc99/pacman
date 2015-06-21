@@ -11,7 +11,7 @@ const uint16_t INTELLIGENCE_CLYDE = 0;
 const uint16_t INIT_UP_DOWN = 0;          // initial up/down cycles before the ghost will be allowed to leave the castle
 const uint16_t INIT_UP_DOWN_INKY = 5;
 const uint16_t INIT_UP_DOWN_CLYDE = 11;
-const uint32_t MIN_FRAME_DURATION = 30;        // duration of a loop in milliseconds (i.e. minimum time between frames)
+const int MIN_FRAME_DURATION = 30;        // duration of a loop in milliseconds (i.e. minimum time between frames)
 const uint16_t START_OFFSET   = 4500;
 const uint16_t START_OFFSET_2 = 1500;
 const int INITIAL_LIVES = 3;              // number of times the player must die to get the "game over"
@@ -80,7 +80,7 @@ static void stop_all(uint16_t stop, Pacman *pacman, Ghost **ghost_array, Labyrin
 }
 
 // SDL event loop: handle keyboard input events, and others
-static int eventloop(Pacman *pacman, Ghost **ghost_array, bool allowPacmanControl, 
+static int eventloop(Pacman *pacman, bool allowPacmanControl, 
                      int *neededTime, Labyrinth *labyrinth) {
 	*neededTime = 0;
 	SDL_Event event;
@@ -227,7 +227,7 @@ int main(int argc, char *argv[]) {
 	labyrinth->getSounds()->intro();
 	// game loop
 	while(loop) {	
-		loop = eventloop(pacman, ghost_array_ghost, start_offset<0, &specialEventTime, labyrinth);
+		loop = eventloop(pacman, start_offset<0, &specialEventTime, labyrinth);
 		if (specialEventTime > 0)
 			currentTicks += specialEventTime;
 

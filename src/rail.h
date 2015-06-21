@@ -8,5 +8,7 @@ class Rail {
 		int y1;
 		int x2;
 		int y2;
+		int idxPills[12];
+		int numPills;      // number of pills on this rail (visible and invisible)
 };
 #endif

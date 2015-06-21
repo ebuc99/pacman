@@ -53,7 +53,7 @@ class Labyrinth {
 		void draw_blocks();
 
 		/* initially, throw some pills across the level */
-		void init_pillen(SDL_Surface *background);
+		void init_pillen(SDL_Surface *background, bool firstInit);
 
 		/* draw pills, but only if Blinky has moved */
 		void draw_pillen();

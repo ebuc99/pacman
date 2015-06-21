@@ -203,7 +203,7 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
    
-	labyrinth->init_pillen(hintergrund);
+	labyrinth->init_pillen(hintergrund, true);
 	labyrinth->draw_pillen();  // including background
 	labyrinth->setInitText("Get Ready!");
 	labyrinth->startFruitRandomizer(true);

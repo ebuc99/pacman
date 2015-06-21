@@ -232,8 +232,8 @@ void Labyrinth::init_pillen(SDL_Surface *background) {
 	this->cnt_pills = this->NUMBER_PILLS;
 	int i_ar_pille_x[26] = {148,162,176,190,204,217,231,245,259,273,287,300,314,327,340,354,368,381,395,409,422,436,449,462,476,490};
 	int i_ar_pille_y[29] = {47,61,75,89,102,116,130,143,157,170,184,197,211,225,239,252,266,280,294,308,321,335,349,362,376,390,404,417,431};
-	for(int k = 0; k < NUMBER_RAILS_PILLS; k++)
-		array_rails_pills[k]->numPills = 0;
+	for(int k = 0; k < NUMBER_RAILS; k++)
+		array_rails[k]->numPills = 0;
 	for(int i = 0; i < 26; i++) {
 		for(int j = 0; j < 29; j++) {
 			bool created = false;

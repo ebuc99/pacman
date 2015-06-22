@@ -195,9 +195,12 @@ Labyrinth::Labyrinth(Screen *screen):
 	ar_superpille[4] = this->LoadSurface(filePath, 0);
 	superpille = ar_superpille[cnt_pill_animation];
 
-	textweiss = {255, 255, 255, 0};
-	textgelb = {255, 247, 11, 0};
-	textrot = {255, 0, 0, 0};
+	textweiss.r = textweiss.g = textweiss.b = 255;
+	textgelb.r = 255;
+	textgelb.g = 247;
+	textgelb.b = 11;
+	textrot.r = 255;
+	textrot.g = textrot.b = 0;
 	sounds = new Sounds();
 }   
 

@@ -139,7 +139,9 @@ Figur::Hunter Figur::get_hunter() const {
 	return NONE;
 }
 
-void Figur::set_hunter(Hunter hunter) {}
+void Figur::set_hunter(Hunter hunter) {
+		this->hunter = hunter;
+}
 
 void Figur::setVisibility(bool v) {
 	int prev_value = this->visible;

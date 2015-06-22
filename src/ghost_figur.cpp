@@ -281,8 +281,10 @@ void Ghost::move_on_rails(int ms, Rail **ar_s) {
 			sammel_richtung[0] = UP;
 			sammel_counter = 1;
 			// make an eyes-only ghost normal again
-			if (get_hunter() == NONE)
+			if (get_hunter() == NONE) {
 				set_hunter(GHOST);
+				this->labyrinth->getSounds()->eat_ghost_stop(false);
+			}
 		} else if (this->up_down) {
 			sammel_richtung[sammel_counter] = ((old_dir==UP) ? DOWN : UP);
 			++sammel_counter;
@@ -416,6 +418,7 @@ bool Ghost::touched() {
 		this->labyrinth->increaseBonusStage();
 		this->labyrinth->sleep(400);
 		this->labyrinth->playEatGhost();
+		this->labyrinth->getSounds()->eat_ghost_start();
 	}
 	if(this->get_hunter() == NONE)
 		return false;  // no problem for pacman

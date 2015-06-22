@@ -15,6 +15,8 @@ class Sounds {
 		void intro();
 		void siren_start();
 		void superpill_start();
+		void eat_ghost_start();
+		void eat_ghost_stop(bool force);
 		void music_stop();
 		void playSingleSound(SingleSounds singlesounds);
 	protected:
@@ -25,11 +27,13 @@ class Sounds {
 		Mix_Music *music_intro = NULL;
 		Mix_Music *music_siren_slow = NULL;
 		Mix_Music *music_superpill_loop = NULL;
+		Mix_Music *music_eat_ghost = NULL;
 		int channel_siren;
 		Mix_Chunk *chunk_dying = NULL;
 		Mix_Chunk *chunk_extra_man = NULL;
 		Mix_Chunk *chunk_fruit = NULL;
 		Mix_Chunk *chunk_eat_ghost = NULL;
+		int eat_ghost_cnt;
 };
 
 #endif

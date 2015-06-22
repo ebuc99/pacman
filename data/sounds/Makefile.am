@@ -10,4 +10,5 @@ dist_datadir_sounds_DATA = munch_a.wav \
 	extra_man.wav \
 	fruit.wav \
 	large_pellet_loop.wav \
-	ghost_eat_3.wav
+	ghost_eat_3.wav \
+	ghost_eat_1.wav

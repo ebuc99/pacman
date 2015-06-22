@@ -1,7 +1,8 @@
 #include "sounds.h"
 
 Sounds::Sounds():
-	munch_toggle(true){
+	munch_toggle(true),
+	eat_ghost_cnt(0) {
 	int audio_rate = 44100;
 	Uint16 audio_format = AUDIO_S16SYS;
 	int audio_channels = 2;
@@ -57,6 +58,11 @@ Sounds::Sounds():
 	if(chunk_eat_ghost == NULL) {
 		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
 	}
+	getFilePath(filePath, "sounds/ghost_eat_1.wav");	
+	music_eat_ghost = Mix_LoadMUS(filePath);
+	if(music_eat_ghost == NULL) {
+		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
+	}	
 }
 
 Sounds::~Sounds() {
@@ -67,6 +73,7 @@ Sounds::~Sounds() {
 	Mix_FreeMusic(music_intro);
 	Mix_FreeMusic(music_siren_slow);
 	Mix_FreeMusic(music_superpill_loop);
+	Mix_FreeMusic(music_eat_ghost);
 	Mix_FreeChunk(chunk_extra_man);
 	Mix_FreeChunk(chunk_dying);
 	Mix_FreeChunk(chunk_fruit);
@@ -103,6 +110,25 @@ void Sounds::superpill_start() {
 	if(!Mix_PlayingMusic())
 		if((Mix_PlayMusic(music_superpill_loop, -1)) == -1)
 			fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+}
+
+void Sounds::eat_ghost_start() {
+	if(!eat_ghost_cnt++) {
+		this->music_stop(); 
+		if((Mix_PlayMusic(music_eat_ghost, -1)) == -1)
+			fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+	}
+}
+
+void Sounds::eat_ghost_stop(bool force) {
+	if(force)
+		eat_ghost_cnt = 0;
+	else if(eat_ghost_cnt == 1) {
+		--eat_ghost_cnt;
+		this->music_stop();
+		this->superpill_start();
+	} else
+		--eat_ghost_cnt;
 }
 
 void Sounds::music_stop() {

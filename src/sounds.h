@@ -16,7 +16,7 @@ class Sounds {
 		void siren_start();
 		void superpill_start();
 		void eat_ghost_start();
-		void eat_ghost_stop(bool force);
+		void eat_ghost_stop();
 		void music_stop();
 		void playSingleSound(SingleSounds singlesounds);
 	protected:

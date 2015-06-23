@@ -357,7 +357,7 @@ void Labyrinth::startHuntingMode() {
 void Labyrinth::stopHuntingMode() {
 	this->cnt_hunting_mode = -1;
 	this->bonus_stage = 200;
-	this->getSounds()->eat_ghost_stop(true);
+	this->getSounds()->eat_ghost_stop();
 	this->sounds->music_stop();
 }
 

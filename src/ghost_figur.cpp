@@ -283,7 +283,7 @@ void Ghost::move_on_rails(int ms, Rail **ar_s) {
 			// make an eyes-only ghost normal again
 			if (get_hunter() == NONE) {
 				set_hunter(GHOST);
-				this->labyrinth->getSounds()->eat_ghost_stop(false);
+				this->labyrinth->getSounds()->eat_ghost_stop();
 			}
 		} else if (this->up_down) {
 			sammel_richtung[sammel_counter] = ((old_dir==UP) ? DOWN : UP);

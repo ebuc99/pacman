@@ -120,10 +120,8 @@ void Sounds::eat_ghost_start() {
 	}
 }
 
-void Sounds::eat_ghost_stop(bool force) {
-	if(force)
-		eat_ghost_cnt = 0;
-	else if(eat_ghost_cnt > 0) {
+void Sounds::eat_ghost_stop() {
+	if(eat_ghost_cnt > 0) {
 		if(!--eat_ghost_cnt) {
 			this->music_stop();
 			this->superpill_start();
@@ -134,6 +132,7 @@ void Sounds::eat_ghost_stop(bool force) {
 void Sounds::music_stop() {
 	if(Mix_PlayingMusic()) 
 		Mix_HaltMusic();
+	eat_ghost_cnt = 0;
 }
 
 void Sounds::pause_all() {

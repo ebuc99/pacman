@@ -113,7 +113,7 @@ void Sounds::superpill_start() {
 }
 
 void Sounds::eat_ghost_start() {
-	if(!eat_ghost_cnt++) {
+	if(eat_ghost_cnt) {
 		this->music_stop(); 
 		if((Mix_PlayMusic(music_eat_ghost, -1)) == -1)
 			fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
@@ -155,8 +155,10 @@ void Sounds::playSingleSound(SingleSounds singlesounds) {
 		channel = Mix_PlayChannel(-1, chunk_extra_man, 0);
 	else if(singlesounds == FRUIT)
 		channel = Mix_PlayChannel(-1, chunk_fruit, 0);
-	else if(singlesounds == EAT_GHOST)
+	else if(singlesounds == EAT_GHOST) {
 		channel = Mix_PlayChannel(-1, chunk_eat_ghost, 0);
+		++eat_ghost_cnt;
+	}
 	else
 		return;
 	

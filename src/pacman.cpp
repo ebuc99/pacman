@@ -314,6 +314,7 @@ int main(int argc, char *argv[]) {
 				pinky->setVisibility(true);
 				inky->setVisibility(true);
 				clyde->setVisibility(true);
+				labyrinth->getSounds()->eat_ghost_start();
 			}
 		}
 

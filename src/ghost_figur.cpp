@@ -418,7 +418,6 @@ bool Ghost::touched() {
 		this->labyrinth->increaseBonusStage();
 		this->labyrinth->sleep(400);
 		this->labyrinth->playEatGhost();
-		this->labyrinth->getSounds()->eat_ghost_start();
 	}
 	if(this->get_hunter() == NONE)
 		return false;  // no problem for pacman

@@ -368,7 +368,7 @@ void Pacman::check_eat_pills(Figur **ghost_array) {
 			this->set_speed(PACMAN_V_FAST); // make pacman fast again
 
 		// fruit eaten?
-		if(labyrinth->fruitIsDisplayed() && this->y == 257 && (this->x>=310 && this->last_x<=310 || this->x<=310 && this->last_x>=310)) {
+		if(labyrinth->fruitIsDisplayed() && this->y == 257 && ((this->x>=310 && this->last_x<=310) || (this->x<=310 && this->last_x>=310))) {
 			labyrinth->playSoundFruit();
 			labyrinth->hideFruit();
 			labyrinth->addScore(labyrinth->getFruitBonus(), 310 + 10, 257 + 10);

@@ -18,12 +18,16 @@ You have to compile the Linux version on your own. For this, you'll need
 * sdl-ttf
 * and sdl-mixer.
 
-Then, download the zip file or clone the pacman repository. Inside the pacman directory,
-1. prepare the compilation: `./configure`
-2. compile the game: `make`
-3. install the game: `make install`
+Then, download and extract the zip file or clone the pacman repository.
+Inside the pacman directory, run
+```
+./configure
+make
+make install
+```
+For more detailed instructions, you may also have a look at the [INSTALL](https://github.com/ebuc99/pacman/blob/master/INSTALL) file.
 
-You should now be able to start the game via command line: `pacman`
+After a successful installation, you should be able to start the game via command line: `pacman`
 
 
 ## License ##

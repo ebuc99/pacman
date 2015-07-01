@@ -114,7 +114,7 @@ int Figur::greatest(int a, int b) {
 	return (a > b) ? a : b;
 }
 
-SDL_Surface* Figur::LoadSurface(const char *filename, int transparent_color = -1) {
+/*SDL_Surface* Figur::LoadSurface(const char *filename, int transparent_color = -1) {
 	SDL_Surface *surface, *temp;
 	temp = IMG_Load(filename);
 	if(!temp) {
@@ -130,7 +130,7 @@ SDL_Surface* Figur::LoadSurface(const char *filename, int transparent_color = -1
         }
     SDL_FreeSurface(temp);
     return surface;	
-}
+}*/
 
 void Figur::reset() {
 }

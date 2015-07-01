@@ -32,7 +32,9 @@ pacman_SOURCES =  \
 	sounds.h \
 	sounds.cpp \
 	platform.h \
-	platform.cpp
+	platform.cpp \
+	menu.h \
+	menu.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \

@@ -24,9 +24,6 @@ class Labyrinth {
 		    *s80, *s81, *s82, *s83, *s84, *s85, *s86, *s87, *s88, *s89,
 		    *s90;
 		SDL_Surface *pille, *superpille, *ar_superpille[5];
-		//very bad, because the same method is in figur (and pacman)
-		// it must be in a basic class in future
-		SDL_Surface *LoadSurface(const char *filename, int transparent_color = -1);
 		Sounds *sounds;
 		int punktestand;
 		int bonus_stage; //200, 400, 800, 1600

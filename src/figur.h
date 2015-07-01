@@ -91,7 +91,7 @@ class Figur {
 		int initial_y;
 		int initial_v;
 		int last_speed;
-		SDL_Surface *LoadSurface(const char *filename, int transparent_color);
+		//SDL_Surface *LoadSurface(const char *filename, int transparent_color);
 		Labyrinth *labyrinth;
 		Screen *screen;
 		Hunter hunter;

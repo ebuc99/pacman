@@ -44,6 +44,7 @@ class Screen {
 		// draw a horizontal or vertical line using the specified color
 		void drawHorizontalLine(int x1, int x2, int y, Uint8 r, Uint8 g, Uint8 b);
 		void drawVerticalLine(int x, int y1, int y2, Uint8 r, Uint8 g, Uint8 b);
+		SDL_Surface *LoadSurface(const char *filename, int transparent_color = -1);
 	private:
 		SDL_Rect rects[200];
 		int rect_num;

@@ -182,17 +182,17 @@ Labyrinth::Labyrinth(Screen *screen):
 
 	char filePath[256];
 	getFilePath(filePath, "gfx/pille.png");
-	pille = this->LoadSurface(filePath, 0);
+	pille = screen->LoadSurface(filePath, 0);
 	getFilePath(filePath, "gfx/superpille_1.png");
-	ar_superpille[0] = this->LoadSurface(filePath, 0);
+	ar_superpille[0] = screen->LoadSurface(filePath, 0);
 	getFilePath(filePath, "gfx/superpille_2.png");
-	ar_superpille[1] = this->LoadSurface(filePath, 0);
+	ar_superpille[1] = screen->LoadSurface(filePath, 0);
 	getFilePath(filePath, "gfx/superpille_3.png");
-	ar_superpille[2] = this->LoadSurface(filePath, 0);
+	ar_superpille[2] = screen->LoadSurface(filePath, 0);
 	getFilePath(filePath, "gfx/superpille_3.png");
-	ar_superpille[3] = this->LoadSurface(filePath, 0);
+	ar_superpille[3] = screen->LoadSurface(filePath, 0);
 	getFilePath(filePath, "gfx/superpille_2.png");
-	ar_superpille[4] = this->LoadSurface(filePath, 0);
+	ar_superpille[4] = screen->LoadSurface(filePath, 0);
 	superpille = ar_superpille[cnt_pill_animation];
 
 	textweiss.r = textweiss.g = textweiss.b = 255;
@@ -315,24 +315,6 @@ void Labyrinth::pill_animation() {
 	else
 		cnt_pill_animation++;
 	superpille = ar_superpille[cnt_pill_animation];
-}
-
-SDL_Surface *Labyrinth::LoadSurface(const char *filename, int transparent_color) {
-	SDL_Surface *surface, *temp;
-	temp = IMG_Load(filename);
-	if(!temp) {
-		printf("Unable to load image: %s\n", IMG_GetError());
-		exit(-1);
-	}
-	if(transparent_color != -1)
-		SDL_SetColorKey(temp, SDL_SRCCOLORKEY | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, (uint8_t)transparent_color, (uint8_t)transparent_color, (uint8_t)transparent_color));
-	surface = SDL_DisplayFormat(temp);
-	if(surface == NULL) {
-		printf("Unable to convert image to display format: %s\n", SDL_GetError());
-                exit(EXIT_FAILURE);
-        }
-    SDL_FreeSurface(temp);
-    return surface;	
 }
 
 void Labyrinth::compute_score() {
@@ -518,7 +500,7 @@ void Labyrinth::setLevel(int level) {
 			setFruitBonus(5000);
 			getFilePath(fruit_file, "gfx/key.png");
 	};
-	infoFruit = LoadSurface(fruit_file, 255);
+	infoFruit = screen->LoadSurface(fruit_file, 255);
 	fruit = NULL;
 	drawInfoFruit();
 	screen->AddUpdateRects(525, 430, infoFruit->w, infoFruit->h);

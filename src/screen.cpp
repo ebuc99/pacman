@@ -119,3 +119,20 @@ void Screen::drawVerticalLine(int x, int y1, int y2, Uint8 r, Uint8 g, Uint8 b) 
 		SDL_UnlockSurface(this->screen_surface);
 }
 
+SDL_Surface *Screen::LoadSurface(const char *filename, int transparent_color) {
+	SDL_Surface *surface, *temp;
+	temp = IMG_Load(filename);
+	if(!temp) {
+		printf("Unable to load image: %s\n", IMG_GetError());
+		exit(-1);
+	}
+	if(transparent_color != -1)
+		SDL_SetColorKey(temp, SDL_SRCCOLORKEY | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, (uint8_t)transparent_color, (uint8_t)transparent_color, (uint8_t)transparent_color));
+	surface = SDL_DisplayFormat(temp);
+	if(surface == NULL) {
+		printf("Unable to convert image to display format: %s\n", SDL_GetError());
+                exit(EXIT_FAILURE);
+        }
+    SDL_FreeSurface(temp);
+    return surface;	
+}

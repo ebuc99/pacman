@@ -95,7 +95,7 @@ am_pacman_OBJECTS = pacman-figur.$(OBJEXT) \
 	pacman-pacman_figur.$(OBJEXT) pacman-pille.$(OBJEXT) \
 	pacman-labyrinth.$(OBJEXT) pacman-screen.$(OBJEXT) \
 	pacman-rail.$(OBJEXT) pacman-sounds.$(OBJEXT) \
-	pacman-platform.$(OBJEXT)
+	pacman-platform.$(OBJEXT) pacman-menu.$(OBJEXT)
 pacman_OBJECTS = $(am_pacman_OBJECTS)
 am__DEPENDENCIES_1 =
 pacman_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -298,7 +298,9 @@ pacman_SOURCES = \
 	sounds.h \
 	sounds.cpp \
 	platform.h \
-	platform.cpp
+	platform.cpp \
+	menu.h \
+	menu.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \
@@ -418,6 +420,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-figur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-ghost_figur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-labyrinth.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-menu.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-pacman.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-pacman_figur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-pille.Po@am__quote@
@@ -579,6 +582,20 @@ pacman-platform.obj: platform.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='platform.cpp' object='pacman-platform.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-platform.obj `if test -f 'platform.cpp'; then $(CYGPATH_W) 'platform.cpp'; else $(CYGPATH_W) '$(srcdir)/platform.cpp'; fi`
+
+pacman-menu.o: menu.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-menu.o -MD -MP -MF $(DEPDIR)/pacman-menu.Tpo -c -o pacman-menu.o `test -f 'menu.cpp' || echo '$(srcdir)/'`menu.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-menu.Tpo $(DEPDIR)/pacman-menu.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menu.cpp' object='pacman-menu.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-menu.o `test -f 'menu.cpp' || echo '$(srcdir)/'`menu.cpp
+
+pacman-menu.obj: menu.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-menu.obj -MD -MP -MF $(DEPDIR)/pacman-menu.Tpo -c -o pacman-menu.obj `if test -f 'menu.cpp'; then $(CYGPATH_W) 'menu.cpp'; else $(CYGPATH_W) '$(srcdir)/menu.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-menu.Tpo $(DEPDIR)/pacman-menu.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menu.cpp' object='pacman-menu.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-menu.obj `if test -f 'menu.cpp'; then $(CYGPATH_W) 'menu.cpp'; else $(CYGPATH_W) '$(srcdir)/menu.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

@@ -13,6 +13,8 @@ class Menu {
 		SDL_Color textweiss = {255, 255, 255, 0};
 		int eventloop();
 		SDL_Surface *headline;
+		SDL_Surface *selection[3];
 		TTF_Font *bigFont;
+		TTF_Font *normalFont;
 };
 #endif

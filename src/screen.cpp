@@ -136,3 +136,7 @@ SDL_Surface *Screen::LoadSurface(const char *filename, int transparent_color) {
     SDL_FreeSurface(temp);
     return surface;	
 }
+
+void Screen::clear() {
+	SDL_FillRect(this->screen_surface, NULL, SDL_MapRGB(this->screen_surface->format, 0, 0, 0));
+}

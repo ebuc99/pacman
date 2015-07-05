@@ -613,3 +613,7 @@ void Labyrinth::playEatGhost() {
 Sounds* Labyrinth::getSounds() {
 	return sounds;
 }
+
+void Labyrinth::resetScore() {
+	punktestand = 0;
+}

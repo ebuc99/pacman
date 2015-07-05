@@ -15,6 +15,14 @@ Menu::Menu(Screen *screen) {
 	selection[0] = TTF_RenderText_Solid(this->normalFont, "Start Game", this->textweiss);
 	selection[1] = TTF_RenderText_Solid(this->normalFont, "Controls", this->textweiss);
 	selection[2] = TTF_RenderText_Solid(this->normalFont, "About", this->textweiss);
+	draw(screen);
+}
+
+Menu::~Menu() {
+	TTF_CloseFont(bigFont);
+}
+void Menu::draw(Screen *screen) {
+	screen->clear();
 	screen->draw_dynamic_content(headline, 200, 50);
 	screen->draw_dynamic_content(selection[0], 240, 300);
 	screen->draw_dynamic_content(selection[1], 260, 350);
@@ -23,14 +31,14 @@ Menu::Menu(Screen *screen) {
 	screen->Refresh();
 }
 
-Menu::~Menu() {
-	TTF_CloseFont(bigFont);
-}
-
 int Menu::show() {
-	while(eventloop())
+	int event;
+	while(!(event = eventloop()))
 		SDL_Delay(30);
-	return 1;
+	if(event == 1)
+		return 1;
+	else //quit
+		return 0;
 }
 
 int Menu::eventloop() {
@@ -39,10 +47,11 @@ int Menu::eventloop() {
 		switch(event.type) {
 		case SDL_KEYDOWN:
 				if(event.key.keysym.sym == SDLK_RETURN)
-					return 0;
+					return 1;
+				break;
 		case SDL_QUIT:
-				return 0;
+				return 2;
 		}
 	}
-	return 1;
+	return 0;
 }

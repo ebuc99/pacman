@@ -422,3 +422,7 @@ int Pacman::getRemainingLives() {
 	return remainingLives;
 }
 
+void Pacman::setRemainingLives(int lives) {
+	remainingLives = lives;
+}
+

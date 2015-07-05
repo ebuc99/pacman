@@ -70,6 +70,7 @@ class Game {
 		TTF_Font *font, *smallFont;
 		SDL_Color textweiss = {255, 255, 255, 0};
 		int numberGhosts;
+		int gameOver;
 	public:
 		Game(Screen *screen, Pacman *pacman, Ghost *ghosts[], Figur *ghosts_figur[], Labyrinth *labyrinth);
 		~Game();
@@ -79,11 +80,13 @@ class Game {
 		void start();
 		/* stop all figures */
 		void stop(uint16_t stop);
-
+		void setGameOver(int gameOver);
+		int isGameOver();
 };
 
 Game::Game(Screen *screen, Pacman *pacman, Ghost *ghosts[], Figur *ghosts_figur[], Labyrinth *labyrinth):
-	numberGhosts(4) {
+	numberGhosts(4),
+	gameOver(0) {
 	this->screen = screen;
 	this->pacman = pacman;
 	this->ghosts = ghosts;
@@ -124,10 +127,17 @@ void Game::init() {
 	labyrinth->setInitText("Get Ready!");
 	labyrinth->startFruitRandomizer(true);
 	labyrinth->setLevel(1);
-	pacman->draw();
+	pacman->setVisibility(1);
 	int i;
 	for(i = 0; i < numberGhosts; ++i)
+		ghosts[i]->setVisibility(1);
+	pacman->draw();
+	for(i = 0; i < numberGhosts; ++i)
 		ghosts[i]->draw();
+	reset_all(pacman, ghosts);
+	pacman->setRemainingLives(INITIAL_LIVES);
+	labyrinth->resetScore();
+	setGameOver(0);
 	screen->draw(score, 530, 30);
 	pacman->drawLives();
 	screen->AddUpdateRects(0, 0, background->w, background->h);
@@ -154,6 +164,8 @@ int Game::eventloop(bool allowPacmanControl, int *neededTime) {
 	while(SDL_PollEvent(&event)) {
 		switch(event.type) {
 		case SDL_KEYDOWN:
+			if(isGameOver())
+					return 0;
 			if(allowPacmanControl && !pacman->is_dying() && !pause) {
 				if(event.key.keysym.sym == SDLK_LEFT)
 					pacman->direction_pre = Figur::LEFT;
@@ -208,6 +220,16 @@ void Game::stop(uint16_t stop) {
 	}
 }
 
+void Game::setGameOver(int gameOver) {
+	this->gameOver = gameOver;
+	if(gameOver)
+		labyrinth->setInitText("Game over", RED);
+}
+
+int Game::isGameOver() {
+	return this->gameOver;
+}
+
 void Game::start() {
 	int loop = 1;
 	int start_offset = START_OFFSET;
@@ -243,7 +265,7 @@ void Game::start() {
 					stop(true);
 					pacman->addLives(-1);
 					if (pacman->getRemainingLives() <= 0) {
-						labyrinth->setInitText("Game over", RED);
+						setGameOver(1);
 						start_offset = -1;  // do not start again
 						pacman->setVisibility(0);  // Pacman does not exist anymore
 						for(i = 0; i < numberGhosts; ++i)
@@ -426,9 +448,12 @@ int main(int argc, char *argv[]) {
 	
 	Game *game = new Game(screen, pacman, ghost_array_ghost, ghost_array, labyrinth);
 	Menu *menu = new Menu(screen);
-	menu->show();
-	game->init();
-	game->start();
+	//menu->show();
+	while(menu->show()) {
+		game->init();
+		game->start();
+		menu->draw(screen);
+	}
 
 	delete pacman;
 	delete blinky;

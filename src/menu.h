@@ -8,7 +8,8 @@ class Menu {
 	public:
 		Menu(Screen *screen);
 		~Menu();
-		int show();	
+		void draw(Screen *screen);
+		int show();
 	private:
 		SDL_Color textweiss = {255, 255, 255, 0};
 		int eventloop();

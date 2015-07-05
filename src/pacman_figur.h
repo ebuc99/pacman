@@ -60,8 +60,12 @@ class Pacman : public Figur {
 
 		// Add lives. num should be -1 if pacman died, 1 if a bonus life is granted
 		void addLives(int num);
+
 		// returns the remaining number of lives
 		int getRemainingLives();
+
+		// set the lives
+		void setRemainingLives(int lives);
 
 	private:
 		static const int PACMAN_V_FAST = 100;   // pacman's speed when not eating

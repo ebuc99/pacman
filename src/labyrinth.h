@@ -167,5 +167,7 @@ class Labyrinth {
 
 		// Return indexes of the Rails from the specified point (x,y), -1 if there is no such rail.
 		void getRailsForPoint(int x, int y, int *left, int *right, int *up, int *down);
+
+		void resetScore();
 };
 #endif

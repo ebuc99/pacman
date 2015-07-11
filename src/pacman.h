@@ -5,7 +5,7 @@
 #include <SDL/SDL_ttf.h>
 #include "ghost_figur.h"
 #include "pacman_figur.h"
-#include "menu.h"
+#include "menu_main.h"
 
 
 #endif

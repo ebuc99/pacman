@@ -29,6 +29,12 @@ class Pacman : public Figur {
 		
 		// moves a ghost on the defined rails
 		void move_on_rails(int ms, Rail **ar_s);
+
+		// four directions for movement
+		void move_left(int ms, int stop_at = 999);
+		void move_up(int ms, int stop_at = 999);
+		void move_right(int ms, int stop_at = 999);
+		void move_down(int ms, int stop_at = 999);
 		
 		// returns whether pacman has stopped
 		int is_pacman_stopped();
@@ -66,16 +72,11 @@ class Pacman : public Figur {
 
 		// set the lives
 		void setRemainingLives(int lives);
-
+		
 	private:
 		static const int PACMAN_V_FAST = 100;   // pacman's speed when not eating
 		static const int PACMAN_V_SLOW = 90;    // pacman's speed while eating
 		static const uint16_t WECHSEL_RATE = 7; // load a new image for pacman after a movement of this number of pixels
-		// four directions for movement
-		void move_left(int ms, int stop_at = 999);
-		void move_up(int ms, int stop_at = 999);
-		void move_right(int ms, int stop_at = 999);
-		void move_down(int ms, int stop_at = 999);
 		int pacman_stopped; 
 		int animation;
 		int cnt_animation;

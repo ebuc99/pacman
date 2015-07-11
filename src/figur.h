@@ -55,6 +55,9 @@ class Figur {
 		// sets the direction of movement
 		void set_direction(Direction direction);
 
+		// sets the position of the figure
+		void set_position(int new_x, int new_y);
+
 		// start/stop the figure
 		void set_stop(int stop);
 

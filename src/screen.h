@@ -46,6 +46,9 @@ class Screen {
 		void drawVerticalLine(int x, int y1, int y2, Uint8 r, Uint8 g, Uint8 b);
 		SDL_Surface *LoadSurface(const char *filename, int transparent_color = -1);
 		void clear();
+
+		// draw a filled rectangle
+		void fillRect(SDL_Rect *rect, Uint8 r, Uint8 g, Uint8 b);
 	private:
 		SDL_Rect rects[200];
 		int rect_num;

@@ -127,6 +127,7 @@ void Game::init() {
 	labyrinth->setInitText("Get Ready!");
 	labyrinth->startFruitRandomizer(true);
 	labyrinth->setLevel(1);
+	reset_all(pacman, ghosts);
 	pacman->setVisibility(1);
 	int i;
 	for(i = 0; i < numberGhosts; ++i)
@@ -134,7 +135,6 @@ void Game::init() {
 	pacman->draw();
 	for(i = 0; i < numberGhosts; ++i)
 		ghosts[i]->draw();
-	reset_all(pacman, ghosts);
 	pacman->setRemainingLives(INITIAL_LIVES);
 	labyrinth->resetScore();
 	setGameOver(0);
@@ -194,6 +194,7 @@ int Game::eventloop(bool allowPacmanControl, int *neededTime) {
 			}
 			break;
 		case SDL_QUIT:
+			this->stop(1);
 			return 0;
 		}		
 	}
@@ -447,7 +448,7 @@ int main(int argc, char *argv[]) {
 	clyde->setGhostArray(ghost_array_ghost);
 	
 	Game *game = new Game(screen, pacman, ghost_array_ghost, ghost_array, labyrinth);
-	Menu *menu = new Menu(screen);
+	Menu *menu = new Menu(screen, pacman);
 	//menu->show();
 	while(menu->show()) {
 		game->init();

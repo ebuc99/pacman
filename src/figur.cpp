@@ -95,6 +95,14 @@ void Figur::set_direction(Direction direction) {
 	this->direction = direction;
 }
 
+void Figur::set_position(int new_x, int new_y) {
+	last_x = x;
+	last_y = y;
+	x = new_x;
+	y = new_y;
+	cur_x = new_x << 10;
+	cur_y = new_y << 10;
+}
 
 void Figur::set_stop(int stop) {
 	if(stop){

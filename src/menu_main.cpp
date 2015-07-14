@@ -1,51 +1,52 @@
 #include "menu_main.h"
 
-Menu::Menu(Screen *screen, Pacman *pacman):
+MenuMain::MenuMain(Screen *screen, Pacman *pacman):
 	selection(0){
-	this->screen = screen;
-	this->pacman = pacman;
-	char filePath[256];
-	getFilePath(filePath, "fonts/Cheapmot.TTF");
-	font = TTF_OpenFont(filePath, 20);
-	if(!font) {
-		printf("Unable to open TTF font: %s\n", TTF_GetError());
-	}
-	largeFont = TTF_OpenFont(filePath, 24);
-	if (!largeFont) {
-		printf("Unable to open TTF font: %s\n", TTF_GetError());
-	}
-	veryLargeFont = TTF_OpenFont(filePath, 48);
-	if (!veryLargeFont) {
-		printf("Unable to open TTF font: %s\n", TTF_GetError());
-	}
-	hugeFont = TTF_OpenFont(filePath, 96);
-	if (!hugeFont) {
-		printf("Unable to open TTF font: %s\n", TTF_GetError());
-	}
-	appTitle1 = TTF_RenderText_Solid(hugeFont, "Pa", textweiss);
-	appTitle2 = TTF_RenderText_Solid(hugeFont, "man", textweiss);
-	getFilePath(filePath, "gfx/title_pacman.png");
-    titlePacman = screen->LoadSurface(filePath, 0);
-	menu = new SDL_Surface*[NUM_MENU_ENTRIES];
-	menu_sel = new SDL_Surface*[NUM_MENU_ENTRIES];
-	menu[0] = TTF_RenderText_Solid(font, "Start Game", textgray);
-	menu_sel[0] = TTF_RenderText_Solid(largeFont, "Start Game", textweiss);
-	menu[1] = TTF_RenderText_Solid(font, "Options", textgray);
-	menu_sel[1] = TTF_RenderText_Solid(largeFont, "Options", textweiss);
-	menu[2] = TTF_RenderText_Solid(font, "About", textgray);
-	menu_sel[2] = TTF_RenderText_Solid(largeFont, "About", textweiss);
-	menu[3] = TTF_RenderText_Solid(font, "Quit", textgray);
-	menu_sel[3] = TTF_RenderText_Solid(largeFont, "Quit", textweiss);
-	for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
-		menu_entry_rects[i].x = (short int) (320 - (menu_sel[i]->w >> 1));
-		menu_entry_rects[i].y = (short int) (325 + i*35 - (menu_sel[i]->h >> 1));
-		menu_entry_rects[i].w = (short int) menu_sel[i]->w;
-		menu_entry_rects[i].h = (short int) menu_sel[i]->h;
-	}
-	draw(screen);
+		this->screen = screen;
+		this->pacman = pacman;
+		char filePath[256];
+		getFilePath(filePath, "fonts/Cheapmot.TTF");
+		font = TTF_OpenFont(filePath, 20);
+		if(!font) {
+			printf("Unable to open TTF font: %s\n", TTF_GetError());
+		}
+		largeFont = TTF_OpenFont(filePath, 24);
+		if (!largeFont) {
+			printf("Unable to open TTF font: %s\n", TTF_GetError());
+		}
+		veryLargeFont = TTF_OpenFont(filePath, 48);
+		if (!veryLargeFont) {
+			printf("Unable to open TTF font: %s\n", TTF_GetError());
+		}
+		hugeFont = TTF_OpenFont(filePath, 96);
+		if (!hugeFont) {
+			printf("Unable to open TTF font: %s\n", TTF_GetError());
+		}
+		appTitle1 = TTF_RenderText_Solid(hugeFont, "Pa", textweiss);
+		appTitle2 = TTF_RenderText_Solid(hugeFont, "man", textweiss);
+		getFilePath(filePath, "gfx/title_pacman.png");
+		titlePacman = screen->LoadSurface(filePath, 0);
+		menu = new SDL_Surface*[NUM_MENU_ENTRIES];
+		menu_sel = new SDL_Surface*[NUM_MENU_ENTRIES];
+		menu[0] = TTF_RenderText_Solid(font, "Start Game", textgray);
+		menu_sel[0] = TTF_RenderText_Solid(largeFont, "Start Game", textweiss);
+		menu[1] = TTF_RenderText_Solid(font, "Options", textgray);
+		menu_sel[1] = TTF_RenderText_Solid(largeFont, "Options", textweiss);
+		menu[2] = TTF_RenderText_Solid(font, "About", textgray);
+		menu_sel[2] = TTF_RenderText_Solid(largeFont, "About", textweiss);
+		menu[3] = TTF_RenderText_Solid(font, "Quit", textgray);
+		menu_sel[3] = TTF_RenderText_Solid(largeFont, "Quit", textweiss);
+		for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
+			menu_entry_rects[i].x = (short int) (320 - (menu_sel[i]->w >> 1));
+			menu_entry_rects[i].y = (short int) (325 + i*35 - (menu_sel[i]->h >> 1));
+			menu_entry_rects[i].w = (short int) menu_sel[i]->w;
+			menu_entry_rects[i].h = (short int) menu_sel[i]->h;
+		}
+		menuoptions = new MenuOptions(this->screen);
+		draw();
 }
 
-Menu::~Menu() {
+MenuMain::~MenuMain() {
 	SDL_FreeSurface(appTitle1);
 	SDL_FreeSurface(appTitle2);
 	SDL_FreeSurface(titlePacman);
@@ -55,8 +56,9 @@ Menu::~Menu() {
 	TTF_CloseFont(hugeFont);
 	delete[] menu;
 	delete[] menu_sel;
+	delete menuoptions;
 }
-void Menu::draw(Screen *screen) {
+void MenuMain::draw() {
 	screen->clear();
 	SDL_Rect rect;
 	rect.x = 0;
@@ -74,7 +76,7 @@ void Menu::draw(Screen *screen) {
 	screen->Refresh();
 }
 
-int Menu::show() {
+int MenuMain::show() {
 	int event;
 	SDL_Rect animRect;
 	animRect.x = 0;
@@ -114,7 +116,7 @@ int Menu::show() {
 		return 0;
 }
 
-int Menu::eventloop() {
+int MenuMain::eventloop() {
 	SDL_Event event;
 	while(SDL_PollEvent(&event)) {
 		switch(event.type) {
@@ -122,6 +124,11 @@ int Menu::eventloop() {
 				if(event.key.keysym.sym == SDLK_RETURN) {
 					if(selection == 0)
 						return 1;
+					else if (selection == 1) {
+						menuoptions->draw();
+						menuoptions->show();
+						this->draw();
+					}
 					else if (selection == 3)
 						return 2;
 				}
@@ -141,7 +148,7 @@ int Menu::eventloop() {
 	return 0;
 }
 
-void Menu::setEntrySelection(int selection) {
+void MenuMain::setEntrySelection(int selection) {
 	for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
 		screen->fillRect(&menu_entry_rects[i], 0, 0, 0);
 		if(selection == i)

@@ -448,12 +448,12 @@ int main(int argc, char *argv[]) {
 	clyde->setGhostArray(ghost_array_ghost);
 	
 	Game *game = new Game(screen, pacman, ghost_array_ghost, ghost_array, labyrinth);
-	Menu *menu = new Menu(screen, pacman);
+	MenuMain *menu = new MenuMain(screen, pacman);
 	//menu->show();
 	while(menu->show()) {
 		game->init();
 		game->start();
-		menu->draw(screen);
+		menu->draw();
 	}
 
 	delete pacman;

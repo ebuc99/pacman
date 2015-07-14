@@ -1,16 +1,17 @@
-#ifndef MENU_H
-#define MENU_H
+#ifndef MENU_MAIN_H
+#define MENU_MAIN_H
 #include "screen.h"
 #include "platform.h"
 #include "pacman_figur.h"
 #include "ghost_figur.h"
+#include "menu_options.h"
 #include <SDL/SDL_ttf.h>
 
-class Menu {
+class MenuMain {
 	public:
-		Menu(Screen *screen, Pacman *pacman);
-		~Menu();
-		void draw(Screen *screen);
+		MenuMain(Screen *screen, Pacman *pacman);
+		~MenuMain();
+		void draw();
 		int show();
 	private:
 		static const int NUM_MENU_ENTRIES = 4;
@@ -25,6 +26,7 @@ class Menu {
 		SDL_Color textcyan    = {  0, 255, 255, 0};
 		SDL_Color textorange  = {255, 127,   0, 0};
 		Screen *screen;
+		MenuOptions *menuoptions;
 		Pacman *pacman;
 		int eventloop();
 		int idxAnimation, animationPart = 0, animationTime, lastAnimTime, animWaitUntil = 0;

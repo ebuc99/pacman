@@ -11,7 +11,7 @@ Screen::Screen() {
     }
 	atexit(SDL_Quit);
 	atexit(SDL_CloseAudio);
-	this->screen_surface = SDL_SetVideoMode(680, 512, 24, SDL_HWSURFACE);
+	this->screen_surface = SDL_SetVideoMode(640, 480, 24, SDL_HWSURFACE);
     if(this->screen_surface == 0) {
         printf("Setting video mode failed: %s\n",SDL_GetError());
         this->sdl_init_error = EXIT_FAILURE;

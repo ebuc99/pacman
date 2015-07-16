@@ -2,11 +2,12 @@
 #define MENU_OPTIONS
 #include "screen.h"
 #include "platform.h"
+#include "labyrinth.h"
 #include <SDL/SDL_ttf.h>
 
 class MenuOptions {
 	public:
-		MenuOptions(Screen *screen);
+		MenuOptions(Screen *screen, Labyrinth *labyrinth);
 		~MenuOptions();
 		void draw();
 		int show();
@@ -21,6 +22,7 @@ class MenuOptions {
 		SDL_Color textcyan    = {  0, 255, 255, 0};
 		SDL_Color textorange  = {255, 127,   0, 0};
 		Screen *screen;
+		Labyrinth *labyrinth;
 		int eventloop();
 		SDL_Surface *optionsTitle;
 		SDL_Surface **menu, **menu_sel;

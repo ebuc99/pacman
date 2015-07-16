@@ -1,8 +1,9 @@
 #include "menu_options.h"
 
-MenuOptions::MenuOptions(Screen *screen):
+MenuOptions::MenuOptions(Screen *screen, Labyrinth *labyrinth):
 	selection(0) {
 		this->screen = screen;
+		this->labyrinth = labyrinth;
 		char filePath[256];
 		getFilePath(filePath, "fonts/Cheapmot.TTF");
 		font = TTF_OpenFont(filePath, 20);
@@ -38,7 +39,6 @@ MenuOptions::MenuOptions(Screen *screen):
 			options_entry_rects[i].w = (short int) menu_sel[i]->w;
 			options_entry_rects[i].h = (short int) menu_sel[i]->h;
 		}
-		//draw();
 }
 
 MenuOptions::~MenuOptions() {
@@ -62,12 +62,6 @@ void MenuOptions::draw() {
 	rect.w = 640;
 	rect.h = 480;
 	screen->draw(optionsTitle, 320 - (optionsTitle->w >> 1), 50);
-	/*rect.x = (short int) (320 - ((optionsTitle->w + titlePacman->w + appTitle2->w) >> 1));
-	screen->draw(appTitle1, rect.x, 30);
-	rect.x = (short int) (rect.x + appTitle1->w + titlePacman->w);
-	screen->draw(appTitle2, rect.x, 30);
-	rect.x = (short int) (rect.x - titlePacman->w);
-	screen->draw(titlePacman, rect.x, 40);*/
 	setEntrySelection(selection);
 	screen->AddUpdateRects(0, 0, 640, 480);
 	screen->Refresh();
@@ -85,7 +79,18 @@ int MenuOptions::eventloop() {
 		switch(event.type) {
 		case SDL_KEYDOWN:
 				if(event.key.keysym.sym == SDLK_RETURN) {
-					if (selection == 3)
+					if(selection == 0) {
+						labyrinth->getSounds()->toggleEnabled();
+						if (this->labyrinth->getSounds()->isEnabled()) {
+							menu[selection] = options_sound_on;
+							menu_sel[selection] = options_sound_on_sel;
+						} else {
+							menu[selection] = options_sound_off;
+							menu_sel[selection] = options_sound_off_sel;
+						}
+						options_entry_rects[selection].w = (short int) options_sound_off_sel->w; //menu_sel[selection]->w;
+						setEntrySelection(selection);
+					}else if(selection == 3)
 						return 2;
 				}
 				else if(event.key.keysym.sym == SDLK_UP) {

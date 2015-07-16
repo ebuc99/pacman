@@ -9,7 +9,7 @@
 
 class MenuMain {
 	public:
-		MenuMain(Screen *screen, Pacman *pacman);
+		MenuMain(Screen *screen, Pacman *pacman, Labyrinth *labyrinth);
 		~MenuMain();
 		void draw();
 		int show();
@@ -36,5 +36,6 @@ class MenuMain {
 		SDL_Surface **menu, **menu_sel;
 		TTF_Font *font, *largeFont, *veryLargeFont, *hugeFont;
 		int selection;
+		Labyrinth *labyrinth;
 };
 #endif

@@ -1,9 +1,10 @@
 #include "menu_main.h"
 
-MenuMain::MenuMain(Screen *screen, Pacman *pacman):
+MenuMain::MenuMain(Screen *screen, Pacman *pacman, Labyrinth *labyrinth):
 	selection(0){
 		this->screen = screen;
 		this->pacman = pacman;
+		this->labyrinth = labyrinth;
 		char filePath[256];
 		getFilePath(filePath, "fonts/Cheapmot.TTF");
 		font = TTF_OpenFont(filePath, 20);
@@ -42,7 +43,7 @@ MenuMain::MenuMain(Screen *screen, Pacman *pacman):
 			menu_entry_rects[i].w = (short int) menu_sel[i]->w;
 			menu_entry_rects[i].h = (short int) menu_sel[i]->h;
 		}
-		menuoptions = new MenuOptions(this->screen);
+		menuoptions = new MenuOptions(this->screen, this->labyrinth);
 		draw();
 }
 

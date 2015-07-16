@@ -8,6 +8,9 @@ class Sounds {
 	public:
 		Sounds();
 		~Sounds();
+		bool isEnabled() const;
+		void setEnabled(bool newValue = true);
+		void toggleEnabled();
 		enum SingleSounds{DYING, EXTRA_MAN, FRUIT, EAT_GHOST};
 		void pause_all();
 		void resume_all();
@@ -20,6 +23,7 @@ class Sounds {
 		void music_stop();
 		void playSingleSound(SingleSounds singlesounds);
 	protected:
+		bool enabled;
 		Mix_Chunk *chunk_munch_a = NULL;
 		Mix_Chunk *chunk_munch_b = NULL;
 		int channel_munch;

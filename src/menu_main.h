@@ -9,7 +9,7 @@
 
 class MenuMain {
 	public:
-		MenuMain(Screen *screen, Pacman *pacman, Labyrinth *labyrinth);
+		MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *labyrinth);
 		~MenuMain();
 		void draw();
 		int show();
@@ -17,7 +17,7 @@ class MenuMain {
 		static const int NUM_MENU_ENTRIES = 4;
 		static const int MIN_FRAME_DURATION = 30;
 		static const int ANIMATION_WAIT = 3000;
-		static const int NUM_ANIMATIONS = 1; //5;
+		static const int NUM_ANIMATIONS = 2; //5;
 		SDL_Color textweiss = {255, 255, 255, 0};
 		SDL_Color textgray    = {191, 191, 191, 0};
 		SDL_Color textyellow  = {255, 255,   0, 0};
@@ -28,14 +28,17 @@ class MenuMain {
 		Screen *screen;
 		MenuOptions *menuoptions;
 		Pacman *pacman;
+		Ghost **ghosts;
 		int eventloop();
 		int idxAnimation, animationPart = 0, animationTime, lastAnimTime, animWaitUntil = 0;
 		void setEntrySelection(int selection);
 		SDL_Rect menu_entry_rects[NUM_MENU_ENTRIES];
 		SDL_Surface *headline, *appTitle1, *appTitle2, *titlePacman;
 		SDL_Surface **menu, **menu_sel;
-		TTF_Font *font, *largeFont, *veryLargeFont, *hugeFont;
+		SDL_Surface *animScore200, *animScore400, *animScore800, *animScore1600;
+		TTF_Font *font, *smallFont, *largeFont, *veryLargeFont, *hugeFont;
 		int selection;
 		Labyrinth *labyrinth;
+		int handleSelection();
 };
 #endif

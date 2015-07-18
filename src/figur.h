@@ -81,6 +81,9 @@ class Figur {
 		// sets the figure's visibility (e.g. for pacman after eating a ghost or a fruit)
 		void setVisibility(bool v);
 
+		// return the visibility
+		bool isVisible();
+
 	protected:
 		int cur_y;
 		int cur_x;

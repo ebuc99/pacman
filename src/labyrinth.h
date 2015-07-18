@@ -169,5 +169,8 @@ class Labyrinth {
 		void getRailsForPoint(int x, int y, int *left, int *right, int *up, int *down);
 
 		void resetScore();
+
+		// Return the current surface of the superpill
+		SDL_Surface *get_superpill_sf();
 };
 #endif

@@ -617,3 +617,7 @@ Sounds* Labyrinth::getSounds() {
 void Labyrinth::resetScore() {
 	punktestand = 0;
 }
+
+SDL_Surface* Labyrinth::get_superpill_sf() {
+	return superpille;
+}

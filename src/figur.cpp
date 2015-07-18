@@ -159,3 +159,6 @@ void Figur::setVisibility(bool v) {
 		addUpdateRect();
 }
 
+bool Figur::isVisible() {
+	return visible;
+}

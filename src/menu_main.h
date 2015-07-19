@@ -5,6 +5,7 @@
 #include "pacman_figur.h"
 #include "ghost_figur.h"
 #include "menu_options.h"
+#include "menu_about.h"
 #include <SDL/SDL_ttf.h>
 
 class MenuMain {
@@ -27,6 +28,7 @@ class MenuMain {
 		SDL_Color textorange  = {255, 127,   0, 0};
 		Screen *screen;
 		MenuOptions *menuoptions;
+		MenuAbout *menuabout;
 		Pacman *pacman;
 		Ghost **ghosts;
 		int eventloop();

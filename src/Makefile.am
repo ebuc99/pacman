@@ -36,7 +36,9 @@ pacman_SOURCES =  \
 	menu_main.h \
 	menu_main.cpp \
 	menu_options.h \
-	menu_options.cpp
+	menu_options.cpp \
+	menu_about.h \
+	menu_about.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \

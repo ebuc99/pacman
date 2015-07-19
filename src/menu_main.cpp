@@ -53,6 +53,7 @@ MenuMain::MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *l
 			menu_entry_rects[i].h = (short int) menu_sel[i]->h;
 		}
 		menuoptions = new MenuOptions(this->screen, this->labyrinth);
+		menuabout = new MenuAbout(this->screen);
 		draw();
 }
 
@@ -71,6 +72,7 @@ MenuMain::~MenuMain() {
 	delete[] menu;
 	delete[] menu_sel;
 	delete menuoptions;
+	delete menuabout;
 }
 void MenuMain::draw() {
 	screen->clear();
@@ -335,12 +337,17 @@ void MenuMain::setEntrySelection(int selection) {
 int MenuMain::handleSelection() {
 	if(selection == 0)
 			return 1;
-		else if (selection == 1) {
+		else if(selection == 1) {
 			menuoptions->draw();
 			menuoptions->show();
 			this->draw();
 		}
-		else if (selection == 3)
+		else if(selection == 2) {
+			menuabout->draw();
+			menuabout->show();
+			this->draw();
+		}
+		else if(selection == 3)
 			return 2;
 	return 0;
 }

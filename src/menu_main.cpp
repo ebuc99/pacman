@@ -286,7 +286,7 @@ int MenuMain::eventloop() {
 		switch(event.type) {
 		case SDL_KEYDOWN:
 				if(event.key.keysym.sym == SDLK_RETURN)
-					handleSelection();
+					return handleSelection();
 				else if(event.key.keysym.sym == SDLK_UP) {
 					selection = (--selection + NUM_MENU_ENTRIES) % NUM_MENU_ENTRIES;
 					setEntrySelection(selection);

@@ -23,8 +23,8 @@ MenuOptions::MenuOptions(Screen *screen, Labyrinth *labyrinth):
 		options_sound_on_sel = TTF_RenderText_Solid(largeFont, "Sound: on", textweiss);
 		options_sound_off = TTF_RenderText_Solid(font, "Sound: off", textgray);
 		options_sound_off_sel = TTF_RenderText_Solid(largeFont, "Sound: off", textweiss);
-		menu = new SDL_Surface*[NUM_OPTIONS_ENTRIES];
-		menu_sel = new SDL_Surface*[NUM_OPTIONS_ENTRIES];
+		menu = new SDL_Surface*[NUM_MENU_ENTRIES];
+		menu_sel = new SDL_Surface*[NUM_MENU_ENTRIES];
 		menu[0] = options_sound_on;
 		menu_sel[0] = options_sound_on_sel;
 		menu[1] = TTF_RenderText_Solid(font, "Key configuration", textgray);
@@ -33,11 +33,11 @@ MenuOptions::MenuOptions(Screen *screen, Labyrinth *labyrinth):
 		menu_sel[2] = TTF_RenderText_Solid(largeFont, "Screen resolution: 640x480", textweiss);
 		menu[3] = TTF_RenderText_Solid(font, "back", textgray);
 		menu_sel[3] = TTF_RenderText_Solid(largeFont, "back", textweiss);
-		for (int i = 0; i < NUM_OPTIONS_ENTRIES; i++) {
-			options_entry_rects[i].x = (short int) (320 - (menu_sel[i]->w >> 1));
-			options_entry_rects[i].y = (short int) (220 + i*70 - (menu_sel[i]->h >> 1));
-			options_entry_rects[i].w = (short int) menu_sel[i]->w;
-			options_entry_rects[i].h = (short int) menu_sel[i]->h;
+		for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
+			menu_entry_rects[i].x = (short int) (320 - (menu_sel[i]->w >> 1));
+			menu_entry_rects[i].y = (short int) (220 + i*70 - (menu_sel[i]->h >> 1));
+			menu_entry_rects[i].w = (short int) menu_sel[i]->w;
+			menu_entry_rects[i].h = (short int) menu_sel[i]->h;
 		}
 }
 
@@ -79,29 +79,34 @@ int MenuOptions::eventloop() {
 		switch(event.type) {
 		case SDL_KEYDOWN:
 				if(event.key.keysym.sym == SDLK_RETURN) {
-					if(selection == 0) {
-						labyrinth->getSounds()->toggleEnabled();
-						if (this->labyrinth->getSounds()->isEnabled()) {
-							menu[selection] = options_sound_on;
-							menu_sel[selection] = options_sound_on_sel;
-						} else {
-							menu[selection] = options_sound_off;
-							menu_sel[selection] = options_sound_off_sel;
-						}
-						options_entry_rects[selection].w = (short int) options_sound_off_sel->w; //menu_sel[selection]->w;
-						setEntrySelection(selection);
-					}else if(selection == 3)
-						return 2;
+					return handleSelection();
 				}
 				else if(event.key.keysym.sym == SDLK_UP) {
-					selection = (--selection + NUM_OPTIONS_ENTRIES) % NUM_OPTIONS_ENTRIES;
+					selection = (--selection + NUM_MENU_ENTRIES) % NUM_MENU_ENTRIES;
 					setEntrySelection(selection);
 				}
 				else if(event.key.keysym.sym == SDLK_DOWN) {
-					selection = ++selection % NUM_OPTIONS_ENTRIES;
+					selection = ++selection % NUM_MENU_ENTRIES;
 					setEntrySelection(selection);
 				}
 				break;
+		case SDL_MOUSEMOTION:
+			for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
+				if (menu_entry_rects[i].x <= event.motion.x && event.motion.x <= menu_entry_rects[i].x+menu_entry_rects[i].w && menu_entry_rects[i].y <= event.motion.y && event.motion.y <= menu_entry_rects[i].y+menu_entry_rects[i].h) {
+					setEntrySelection(selection = i);
+					break;
+				}
+			}
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			if (event.button.button == SDL_BUTTON_LEFT) {
+				for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
+					if (menu_entry_rects[i].x <= event.motion.x && event.motion.x <= menu_entry_rects[i].x+menu_entry_rects[i].w && menu_entry_rects[i].y <= event.motion.y && event.motion.y <= menu_entry_rects[i].y+menu_entry_rects[i].h) {
+						return handleSelection();
+					}
+				}
+			}
+			break;
 		case SDL_QUIT:
 				return 2;
 		}
@@ -111,13 +116,30 @@ int MenuOptions::eventloop() {
 
 
 void MenuOptions::setEntrySelection(int selection) {
-	for (int i = 0; i < NUM_OPTIONS_ENTRIES; i++) {
-		screen->fillRect(&options_entry_rects[i], 0, 0, 0);
+	for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
+		screen->fillRect(&menu_entry_rects[i], 0, 0, 0);
 		if(selection == i)
-			screen->draw(menu_sel[i], options_entry_rects[i].x, options_entry_rects[i].y);
+			screen->draw(menu_sel[i], menu_entry_rects[i].x, menu_entry_rects[i].y);
 		else
-			screen->draw(menu[i], 320-(menu[i]->w >> 1), options_entry_rects[i].y + ((menu_sel[i]->h - menu[i]->h) >> 1));
-		screen->AddUpdateRects(options_entry_rects[i].x, options_entry_rects[i].y, options_entry_rects[i].w, options_entry_rects[i].h);
+			screen->draw(menu[i], 320-(menu[i]->w >> 1), menu_entry_rects[i].y + ((menu_sel[i]->h - menu[i]->h) >> 1));
+		screen->AddUpdateRects(menu_entry_rects[i].x, menu_entry_rects[i].y, menu_entry_rects[i].w, menu_entry_rects[i].h);
 	}
 	screen->Refresh();
+}
+
+int MenuOptions::handleSelection() {
+	if(selection == 0) {
+		labyrinth->getSounds()->toggleEnabled();
+		if (this->labyrinth->getSounds()->isEnabled()) {
+			menu[selection] = options_sound_on;
+			menu_sel[selection] = options_sound_on_sel;
+		} else {
+			menu[selection] = options_sound_off;
+			menu_sel[selection] = options_sound_off_sel;
+		}
+		menu_entry_rects[selection].w = (short int) options_sound_off_sel->w; 
+		setEntrySelection(selection);
+		return 0;
+	}else if(selection == 3)
+		return 2;
 }

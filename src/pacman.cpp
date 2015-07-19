@@ -404,6 +404,9 @@ void Game::start() {
 		deltaT = getDelayTime(&currentTicks);
 	}
 	pacman->setVisibility(0);
+	for(int i = 0; i < numberGhosts; ++i) {
+		ghosts[i]->setVisibility(0);
+	}
 }
 
 // main function, contains the game loop

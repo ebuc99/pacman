@@ -12,7 +12,7 @@ class MenuOptions {
 		void draw();
 		int show();
 	private:
-		static const int NUM_OPTIONS_ENTRIES = 4;
+		static const int NUM_MENU_ENTRIES = 4;
 		static const int MIN_FRAME_DURATION = 30;
 		SDL_Color textweiss = {255, 255, 255, 0};
 		SDL_Color textgray    = {191, 191, 191, 0};
@@ -28,9 +28,10 @@ class MenuOptions {
 		SDL_Surface **menu, **menu_sel;
 		SDL_Surface *options_sound_on, *options_sound_on_sel, *options_sound_off, *options_sound_off_sel;
 		TTF_Font *font, *largeFont, *veryLargeFont;
-		SDL_Rect options_entry_rects[NUM_OPTIONS_ENTRIES];
+		SDL_Rect menu_entry_rects[NUM_MENU_ENTRIES];
 		void setEntrySelection(int selection);
 		int selection;
+		int handleSelection();
 };
 
 #endif

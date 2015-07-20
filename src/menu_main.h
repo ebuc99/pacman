@@ -28,7 +28,7 @@ class MenuMain {
 		SDL_Color textorange  = {255, 127,   0, 0};
 		Screen *screen;
 		MenuOptions *menuoptions;
-		MenuAbout *menuabout;
+		Menu *menuabout;
 		Pacman *pacman;
 		Ghost **ghosts;
 		int eventloop();

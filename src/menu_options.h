@@ -14,8 +14,8 @@ class MenuOptions {
 	private:
 		static const int NUM_MENU_ENTRIES = 4;
 		static const int MIN_FRAME_DURATION = 30;
-		SDL_Color textweiss = {255, 255, 255, 0};
-		SDL_Color textgray    = {191, 191, 191, 0};
+		SDL_Color textwhite;
+		SDL_Color textgray;
 		Screen *screen;
 		Labyrinth *labyrinth;
 		int eventloop();

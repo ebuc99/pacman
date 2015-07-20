@@ -53,7 +53,7 @@ MenuMain::MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *l
 			menu_entry_rects[i].h = (short int) menu_sel[i]->h;
 		}
 		menuoptions = new MenuOptions(this->screen, this->labyrinth);
-		menuabout = new MenuAbout(this->screen);
+		menuabout = new MenuAbout(this->screen, "About");
 		draw();
 }
 

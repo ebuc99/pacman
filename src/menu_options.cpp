@@ -4,6 +4,8 @@ MenuOptions::MenuOptions(Screen *screen, Labyrinth *labyrinth):
 	selection(0) {
 		this->screen = screen;
 		this->labyrinth = labyrinth;
+		textwhite.r = textwhite.g = textwhite.b = 255;
+		textgray.r = textgray.g = textgray.b = 192;
 		char filePath[256];
 		getFilePath(filePath, "fonts/Cheapmot.TTF");
 		font = TTF_OpenFont(filePath, 20);
@@ -18,21 +20,21 @@ MenuOptions::MenuOptions(Screen *screen, Labyrinth *labyrinth):
 		if (!veryLargeFont) {
 			printf("Unable to open TTF font: %s\n", TTF_GetError());
 		}
-		optionsTitle = TTF_RenderText_Solid(veryLargeFont, "Options", textweiss);
+		optionsTitle = TTF_RenderText_Solid(veryLargeFont, "Options", textwhite);
 		options_sound_on = TTF_RenderText_Solid(font, "Sound: on", textgray);
-		options_sound_on_sel = TTF_RenderText_Solid(largeFont, "Sound: on", textweiss);
+		options_sound_on_sel = TTF_RenderText_Solid(largeFont, "Sound: on", textwhite);
 		options_sound_off = TTF_RenderText_Solid(font, "Sound: off", textgray);
-		options_sound_off_sel = TTF_RenderText_Solid(largeFont, "Sound: off", textweiss);
+		options_sound_off_sel = TTF_RenderText_Solid(largeFont, "Sound: off", textwhite);
 		menu = new SDL_Surface*[NUM_MENU_ENTRIES];
 		menu_sel = new SDL_Surface*[NUM_MENU_ENTRIES];
 		menu[0] = options_sound_on;
 		menu_sel[0] = options_sound_on_sel;
 		menu[1] = TTF_RenderText_Solid(font, "Key configuration", textgray);
-		menu_sel[1] = TTF_RenderText_Solid(largeFont, "Key configuration", textweiss);
+		menu_sel[1] = TTF_RenderText_Solid(largeFont, "Key configuration", textwhite);
 		menu[2] = TTF_RenderText_Solid(font, "Screen resolution: 640x480", textgray);
-		menu_sel[2] = TTF_RenderText_Solid(largeFont, "Screen resolution: 640x480", textweiss);
+		menu_sel[2] = TTF_RenderText_Solid(largeFont, "Screen resolution: 640x480", textwhite);
 		menu[3] = TTF_RenderText_Solid(font, "back", textgray);
-		menu_sel[3] = TTF_RenderText_Solid(largeFont, "back", textweiss);
+		menu_sel[3] = TTF_RenderText_Solid(largeFont, "back", textwhite);
 		for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
 			menu_entry_rects[i].x = (short int) (320 - (menu_sel[i]->w >> 1));
 			menu_entry_rects[i].y = (short int) (220 + i*70 - (menu_sel[i]->h >> 1));

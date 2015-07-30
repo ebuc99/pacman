@@ -308,6 +308,7 @@ void Pacman::reset() {
 	cnt_animation = 0;
 	pacman_stopped = 0;
 	idxCurrentRail = 33;
+	visible = true;
 }
 
 SDL_Surface* Pacman::get_Surface() const {

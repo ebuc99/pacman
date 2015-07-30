@@ -378,6 +378,7 @@ void Ghost::reset() {
 		idxCurrentRail = 88;
 	if (ghost_ident == CLYDE)
 		idxCurrentRail = 90;
+	visible = true;
 }
 
 void Ghost::addUpdateRect() {

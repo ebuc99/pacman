@@ -46,6 +46,11 @@ MenuMain::MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *l
 		animScore400 = TTF_RenderText_Solid(smallFont, "400", textweiss);
 		animScore800 = TTF_RenderText_Solid(smallFont, "800", textweiss);
 		animScore1600 = TTF_RenderText_Solid(smallFont, "1600", textweiss);
+		pacmanName = TTF_RenderText_Solid(largeFont, "Pacman", textyellow);
+		blinkyName = TTF_RenderText_Solid(largeFont, "Blinky", textred);
+		pinkyName = TTF_RenderText_Solid(largeFont, "Pinky", textmagenta);
+		inkyName = TTF_RenderText_Solid(largeFont, "Inky", textcyan);
+		clydeName = TTF_RenderText_Solid(largeFont, "Clyde",textorange);
 		for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
 			menu_entry_rects[i].x = (short int) (320 - (menu_sel[i]->w >> 1));
 			menu_entry_rects[i].y = (short int) (325 + i*35 - (menu_sel[i]->h >> 1));
@@ -65,6 +70,10 @@ MenuMain::~MenuMain() {
 	SDL_FreeSurface(animScore400);
 	SDL_FreeSurface(animScore800);
 	SDL_FreeSurface(animScore1600);
+	SDL_FreeSurface(pacmanName);
+	SDL_FreeSurface(blinkyName);
+	SDL_FreeSurface(inkyName);
+	SDL_FreeSurface(clydeName);
 	TTF_CloseFont(font);
 	TTF_CloseFont(largeFont);
 	TTF_CloseFont(veryLargeFont);
@@ -94,14 +103,16 @@ void MenuMain::draw() {
 
 int MenuMain::show() {
 	int event;
-	SDL_Rect animRect;
+	SDL_Rect animRect,animRectTmp;
 	animRect.x = 0;
 	animRect.y = 200;
 	animRect.w = 640;
 	animRect.h = 23;
+	bool redrawMenu;
 	int animation_counter = 0;
 	int timeScore200 = 0, timeScore400 = 0, timeScore800 = 0, timeScore1600 = 0;
 	int xScore200 = 0, xScore400 = 0, xScore800 = 0, xScore1600 = 0;
+	int xTarget = 0;
 	while(!(event = eventloop())) {
 		SDL_Delay(MIN_FRAME_DURATION);
 		lastAnimTime = animationTime;
@@ -129,152 +140,339 @@ int MenuMain::show() {
 			} 
 							
 		} else if (idxAnimation == 1) {
-				// Animation 2: Pacman comes from the left, followed by blinky, pinky, inky and clyde.
-				//              Pacman eats the superpill on the right, turns around and eats each ghost.
-				if (animationTime >= ANIMATION_WAIT) {
-					if (lastAnimTime < ANIMATION_WAIT) {
-						animationPart = 1;
-						animWaitUntil = 0;
-						// initialize figures
-						pacman->reset();
-						pacman->set_position(-23, 200);
-						ghosts[0]->reset();
-						ghosts[0]->set_position(-60, 200);
-						ghosts[1]->reset();
-						ghosts[1]->set_position(-90, 200);
-						ghosts[2]->reset();
-						ghosts[2]->set_position(-120, 200);
-						ghosts[3]->reset();
-						ghosts[3]->set_position(-150, 200);
-						animation_counter = 0;
+			// Animation 2: Pacman comes from the left, followed by blinky, pinky, inky and clyde.
+			//              Pacman eats the superpill on the right, turns around and eats each ghost.
+			if (animationTime >= ANIMATION_WAIT) {
+				if (lastAnimTime < ANIMATION_WAIT) {
+					animationPart = 1;
+					animWaitUntil = 0;
+					// initialize figures
+					pacman->reset();
+					pacman->set_position(-23, 200);
+					for(int i = 0; i < 4; ++i) {
+						ghosts[i]->reset();
+						ghosts[i]->set_position(-60 - (i*30), 200);
 					}
-					if (animationPart == 1) {
-						pacman->move_right(MIN_FRAME_DURATION, 540);
-						if (pacman->x >= 540) {
-							animationPart = 2;
-							ghosts[0]->set_hunter(Figur::PACMAN);
-							ghosts[1]->set_hunter(Figur::PACMAN);
-							ghosts[2]->set_hunter(Figur::PACMAN);
-							ghosts[3]->set_hunter(Figur::PACMAN);
-						}
-						ghosts[0]->move_right(MIN_FRAME_DURATION, 640);
-						ghosts[1]->move_right(MIN_FRAME_DURATION, 640);
-						ghosts[2]->move_right(MIN_FRAME_DURATION, 640);
-						ghosts[3]->move_right(MIN_FRAME_DURATION, 640);
-						animation_counter += MIN_FRAME_DURATION;
-					} else if (animationPart == 2) {
-						if (animationTime >= animWaitUntil) {
-							pacman->move_left(MIN_FRAME_DURATION, -23);
-							pacman->setVisibility(true);
-							if (pacman->x <= -23) {
-								idxAnimation  = (idxAnimation + 1) % NUM_ANIMATIONS;
-								animationTime = 0;
-								animationPart = 0;
-								timeScore200  = 0;
-								timeScore400  = 0;
-								timeScore800  = 0;
-								timeScore1600 = 0;
-								screen->AddUpdateRects(animRect.x, animRect.y, animRect.w, animRect.h);
-							}
-							ghosts[0]->move_left(MIN_FRAME_DURATION, -23);
-							ghosts[1]->move_left(MIN_FRAME_DURATION, -23);
-							ghosts[2]->move_left(MIN_FRAME_DURATION, -23);
-							ghosts[3]->move_left(MIN_FRAME_DURATION, -23);
-						}
-						if (pacman->x <= ghosts[0]->x + 11 && ghosts[0]->isVisible()) {
-							ghosts[0]->setVisibility(false);
-							xScore200 = ghosts[0]->x;
-							timeScore200 = 400;
-							pacman->setVisibility(false);
-							animWaitUntil = animationTime + 400;
-						}
-						if (pacman->x <= ghosts[1]->x + 11 && ghosts[1]->isVisible()) {
-							ghosts[1]->setVisibility(false);
-							xScore400 = ghosts[1]->x;
-							timeScore400 = 400;
-							pacman->setVisibility(false);
-							animWaitUntil = animationTime + 400;
-						}
-						if (pacman->x <= ghosts[2]->x + 11 && ghosts[2]->isVisible()) {
-							ghosts[2]->setVisibility(false);
-							xScore800 = ghosts[2]->x;
-							timeScore800 = 400;
-							pacman->setVisibility(false);
-							animWaitUntil = animationTime + 400;
-						}
-						if (pacman->x <= ghosts[3]->x + 11 && ghosts[3]->isVisible()) {
-							ghosts[3]->setVisibility(false);
-							xScore1600 = ghosts[3]->x;
-							timeScore1600 = 400;
-							pacman->setVisibility(false);
-							animWaitUntil = animationTime + 400;
-						}
-						animation_counter += MIN_FRAME_DURATION;
+					animation_counter = 0;
+				}
+				if (animationPart == 1) {
+					pacman->move_right(MIN_FRAME_DURATION, 540);
+					if (pacman->x >= 540) {
+						animationPart = 2;
+						ghosts[0]->set_hunter(Figur::PACMAN);
+						ghosts[1]->set_hunter(Figur::PACMAN);
+						ghosts[2]->set_hunter(Figur::PACMAN);
+						ghosts[3]->set_hunter(Figur::PACMAN);
 					}
-					screen->fillRect(&animRect, 0, 0, 0);
+					ghosts[0]->move_right(MIN_FRAME_DURATION, 640);
+					ghosts[1]->move_right(MIN_FRAME_DURATION, 640);
+					ghosts[2]->move_right(MIN_FRAME_DURATION, 640);
+					ghosts[3]->move_right(MIN_FRAME_DURATION, 640);
+					animation_counter += MIN_FRAME_DURATION;
+				} else if (animationPart == 2) {
+					if (animationTime >= animWaitUntil) {
+						pacman->move_left(MIN_FRAME_DURATION, -23);
+						pacman->setVisibility(true);
+						if (pacman->x <= -23) {
+							idxAnimation  = (idxAnimation + 1) % NUM_ANIMATIONS;
+							animationTime = 0;
+							animationPart = 0;
+							timeScore200  = 0;
+							timeScore400  = 0;
+							timeScore800  = 0;
+							timeScore1600 = 0;
+							screen->AddUpdateRects(animRect.x, animRect.y, animRect.w, animRect.h);
+						}
+						ghosts[0]->move_left(MIN_FRAME_DURATION, -23);
+						ghosts[1]->move_left(MIN_FRAME_DURATION, -23);
+						ghosts[2]->move_left(MIN_FRAME_DURATION, -23);
+						ghosts[3]->move_left(MIN_FRAME_DURATION, -23);
+					}
+					if (pacman->x <= ghosts[0]->x + 11 && ghosts[0]->isVisible()) {
+						ghosts[0]->setVisibility(false);
+						xScore200 = ghosts[0]->x;
+						timeScore200 = 400;
+						pacman->setVisibility(false);
+						animWaitUntil = animationTime + 400;
+					}
+					if (pacman->x <= ghosts[1]->x + 11 && ghosts[1]->isVisible()) {
+						ghosts[1]->setVisibility(false);
+						xScore400 = ghosts[1]->x;
+						timeScore400 = 400;
+						pacman->setVisibility(false);
+						animWaitUntil = animationTime + 400;
+					}
+					if (pacman->x <= ghosts[2]->x + 11 && ghosts[2]->isVisible()) {
+						ghosts[2]->setVisibility(false);
+						xScore800 = ghosts[2]->x;
+						timeScore800 = 400;
+						pacman->setVisibility(false);
+						animWaitUntil = animationTime + 400;
+					}
+					if (pacman->x <= ghosts[3]->x + 11 && ghosts[3]->isVisible()) {
+						ghosts[3]->setVisibility(false);
+						xScore1600 = ghosts[3]->x;
+						timeScore1600 = 400;
+						pacman->setVisibility(false);
+						animWaitUntil = animationTime + 400;
+					}
+					animation_counter += MIN_FRAME_DURATION;
+				}
+				screen->fillRect(&animRect, 0, 0, 0);
+				if (animation_counter > 100) {
+					animation_counter -= 100;
+					ghosts[0]->animation();
+					ghosts[1]->animation();
+					ghosts[2]->animation();
+					ghosts[3]->animation();
+					labyrinth->pill_animation();
+				}
+				if (animationPart == 1) {
+					// superpill not yet eaten
+					screen->draw(labyrinth->get_superpill_sf(), 546, 206);
+					screen->AddUpdateRects(546, 206, labyrinth->get_superpill_sf()->w, labyrinth->get_superpill_sf()->h);
+				}
+				ghosts[0]->draw();
+				ghosts[0]->addUpdateRect();
+				ghosts[1]->draw();
+				ghosts[1]->addUpdateRect();
+				ghosts[2]->draw();
+				ghosts[2]->addUpdateRect();
+				ghosts[3]->draw();
+				ghosts[3]->addUpdateRect();
+				pacman->animate();
+				pacman->draw();
+				pacman->addUpdateRect();
+				if (timeScore200 > 0) {
+					timeScore200 -= MIN_FRAME_DURATION;
+					if (timeScore200 <= 0) {
+						timeScore200 = 0;
+					} else {
+						screen->draw(animScore200, xScore200, 205);
+					}
+					screen->AddUpdateRects(xScore200, 205, animScore200->w, animScore200->h);
+				}
+				if (timeScore400 > 0) {
+					timeScore400 -= MIN_FRAME_DURATION;
+					if (timeScore400 <= 0) {
+						timeScore400 = 0;
+					} else {
+						screen->draw(animScore400, xScore400, 205);
+					}
+					screen->AddUpdateRects(xScore400, 205, animScore400->w, animScore400->h);
+				}
+				if (timeScore800 > 0) {
+					timeScore800 -= MIN_FRAME_DURATION;
+					if (timeScore800 <= 0) {
+						timeScore800 = 0;
+					} else {
+						screen->draw(animScore800, xScore800, 205);
+					}
+					screen->AddUpdateRects(xScore800, 205, animScore800->w, animScore800->h);
+				}
+				if (timeScore1600 > 0) {
+					timeScore1600 -= MIN_FRAME_DURATION;
+					if (timeScore1600 <= 0) {
+						timeScore1600 = 0;
+					} else {
+						screen->draw(animScore1600, xScore1600, 205);
+					}
+					screen->AddUpdateRects(xScore1600, 205, animScore1600->w, animScore1600->h);
+				}
+				screen->Refresh();
+			}
+		}else if (idxAnimation == 2) {
+			// Animation 3: Pacman comes from the left, stops in the middle, name "Pacman" shows up for a while, Pacman leaves to the right.
+			//              Blinky from right to left, Pinky from left to right, Inky from right to left, Clyde from left to right.
+			if (animationTime >= ANIMATION_WAIT) {
+				if (lastAnimTime < ANIMATION_WAIT) {
+					animationPart = 1;
+					animWaitUntil = 0;
+					// initialize figures
+					pacman->reset();
+					pacman->set_position(-23, 200);
+					ghosts[0]->reset();
+					ghosts[0]->set_position(640, 200);
+					ghosts[1]->reset();
+					ghosts[1]->set_position(-23, 200);
+					ghosts[2]->reset();
+					ghosts[2]->set_position(640, 200);
+					ghosts[3]->reset();
+					ghosts[3]->set_position(-23, 200);
+					animation_counter = 0;
+				}
+				screen->fillRect(&animRect, 0, 0, 0);
+				if (animationPart == 1) {
+					xTarget = 320 + (pacmanName->w >> 1) + 50;
+					pacman->move_right(MIN_FRAME_DURATION, xTarget);
+					if (pacman->x >= xTarget) {
+						pacman->right_pic(0);  // mouth open
+						animRectTmp.x = (short int) (xTarget - 50 - pacmanName->w);
+						animRectTmp.y = (short int) (223-pacmanName->h);
+						animRectTmp.w = (short int) pacmanName->w;
+						animRectTmp.h = (short int) pacmanName->h;
+						screen->draw(pacmanName, animRectTmp.x, animRectTmp.y);
+						screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
+						animationPart = 2;
+						animWaitUntil = animationTime + 2000;
+					}
+				} else if (animationPart == 2) {
+					if (animationTime >= animWaitUntil) {
+						screen->fillRect(&animRectTmp, 0, 0, 0);
+						screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
+						animationPart = 3;
+					} else if (redrawMenu) {
+						screen->draw(pacmanName, animRectTmp.x, animRectTmp.y);
+						screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
+					}
+				} else if (animationPart == 3) {
+					pacman->move_right(MIN_FRAME_DURATION, 690);
+					if (pacman->x >= 690) {
+						animationPart = 4;
+					}
+				} else if (animationPart == 4) {
+					xTarget = 320 - (blinkyName->w >> 1) - 73;
+					ghosts[0]->move_left(MIN_FRAME_DURATION, xTarget);
+					if (ghosts[0]->x <= xTarget) {
+						animRectTmp.x = (short int) (xTarget + 73);
+						animRectTmp.y = (short int) (223-blinkyName->h);
+						animRectTmp.w = (short int) blinkyName->w;
+						animRectTmp.h = (short int) blinkyName->h;
+						screen->draw(blinkyName, animRectTmp.x, animRectTmp.y);
+						screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
+						animationPart = 5;
+						animWaitUntil = animationTime + 2000;
+					}
+				} else if (animationPart == 5) {
+					if (animationTime >= animWaitUntil) {
+						screen->fillRect(&animRectTmp, 0, 0, 0);
+						screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
+						animationPart = 6;
+					} else if (redrawMenu) {
+						screen->draw(blinkyName, animRectTmp.x, animRectTmp.y);
+						screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
+					}
+				} else if (animationPart == 6) {
+					ghosts[0]->move_left(MIN_FRAME_DURATION, -73);
+					if (ghosts[0]->x <= -73) {
+						animationPart = 7;
+					}
+				} else if (animationPart == 7) {
+					xTarget = 320 + (pinkyName->w >> 1) + 50;
+					ghosts[1]->move_right(MIN_FRAME_DURATION, xTarget);
+					if (ghosts[1]->x >= xTarget) {
+						animRectTmp.x = (short int) (xTarget - 50 - pinkyName->w);
+						animRectTmp.y = (short int) (223-pinkyName->h);
+						animRectTmp.w = (short int) pinkyName->w;
+						animRectTmp.h = (short int) pinkyName->h;
+						screen->draw(pinkyName, animRectTmp.x, animRectTmp.y);
+						screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
+						animationPart = 8;
+						animWaitUntil = animationTime + 2000;
+					}
+				} else if (animationPart == 8) {
+					if (animationTime >= animWaitUntil) {
+						screen->fillRect(&animRectTmp, 0, 0, 0);
+						screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
+						animationPart = 9;
+					} else if (redrawMenu) {
+						screen->draw(pinkyName, animRectTmp.x, animRectTmp.y);
+						screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
+					}
+				} else if (animationPart == 9) {
+					ghosts[1]->move_right(MIN_FRAME_DURATION, 690);
+					if (ghosts[1]->x >= 690) {
+						animationPart = 10;
+					}
+				} else if (animationPart == 10) {
+					xTarget = 320 - (inkyName->w >> 1) - 73;
+					ghosts[2]->move_left(MIN_FRAME_DURATION, xTarget);
+					if (ghosts[2]->x <= xTarget) {
+						animRectTmp.x = (short int) (xTarget + 73);
+						animRectTmp.y = (short int) (223-inkyName->h);
+						animRectTmp.w = (short int) inkyName->w;
+						animRectTmp.h = (short int) inkyName->h;
+						screen->draw(inkyName, animRectTmp.x, animRectTmp.y);
+						screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
+						animationPart = 11;
+						animWaitUntil = animationTime + 2000;
+					}
+				} else if (animationPart == 11) {
+					if (animationTime >= animWaitUntil) {
+						screen->fillRect(&animRectTmp, 0, 0, 0);
+						screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
+						animationPart = 12;
+					} else if (redrawMenu) {
+						screen->draw(inkyName, animRectTmp.x, animRectTmp.y);
+						screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
+					}
+				} else if (animationPart == 12) {
+					ghosts[2]->move_left(MIN_FRAME_DURATION, -73);
+					if (ghosts[2]->x <= -73) {
+						animationPart = 13;
+					}
+				} else if (animationPart == 13) {
+					xTarget = 320 + (clydeName->w >> 1) + 50;
+					ghosts[3]->move_right(MIN_FRAME_DURATION, xTarget);
+					if (ghosts[3]->x >= xTarget) {
+						animRectTmp.x = (short int) (xTarget - 50 - clydeName->w);
+						animRectTmp.y = (short int) (223-clydeName->h);
+						animRectTmp.w = (short int) clydeName->w;
+						animRectTmp.h = (short int) clydeName->h;
+						screen->draw(clydeName, animRectTmp.x, animRectTmp.y);
+						screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
+						animationPart = 14;
+						animWaitUntil = animationTime + 2000;
+					}
+				} else if (animationPart == 14) {
+					if (animationTime >= animWaitUntil) {
+						screen->fillRect(&animRectTmp, 0, 0, 0);
+						screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
+						animationPart = 15;
+					} else if (redrawMenu) {
+						screen->draw(clydeName, animRectTmp.x, animRectTmp.y);
+						screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
+					}
+				} else if (animationPart == 15) {
+					ghosts[3]->move_right(MIN_FRAME_DURATION, 690);
+					if (ghosts[3]->x >= 690) {
+						idxAnimation  = (idxAnimation + 1) % NUM_ANIMATIONS;
+						animationTime = 0;
+						animationPart = 0;
+						screen->AddUpdateRects(animRect.x, animRect.y, animRect.w, animRect.h);
+					}
+				}
+				if (1 <= animationPart && animationPart <= 3) {
+					pacman->animate();
+					pacman->draw();
+					pacman->addUpdateRect();
+				}
+				if (4 <= animationPart && animationPart <= 15) {
+					animation_counter += MIN_FRAME_DURATION;
 					if (animation_counter > 100) {
 						animation_counter -= 100;
 						ghosts[0]->animation();
 						ghosts[1]->animation();
 						ghosts[2]->animation();
 						ghosts[3]->animation();
-						labyrinth->pill_animation();
 					}
-					if (animationPart == 1) {
-						// superpill not yet eaten
-						screen->draw(labyrinth->get_superpill_sf(), 546, 206);
-						screen->AddUpdateRects(546, 206, labyrinth->get_superpill_sf()->w, labyrinth->get_superpill_sf()->h);
+					if (4 <= animationPart && animationPart <= 6) {
+						ghosts[0]->draw();
+						ghosts[0]->addUpdateRect();
+					} else if (7 <= animationPart && animationPart <= 9) {
+						ghosts[1]->draw();
+						ghosts[1]->addUpdateRect();
+					} else if (10 <= animationPart && animationPart <= 12) {
+						ghosts[2]->draw();
+						ghosts[2]->addUpdateRect();
+					} else if (13 <= animationPart && animationPart <= 15) {
+						ghosts[3]->draw();
+						ghosts[3]->addUpdateRect();
 					}
-					ghosts[0]->draw();
-					ghosts[0]->addUpdateRect();
-					ghosts[1]->draw();
-					ghosts[1]->addUpdateRect();
-					ghosts[2]->draw();
-					ghosts[2]->addUpdateRect();
-					ghosts[3]->draw();
-					ghosts[3]->addUpdateRect();
-					pacman->animate();
-					pacman->draw();
-					pacman->addUpdateRect();
-					if (timeScore200 > 0) {
-						timeScore200 -= MIN_FRAME_DURATION;
-						if (timeScore200 <= 0) {
-							timeScore200 = 0;
-						} else {
-							screen->draw(animScore200, xScore200, 205);
-						}
-						screen->AddUpdateRects(xScore200, 205, animScore200->w, animScore200->h);
-					}
-					if (timeScore400 > 0) {
-						timeScore400 -= MIN_FRAME_DURATION;
-						if (timeScore400 <= 0) {
-							timeScore400 = 0;
-						} else {
-							screen->draw(animScore400, xScore400, 205);
-						}
-						screen->AddUpdateRects(xScore400, 205, animScore400->w, animScore400->h);
-					}
-					if (timeScore800 > 0) {
-						timeScore800 -= MIN_FRAME_DURATION;
-						if (timeScore800 <= 0) {
-							timeScore800 = 0;
-						} else {
-							screen->draw(animScore800, xScore800, 205);
-						}
-						screen->AddUpdateRects(xScore800, 205, animScore800->w, animScore800->h);
-					}
-					if (timeScore1600 > 0) {
-						timeScore1600 -= MIN_FRAME_DURATION;
-						if (timeScore1600 <= 0) {
-							timeScore1600 = 0;
-						} else {
-							screen->draw(animScore1600, xScore1600, 205);
-						}
-						screen->AddUpdateRects(xScore1600, 205, animScore1600->w, animScore1600->h);
-					}
-					screen->Refresh();
 				}
-			}//Ende Animation 1
+				screen->Refresh();
+			}					
+		}//Ende Animation 2
 	}
 	if(event == 1)
 		return 1;

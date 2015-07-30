@@ -387,11 +387,11 @@ int Pacman::is_dying() const {
 	return dying;
 }
 
-int Pacman::die_animation() {
+int Pacman::die_animation(bool skipSound) {
 	if(dying > 1) 
 		return dying--;
 	else {
-		if(!die_counter)
+		if(!die_counter && !skipSound)
 			labyrinth->playSoundDying();
 		this->die_pic(die_counter++);
 		if(die_counter == 16) {

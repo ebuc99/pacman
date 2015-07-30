@@ -59,6 +59,24 @@ MenuMain::MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *l
 		}
 		menuoptions = new MenuOptions(this->screen, this->labyrinth);
 		menuabout = new MenuAbout(this->screen, "About");
+		animFruits = new SDL_Surface*[NUM_FRUITS];
+		getFilePath(filePath, "gfx/cherry.png");     animFruits[0] = screen->LoadSurface(filePath, 255);
+		getFilePath(filePath, "gfx/strawberry.png"); animFruits[1] = screen->LoadSurface(filePath, 255);
+		getFilePath(filePath, "gfx/orange.png");     animFruits[2] = screen->LoadSurface(filePath, 255);
+		getFilePath(filePath, "gfx/apple.png");      animFruits[3] = screen->LoadSurface(filePath, 255);
+		getFilePath(filePath, "gfx/grapes.png");     animFruits[4] = screen->LoadSurface(filePath, 255);
+		getFilePath(filePath, "gfx/banana.png");     animFruits[5] = screen->LoadSurface(filePath, 255);
+		getFilePath(filePath, "gfx/pear.png");       animFruits[6] = screen->LoadSurface(filePath, 255);
+		getFilePath(filePath, "gfx/key.png");        animFruits[7] = screen->LoadSurface(filePath, 255);
+		animScores = new SDL_Surface*[NUM_FRUITS];
+		animScores[0] = TTF_RenderText_Solid(smallFont,  "100", textweiss);
+		animScores[1] = TTF_RenderText_Solid(smallFont,  "300", textweiss);
+		animScores[2] = TTF_RenderText_Solid(smallFont,  "500", textweiss);
+		animScores[3] = TTF_RenderText_Solid(smallFont,  "700", textweiss);
+		animScores[4] = TTF_RenderText_Solid(smallFont, "1000", textweiss);
+		animScores[5] = TTF_RenderText_Solid(smallFont, "2000", textweiss);
+		animScores[6] = TTF_RenderText_Solid(smallFont, "3000", textweiss);
+		animScores[7] = TTF_RenderText_Solid(smallFont, "5000", textweiss);
 		draw();
 }
 
@@ -78,10 +96,19 @@ MenuMain::~MenuMain() {
 	TTF_CloseFont(largeFont);
 	TTF_CloseFont(veryLargeFont);
 	TTF_CloseFont(hugeFont);
+	for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
+		SDL_FreeSurface(menu[i]);
+		SDL_FreeSurface(menu_sel[i]);
+	}
 	delete[] menu;
 	delete[] menu_sel;
 	delete menuoptions;
 	delete menuabout;
+	for (int i = 0; i < NUM_FRUITS; i++) {
+		SDL_FreeSurface(animFruits[i]);
+		SDL_FreeSurface(animScores[i]);
+	}
+	delete[] animFruits;
 }
 void MenuMain::draw() {
 	screen->clear();
@@ -108,6 +135,11 @@ int MenuMain::show() {
 	animRect.y = 200;
 	animRect.w = 640;
 	animRect.h = 23;
+	int xFruits[NUM_FRUITS], timeScore[NUM_FRUITS];
+	for (int i = 0; i < NUM_FRUITS; i++) {
+		xFruits[i]   = 460 - i*50;
+		timeScore[i] = 0;
+	}
 	bool redrawMenu;
 	int animation_counter = 0;
 	int timeScore200 = 0, timeScore400 = 0, timeScore800 = 0, timeScore1600 = 0;
@@ -472,7 +504,154 @@ int MenuMain::show() {
 				}
 				screen->Refresh();
 			}					
-		}//Ende Animation 2
+		} else if (idxAnimation == 3) {
+			// Animation 4: Pacman comes from the right eating all bonus fruits.
+			if (animationTime >= ANIMATION_WAIT) {
+				if (lastAnimTime < ANIMATION_WAIT) {
+					animationPart = 0;
+					animWaitUntil = 0;
+					pacman->reset();
+					pacman->set_position(840, 200);
+				}
+				screen->fillRect(&animRect, 0, 0, 0);
+				if (animationTime >= animWaitUntil) {
+					pacman->move_left(MIN_FRAME_DURATION, -23);
+					pacman->setVisibility(true);
+				}
+				for (int i = animationPart; i < NUM_FRUITS; i++) {
+					if (pacman->x < xFruits[i]+11 && animationPart < i+1) {
+						animationPart = i+1;  // here, means "fruit No. i eaten"
+						screen->AddUpdateRects(xFruits[i], 200, animFruits[i]->w, animFruits[i]->h);
+						timeScore[i] = 400;
+						pacman->setVisibility(false);
+						animWaitUntil = animationTime + 400;
+						break;
+					}
+				}
+				for (int i = animationPart; i < NUM_FRUITS; i++) {
+					screen->draw(animFruits[i], xFruits[i], 200);
+					screen->AddUpdateRects(xFruits[i], 200, animFruits[i]->w, animFruits[i]->h);
+				}
+				if (pacman->x <= -23) {
+					idxAnimation  = (idxAnimation + 1) % NUM_ANIMATIONS;
+					animationTime = 0;
+					animationPart = 0;
+					for (int i = 0; i < NUM_FRUITS; i++) {
+						timeScore[i] = 0;
+					}
+					screen->AddUpdateRects(animRect.x, animRect.y, animRect.w, animRect.h);
+				}
+				pacman->animate();
+				pacman->draw();
+				pacman->addUpdateRect();
+				for (int i = 0; i < NUM_FRUITS; i++) {
+					if (timeScore[i] > 0) {
+						timeScore[i] -= MIN_FRAME_DURATION;
+						if (timeScore[i] <= 0) {
+							timeScore[i] = 0;
+						} else {
+							screen->draw(animScores[i], xFruits[i], 205);
+						}
+						screen->AddUpdateRects(xFruits[i], 205, animScores[i]->w, animScores[i]->h);
+					}
+				}
+				screen->Refresh();
+			}					
+		}else if (idxAnimation == 4) {
+			// Animation 5: Pacman comes from the left, followed by Blinky, Inky and Clyde. But Pinky
+			//              comes from the right, and moves beyond the superpill which Pacman thus cannot
+			//              reach anymore. Pacman changes his direction twice, runs into Pinky, and dies.
+			//              The ghosts disappear after Pacman died.
+			if (animationTime >= ANIMATION_WAIT) {
+				if (lastAnimTime < ANIMATION_WAIT) {
+					animationPart = 1;
+					animWaitUntil = 0;
+					// initialize figures
+					pacman->reset();
+					pacman->set_position(-23, 200);
+					ghosts[0]->reset();
+					ghosts[0]->set_position(-120, 200);
+					ghosts[1]->reset();
+					ghosts[1]->set_position(980, 200);
+					ghosts[2]->reset();
+					ghosts[2]->set_position(-150, 200);
+					ghosts[3]->reset();
+					ghosts[3]->set_position(-210, 200);
+					animation_counter = 0;
+				}
+				if (animationPart == 1) {
+					pacman->move_right(MIN_FRAME_DURATION, 540);
+					ghosts[0]->move_right(MIN_FRAME_DURATION, 640);
+					ghosts[1]->move_left(MIN_FRAME_DURATION, -23);
+					ghosts[2]->move_right(MIN_FRAME_DURATION, 640);
+					ghosts[3]->move_right(MIN_FRAME_DURATION, 640);
+					if (pacman->x >= ghosts[1]->x - 60) {
+						animationPart = 2;
+					}
+				} else if (animationPart == 2) {
+					pacman->move_left(MIN_FRAME_DURATION, -23);
+					ghosts[0]->move_right(MIN_FRAME_DURATION, 640);
+					ghosts[1]->move_left(MIN_FRAME_DURATION, -23);
+					ghosts[2]->move_right(MIN_FRAME_DURATION, 640);
+					ghosts[3]->move_right(MIN_FRAME_DURATION, 640);
+					if (pacman->x <= ghosts[0]->x + 35) {
+						animationPart = 3;
+					}
+				} else if (animationPart == 3) {
+					pacman->move_right(MIN_FRAME_DURATION, 540);
+					ghosts[0]->move_right(MIN_FRAME_DURATION, 640);
+					ghosts[1]->move_left(MIN_FRAME_DURATION, -23);
+					ghosts[2]->move_right(MIN_FRAME_DURATION, 640);
+					ghosts[3]->move_right(MIN_FRAME_DURATION, 640);
+					if (pacman->x >= ghosts[1]->x - 11) {
+						pacman->right_pic(0);  // mouth open
+						pacman->set_dying(10);
+						animationPart = 4;
+					}
+				} else if (animationPart == 4) {
+					if (animation_counter < MIN_FRAME_DURATION && !pacman->die_animation(/*skipSound=*/true)) {
+						pacman->setVisibility(false);
+						animationPart = 5;
+						animWaitUntil = animationTime + 2000;
+					}
+				} else if (animationPart == 5) {
+					if (animationTime >= animWaitUntil) {
+						idxAnimation  = (idxAnimation + 1) % NUM_ANIMATIONS;
+						animationTime = 0;
+						animationPart = 0;
+						screen->AddUpdateRects(animRect.x, animRect.y, animRect.w, animRect.h);
+					}
+				}
+				screen->fillRect(&animRect, 0, 0, 0);
+				animation_counter += MIN_FRAME_DURATION;
+				if (animation_counter > 100) {
+					animation_counter -= 100;
+					ghosts[0]->animation();
+					ghosts[1]->animation();
+					ghosts[2]->animation();
+					ghosts[3]->animation();
+					labyrinth->pill_animation();
+				}
+				if (idxAnimation == 4) {
+					screen->draw(labyrinth->get_superpill_sf(), 546, 206);
+					screen->AddUpdateRects(546, 206, labyrinth->get_superpill_sf()->w, labyrinth->get_superpill_sf()->h);
+					ghosts[0]->draw();
+					ghosts[0]->addUpdateRect();
+					ghosts[1]->draw();
+					ghosts[1]->addUpdateRect();
+					ghosts[2]->draw();
+					ghosts[2]->addUpdateRect();
+					ghosts[3]->draw();
+					ghosts[3]->addUpdateRect();
+					if (animationPart < 4) {
+						pacman->animate();
+					}
+					pacman->draw();
+					pacman->addUpdateRect();
+				}
+				screen->Refresh();
+			}
+		}//Ende Animation 3
 	}
 	if(event == 1)
 		return 1;

@@ -56,7 +56,7 @@ class Pacman : public Figur {
 		// pacman dies
 		void set_dying(int dying);
 		int is_dying() const;
-		int die_animation();
+		int die_animation(bool skipSound = false);
 
 		// registers pacman's rectangle (last and current position) for redrawing
 		virtual void addUpdateRect();

@@ -145,6 +145,7 @@ int MenuMain::show() {
 	int timeScore200 = 0, timeScore400 = 0, timeScore800 = 0, timeScore1600 = 0;
 	int xScore200 = 0, xScore400 = 0, xScore800 = 0, xScore1600 = 0;
 	int xTarget = 0;
+	int idxAnimation= 0, animationPart = 0, animationTime = 0, lastAnimTime = 0, animWaitUntil = 0;
 	while(!(event = eventloop())) {
 		SDL_Delay(MIN_FRAME_DURATION);
 		lastAnimTime = animationTime;

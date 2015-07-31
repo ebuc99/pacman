@@ -33,7 +33,6 @@ class MenuMain {
 		Pacman *pacman;
 		Ghost **ghosts;
 		int eventloop();
-		int idxAnimation, animationPart, animationTime, lastAnimTime, animWaitUntil = 0;
 		void setEntrySelection(int selection);
 		SDL_Rect menu_entry_rects[NUM_MENU_ENTRIES];
 		SDL_Surface *headline, *appTitle1, *appTitle2, *titlePacman;

@@ -25,14 +25,18 @@ MenuOptions::MenuOptions(Screen *screen, Labyrinth *labyrinth):
 		options_sound_on_sel = TTF_RenderText_Solid(largeFont, "Sound: on", textwhite);
 		options_sound_off = TTF_RenderText_Solid(font, "Sound: off", textgray);
 		options_sound_off_sel = TTF_RenderText_Solid(largeFont, "Sound: off", textwhite);
+		options_window = TTF_RenderText_Solid(font, "Window 640x480", textgray);
+		options_window_sel = TTF_RenderText_Solid(largeFont, "Window 640x480", textwhite);
+		options_fullscreen = TTF_RenderText_Solid(font, "Fullscreen", textgray);
+		options_fullscreen_sel = TTF_RenderText_Solid(largeFont, "    Fullscreen", textwhite);
 		menu = new SDL_Surface*[NUM_MENU_ENTRIES];
 		menu_sel = new SDL_Surface*[NUM_MENU_ENTRIES];
 		menu[0] = options_sound_on;
 		menu_sel[0] = options_sound_on_sel;
 		menu[1] = TTF_RenderText_Solid(font, "Key configuration", textgray);
 		menu_sel[1] = TTF_RenderText_Solid(largeFont, "Key configuration", textwhite);
-		menu[2] = TTF_RenderText_Solid(font, "Screen resolution: 640x480", textgray);
-		menu_sel[2] = TTF_RenderText_Solid(largeFont, "Screen resolution: 640x480", textwhite);
+		menu[2] = options_window;
+		menu_sel[2] = options_window_sel;
 		menu[3] = TTF_RenderText_Solid(font, "back", textgray);
 		menu_sel[3] = TTF_RenderText_Solid(largeFont, "back", textwhite);
 		for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
@@ -49,11 +53,19 @@ MenuOptions::~MenuOptions() {
 	SDL_FreeSurface(options_sound_on_sel);
 	SDL_FreeSurface(options_sound_off);
 	SDL_FreeSurface(options_sound_off_sel);
+	SDL_FreeSurface(options_window);
+	SDL_FreeSurface(options_window_sel);
+	SDL_FreeSurface(options_fullscreen);
+	SDL_FreeSurface(options_fullscreen_sel);
 	TTF_CloseFont(font);
 	TTF_CloseFont(largeFont);
 	TTF_CloseFont(veryLargeFont);
 	delete[] menu;
 	delete[] menu_sel;
+	for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
+		SDL_FreeSurface(menu[i]);
+		SDL_FreeSurface(menu_sel[i]);
+	}
 }
 
 void MenuOptions::draw() {
@@ -142,6 +154,17 @@ int MenuOptions::handleSelection() {
 		menu_entry_rects[selection].w = (short int) options_sound_off_sel->w; 
 		setEntrySelection(selection);
 		return 0;
-	}else if(selection == 3)
+	} else if(selection == 2) {
+		if(screen->isFullscreen()) {
+			menu[selection] = options_window;
+			menu_sel[selection] = options_window_sel;
+		} else {
+			menu[selection] = options_fullscreen;
+			menu_sel[selection] = options_fullscreen_sel;
+		}
+		screen->toggleFullscreen();
+		this->draw();
+		return 0;
+	} else if(selection == 3)
 		return 2;
 }

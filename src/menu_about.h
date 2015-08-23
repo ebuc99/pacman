@@ -9,5 +9,7 @@ class MenuAbout : public Menu {
 		void draw();
 	private:
 		SDL_Surface *idea;
+		SDL_Surface *coding;
+		SDL_Surface *coding2;
 };
 #endif

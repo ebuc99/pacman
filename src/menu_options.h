@@ -12,7 +12,7 @@ class MenuOptions {
 		void draw();
 		int show();
 	private:
-		static const int NUM_MENU_ENTRIES = 4;
+		static const int NUM_MENU_ENTRIES = 3;
 		static const int MIN_FRAME_DURATION = 30;
 		SDL_Color textwhite;
 		SDL_Color textgray;

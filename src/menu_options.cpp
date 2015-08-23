@@ -33,15 +33,15 @@ MenuOptions::MenuOptions(Screen *screen, Labyrinth *labyrinth):
 		menu_sel = new SDL_Surface*[NUM_MENU_ENTRIES];
 		menu[0] = options_sound_on;
 		menu_sel[0] = options_sound_on_sel;
-		menu[1] = TTF_RenderText_Solid(font, "Key configuration", textgray);
-		menu_sel[1] = TTF_RenderText_Solid(largeFont, "Key configuration", textwhite);
-		menu[2] = options_window;
-		menu_sel[2] = options_window_sel;
-		menu[3] = TTF_RenderText_Solid(font, "back", textgray);
-		menu_sel[3] = TTF_RenderText_Solid(largeFont, "back", textwhite);
+		/*menu[1] = TTF_RenderText_Solid(font, "Key configuration", textgray);
+		menu_sel[1] = TTF_RenderText_Solid(largeFont, "Key configuration", textwhite);*/
+		menu[1] = options_window;
+		menu_sel[1] = options_window_sel;
+		menu[2] = TTF_RenderText_Solid(font, "back", textgray);
+		menu_sel[2] = TTF_RenderText_Solid(largeFont, "back", textwhite);
 		for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
 			menu_entry_rects[i].x = (short int) (320 - (menu_sel[i]->w >> 1));
-			menu_entry_rects[i].y = (short int) (220 + i*70 - (menu_sel[i]->h >> 1));
+			menu_entry_rects[i].y = (short int) (290 + i*70 - (menu_sel[i]->h >> 1));
 			menu_entry_rects[i].w = (short int) menu_sel[i]->w;
 			menu_entry_rects[i].h = (short int) menu_sel[i]->h;
 		}
@@ -154,7 +154,7 @@ int MenuOptions::handleSelection() {
 		menu_entry_rects[selection].w = (short int) options_sound_off_sel->w; 
 		setEntrySelection(selection);
 		return 0;
-	} else if(selection == 2) {
+	} else if(selection == 1) {
 		if(screen->isFullscreen()) {
 			menu[selection] = options_window;
 			menu_sel[selection] = options_window_sel;
@@ -165,6 +165,6 @@ int MenuOptions::handleSelection() {
 		screen->toggleFullscreen();
 		this->draw();
 		return 0;
-	} else if(selection == 3)
+	} else if(selection == 2)
 		return 2;
 }

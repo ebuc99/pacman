@@ -192,6 +192,10 @@ int Game::eventloop(bool allowPacmanControl, int *neededTime) {
 					}
 				}
 			}
+			if((event.key.keysym.sym == SDLK_q)||(event.key.keysym.sym == SDLK_ESCAPE)) {
+				this->stop(1);
+				return 0;
+			}
 			break;
 		case SDL_QUIT:
 			this->stop(1);

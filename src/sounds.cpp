@@ -151,6 +151,9 @@ void Sounds::music_stop() {
 	eat_ghost_cnt = 0;
 }
 
+void Sounds::channelStop() {
+	Mix_HaltChannel(-1);
+}
 void Sounds::pause_all() {
 	if(!Mix_PausedMusic())
 		Mix_PauseMusic();

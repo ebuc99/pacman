@@ -213,7 +213,8 @@ void Game::stop(uint16_t stop) {
 		ghosts_figur[3]->set_stop(true);
 		pacman->set_stop(true);
 		stop_moving = 1;
-		labyrinth->getSounds()->music_stop();	
+		labyrinth->getSounds()->music_stop();
+		labyrinth->getSounds()->channelStop();
 	} else {
 		ghosts_figur[0]->set_stop(false);
 		ghosts_figur[1]->set_stop(false);

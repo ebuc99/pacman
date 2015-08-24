@@ -21,6 +21,7 @@ class Sounds {
 		void eat_ghost_start();
 		void eat_ghost_stop();
 		void music_stop();
+		void channelStop();
 		void playSingleSound(SingleSounds singlesounds);
 	protected:
 		bool enabled;

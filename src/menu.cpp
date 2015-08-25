@@ -45,6 +45,8 @@ int Menu::eventloop() {
 		case SDL_KEYDOWN:
 				if(event.key.keysym.sym == SDLK_RETURN)
 					return 1;
+				if((event.key.keysym.sym == SDLK_q)||(event.key.keysym.sym == SDLK_ESCAPE))
+					return 1;
 				break;
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.button.button == SDL_BUTTON_LEFT)

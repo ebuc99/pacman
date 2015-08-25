@@ -25,7 +25,8 @@ class MenuOptions {
 		SDL_Surface *options_window, *options_window_sel, *options_fullscreen, *options_fullscreen_sel;
 		TTF_Font *font, *largeFont, *veryLargeFont;
 		SDL_Rect menu_entry_rects[NUM_MENU_ENTRIES];
-		void setEntrySelection(int selection);
+		void drawEntrySelection(int selection);
+		void setMenuSelections();
 		int selection;
 		int handleSelection();
 };

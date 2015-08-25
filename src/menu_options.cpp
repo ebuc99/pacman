@@ -1,7 +1,7 @@
 #include "menu_options.h"
 
 MenuOptions::MenuOptions(Screen *screen, Labyrinth *labyrinth):
-	selection(0) {
+	selection(2) {
 		this->screen = screen;
 		this->labyrinth = labyrinth;
 		textwhite.r = textwhite.g = textwhite.b = 255;
@@ -33,8 +33,6 @@ MenuOptions::MenuOptions(Screen *screen, Labyrinth *labyrinth):
 		menu_sel = new SDL_Surface*[NUM_MENU_ENTRIES];
 		menu[0] = options_sound_on;
 		menu_sel[0] = options_sound_on_sel;
-		/*menu[1] = TTF_RenderText_Solid(font, "Key configuration", textgray);
-		menu_sel[1] = TTF_RenderText_Solid(largeFont, "Key configuration", textwhite);*/
 		menu[1] = options_window;
 		menu_sel[1] = options_window_sel;
 		menu[2] = TTF_RenderText_Solid(font, "back", textgray);
@@ -76,7 +74,7 @@ void MenuOptions::draw() {
 	rect.w = 640;
 	rect.h = 480;
 	screen->draw(optionsTitle, 320 - (optionsTitle->w >> 1), 50);
-	setEntrySelection(selection);
+	drawEntrySelection(selection);
 	screen->AddUpdateRects(0, 0, 640, 480);
 	screen->Refresh();
 }
@@ -97,17 +95,28 @@ int MenuOptions::eventloop() {
 				}
 				else if(event.key.keysym.sym == SDLK_UP) {
 					selection = (--selection + NUM_MENU_ENTRIES) % NUM_MENU_ENTRIES;
-					setEntrySelection(selection);
+					drawEntrySelection(selection);
 				}
 				else if(event.key.keysym.sym == SDLK_DOWN) {
 					selection = ++selection % NUM_MENU_ENTRIES;
-					setEntrySelection(selection);
+					drawEntrySelection(selection);
+				}
+				else if(event.key.keysym.sym == SDLK_f) {
+					screen->toggleFullscreen();
+					this->draw();
+				}
+				else if(event.key.keysym.sym == SDLK_s) {
+					labyrinth->getSounds()->toggleEnabled();
+					this->draw();
+				}
+				else if((event.key.keysym.sym == SDLK_q)||(event.key.keysym.sym == SDLK_ESCAPE)) {
+					return 2;
 				}
 				break;
 		case SDL_MOUSEMOTION:
 			for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
 				if (menu_entry_rects[i].x <= event.motion.x && event.motion.x <= menu_entry_rects[i].x+menu_entry_rects[i].w && menu_entry_rects[i].y <= event.motion.y && event.motion.y <= menu_entry_rects[i].y+menu_entry_rects[i].h) {
-					setEntrySelection(selection = i);
+					drawEntrySelection(selection = i);
 					break;
 				}
 			}
@@ -129,7 +138,8 @@ int MenuOptions::eventloop() {
 }
 
 
-void MenuOptions::setEntrySelection(int selection) {
+void MenuOptions::drawEntrySelection(int selection) {
+	this->setMenuSelections();
 	for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
 		screen->fillRect(&menu_entry_rects[i], 0, 0, 0);
 		if(selection == i)
@@ -144,27 +154,34 @@ void MenuOptions::setEntrySelection(int selection) {
 int MenuOptions::handleSelection() {
 	if(selection == 0) {
 		labyrinth->getSounds()->toggleEnabled();
-		if (this->labyrinth->getSounds()->isEnabled()) {
-			menu[selection] = options_sound_on;
-			menu_sel[selection] = options_sound_on_sel;
-		} else {
-			menu[selection] = options_sound_off;
-			menu_sel[selection] = options_sound_off_sel;
-		}
-		menu_entry_rects[selection].w = (short int) options_sound_off_sel->w; 
-		setEntrySelection(selection);
+		this->draw();
 		return 0;
 	} else if(selection == 1) {
-		if(screen->isFullscreen()) {
-			menu[selection] = options_window;
-			menu_sel[selection] = options_window_sel;
-		} else {
-			menu[selection] = options_fullscreen;
-			menu_sel[selection] = options_fullscreen_sel;
-		}
 		screen->toggleFullscreen();
 		this->draw();
 		return 0;
 	} else if(selection == 2)
 		return 2;
+}
+
+void MenuOptions::setMenuSelections() {
+	const int SOUND = 0;
+	const int FULLSCREEN = 1;
+	if (this->labyrinth->getSounds()->isEnabled()) {
+		menu[SOUND] = options_sound_on;
+		menu_sel[SOUND] = options_sound_on_sel;
+	} else {
+		menu[SOUND] = options_sound_off;
+		menu_sel[SOUND] = options_sound_off_sel;
+	}
+	menu_entry_rects[SOUND].w = (short int) options_sound_off_sel->w; 
+
+	if(!screen->isFullscreen()) {
+		menu[FULLSCREEN] = options_window;
+		menu_sel[FULLSCREEN] = options_window_sel;
+	} else {
+		menu[FULLSCREEN] = options_fullscreen;
+		menu_sel[FULLSCREEN] = options_fullscreen_sel;
+	}
+	menu_entry_rects[FULLSCREEN].w = (short int) options_window_sel->w;
 }

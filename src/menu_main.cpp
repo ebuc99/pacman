@@ -32,6 +32,7 @@ MenuMain::MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *l
 		appTitle2 = TTF_RenderText_Solid(hugeFont, "man", textweiss);
 		getFilePath(filePath, "gfx/title_pacman.png");
 		titlePacman = screen->LoadSurface(filePath, 0);
+		version = TTF_RenderText_Solid(smallFont, "version 0.69", textgray);
 		menu = new SDL_Surface*[NUM_MENU_ENTRIES];
 		menu_sel = new SDL_Surface*[NUM_MENU_ENTRIES];
 		menu[0] = TTF_RenderText_Solid(font, "Start Game", textgray);
@@ -123,6 +124,8 @@ void MenuMain::draw() {
 	screen->draw(appTitle2, rect.x, 30);
 	rect.x = (short int) (rect.x - titlePacman->w);
 	screen->draw(titlePacman, rect.x, 40);
+	//rect.x = (short int) (rect.x - version->w);
+	screen->draw(version, (short int)(320 - (version->w >> 1)), 140);
 	setEntrySelection(selection);
 	screen->AddUpdateRects(0, 0, 640, 480);
 	screen->Refresh();
@@ -674,6 +677,9 @@ int MenuMain::eventloop() {
 				else if(event.key.keysym.sym == SDLK_DOWN) {
 					selection = ++selection % NUM_MENU_ENTRIES;
 					setEntrySelection(selection);
+				}
+				else if((event.key.keysym.sym == SDLK_q)||(event.key.keysym.sym == SDLK_ESCAPE)) {
+					return 2;
 				}
 				break;
 		case SDL_MOUSEMOTION:

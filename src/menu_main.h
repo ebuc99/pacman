@@ -35,7 +35,7 @@ class MenuMain {
 		int eventloop();
 		void setEntrySelection(int selection);
 		SDL_Rect menu_entry_rects[NUM_MENU_ENTRIES];
-		SDL_Surface *headline, *appTitle1, *appTitle2, *titlePacman;
+		SDL_Surface *headline, *appTitle1, *appTitle2, *titlePacman, *version;
 		SDL_Surface **menu, **menu_sel;
 		SDL_Surface *animScore200, *animScore400, *animScore800, *animScore1600;
 		SDL_Surface *pacmanName, *blinkyName, *pinkyName, *inkyName, *clydeName;

@@ -181,6 +181,10 @@ int Game::eventloop(bool allowPacmanControl, int *neededTime) {
 			    screen->toggleFullscreen();
 			    *neededTime = (int) (SDL_GetTicks() - ticksBefore);
 			}
+			/* Hier muß irgendwie noch mit pause music bzw. mixer gearbeitet werden
+			if(event.key.keysym.sym == SDLK_s) {
+				labyrinth->getSounds()->toggleEnabled();
+			}*/
 			if(event.key.keysym.sym == SDLK_p) {
 				if(!pacman->is_dying()) {
 					if(pause) {

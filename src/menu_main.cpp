@@ -32,7 +32,7 @@ MenuMain::MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *l
 		appTitle2 = TTF_RenderText_Solid(hugeFont, "man", textweiss);
 		getFilePath(filePath, "gfx/title_pacman.png");
 		titlePacman = screen->LoadSurface(filePath, 0);
-		version = TTF_RenderText_Solid(smallFont, "version 0.69", textgray);
+		version = TTF_RenderText_Solid(smallFont, "version 0.7.0", textgray);
 		menu = new SDL_Surface*[NUM_MENU_ENTRIES];
 		menu_sel = new SDL_Surface*[NUM_MENU_ENTRIES];
 		menu[0] = TTF_RenderText_Solid(font, "Start Game", textgray);

@@ -1,5 +1,35 @@
-- code review
-- some differences between the levels
-- sounds
-- start screen with some configurations
-- ...
+new features to be implemented:
+- command line parameters
+  - initially use fullscreen mode
+  - initially switch sound off
+  - help (which prints the usage info to stdout, and quits the application afterwards)
+- switch sound on/off ingame (button [S] ?), shortcut key can also be used within the menu - similar to [F] (toggle fullscreen mode)
+- show level number somewhere
+- show the remaining fruits to come for the current level
+
+necessary bug fixes:
+- When Pacman changes direction (especially within the last main menu animation), he seems to move backwards for a short time.
+- When the last pill is eaten, the background will not be redrawn - causing the score number to be painted over, and the last pill does not disappear even though it was eaten.
+- When a submenu (e.g. about) is selected, and the current animation displays a text, the text won't be redrawn when the user returns to the main menu and the animation continues.
+
+in general:
+- the great refactoring
+- look for further performance improvements (means less CPU usage)
+
+
+
+for future releases:
+- game statistics:
+  - how often eaten by which ghost
+  - how often eaten which ghost
+  - how many points per minute
+- high score list
+  - name, score, level, date+time
+  - sortable by different columns
+  - maximum number of entries - the last one (according to score) will be eliminated when a better entry is made.
+  - plausibility checks (to make manipulation a bit more difficult):
+    - Each level has a minimum score that must be reached, and a maximum score that can be reached. So, score and level must fit together.
+    - hash value (MD5 or so) that will also be written to the file, and that will be generated over the high score list's text (normalised line breaks necessary!) plus a formatted value of the "last modified" time of the file (including up to seconds). The list's content is valid only if the last modified time is not more than 1 second beyond the time that was used for the hash (worst case: 2 checks necessary).
+    - encoded game statistics that enable to recompute the correct score value - or the range that it must be in.
+    - If the high score table is invalid, it will be cleared immediately.
+  - If the plausibility checks are hard enough to break, a global high score list could be established. The server needs to reperform the plausibility checks. All necessary information has to be send, including the local high score file and it's "last modified" time.

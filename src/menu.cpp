@@ -31,7 +31,7 @@ Menu::~Menu() {
 
 void Menu::draw() {
 	screen->clear();
-	screen->draw(menuTitle, 320 - (menuTitle->w >> 1), 50);
+	this->drawTitle();
 	screen->draw(back, 320 - (back->w >> 1), 430 - (back->h >> 1));
 	screen->AddUpdateRects(0, 0, 640, 480);
 	screen->Refresh();
@@ -41,6 +41,10 @@ int Menu::show() {
 	int event;
 	while(!(event = eventloop()))
 		SDL_Delay(MIN_FRAME_DURATION);
+}
+
+void Menu::drawTitle() {
+	screen->draw(menuTitle, 320 - (menuTitle->w >> 1), 50);
 }
 
 int Menu::eventloop() {

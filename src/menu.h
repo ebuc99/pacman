@@ -10,6 +10,7 @@ class Menu {
 		~Menu();
 		virtual void draw();
 		virtual int show();
+		void drawTitle();
 	private:
 		static const int MIN_FRAME_DURATION = 30;
 		int eventloop();

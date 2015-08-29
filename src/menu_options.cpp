@@ -1,26 +1,11 @@
 #include "menu_options.h"
 
 MenuOptions::MenuOptions(Screen *screen, Labyrinth *labyrinth):
+	Menu(screen, "Options"),
 	selection(2) {
 		this->screen = screen;
 		this->labyrinth = labyrinth;
-		textwhite.r = textwhite.g = textwhite.b = 255;
-		textgray.r = textgray.g = textgray.b = 192;
 		char filePath[256];
-		getFilePath(filePath, "fonts/Cheapmot.TTF");
-		font = TTF_OpenFont(filePath, 20);
-		if(!font) {
-			printf("Unable to open TTF font: %s\n", TTF_GetError());
-		}
-		largeFont = TTF_OpenFont(filePath, 24);
-		if (!largeFont) {
-			printf("Unable to open TTF font: %s\n", TTF_GetError());
-		}
-		veryLargeFont = TTF_OpenFont(filePath, 48);
-		if (!veryLargeFont) {
-			printf("Unable to open TTF font: %s\n", TTF_GetError());
-		}
-		optionsTitle = TTF_RenderText_Solid(veryLargeFont, "Options", textwhite);
 		options_sound_on = TTF_RenderText_Solid(font, "Sound: on", textgray);
 		options_sound_on_sel = TTF_RenderText_Solid(largeFont, "Sound: on", textwhite);
 		options_sound_off = TTF_RenderText_Solid(font, "Sound: off", textgray);
@@ -46,7 +31,6 @@ MenuOptions::MenuOptions(Screen *screen, Labyrinth *labyrinth):
 }
 
 MenuOptions::~MenuOptions() {
-	SDL_FreeSurface(optionsTitle);
 	SDL_FreeSurface(options_sound_on);
 	SDL_FreeSurface(options_sound_on_sel);
 	SDL_FreeSurface(options_sound_off);
@@ -55,9 +39,6 @@ MenuOptions::~MenuOptions() {
 	SDL_FreeSurface(options_window_sel);
 	SDL_FreeSurface(options_fullscreen);
 	SDL_FreeSurface(options_fullscreen_sel);
-	TTF_CloseFont(font);
-	TTF_CloseFont(largeFont);
-	TTF_CloseFont(veryLargeFont);
 	delete[] menu;
 	delete[] menu_sel;
 	for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
@@ -68,12 +49,7 @@ MenuOptions::~MenuOptions() {
 
 void MenuOptions::draw() {
 	screen->clear();
-	SDL_Rect rect;
-	rect.x = 0;
-	rect.y = 0;
-	rect.w = 640;
-	rect.h = 480;
-	screen->draw(optionsTitle, 320 - (optionsTitle->w >> 1), 50);
+	this->drawTitle();
 	drawEntrySelection(selection);
 	screen->AddUpdateRects(0, 0, 640, 480);
 	screen->Refresh();
@@ -165,8 +141,7 @@ int MenuOptions::handleSelection() {
 }
 
 void MenuOptions::setMenuSelections() {
-	const int SOUND = 0;
-	const int FULLSCREEN = 1;
+	enum Entries {SOUND, FULLSCREEN};
 	if (this->labyrinth->getSounds()->isEnabled()) {
 		menu[SOUND] = options_sound_on;
 		menu_sel[SOUND] = options_sound_on_sel;

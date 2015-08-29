@@ -1,7 +1,7 @@
 #include "menu_about.h"
 
-MenuAbout::MenuAbout(Screen *screen, const char* title):
-		Menu(screen, title)
+MenuAbout::MenuAbout(Screen *screen):
+		Menu(screen, "About")
 {
 			idea = TTF_RenderText_Solid(largeFont, "idea: Toro Iwatani - Namco", textgray);
 			coding = TTF_RenderText_Solid(largeFont, "coding: Martin Prussak", textgray);
@@ -13,7 +13,7 @@ MenuAbout::~MenuAbout() {
 
 void MenuAbout::draw() {
 	screen->clear();
-	screen->draw(menuTitle, 320 - (menuTitle->w >> 1), 50);
+	this->drawTitle();
 	screen->draw(idea, 320 - (idea->w >> 1), 230 - (idea->h >> 1));
 	screen->draw(coding, 320 - (coding->w >> 1), 300 - (coding->h >> 1));
 	screen->draw(coding2, 320 - (coding2->w >> 1), 340 - (coding2->h >> 1));

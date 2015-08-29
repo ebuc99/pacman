@@ -4,7 +4,7 @@
 
 class MenuAbout : public Menu {
 	public:
-		MenuAbout(Screen *screen, const char* title);
+		MenuAbout(Screen *screen);
 		~MenuAbout();
 		void draw();
 	private:

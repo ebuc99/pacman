@@ -18,6 +18,6 @@ class Menu {
 		SDL_Surface *menuTitle, *back;
 		SDL_Color textwhite;
 		SDL_Color textgray;
-		TTF_Font *largeFont, *veryLargeFont;
+		TTF_Font *font, *smallFont, *largeFont, *veryLargeFont, *hugeFont;
 };
 #endif

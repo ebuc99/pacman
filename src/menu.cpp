@@ -6,22 +6,27 @@ Menu::Menu(Screen *screen, const char* title) {
 	textgray.r = textgray.g = textgray.b = 192;
 	char filePath[256];
 	getFilePath(filePath, "fonts/Cheapmot.TTF");
-	largeFont = TTF_OpenFont(filePath, 24);
-	if (!largeFont) {
+	if(!(font = TTF_OpenFont(filePath, 20)))
 		printf("Unable to open TTF font: %s\n", TTF_GetError());
-	}
-	veryLargeFont = TTF_OpenFont(filePath, 48);
-	if (!veryLargeFont) {
+	if (!(smallFont = TTF_OpenFont(filePath, 12)))
 		printf("Unable to open TTF font: %s\n", TTF_GetError());
-	}
+	if (!(largeFont = TTF_OpenFont(filePath, 24)))
+		printf("Unable to open TTF font: %s\n", TTF_GetError());
+	if (!(veryLargeFont = TTF_OpenFont(filePath, 48)))
+		printf("Unable to open TTF font: %s\n", TTF_GetError());
+	if (!(hugeFont = TTF_OpenFont(filePath, 96)))
+		printf("Unable to open TTF font: %s\n", TTF_GetError());
 	menuTitle = TTF_RenderText_Solid(veryLargeFont, title, textwhite);
 	back = TTF_RenderText_Solid(largeFont, "back", textwhite);
 }
 Menu::~Menu() {
 	SDL_FreeSurface(menuTitle);
 	SDL_FreeSurface(back);
+	TTF_CloseFont(font);
+	TTF_CloseFont(smallFont);
 	TTF_CloseFont(largeFont);
 	TTF_CloseFont(veryLargeFont);
+	TTF_CloseFont(hugeFont);
 }
 
 void Menu::draw() {

@@ -15,6 +15,8 @@ AM_CFLAGS =\
 pacman_SOURCES =  \
 	figur.cpp \
 	figur.h \
+	game.cpp \
+	game.h \
 	ghost_figur.cpp \
 	ghost_figur.h \
 	pacman.cpp \
@@ -58,21 +60,21 @@ pacman_CXXFLAGS = -ansi \
 	-Wfloat-equal \
 	-Wunreachable-code \
 	-Wno-reorder \
-	-D_GNU_SOURCE 
+	-D_GNU_SOURCE
 
-pacman_LDFLAGS = $(SDL_CFLAGS) 
+pacman_LDFLAGS = $(SDL_CFLAGS)
 
 pacman_LDADD =  \
 	$(SDL_LIBS) \
 	-lSDL_mixer
- 
+
 
 pacmanEXTRA_DIST = libsdl \
 	sdl-image \
 	sdl-ttf \
-	sdl-mixer 
+	sdl-mixer
 
-  
+
 
 bin_PROGRAMS =  \
 	pacman

@@ -2,8 +2,7 @@
 #include "math.h"
 
 
-Figur::Figur(int init_x, int init_y, int init_v,
-             Screen *screen, Labyrinth *labyrinth):
+Figur::Figur(int init_x, int init_y, int init_v):
 	initial_x(init_x),
 	initial_y(init_y),
 	initial_v(init_v),
@@ -16,8 +15,6 @@ Figur::Figur(int init_x, int init_y, int init_v,
 	cur_y = init_y << 10;
 	dx = init_v;
 	dy = init_v;
-	this->screen = screen;
-	this->labyrinth = labyrinth;
 }
 
 Figur::~Figur() {
@@ -63,7 +60,7 @@ void Figur::move_dir(int ms, Direction direction) {
 	if(direction == RIGHT)
 		move_right(ms);
 	if(direction == DOWN)
-		move_down(ms);		
+		move_down(ms);
 }
 void Figur::set_speed(int v) {
 	dx = v;
@@ -108,7 +105,7 @@ void Figur::set_stop(int stop) {
 	if(stop){
 		last_speed = this->get_speed();
 		this->set_speed(0);
-	} 
+	}
 	else {
 		this->set_speed(last_speed);
 	}
@@ -137,7 +134,7 @@ int Figur::greatest(int a, int b) {
                 exit(EXIT_FAILURE);
         }
     SDL_FreeSurface(temp);
-    return surface;	
+    return surface;
 }*/
 
 void Figur::reset() {

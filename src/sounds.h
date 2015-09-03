@@ -6,8 +6,8 @@
 
 class Sounds {
 	public:
-		Sounds();
-		~Sounds();
+		static Sounds *getInstance();
+		static void cleanUpInstance();
 		bool isEnabled() const;
 		void setEnabled(bool newValue = true);
 		void toggleEnabled();
@@ -24,6 +24,9 @@ class Sounds {
 		void channelStop();
 		void playSingleSound(SingleSounds singlesounds);
 	protected:
+		static Sounds *instance;
+		Sounds();
+		~Sounds();
 		bool enabled;
 		Mix_Chunk *chunk_munch_a = NULL;
 		Mix_Chunk *chunk_munch_b = NULL;

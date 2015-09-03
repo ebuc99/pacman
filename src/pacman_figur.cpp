@@ -1,8 +1,9 @@
 #include "pacman_figur.h"
+#include "ghost_figur.h"
 #include "math.h"
 
-Pacman::Pacman(int init_x, int init_y, Screen *screen, Labyrinth *labyrinth, int lives):
-	Figur(init_x, init_y, PACMAN_V_FAST, screen, labyrinth),
+Pacman::Pacman(int init_x, int init_y, int lives):
+	Figur(init_x, init_y, PACMAN_V_FAST),
 	animation(0),
 	cnt_animation(0),
 	pacman_stopped(0),
@@ -18,74 +19,74 @@ Pacman::Pacman(int init_x, int init_y, Screen *screen, Labyrinth *labyrinth, int
 	direction_pre = LEFT;
 	char filePath[256];
 	getFilePath(filePath, "gfx/pacman.png");
-	pacman_normal = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_links_1.png");	
-	pacman_links_1 = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_links_2.png");	
-    pacman_links_2 = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_oben_1.png");	
-    pacman_oben_1 = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_oben_2.png");	
-    pacman_oben_2 = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_rechts_1.png");	
-    pacman_rechts_1 = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_rechts_2.png");	
-    pacman_rechts_2 = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_unten_1.png");	
-    pacman_unten_1 = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_unten_2.png");	
-    pacman_unten_2 = screen->LoadSurface(filePath, 255);
+	pacman_normal = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_links_1.png");
+	pacman_links_1 = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_links_2.png");
+    pacman_links_2 = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_oben_1.png");
+    pacman_oben_1 = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_oben_2.png");
+    pacman_oben_2 = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_rechts_1.png");
+    pacman_rechts_1 = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_rechts_2.png");
+    pacman_rechts_2 = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_unten_1.png");
+    pacman_unten_1 = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_unten_2.png");
+    pacman_unten_2 = Screen::getInstance()->LoadSurface(filePath, 255);
 	// initialize all pacman images
     ar_pacman_links[0] = pacman_links_1;
     ar_pacman_links[1] = pacman_links_2;
     ar_pacman_links[2] = pacman_links_1;
     ar_pacman_links[3] = pacman_normal;
-        
+
     ar_pacman_oben[0] = pacman_oben_1;
     ar_pacman_oben[1] = pacman_oben_2;
     ar_pacman_oben[2] = pacman_oben_1;
     ar_pacman_oben[3] = pacman_normal;
-        
+
     ar_pacman_rechts[0] = pacman_rechts_1;
     ar_pacman_rechts[1] = pacman_rechts_2;
     ar_pacman_rechts[2] = pacman_rechts_1;
     ar_pacman_rechts[3] = pacman_normal;
-        
+
     ar_pacman_unten[0] = pacman_unten_1;
     ar_pacman_unten[1] = pacman_unten_2;
     ar_pacman_unten[2] = pacman_unten_1;
     ar_pacman_unten[3] = pacman_normal;
 
-	getFilePath(filePath, "gfx/pacman_die_1.png");	
-    ar_pacman_die[0] = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_2.png");	
-    ar_pacman_die[1] = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_3.png");	
-    ar_pacman_die[2] = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_4.png");	
-    ar_pacman_die[3] = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_5.png");	
-    ar_pacman_die[4] = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_6.png");	
-    ar_pacman_die[5] = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_10.png");	
-	ar_pacman_die[6] = screen->LoadSurface(filePath, 255);
-	ar_pacman_die[7] = screen->LoadSurface(filePath, 255);
-	ar_pacman_die[8] = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_7.png");	
-	ar_pacman_die[9] = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_8.png");	
-    ar_pacman_die[10] = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_9.png");	
-    ar_pacman_die[11] = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_7.png");	
-    ar_pacman_die[12] = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_8.png");	
-    ar_pacman_die[13] = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_9.png");	
-    ar_pacman_die[14] = screen->LoadSurface(filePath, 255);
-    ar_pacman_die[15] = screen->LoadSurface(filePath, 255);
-	
+	getFilePath(filePath, "gfx/pacman_die_1.png");
+    ar_pacman_die[0] = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_die_2.png");
+    ar_pacman_die[1] = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_die_3.png");
+    ar_pacman_die[2] = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_die_4.png");
+    ar_pacman_die[3] = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_die_5.png");
+    ar_pacman_die[4] = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_die_6.png");
+    ar_pacman_die[5] = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_die_10.png");
+	ar_pacman_die[6] = Screen::getInstance()->LoadSurface(filePath, 255);
+	ar_pacman_die[7] = Screen::getInstance()->LoadSurface(filePath, 255);
+	ar_pacman_die[8] = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_die_7.png");
+	ar_pacman_die[9] = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_die_8.png");
+    ar_pacman_die[10] = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_die_9.png");
+    ar_pacman_die[11] = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_die_7.png");
+    ar_pacman_die[12] = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_die_8.png");
+    ar_pacman_die[13] = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/pacman_die_9.png");
+    ar_pacman_die[14] = Screen::getInstance()->LoadSurface(filePath, 255);
+    ar_pacman_die[15] = Screen::getInstance()->LoadSurface(filePath, 255);
+
 	this->pacman_sf = ar_pacman_links[0];
 }
 
@@ -104,8 +105,8 @@ Pacman::~Pacman() {
 }
 
 void Pacman::draw() {
-	if (this->visible)
-	    this->screen->draw(this->pacman_sf, this->x, this->y);
+	if (visible)
+	    Screen::getInstance()->draw(pacman_sf, x, y);
 }
 
 void Pacman::checkAnimationChange() {
@@ -117,7 +118,7 @@ void Pacman::checkAnimationChange() {
 }
 
 void Pacman::move(int ms) {
-	this->move_on_rails(ms, this->labyrinth->array_rails);		
+	this->move_on_rails(ms, Labyrinth::getInstance()->array_rails);
 	if (last_x != x || last_y != y)
 		this->addUpdateRect();
 }
@@ -233,7 +234,7 @@ void Pacman::move_on_rails(int ms, Rail **ar_s) {
 	if (!moved) {
 		// Find the rail that pacman is positioned on. Also, consider the direction that the player wants to move.
 		int idxLeft, idxRight, idxUp, idxDown;
-		this->labyrinth->getRailsForPoint(this->x, this->y, &idxLeft, &idxRight, &idxUp, &idxDown);
+		Labyrinth::getInstance()->getRailsForPoint(this->x, this->y, &idxLeft, &idxRight, &idxUp, &idxDown);
 		if (idxLeft>=0 && this->x <= ar_s[idxLeft]->x1)
 			idxLeft = -1;
 		if (idxRight>=0 && ar_s[idxRight]->x2 <= this->x)
@@ -279,7 +280,7 @@ void Pacman::move_on_rails(int ms, Rail **ar_s) {
 	}
 	if (new_dir != old_dir)
 		this->animation = 1;
-	if (!moved) 
+	if (!moved)
 		this->pacman_stopped = 1;
 }
 
@@ -288,7 +289,7 @@ int Pacman::is_pacman_stopped() {
 		pacman_stopped = 0;
 		return 1;
 	} else
-		return 0;	
+		return 0;
 }
 
 void Pacman::reset() {
@@ -317,25 +318,25 @@ SDL_Surface* Pacman::get_Surface() const {
 	return pacman_sf;
 }
 
-int Pacman::touch(Figur **ghost_array) const{
+bool Pacman::ghostTouched() const{
 	int x_left_pacman = this->x;
 	int y_up_pacman = this->y;
 	int x_right_pacman = this->x + this->get_Surface()->w;
 	int y_down_pacman = this->y + this->get_Surface()->h;
 	int touch_result = 0;
-	
-    for(int i = 0; i <= 3; i++) {
-    	int x_real_ghost = ghost_array[i]->x + (int)(ghost_array[i]->get_Surface()->w * 0.5);
-		int y_real_ghost = ghost_array[i]->y + (int)(ghost_array[i]->get_Surface()->h * 0.5);
+
+    for(int i = 0; i < 4; i++) {
+    	int x_real_ghost = Ghost::allGhosts[i]->x + (int)(Ghost::allGhosts[i]->get_Surface()->w * 0.5);
+		int y_real_ghost = Ghost::allGhosts[i]->y + (int)(Ghost::allGhosts[i]->get_Surface()->h * 0.5);
 		if((x_real_ghost >= x_left_pacman) && (x_real_ghost <= x_right_pacman) && (y_real_ghost >= y_up_pacman) && (y_real_ghost <= y_down_pacman))
-			touch_result = ghost_array[i]->touched();
+			touch_result = Ghost::allGhosts[i]->touched();
 			if(touch_result != 0)
-				return 1;
-	}			
-	return 0;
+				return true;
+	}
+	return false;
 }
 
-void Pacman::check_eat_pills(Figur **ghost_array) {
+void Pacman::check_eat_pills() {
 	if(was_moving() && !is_dying()){
 		int tmp_last_x = this->last_x;
 		if (this->y == 215) {
@@ -344,39 +345,39 @@ void Pacman::check_eat_pills(Figur **ghost_array) {
 			if (this->last_x > 310 && this->x < 310)  // tunnel crossed - gone out to the right and coming in from the left
 				tmp_last_x = 99;  // if we did not pretend something like this, a pill would be eaten that Pacman did not really pass
 		}
-		for (int k = 0; k < this->labyrinth->array_rails[idxCurrentRail]->numPills; k++) {
-			int i = this->labyrinth->array_rails[idxCurrentRail]->idxPills[k];
-			if(i >= 0 && this->labyrinth->pillen[i].sichtbar && ((this->labyrinth->pillen[i].x - 10) >= least(this->x,tmp_last_x)) && ((this->labyrinth->pillen[i].x - 10) <= greatest(this->x,tmp_last_x)) && ((this->labyrinth->pillen[i].y - 10) >= least(this->y,this->last_y)) && ((this->labyrinth->pillen[i].y - 10) <= greatest(this->y,this->last_y))) {
+		for (int k = 0; k < Labyrinth::getInstance()->array_rails[idxCurrentRail]->numPills; k++) {
+			int i = Labyrinth::getInstance()->array_rails[idxCurrentRail]->idxPills[k];
+			if(i >= 0 && Labyrinth::getInstance()->pillen[i].sichtbar && ((Labyrinth::getInstance()->pillen[i].x - 10) >= least(this->x,tmp_last_x)) && ((Labyrinth::getInstance()->pillen[i].x - 10) <= greatest(this->x,tmp_last_x)) && ((Labyrinth::getInstance()->pillen[i].y - 10) >= least(this->y,this->last_y)) && ((Labyrinth::getInstance()->pillen[i].y - 10) <= greatest(this->y,this->last_y))) {
 				cnt_slow = 15;
-				this->labyrinth->hidePill(i);
-				this->set_speed(PACMAN_V_SLOW);
-				this->labyrinth->addScore(10);
-				this->labyrinth->decreasePills();
-				this->labyrinth->getSounds()->munch();
-				if(this->labyrinth->pillen[i].superpille) {
+				Labyrinth::getInstance()->hidePill(i);
+				set_speed(PACMAN_V_SLOW);
+				Labyrinth::getInstance()->addScore(10);
+				Labyrinth::getInstance()->decreasePills();
+				Sounds::getInstance()->munch();
+				if(Labyrinth::getInstance()->pillen[i].superpille) {
 					for(int j = 0; j < 4; ++j) {
-						if(ghost_array[j]->get_hunter() != NONE)  // eaten ghosts still have to return to the castle
-							ghost_array[j]->set_hunter(PACMAN);
+						if(Ghost::allGhosts[j]->get_hunter() != NONE)  // eaten ghosts still have to return to the castle
+							Ghost::allGhosts[j]->set_hunter(PACMAN);
 					}
-					this->labyrinth->startHuntingMode();
-					this->labyrinth->addScore(40);
+					Labyrinth::getInstance()->startHuntingMode();
+					Labyrinth::getInstance()->addScore(40);
 				}
 				break;
 			}
 		}
 		// only if pacman really has moved
 		if(cnt_slow > 0)
-			cnt_slow--; 
+			cnt_slow--;
 		if(cnt_slow <= 0)
-			this->set_speed(PACMAN_V_FAST); // make pacman fast again
+			set_speed(PACMAN_V_FAST); // make pacman fast again
 
 		// fruit eaten?
-		if(labyrinth->fruitIsDisplayed() && this->y == 257 && ((this->x>=310 && this->last_x<=310) || (this->x<=310 && this->last_x>=310))) {
-			labyrinth->playSoundFruit();
-			labyrinth->hideFruit();
-			labyrinth->addScore(labyrinth->getFruitBonus(), 310 + 10, 257 + 10);
-			this->setVisibility(0);
-			labyrinth->sleep(400);
+		if(Labyrinth::getInstance()->fruitIsDisplayed() && this->y == 257 && ((this->x>=310 && this->last_x<=310) || (this->x<=310 && this->last_x>=310))) {
+			Labyrinth::getInstance()->playSoundFruit();
+			Labyrinth::getInstance()->hideFruit();
+			Labyrinth::getInstance()->addScore(Labyrinth::getInstance()->getFruitBonus(), 310 + 10, 257 + 10);
+			setVisibility(0);
+			Labyrinth::getInstance()->sleep(400);
 		}
 	}
 }
@@ -390,11 +391,11 @@ int Pacman::is_dying() const {
 }
 
 int Pacman::die_animation(bool skipSound) {
-	if(dying > 1) 
+	if(dying > 1)
 		return dying--;
 	else {
 		if(!die_counter && !skipSound)
-			labyrinth->playSoundDying();
+			Labyrinth::getInstance()->playSoundDying();
 		this->die_pic(die_counter++);
 		if(die_counter == 16) {
 			die_counter = 0;
@@ -405,7 +406,7 @@ int Pacman::die_animation(bool skipSound) {
 }
 
 void Pacman::addUpdateRect() {
-	screen->AddUpdateRects(least(x,last_x), least(y,last_y), pacman_sf->w + abs(x-last_x), pacman_sf->h + abs(y-last_y));
+	Screen::getInstance()->AddUpdateRects(least(x,last_x), least(y,last_y), pacman_sf->w + abs(x-last_x), pacman_sf->h + abs(y-last_y));
 }
 
 void Pacman::drawLives() {
@@ -413,8 +414,8 @@ void Pacman::drawLives() {
 	const int Y_POS = 110;
 	const int X_OFFSET = pacman_links_1->w + 3;
 	for (int i = 0; i < remainingLives-1; ++i)
-		screen->draw(pacman_links_1, X_POS+(i*X_OFFSET), Y_POS);
-	screen->AddUpdateRects(X_POS, Y_POS, (remainingLives*X_OFFSET)+pacman_links_1->w, pacman_links_1->h);
+		Screen::getInstance()->draw(pacman_links_1, X_POS+(i*X_OFFSET), Y_POS);
+	Screen::getInstance()->AddUpdateRects(X_POS, Y_POS, (remainingLives*X_OFFSET)+pacman_links_1->w, pacman_links_1->h);
 }
 
 void Pacman::addLives(int num) {

@@ -9,10 +9,16 @@
 #include "platform.h"
 
 class Labyrinth {
-	private: 
+	private:
+		static Labyrinth *instance;
+
+		//constructor and destructor
+		Labyrinth();
+		~Labyrinth();
+
 		static const int NUMBER_RAILS = 91; // number of rails
 		static const int NUMBER_RAILS_PILLS = 69; // number of pill-filled rails
-		int cnt_pill_animation; 
+		int cnt_pill_animation;
 		Rail *s0,  *s1,  *s2,  *s3,  *s4,  *s5,  *s6,  *s7,  *s8,  *s9,
 		    *s10, *s11, *s12, *s13, *s14, *s15, *s16, *s17, *s18, *s19,
 		    *s20, *s21, *s22, *s23, *s24, *s25,	*s26, *s27, *s28, *s29,
@@ -24,7 +30,6 @@ class Labyrinth {
 		    *s80, *s81, *s82, *s83, *s84, *s85, *s86, *s87, *s88, *s89,
 		    *s90;
 		SDL_Surface *pille, *superpille, *ar_superpille[5];
-		Sounds *sounds;
 		int punktestand;
 		int bonus_stage; //200, 400, 800, 1600
 		TTF_Font *font, *smallFont;
@@ -40,9 +45,8 @@ class Labyrinth {
 		int fruit_bonus;
 		int idxSuperpills[4];
 	public:
-		//constructor and destructor
-		Labyrinth(Screen *screen);
-		~Labyrinth();
+		static Labyrinth* getInstance();
+		static void cleanUpInstance();
 
 		// At the left and right of the tunnel, there are two black rectangles,
 		// below which pacman and the ghosts will disappear if they leave the
@@ -67,7 +71,7 @@ class Labyrinth {
 
 		static const int NUMBER_PILLS = 246; // number of pills
 		Pille pillen[NUMBER_PILLS];
-		
+
 		Rail *array_rails[NUMBER_RAILS];
 		Rail *array_rails_pills[NUMBER_RAILS_PILLS];
 
@@ -106,7 +110,7 @@ class Labyrinth {
 
 		// set init text, color is 1=yellow, 2=red, white otherwise.
 		void setInitText(const char *text, int color = 0);
-		
+
 		// level init text
 		void drawInitText();
 
@@ -122,7 +126,7 @@ class Labyrinth {
 		// set level
 		void setLevel(int level);
 
-		// start the fruit randomizer 
+		// start the fruit randomizer
 		// first fruit after 50, 60, 70 or 80
 		// eaten pills
 		void startFruitRandomizer(int new_level);
@@ -155,13 +159,13 @@ class Labyrinth {
 
 		// eating the fruit sound
 		void playSoundFruit();
-	
+
 		// the sound of dying
 		void playSoundDying();
 
 		// pacman eats ghost
 		void playEatGhost();
-	
+
 		// get all the fancy sounds
 		Sounds* getSounds();
 

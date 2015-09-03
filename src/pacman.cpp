@@ -17,34 +17,9 @@ const uint16_t START_OFFSET_2 = 1500;
 const int INITIAL_LIVES = 3;              // number of times the player must die to get the "game over"
 const int RED = 2;                        // color red for init text
 
-// initialize static member variables
-int Ghost::was_moving_leader = 1;
-
-Screen *screen;
-
 int stop_moving = 0;
 int refresh_ghosts = 0;
 uint16_t pause = 0;
-float speed_ghosts;
-float speed_pacman;
-
-static SDL_Surface *LoadSurface(const char *filename, int transparent_color = -1) {
-	SDL_Surface *surface, *temp;
-	temp = IMG_Load(filename);
-	if(!temp) {
-		printf("Unable to load image: %s\n", IMG_GetError());
-		exit(-1);
-	}
-	if(transparent_color != -1)
-		SDL_SetColorKey(temp, SDL_SRCCOLORKEY | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, (uint8_t)transparent_color, (uint8_t)transparent_color, (uint8_t)transparent_color));
-	surface = SDL_DisplayFormat(temp);
-	if(surface == NULL) {
-		printf("Unable to convert image to display format: %s\n", SDL_GetError());
-                exit(EXIT_FAILURE);
-        }
-    SDL_FreeSurface(temp);
-    return surface;	
-}
 
 // decide whether something has to be redrawn
 static int moving() {
@@ -61,18 +36,15 @@ static void reset_all(Pacman *pacman, Ghost **ghost_array) {
 
 class Game {
 	private:
-		Screen *screen;
 		Pacman *pacman;
 		Ghost **ghosts;
-		Figur **ghosts_figur;
-		Labyrinth *labyrinth;
 		SDL_Surface *background, *score;
 		TTF_Font *font, *smallFont;
 		SDL_Color textweiss = {255, 255, 255, 0};
 		int numberGhosts;
 		int gameOver;
 	public:
-		Game(Screen *screen, Pacman *pacman, Ghost *ghosts[], Figur *ghosts_figur[], Labyrinth *labyrinth);
+		Game(Pacman *pacman);
 		~Game();
 		void init();
 		int getDelayTime(Uint32 *currentTicks);
@@ -84,19 +56,16 @@ class Game {
 		int isGameOver();
 };
 
-Game::Game(Screen *screen, Pacman *pacman, Ghost *ghosts[], Figur *ghosts_figur[], Labyrinth *labyrinth):
+Game::Game(Pacman *pacman):
 	numberGhosts(4),
 	gameOver(0) {
-	this->screen = screen;
 	this->pacman = pacman;
-	this->ghosts = ghosts;
-	this->labyrinth = labyrinth;
+	this->ghosts = Ghost::allGhosts;
 	this->background = background;
-	this->ghosts_figur = ghosts_figur;
 	// initialize background graphic
 	char filePath[256];
 	getFilePath(filePath, "gfx/hintergrund2.png");
-    background = LoadSurface(filePath);
+    background = Screen::getInstance()->LoadSurface(filePath);
 	if(TTF_Init() == -1) {
 		printf("Unable to init TTF: %s\n", TTF_GetError());
 	}
@@ -109,7 +78,7 @@ Game::Game(Screen *screen, Pacman *pacman, Ghost *ghosts[], Figur *ghosts_figur[
 	if (!smallFont) {
 		printf("Unable to open TTF font: %s\n", TTF_GetError());
 	}
-	labyrinth->setFonts(font, smallFont);
+	Labyrinth::getInstance()->setFonts(font, smallFont);
 	score = TTF_RenderText_Solid(font, "Score", textweiss);
 	if(score == NULL) {
 		printf("Unable to render text: %s\n", TTF_GetError());
@@ -122,26 +91,25 @@ Game::~Game() {
     TTF_Quit();
 }
 void Game::init() {
-	labyrinth->init_pillen(background, true);
-	labyrinth->draw_pillen();  // including background
-	labyrinth->setInitText("Get Ready!");
-	labyrinth->startFruitRandomizer(true);
-	labyrinth->setLevel(1);
+	Labyrinth::getInstance()->init_pillen(background, true);
+	Labyrinth::getInstance()->draw_pillen();  // including background
+	Labyrinth::getInstance()->setInitText("Get Ready!");
+	Labyrinth::getInstance()->startFruitRandomizer(true);
+	Labyrinth::getInstance()->setLevel(1);
 	reset_all(pacman, ghosts);
 	pacman->setVisibility(1);
-	int i;
-	for(i = 0; i < numberGhosts; ++i)
-		ghosts[i]->setVisibility(1);
 	pacman->draw();
-	for(i = 0; i < numberGhosts; ++i)
+	for (int i = 0; i < numberGhosts; ++i) {
+		ghosts[i]->setVisibility(1);
 		ghosts[i]->draw();
+	}
 	pacman->setRemainingLives(INITIAL_LIVES);
-	labyrinth->resetScore();
+	Labyrinth::getInstance()->resetScore();
 	setGameOver(0);
-	screen->draw(score, 530, 30);
+	Screen::getInstance()->draw(score, 530, 30);
 	pacman->drawLives();
-	screen->AddUpdateRects(0, 0, background->w, background->h);
-	screen->Refresh();
+	Screen::getInstance()->AddUpdateRects(0, 0, background->w, background->h);
+	Screen::getInstance()->Refresh();
 }
 
 int Game::getDelayTime(Uint32 *currentTicks) {
@@ -165,38 +133,34 @@ int Game::eventloop(bool allowPacmanControl, int *neededTime) {
 		switch(event.type) {
 		case SDL_KEYDOWN:
 			if(isGameOver())
-					return 0;
+				return 0;
 			if(allowPacmanControl && !pacman->is_dying() && !pause) {
 				if(event.key.keysym.sym == SDLK_LEFT)
 					pacman->direction_pre = Figur::LEFT;
-				if(event.key.keysym.sym == SDLK_UP) 
-					pacman->direction_pre = Figur::UP; 
-				if(event.key.keysym.sym == SDLK_RIGHT) 
+				if(event.key.keysym.sym == SDLK_UP)
+					pacman->direction_pre = Figur::UP;
+				if(event.key.keysym.sym == SDLK_RIGHT)
 					pacman->direction_pre = Figur::RIGHT;
-				if(event.key.keysym.sym == SDLK_DOWN) 
-					pacman->direction_pre = Figur::DOWN; 
+				if(event.key.keysym.sym == SDLK_DOWN)
+					pacman->direction_pre = Figur::DOWN;
 			}
 			if(event.key.keysym.sym == SDLK_f) {
 				Uint32 ticksBefore = SDL_GetTicks();
-			    screen->toggleFullscreen();
+			    Screen::getInstance()->toggleFullscreen();
 			    *neededTime = (int) (SDL_GetTicks() - ticksBefore);
-			}
-			/* Hier muß irgendwie noch mit pause music bzw. mixer gearbeitet werden
-			if(event.key.keysym.sym == SDLK_s) {
-				labyrinth->getSounds()->toggleEnabled();
-			}*/
-			if(event.key.keysym.sym == SDLK_p) {
+			/*} else if(event.key.keysym.sym == SDLK_s) {
+				Sounds::getInstance()->toggleEnabled();*/
+			} else if(event.key.keysym.sym == SDLK_p) {
 				if(!pacman->is_dying()) {
 					if(pause) {
 						pause = 0;
-						labyrinth->getSounds()->resume_all();
+						Sounds::getInstance()->resume_all();
 					} else {
 						pause = 1;
-						labyrinth->getSounds()->pause_all();
+						Sounds::getInstance()->pause_all();
 					}
 				}
-			}
-			if((event.key.keysym.sym == SDLK_q)||(event.key.keysym.sym == SDLK_ESCAPE)) {
+			} else if((event.key.keysym.sym == SDLK_q)||(event.key.keysym.sym == SDLK_ESCAPE)) {
 				this->stop(1);
 				return 0;
 			}
@@ -204,36 +168,32 @@ int Game::eventloop(bool allowPacmanControl, int *neededTime) {
 		case SDL_QUIT:
 			this->stop(1);
 			return 0;
-		}		
+		}
 	}
 	return 1;
 }
 
 void Game::stop(uint16_t stop) {
 	if(stop) {
-		ghosts_figur[0]->set_stop(true);
-		ghosts_figur[1]->set_stop(true);
-		ghosts_figur[2]->set_stop(true);
-		ghosts_figur[3]->set_stop(true);
 		pacman->set_stop(true);
+		for (int i = 0; i < 4; ++i)
+			ghosts[i]->set_stop(true);
 		stop_moving = 1;
-		labyrinth->getSounds()->music_stop();
-		labyrinth->getSounds()->channelStop();
+		Sounds::getInstance()->music_stop();
+		Sounds::getInstance()->channelStop();
 	} else {
-		ghosts_figur[0]->set_stop(false);
-		ghosts_figur[1]->set_stop(false);
-		ghosts_figur[2]->set_stop(false);
-		ghosts_figur[3]->set_stop(false);
 		pacman->set_stop(false);
+		for (int i = 0; i < 4; ++i)
+			ghosts[i]->set_stop(false);
 		stop_moving = 0;
-		labyrinth->getSounds()->siren_start();
+		Sounds::getInstance()->siren_start();
 	}
 }
 
 void Game::setGameOver(int gameOver) {
 	this->gameOver = gameOver;
 	if(gameOver)
-		labyrinth->setInitText("Game over", RED);
+		Labyrinth::getInstance()->setInitText("Game over", RED);
 }
 
 int Game::isGameOver() {
@@ -241,6 +201,7 @@ int Game::isGameOver() {
 }
 
 void Game::start() {
+	init();
 	int loop = 1;
 	int start_offset = START_OFFSET;
 	int specialEventTime;
@@ -248,12 +209,11 @@ void Game::start() {
 	int currentScore = 0, lastScore = 0;
 	Uint32 currentTicks = SDL_GetTicks();
 	int deltaT = MIN_FRAME_DURATION;
-	ghosts[0]->set_leader(1);
-	//blinky->set_leader(1);	// Blinky will be the reference sprite for redrawing
-	stop(true); // at first, stop all figures 
-	labyrinth->getSounds()->intro();
+	ghosts[0]->set_leader(1);  // Blinky will be the reference sprite for redrawing
+	stop(true);  // at first, stop all figures
+	Sounds::getInstance()->intro();
 	// game loop
-	while(loop) {
+	while (loop) {
 		int i;
 		loop = eventloop(start_offset<0, &specialEventTime);
 		if (specialEventTime > 0)
@@ -265,12 +225,12 @@ void Game::start() {
 			refresh_ghosts = 1;
 			for(i = 0; i < numberGhosts; ++i)
 				ghosts[i]->animation();
-			
+
 			// Pacman die animation
 			if(pacman->is_dying()) {
 				if(!pacman->die_animation()) {
-					labyrinth->stopHuntingMode();
-					labyrinth->hideFruit();
+					Labyrinth::getInstance()->stopHuntingMode();
+					Labyrinth::getInstance()->hideFruit();
 					reset_all(pacman, ghosts);
 					stop(true);
 					pacman->addLives(-1);
@@ -281,13 +241,13 @@ void Game::start() {
 						for(i = 0; i < numberGhosts; ++i)
 							ghosts[i]->setVisibility(0);
 					} else {
-						labyrinth->setInitText("Get Ready!");
+						Labyrinth::getInstance()->setInitText("Get Ready!");
 						start_offset = START_OFFSET_2;
 					}
-				    screen->AddUpdateRects(0, 0, background->w, background->h);
+				    Screen::getInstance()->AddUpdateRects(0, 0, background->w, background->h);
 				}
 			}
-			labyrinth->pill_animation();
+			Labyrinth::getInstance()->pill_animation();
 			animation_counter -= 100;
 		}
 		else
@@ -299,72 +259,72 @@ void Game::start() {
 			start_offset -= deltaT;
 			if (start_offset <= 0) {
 				start_offset = -1;
-				labyrinth->hideInitText();
+				Labyrinth::getInstance()->hideInitText();
 				stop(false);
 			}
 	 	}
 	 	// hunting mode - ghosts can be eaten after eating a superpill, but only for a defined time
-		if(labyrinth->cnt_hunting_mode > 0 && !pause && labyrinth->cnt_sleep <= 0) {
-			if (labyrinth->cnt_hunting_mode > 2000 && labyrinth->cnt_hunting_mode-deltaT <= 2000) {
+		if(Labyrinth::getInstance()->cnt_hunting_mode > 0 && !pause && Labyrinth::getInstance()->cnt_sleep <= 0) {
+			if (Labyrinth::getInstance()->cnt_hunting_mode > 2000 && Labyrinth::getInstance()->cnt_hunting_mode-deltaT <= 2000) {
 				for(i = 0; i < numberGhosts; ++i)
 					ghosts[i]->blink();
 			}
-			labyrinth->cnt_hunting_mode -= deltaT;
-			if (labyrinth->cnt_hunting_mode <= 0) {
+			Labyrinth::getInstance()->cnt_hunting_mode -= deltaT;
+			if (Labyrinth::getInstance()->cnt_hunting_mode <= 0) {
 				if (!pacman->is_dying()) {
 					for(i = 0; i < numberGhosts; ++i) {
 						if (ghosts[i]->get_hunter() != Figur::NONE)  // eaten ghosts still have to return to the castle
 						ghosts[i]->set_hunter(Figur::GHOST);
 					}
 				}
-				labyrinth->stopHuntingMode();
-				labyrinth->getSounds()->siren_start();
+				Labyrinth::getInstance()->stopHuntingMode();
+				Sounds::getInstance()->siren_start();
 			}
 		}
 		// sleep counter - wait a short time when the player gets a special score (e.g. after eating a ghost or a fruit)
-		if (labyrinth->cnt_sleep > 0 && !pause) {
-			labyrinth->cnt_sleep -= deltaT;
-			if (labyrinth->cnt_sleep <= 0) {
-				labyrinth->cnt_sleep = 0;
-				labyrinth->hideSmallScore();
+		if (Labyrinth::getInstance()->cnt_sleep > 0 && !pause) {
+			Labyrinth::getInstance()->cnt_sleep -= deltaT;
+			if (Labyrinth::getInstance()->cnt_sleep <= 0) {
+				Labyrinth::getInstance()->cnt_sleep = 0;
+				Labyrinth::getInstance()->hideSmallScore();
 				pacman->setVisibility(true);
 				for(i = 0; i < numberGhosts; ++i)
 					ghosts[i]->setVisibility(true);
-				labyrinth->getSounds()->eat_ghost_start();
+				Sounds::getInstance()->eat_ghost_start();
 			}
 		}
 
 		// move all figures
-		if (!pause && labyrinth->cnt_sleep <= 0) {
+		if (!pause && Labyrinth::getInstance()->cnt_sleep <= 0) {
 			pacman->move(deltaT);
 			for(i = 0; i < numberGhosts; ++i)
 				ghosts[i]->move(deltaT);
 		}
 
 		// did something special happen during the move?
-		pacman->check_eat_pills(ghosts_figur);
-		if(labyrinth->getExisitingPills() <= 0) { 
+		pacman->check_eat_pills();
+		if(Labyrinth::getInstance()->getExisitingPills() <= 0) {
 			// init new level
 			reset_all(pacman, ghosts);
 			stop(true);
-			labyrinth->initNewLevel();
+			Labyrinth::getInstance()->initNewLevel();
 			start_offset = START_OFFSET;
-		    labyrinth->draw_pillen();  // including background
-		    screen->AddUpdateRects(0, 0, background->w, background->h);
+		    Labyrinth::getInstance()->draw_pillen();  // including background
+		    Screen::getInstance()->AddUpdateRects(0, 0, background->w, background->h);
 			continue;
 		}
 		lastScore = currentScore;
-		currentScore = labyrinth->getScore();
+		currentScore = Labyrinth::getInstance()->getScore();
 		if (lastScore < 10000 && currentScore >= 10000) {
 			pacman->addLives(1);
-			labyrinth->playSoundExtraMan();
+			Labyrinth::getInstance()->playSoundExtraMan();
 		}
-		if(pacman->touch(ghosts_figur)  && !pacman->is_dying()) {
+		if(pacman->ghostTouched()  && !pacman->is_dying()) {
 			stop(true);
-			pacman->set_dying(10);  
+			pacman->set_dying(10);
 		}
-		if (!pause && labyrinth->cnt_sleep <= 0) {
-			labyrinth->checkFruit(deltaT);
+		if (!pause && Labyrinth::getInstance()->cnt_sleep <= 0) {
+			Labyrinth::getInstance()->checkFruit(deltaT);
 		}
 
 	  	// if pacman stops, please set it to "normal"
@@ -383,13 +343,13 @@ void Game::start() {
 					pacman->down_pic(0);
 			}
 			pacman->parking();
-		}		
+		}
 
 		// redrawing
 		if (moving()) {
 		    // objects within the level
-		    labyrinth->draw_pillen();  // including background
-			labyrinth->drawFruit();
+		    Labyrinth::getInstance()->draw_pillen();  // including background
+			Labyrinth::getInstance()->drawFruit();
 			// figures
 			pacman->animate();
 			pacman->draw();
@@ -399,16 +359,16 @@ void Game::start() {
 				ghosts[i]->addUpdateRect();
 			}
 			// topmost things within the level
-		    labyrinth->draw_blocks();
-			labyrinth->drawSmallScore();
-			labyrinth->drawInitText();
+		    Labyrinth::getInstance()->draw_blocks();
+			Labyrinth::getInstance()->drawSmallScore();
+			Labyrinth::getInstance()->drawInitText();
 			// information area: score, lives, the level's fruit
-			labyrinth->compute_score();
-			screen->draw(score, 530, 30);
+			Labyrinth::getInstance()->compute_score();
+			Screen::getInstance()->draw(score, 530, 30);
 			pacman->drawLives();
-			labyrinth->drawInfoFruit();
+			Labyrinth::getInstance()->drawInfoFruit();
 		    // bring it to the screen, really
-			screen->Refresh();
+			Screen::getInstance()->Refresh();
 		}
 		deltaT = getDelayTime(&currentTicks);
 	}
@@ -421,50 +381,30 @@ void Game::start() {
 // main function, contains the game loop
 int main(int argc, char *argv[]) {
 	srand((unsigned int)time(0)); // init randomize
-	
-	// create the window 
-	screen = new Screen();
-	if(screen->occuredInitSdlError() == EXIT_FAILURE)
+
+	if(Screen::getInstance()->occuredInitSdlError() == EXIT_FAILURE)
 		return EXIT_FAILURE;
 
-	//create the labyrinth
-	Labyrinth *labyrinth = new Labyrinth(screen);
-	
 	// create an instance of pacman
-	Pacman *pacman = new Pacman(310, 339, screen, labyrinth, INITIAL_LIVES);
-	
+	Pacman *pacman = new Pacman(310, 339, INITIAL_LIVES);
+
 	// init ghosts
-	Ghost *blinky = new Ghost(310, 174, INTELLIGENCE_BLINKY, 
-	               			  Figur::LEFT, INIT_UP_DOWN, Ghost::BLINKY,
-	                          screen, labyrinth, pacman);
-	
-	Ghost *pinky = new Ghost(310, 222, INTELLIGENCE_PINKY, 
-	              			 Figur::UP, INIT_UP_DOWN, Ghost::PINKY, 
-	                         screen, labyrinth, pacman);
-	
-	Ghost *inky = new Ghost(280, 222, INTELLIGENCE_INKY, 
-	             			Figur::UP, INIT_UP_DOWN_INKY, Ghost::INKY, 
-	                        screen, labyrinth, pacman);
-	
-	Ghost *clyde = new Ghost(340, 222, INTELLIGENCE_CLYDE, 
-	              			 Figur::UP, INIT_UP_DOWN_CLYDE, Ghost::CLYDE,
-	                         screen, labyrinth, pacman);
+	Ghost *blinky = new Ghost(310, 174, INTELLIGENCE_BLINKY,
+	               			  Figur::LEFT, INIT_UP_DOWN, Ghost::BLINKY, pacman);
 
-	// ghost array
-	Figur *ghost_array[4] = {blinky, pinky, inky, clyde};
-	Ghost *ghost_array_ghost[4] = {blinky, pinky, inky, clyde};
+	Ghost *pinky = new Ghost(310, 222, INTELLIGENCE_PINKY,
+	              			 Figur::UP, INIT_UP_DOWN, Ghost::PINKY, pacman);
 
+	Ghost *inky = new Ghost(280, 222, INTELLIGENCE_INKY,
+	             			Figur::UP, INIT_UP_DOWN_INKY, Ghost::INKY, pacman);
 
-	blinky->setGhostArray(ghost_array_ghost);
-	pinky->setGhostArray(ghost_array_ghost);
-	inky->setGhostArray(ghost_array_ghost);
-	clyde->setGhostArray(ghost_array_ghost);
-	
-	Game *game = new Game(screen, pacman, ghost_array_ghost, ghost_array, labyrinth);
-	MenuMain *menu = new MenuMain(screen, pacman, ghost_array_ghost,labyrinth);
-	//menu->show();
+	Ghost *clyde = new Ghost(340, 222, INTELLIGENCE_CLYDE,
+	              			 Figur::UP, INIT_UP_DOWN_CLYDE, Ghost::CLYDE, pacman);
+
+	Game *game = new Game(pacman);
+	MenuMain *menu = new MenuMain(Screen::getInstance(), pacman, Ghost::allGhosts, Labyrinth::getInstance());
+
 	while(menu->show()) {
-		game->init();
 		game->start();
 		menu->draw();
 	}
@@ -474,8 +414,11 @@ int main(int argc, char *argv[]) {
 	delete pinky;
 	delete inky;
 	delete clyde;
-	delete labyrinth;
-	delete screen;
+	//delete menu;
+	delete game;
+	Labyrinth::cleanUpInstance();
+	Screen::cleanUpInstance();
+	Sounds::cleanUpInstance();
 
 	return EXIT_SUCCESS;
 }

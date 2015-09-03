@@ -1,7 +1,23 @@
 #include "labyrinth.h"
 #include <string.h>
 
-Labyrinth::Labyrinth(Screen *screen):
+Labyrinth *Labyrinth::instance = NULL;
+
+Labyrinth *Labyrinth::getInstance() {
+	if (instance == NULL) {
+		instance = new Labyrinth();
+	}
+	return instance;
+}
+
+void Labyrinth::cleanUpInstance() {
+	if (instance) {
+		delete instance;
+		instance = NULL;
+	}
+}
+
+Labyrinth::Labyrinth():
 	cnt_pill_animation(0),
 	punktestand(0),
 	bonus_stage(200),
@@ -17,7 +33,6 @@ Labyrinth::Labyrinth(Screen *screen):
 	pillSurface(NULL),
 	bgSurface(NULL),
 	level(1){
-	this->screen = screen;
 	// horizontal rails, row by row, from left to right
 	s0  = new Rail(138,  37, 207,  37);
 	s1  = new Rail(207,  37, 290,  37);
@@ -171,28 +186,28 @@ Labyrinth::Labyrinth(Screen *screen):
 	memcpy(array_rails, array_rails_temp, sizeof(array_rails_temp));
 	Rail *array_rails_pills_temp[this->NUMBER_RAILS_PILLS] = {s0,  s1,  s2,  s3,  s4,  s5,  s6,  s7,  s8,  s9,
 	                                                         s10, s11, s12, s13, s14,
-	                                                                             s24, s25, s26, s27, s28, s29, 
+	                                                                             s24, s25, s26, s27, s28, s29,
 	                                                         s30, s31, s32, s33, s34, s35, s36, s37, s38, s39,
 	                                                         s40, s41, s42, s43, s44, s45, s46, s47, s48, s49,
 	                                                         s50, s51, s52, s53, s54, s55, s56, s57,
 	                                                              s61, s62,      s64, s65, s66,      s68, s69,
-	                                                         s70,                s74, s75, s76, s77, s78, s79, 
+	                                                         s70,                s74, s75, s76, s77, s78, s79,
 	                                                         s80, s81, s82, s83, s84, s85};
 	memcpy(array_rails_pills, array_rails_pills_temp, sizeof(array_rails_pills_temp));
 
 	char filePath[256];
 	getFilePath(filePath, "gfx/pille.png");
-	pille = screen->LoadSurface(filePath, 0);
+	pille = Screen::getInstance()->LoadSurface(filePath, 0);
 	getFilePath(filePath, "gfx/superpille_1.png");
-	ar_superpille[0] = screen->LoadSurface(filePath, 0);
+	ar_superpille[0] = Screen::getInstance()->LoadSurface(filePath, 0);
 	getFilePath(filePath, "gfx/superpille_2.png");
-	ar_superpille[1] = screen->LoadSurface(filePath, 0);
+	ar_superpille[1] = Screen::getInstance()->LoadSurface(filePath, 0);
 	getFilePath(filePath, "gfx/superpille_3.png");
-	ar_superpille[2] = screen->LoadSurface(filePath, 0);
+	ar_superpille[2] = Screen::getInstance()->LoadSurface(filePath, 0);
 	getFilePath(filePath, "gfx/superpille_3.png");
-	ar_superpille[3] = screen->LoadSurface(filePath, 0);
+	ar_superpille[3] = Screen::getInstance()->LoadSurface(filePath, 0);
 	getFilePath(filePath, "gfx/superpille_2.png");
-	ar_superpille[4] = screen->LoadSurface(filePath, 0);
+	ar_superpille[4] = Screen::getInstance()->LoadSurface(filePath, 0);
 	superpille = ar_superpille[cnt_pill_animation];
 
 	textweiss.r = textweiss.g = textweiss.b = 255;
@@ -201,8 +216,7 @@ Labyrinth::Labyrinth(Screen *screen):
 	textgelb.b = 11;
 	textrot.r = 255;
 	textrot.g = textrot.b = 0;
-	sounds = new Sounds();
-}   
+}
 
 Labyrinth::~Labyrinth(){
 	SDL_FreeSurface(pille);
@@ -210,7 +224,6 @@ Labyrinth::~Labyrinth(){
 	SDL_FreeSurface(infoFruit);
 	SDL_FreeSurface(initText);
 	SDL_FreeSurface(pillSurface);
-	delete sounds;
 }
 
 void Labyrinth::draw_blocks() {
@@ -219,14 +232,14 @@ void Labyrinth::draw_blocks() {
   	b1.y = 215;
   	b1.w = 30;
   	b1.h = 30;
-  
+
  	b2.x = 515;
   	b2.y = 215;
   	b2.w = 30;
   	b2.h = 30;
-  
-  	SDL_FillRect(this->screen->getSurface(), &b1, SDL_MapRGB(this->screen->getSurface()->format, 0, 0, 0));
-  	SDL_FillRect(this->screen->getSurface(), &b2, SDL_MapRGB(this->screen->getSurface()->format, 0, 0, 0));
+
+  	SDL_FillRect(Screen::getInstance()->getSurface(), &b1, SDL_MapRGB(Screen::getInstance()->getSurface()->format, 0, 0, 0));
+  	SDL_FillRect(Screen::getInstance()->getSurface(), &b2, SDL_MapRGB(Screen::getInstance()->getSurface()->format, 0, 0, 0));
 }
 
 void Labyrinth::init_pillen(SDL_Surface *background, bool firstInit) {
@@ -293,14 +306,14 @@ void Labyrinth::init_pillen(SDL_Surface *background, bool firstInit) {
 }
 
 void Labyrinth::draw_pillen() {
-	SDL_BlitSurface(pillSurface, NULL, screen->getSurface(), NULL);
+	SDL_BlitSurface(pillSurface, NULL, Screen::getInstance()->getSurface(), NULL);
 	SDL_Rect dest;
 	for (int i = 0; i < 4; i++) {
 		if (pillen[idxSuperpills[i]].sichtbar) {
 			dest.x = (short int) (pillen[idxSuperpills[i]].x - 4);
 			dest.y = (short int) (pillen[idxSuperpills[i]].y - 4);
-			SDL_BlitSurface(superpille, NULL, screen->getSurface(), &dest);
-			screen->AddUpdateRects(dest.x, dest.y, superpille->w, superpille->h);
+			SDL_BlitSurface(superpille, NULL, Screen::getInstance()->getSurface(), &dest);
+			Screen::getInstance()->AddUpdateRects(dest.x, dest.y, superpille->w, superpille->h);
 		}
 	}
 }
@@ -323,13 +336,13 @@ void Labyrinth::compute_score() {
 	if(this->score)
 		SDL_FreeSurface(this->score);
 	this->score = TTF_RenderText_Solid(font, char_punktestand, textgelb);
-	screen->draw_dynamic_content(this->score, 530, 60);
+	Screen::getInstance()->draw_dynamic_content(this->score, 530, 60);
 }
 
 void Labyrinth::startHuntingMode() {
 	this->bonus_stage = 200;
-	this->sounds->music_stop();
-	this->sounds->superpill_start();
+	Sounds::getInstance()->music_stop();
+	Sounds::getInstance()->superpill_start();
 	if (cnt_hunting_mode < 0)
 		this->cnt_hunting_mode = 7000;
 	else // hunting mode was still active - prolong the it's duration
@@ -339,8 +352,8 @@ void Labyrinth::startHuntingMode() {
 void Labyrinth::stopHuntingMode() {
 	this->cnt_hunting_mode = -1;
 	this->bonus_stage = 200;
-	this->getSounds()->eat_ghost_stop();
-	this->sounds->music_stop();
+	Sounds::getInstance()->eat_ghost_stop();
+	Sounds::getInstance()->music_stop();
 }
 
 void Labyrinth::increaseBonusStage() {
@@ -369,12 +382,12 @@ void Labyrinth::addScore(int value, int show_x, int show_y) {
 
 void Labyrinth::drawSmallScore() {
 	if (smallScore)
-		screen->draw_dynamic_content(smallScore, smallScore_x, smallScore_y);
+		Screen::getInstance()->draw_dynamic_content(smallScore, smallScore_x, smallScore_y);
 }
 
 void Labyrinth::hideSmallScore() {
 	if (smallScore) {
-		screen->AddUpdateRects(smallScore_x, smallScore_y, smallScore->w, smallScore->h);
+		Screen::getInstance()->AddUpdateRects(smallScore_x, smallScore_y, smallScore->w, smallScore->h);
 		SDL_FreeSurface(smallScore);
 		smallScore = NULL;
 	}
@@ -426,12 +439,12 @@ void Labyrinth::setInitText(const char *text, int color) {
 
 void Labyrinth::drawInitText() {
 	if(initText)
-		screen->draw_dynamic_content(initText, 320-(initText->w >> 1), 268-(initText->h >> 1));
+		Screen::getInstance()->draw_dynamic_content(initText, 320-(initText->w >> 1), 268-(initText->h >> 1));
 }
 
 void Labyrinth::hideInitText() {
 	if (initText) {
-		screen->AddUpdateRects(320-(initText->w >> 1), 268-(initText->h >> 1), initText->w, initText->h);
+		Screen::getInstance()->AddUpdateRects(320-(initText->w >> 1), 268-(initText->h >> 1), initText->w, initText->h);
 		SDL_FreeSurface(initText);
 		initText = NULL;
 	}
@@ -440,8 +453,8 @@ void Labyrinth::hideInitText() {
 void Labyrinth::initNewLevel() {
 	this->stopHuntingMode();
 	this->compute_score();
-	screen->AddUpdateRects(0, 0, 500, 512);
-	screen->Refresh();
+	Screen::getInstance()->AddUpdateRects(0, 0, 500, 512);
+	Screen::getInstance()->Refresh();
 	this->init_pillen(NULL, level==0);
 	this->draw_pillen();
 	this->hideFruit();
@@ -451,8 +464,8 @@ void Labyrinth::initNewLevel() {
 	sprintf(char_level, "  Level %d", this->getLevel());
 	this->setInitText(char_level);
 	SDL_Delay(1000);
-	screen->AddUpdateRects(0, 0, 500, 512);
-	screen->Refresh();
+	Screen::getInstance()->AddUpdateRects(0, 0, 500, 512);
+	Screen::getInstance()->Refresh();
 }
 
 int Labyrinth::getLevel() const {
@@ -500,14 +513,14 @@ void Labyrinth::setLevel(int level) {
 			setFruitBonus(5000);
 			getFilePath(fruit_file, "gfx/key.png");
 	};
-	infoFruit = screen->LoadSurface(fruit_file, 255);
+	infoFruit = Screen::getInstance()->LoadSurface(fruit_file, 255);
 	fruit = NULL;
 	drawInfoFruit();
-	screen->AddUpdateRects(525, 430, infoFruit->w, infoFruit->h);
+	Screen::getInstance()->AddUpdateRects(525, 430, infoFruit->w, infoFruit->h);
 }
 
 void Labyrinth::startFruitRandomizer(int new_level) {
-	if(new_level) 
+	if(new_level)
 		cnt_displayed_fruits = 0;
 	if(cnt_displayed_fruits >= 2)
 		return;
@@ -534,7 +547,7 @@ void Labyrinth::checkFruit(int ms) {
 
 void Labyrinth::hideFruit() {
 	if (fruit) {
-		screen->AddUpdateRects(310, 257, fruit->w, fruit->h);
+		Screen::getInstance()->AddUpdateRects(310, 257, fruit->w, fruit->h);
 		fruit = NULL;
 		fruit_display_time = 0;
 		if (cnt_displayed_fruits < 2) {
@@ -561,12 +574,12 @@ int Labyrinth::getFruitBonus() const {
 
 void Labyrinth::drawFruit() {
 	if (fruit)
-		screen->draw_dynamic_content(fruit, 310, 257);
+		Screen::getInstance()->draw_dynamic_content(fruit, 310, 257);
 }
 
 void Labyrinth::drawInfoFruit() {
 	if (infoFruit)
-		screen->draw(infoFruit, 525, 430);
+		Screen::getInstance()->draw(infoFruit, 525, 430);
 }
 
 void Labyrinth::getRailsForPoint(int x, int y, int *left, int *right, int *up, int *down) {
@@ -595,23 +608,23 @@ void Labyrinth::getRailsForPoint(int x, int y, int *left, int *right, int *up, i
 }
 
 void Labyrinth::playSoundDying() {
-	sounds->playSingleSound(Sounds::DYING);
+	Sounds::getInstance()->playSingleSound(Sounds::DYING);
 }
 
 void Labyrinth::playSoundExtraMan() {
-	sounds->playSingleSound(Sounds::EXTRA_MAN);
+	Sounds::getInstance()->playSingleSound(Sounds::EXTRA_MAN);
 }
 
 void Labyrinth::playSoundFruit() {
-	sounds->playSingleSound(Sounds::FRUIT);
+	Sounds::getInstance()->playSingleSound(Sounds::FRUIT);
 }
 
 void Labyrinth::playEatGhost() {
-	sounds->playSingleSound(Sounds::EAT_GHOST);
+	Sounds::getInstance()->playSingleSound(Sounds::EAT_GHOST);
 }
 
 Sounds* Labyrinth::getSounds() {
-	return sounds;
+	return Sounds::getInstance();
 }
 
 void Labyrinth::resetScore() {

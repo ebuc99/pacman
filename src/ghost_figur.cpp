@@ -1,10 +1,14 @@
 #include "ghost_figur.h"
 #include <stdlib.h>
 
-Ghost::Ghost(int init_x, int init_y, int init_intelligence, 
+Ghost **Ghost::allGhosts = new Ghost*[Ghost::TOTAL_NUM_GHOSTS];
+int Ghost::numGhosts = 0;
+int Ghost::was_moving_leader = 1;
+
+Ghost::Ghost(int init_x, int init_y, int init_intelligence,
              Direction init_direction, int init_up_down, int ghost_ident,
-             Screen *screen, Labyrinth *labyrinth, Pacman *pacman):
-	Figur(init_x, init_y, GHOSTS_V_NORMAL, screen, labyrinth),
+             Pacman *pacman):
+	Figur(init_x, init_y, GHOSTS_V_NORMAL),
 	its_leader(0),
 	initial_intelligence(init_intelligence),
 	initial_direction(init_direction),
@@ -12,6 +16,10 @@ Ghost::Ghost(int init_x, int init_y, int init_intelligence,
 	ghost_ident(ghost_ident),
 	idxCurrentRail(-1)  // should first be determined
 {
+	if (numGhosts < TOTAL_NUM_GHOSTS) {
+		allGhosts[numGhosts] = this;
+		++numGhosts;
+	}
 	direction = init_direction;
 	intelligence = init_intelligence;
 	up_down = init_up_down;
@@ -21,48 +29,48 @@ Ghost::Ghost(int init_x, int init_y, int init_intelligence,
 	// Surfaces
 	if(ghost_ident == BLINKY) {
 		getFilePath(filePath, "gfx/blinky_1.png");
-		ghost_1 = screen->LoadSurface(filePath, 255);
+		ghost_1 = Screen::getInstance()->LoadSurface(filePath, 255);
 		getFilePath(filePath, "gfx/blinky_2.png");
-		ghost_2 = screen->LoadSurface(filePath, 255);
+		ghost_2 = Screen::getInstance()->LoadSurface(filePath, 255);
 		idxCurrentRail = 16;
 	}
 	else if(ghost_ident == PINKY) {
 		getFilePath(filePath, "gfx/pinky_1.png");
-		ghost_1 = screen->LoadSurface(filePath, 255);
+		ghost_1 = Screen::getInstance()->LoadSurface(filePath, 255);
 		getFilePath(filePath, "gfx/pinky_2.png");
-		ghost_2 = screen->LoadSurface(filePath, 255);
+		ghost_2 = Screen::getInstance()->LoadSurface(filePath, 255);
 		idxCurrentRail = 89;
 	}
 	else if(ghost_ident == INKY) {
 		getFilePath(filePath, "gfx/inky_1.png");
-		ghost_1 = screen->LoadSurface(filePath, 255);
+		ghost_1 = Screen::getInstance()->LoadSurface(filePath, 255);
 		getFilePath(filePath, "gfx/inky_2.png");
-		ghost_2 = screen->LoadSurface(filePath, 255);
+		ghost_2 = Screen::getInstance()->LoadSurface(filePath, 255);
 		idxCurrentRail = 88;
 	}
 	else if(ghost_ident == CLYDE) {
 		getFilePath(filePath, "gfx/clyde_1.png");
-		ghost_1 = screen->LoadSurface(filePath, 255);
+		ghost_1 = Screen::getInstance()->LoadSurface(filePath, 255);
 		getFilePath(filePath, "gfx/clyde_2.png");
-		ghost_2 = screen->LoadSurface(filePath, 255);
+		ghost_2 = Screen::getInstance()->LoadSurface(filePath, 255);
 		idxCurrentRail = 90;
 	}
-	getFilePath(filePath, "gfx/augen_0.png");	
-	augen_0 = screen->LoadSurface(filePath, 0);
-	getFilePath(filePath, "gfx/augen_1.png");	
-	augen_1 = screen->LoadSurface(filePath, 0);
-	getFilePath(filePath, "gfx/augen_2.png");	
-	augen_2 = screen->LoadSurface(filePath, 0);
-	getFilePath(filePath, "gfx/augen_3.png");	
-	augen_3 = screen->LoadSurface(filePath, 0);
-	getFilePath(filePath, "gfx/escaping_ghost_1.png");	
-	escape_1 = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/escaping_ghost_2.png");	
-	escape_2 = screen->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/escaping_ghost_white_1.png");	
-	escape_white_1 = screen->LoadSurface(filePath, 0);
-	getFilePath(filePath, "gfx/escaping_ghost_white_2.png");	
-	escape_white_2 = screen->LoadSurface(filePath, 0);
+	getFilePath(filePath, "gfx/augen_0.png");
+	augen_0 = Screen::getInstance()->LoadSurface(filePath, 0);
+	getFilePath(filePath, "gfx/augen_1.png");
+	augen_1 = Screen::getInstance()->LoadSurface(filePath, 0);
+	getFilePath(filePath, "gfx/augen_2.png");
+	augen_2 = Screen::getInstance()->LoadSurface(filePath, 0);
+	getFilePath(filePath, "gfx/augen_3.png");
+	augen_3 = Screen::getInstance()->LoadSurface(filePath, 0);
+	getFilePath(filePath, "gfx/escaping_ghost_1.png");
+	escape_1 = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/escaping_ghost_2.png");
+	escape_2 = Screen::getInstance()->LoadSurface(filePath, 255);
+	getFilePath(filePath, "gfx/escaping_ghost_white_1.png");
+	escape_white_1 = Screen::getInstance()->LoadSurface(filePath, 0);
+	getFilePath(filePath, "gfx/escaping_ghost_white_2.png");
+	escape_white_2 = Screen::getInstance()->LoadSurface(filePath, 0);
 	ar_ghost[0] = ghost_1;
 	ar_ghost[1] = ghost_2;
 	ar_ghost[2] = escape_white_1;
@@ -73,6 +81,16 @@ Ghost::Ghost(int init_x, int init_y, int init_intelligence,
 }
 
 Ghost::~Ghost() {
+	for (int i = 0; i < numGhosts; ++i) {
+		if (allGhosts[i] == this) {
+			for (int j = i; j < numGhosts-1; ++j) {
+				allGhosts[j] = allGhosts[j+1];
+			}
+			allGhosts[numGhosts-1] = NULL;
+			--numGhosts;
+			break;
+		}
+	}
 	SDL_FreeSurface(ghost_1);
 	SDL_FreeSurface(ghost_2);
 	SDL_FreeSurface(augen_0);
@@ -88,23 +106,23 @@ Ghost::~Ghost() {
 void Ghost::draw() {
 	if (this->visible) {
 		if (this->get_hunter() != NONE)
-			this->screen->draw(this->ghost_sf, this->x, this->y);
+			Screen::getInstance()->draw(this->ghost_sf, this->x, this->y);
 		if (this->get_hunter() != PACMAN) {
 			switch(this->get_direction()) {
 				case LEFT:
-					this->screen->draw(augen_0, this->x, this->y);
+					Screen::getInstance()->draw(augen_0, this->x, this->y);
 					break;
-				case UP: 
-					this->screen->draw(augen_1, this->x, this->y);
+				case UP:
+					Screen::getInstance()->draw(augen_1, this->x, this->y);
 					break;
 				case RIGHT:
-					this->screen->draw(augen_2, this->x, this->y);
+					Screen::getInstance()->draw(augen_2, this->x, this->y);
 					break;
-				case DOWN: 
-					this->screen->draw(augen_3, this->x, this->y);
+				case DOWN:
+					Screen::getInstance()->draw(augen_3, this->x, this->y);
 					break;
 				default:
-					this->screen->draw(augen_0, this->x, this->y);
+					Screen::getInstance()->draw(augen_0, this->x, this->y);
 					break;
 			}
 		}
@@ -123,10 +141,10 @@ void Ghost::set_leader(bool leader) {
 void Ghost::set_leader() {
 	int i;
 	for(i = 0;i < 4; i++) {
-		if(ghost_array[i]->getGhostIdent() == this->getGhostIdent())
-			ghost_array[i]->set_leader(true);
+		if(allGhosts[i]->getGhostIdent() == this->getGhostIdent())
+			allGhosts[i]->set_leader(true);
 		else
-			ghost_array[i]->set_leader(false);
+			allGhosts[i]->set_leader(false);
 	}
 }
 
@@ -138,17 +156,17 @@ void Ghost::move_dir(int ms, int direction, int max_links, int max_oben, int max
 	if(direction == RIGHT)
 		move_right(ms, max_rechts);
 	if(direction == DOWN)
-		move_down(ms, max_unten);	
+		move_down(ms, max_unten);
 	if(its_leader) {
 		if(this->was_moving())
 			was_moving_leader = 1;
 		else
 			was_moving_leader = 0;
-	}	
+	}
 }
 
 void Ghost::move(int ms) {
-	this->move_on_rails(ms, labyrinth->array_rails);
+	this->move_on_rails(ms, Labyrinth::getInstance()->array_rails);
 	if (last_x != x || last_y != y)
 		this->addUpdateRect();
 }
@@ -224,7 +242,7 @@ int Ghost::choose_direction(Direction * sammel_richtung, int richtung_pacman, in
 		}
 	} else {
 		if(idx_dir_pacman != -1) {
-			if(zufallswert <= intelligence) 
+			if(zufallswert <= intelligence)
 				return richtung_pacman;
 		}
 		return sammel_richtung[zufallswert%sammel_counter];
@@ -283,7 +301,7 @@ void Ghost::move_on_rails(int ms, Rail **ar_s) {
 			// make an eyes-only ghost normal again
 			if (get_hunter() == NONE) {
 				set_hunter(GHOST);
-				this->labyrinth->getSounds()->eat_ghost_stop();
+				Sounds::getInstance()->eat_ghost_stop();
 			}
 		} else if (this->up_down) {
 			sammel_richtung[sammel_counter] = ((old_dir==UP) ? DOWN : UP);
@@ -291,7 +309,7 @@ void Ghost::move_on_rails(int ms, Rail **ar_s) {
 			this->up_down--;
 		} else {
 			// Find the rails that the ghost may take next
-			this->labyrinth->getRailsForPoint(this->x, this->y, &idxLeft, &idxRight, &idxUp, &idxDown);
+			Labyrinth::getInstance()->getRailsForPoint(this->x, this->y, &idxLeft, &idxRight, &idxUp, &idxDown);
 			// eliminate the direction the ghost came from
 			switch (old_dir) {
 			case LEFT:
@@ -382,7 +400,7 @@ void Ghost::reset() {
 }
 
 void Ghost::addUpdateRect() {
-	screen->AddUpdateRects(least(x,last_x), least(y,last_y), ghost_sf->w + abs(x-last_x), ghost_sf->h + abs(y-last_y));
+	Screen::getInstance()->AddUpdateRects(least(x,last_x), least(y,last_y), ghost_sf->w + abs(x-last_x), ghost_sf->h + abs(y-last_y));
 }
 
 SDL_Surface* Ghost::get_Surface() const {
@@ -410,17 +428,17 @@ void Ghost::set_hunter(Hunter hunter) {
 bool Ghost::touched() {
 	if(this->get_hunter() == PACMAN) {
 		// ghost has been eaten by pacman
-		this->hunter = NONE;
-		this->set_speed(GHOSTS_V_NORMAL);
-		this->set_leader();
-		this->setVisibility(0);
-		this->pacman->setVisibility(0);
-		this->labyrinth->addBonusScore(this->x + (ghost_sf->w >> 1), this->y + (ghost_sf->h >> 1));
-		this->labyrinth->increaseBonusStage();
-		this->labyrinth->sleep(400);
-		this->labyrinth->playEatGhost();
+		hunter = NONE;
+		set_speed(GHOSTS_V_NORMAL);
+		set_leader();
+		setVisibility(0);
+		pacman->setVisibility(0);
+		Labyrinth::getInstance()->addBonusScore(this->x + (ghost_sf->w >> 1), this->y + (ghost_sf->h >> 1));
+		Labyrinth::getInstance()->increaseBonusStage();
+		Labyrinth::getInstance()->sleep(400);
+		Labyrinth::getInstance()->playEatGhost();
 	}
-	if(this->get_hunter() == NONE)
+	if(get_hunter() == NONE)
 		return false;  // no problem for pacman
 	return true;
 }
@@ -429,10 +447,6 @@ void Ghost::blink() {
 	if(this->get_hunter() == PACMAN) {
 		num_animation_frames = 4;
 	}
-}
-
-void Ghost::setGhostArray(Ghost **ghost_array) {
-	this->ghost_array = ghost_array;
 }
 
 Ghost::Ghosts Ghost::getGhostIdent() const {

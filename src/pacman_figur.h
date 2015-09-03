@@ -1,17 +1,18 @@
 #ifndef PACMAN_FIGUR_H
 #define PACMAN_FIGUR_H
 
+#include "labyrinth.h"
 #include "figur.h"
 #include "rail.h"
 
 class Pacman : public Figur {
 	public:
 		// constructor and destructor
-		Pacman(int init_x, int init_y, Screen *screen, Labyrinth *labyrinth, int lives);
+		Pacman(int init_x, int init_y, int lives);
 		~Pacman();
 		// draw pacman
 		virtual void draw();
-		
+
 		//move pacman
 		void move(int ms);
 
@@ -20,13 +21,13 @@ class Pacman : public Figur {
 		void up_pic(int cnt_pic);
 		void right_pic(int cnt_pic);
 		void down_pic(int cnt_pic);
-		
+
 		// for pacman die animation
 		void die_pic(int cnt_pic);
-		
+
 		// animate pacman
 		void animate();
-		
+
 		// moves a ghost on the defined rails
 		void move_on_rails(int ms, Rail **ar_s);
 
@@ -35,23 +36,23 @@ class Pacman : public Figur {
 		void move_up(int ms, int stop_at = 999);
 		void move_right(int ms, int stop_at = 999);
 		void move_down(int ms, int stop_at = 999);
-		
+
 		// returns whether pacman has stopped
 		int is_pacman_stopped();
-		
+
 		// direction that pacman will next go to
 		Direction direction_pre;
-		
+
 		// reset pacman
 		void reset();
 
-		/* collision handling pacman <-> ghosts */
-		int touch(Figur **ghost_array) const;
-		
+		// collision handling pacman <-> ghosts
+		bool ghostTouched() const;
+
 		// return the surface
 		SDL_Surface* get_Surface() const;
 
-		void check_eat_pills(Figur **ghost_array);
+		void check_eat_pills();
 
 		// pacman dies
 		void set_dying(int dying);
@@ -72,12 +73,12 @@ class Pacman : public Figur {
 
 		// set the lives
 		void setRemainingLives(int lives);
-		
+
 	private:
 		static const int PACMAN_V_FAST = 100;   // pacman's speed when not eating
 		static const int PACMAN_V_SLOW = 90;    // pacman's speed while eating
 		static const uint16_t WECHSEL_RATE = 7; // load a new image for pacman after a movement of this number of pixels
-		int pacman_stopped; 
+		int pacman_stopped;
 		int animation;
 		int cnt_animation;
 		int cnt_slow; // number of loops that pacman will stay slow

@@ -1,6 +1,7 @@
 #ifndef GHOST_FIGUR_H
 #define GHOST_FIGUR_H
 
+#include "labyrinth.h"
 #include "figur.h"
 #include "pacman_figur.h"
 #include "rail.h"
@@ -9,9 +10,9 @@
 class Ghost : public Figur {
 	public:
 		/* constructor and destructor */
-		Ghost(int init_x, int init_y, int init_intelligence, 
+		Ghost(int init_x, int init_y, int init_intelligence,
 		      Direction init_direction, int init_up_down, int ghost_ident,
-		      Screen *screen, Labyrinth *labyrinth, Pacman *pacman);
+		      Pacman *pacman);
 		~Ghost();
 
 		/* draw ghost */
@@ -19,32 +20,32 @@ class Ghost : public Figur {
 
 		// animate the ghost, i.e. switch to the next image of the animation array
 		void animation();
-		
+
 		// defines the leader (reference for redrawing)
-		void set_leader(bool leader); 
+		void set_leader(bool leader);
 		void set_leader();
-		
+
 		// overloaded move of class Figur
 		void move_dir(int ms, int direction, int max_links = 999, int max_oben = 999, int max_rechts = 999, int max_unten = 999);
 		void move(int ms);
 
 		// has the leader moved?
 		static int was_moving_leader;
-		
+
 		// Returns the direction that has to be taken to reach the given target point (e.g. pacman's current position).
 		// The result is coded like this: 0 = left, 1 = up, 2 = right, 3 = down
 		int direction_to_point(int target_x, int target_y);
 		int alternative_direction_to_point(int target_x, int target_y);  // Returns an alternative direction. Use it, if the exact one is not available.
-		
+
 		// This is the A.I. of the ghosts: with a defined probability, they move to the direction where pacman is.
 		int choose_direction(Direction * sammel_richtung, int richtung_pacman, int sammel_counter, int intelligence);
 
 		// moves a ghost on the defined rails
 		void move_on_rails(int ms, Rail **ar_s);
-		
+
 		// returns the intelligence of the ghost
 		int get_intelligence() const;
-		
+
 		// reset the ghost
 		void reset();
 
@@ -69,13 +70,17 @@ class Ghost : public Figur {
 		SDL_Surface* get_Surface() const;
 
 		// set ghost_array
-		void setGhostArray(Ghost **ghost_array);
-		
+		//void setGhostArray(Ghost **ghost_array);
+
 		Ghosts getGhostIdent() const;
-		
+
+		static Ghost **allGhosts;
+
 	private:
-		static const int GHOSTS_V_NORMAL = 90; // normal speed of the ghosts
-		static const int GHOSTS_V_SLOW   = 50; // speed at hunting mode
+		static const int TOTAL_NUM_GHOSTS = 4;   // total number of ghosts in the game
+		static int numGhosts;                    // current number of ghosts
+		static const int GHOSTS_V_NORMAL  = 90;  // normal speed of the ghosts
+		static const int GHOSTS_V_SLOW    = 50;  // speed at hunting mode
 		bool its_leader;
 		int up_down;
 		Direction initial_direction;
@@ -88,7 +93,6 @@ class Ghost : public Figur {
 		SDL_Surface *ghost_1, *ghost_2, *ar_ghost[4];
 		SDL_Surface *augen_0, *augen_1, *augen_2, *augen_3;
 		SDL_Surface *escape_1, *escape_2, *escape_white_1, *escape_white_2;
-		Ghost **ghost_array;
 		Pacman *pacman;
 		int idxCurrentRail;
 };

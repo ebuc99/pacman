@@ -1,5 +1,21 @@
 #include "screen.h"
 
+Screen *Screen::instance = NULL;
+
+Screen *Screen::getInstance() {
+	if (instance == NULL) {
+		instance = new Screen();
+	}
+	return instance;
+}
+
+void Screen::cleanUpInstance() {
+	if (instance) {
+		delete instance;
+		instance = NULL;
+	}
+}
+
 Screen::Screen() {
 	// initialize SDL
 	this->sdl_init_error = 0;
@@ -54,8 +70,8 @@ void Screen::Refresh() {
 
 void Screen::draw_dynamic_content(SDL_Surface *surface, int x, int y) {
 	SDL_Rect dest;
-	dest.x = (short int)x; 
-	dest.y = (short int)y; 
+	dest.x = (short int)x;
+	dest.y = (short int)y;
 	SDL_BlitSurface(surface, NULL, this->screen_surface, &dest);
 	this->AddUpdateRects(dest.x, dest.y, surface->w + 10, surface->h);
 }
@@ -134,7 +150,7 @@ SDL_Surface *Screen::LoadSurface(const char *filename, int transparent_color) {
                 exit(EXIT_FAILURE);
         }
     SDL_FreeSurface(temp);
-    return surface;	
+    return surface;
 }
 
 void Screen::clear() {

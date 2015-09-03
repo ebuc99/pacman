@@ -2,32 +2,29 @@
 #define FIGUR_H
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-#include "screen.h"
-#include "labyrinth.h"
 #include "platform.h"
 
 class Figur {
 	public:
 		// constructor and destructor
-		Figur(int init_x, int init_y, int init_v, 
-		      Screen *screen, Labyrinth *labyrinth);
+		Figur(int init_x, int init_y, int init_v);
 		virtual ~Figur();
 
 		// direction
 		enum Direction{LEFT, UP, RIGHT, DOWN};
-		
+
 		// position of the figure
-		int x, y; 
-		
+		int x, y;
+
 		// last x and y values (important when checking whether pills have been eaten)
-		int last_x, last_y; 
-		
+		int last_x, last_y;
+
 		// four directions of movement
 		void move_left(int ms, int max_step = 999);
 		void move_up(int ms, int max_step = 999);
 		void move_right(int ms, int max_step = 999);
 		void move_down(int ms, int max_step = 999);
-		
+
 		// wrapper for the directional movement functions
 		void move_dir(int ms, Direction direction);
 
@@ -39,19 +36,19 @@ class Figur {
 
 		// sets the speed of the figure
 		void set_speed(int v);
-		
+
 		// returns the speed
 		int get_speed() const;
-		
+
 		// has the figure moved? (needed for performance tuning)
 		bool was_moving();
-		
+
 		// parking figur
 		void parking();
-		
+
 		// returns the direction
 		Direction get_direction() const;
-		
+
 		// sets the direction of movement
 		void set_direction(Direction direction);
 
@@ -97,9 +94,6 @@ class Figur {
 		int initial_y;
 		int initial_v;
 		int last_speed;
-		//SDL_Surface *LoadSurface(const char *filename, int transparent_color);
-		Labyrinth *labyrinth;
-		Screen *screen;
 		Hunter hunter;
 		int visible;
 };

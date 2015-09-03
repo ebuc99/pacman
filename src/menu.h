@@ -6,7 +6,7 @@
 
 class Menu {
 	public:
-		Menu(Screen *screen, const char* title);
+		Menu(Screen *screen, const char* title = NULL);
 		~Menu();
 		virtual void draw();
 		virtual int show();

@@ -16,7 +16,8 @@ Menu::Menu(Screen *screen, const char* title) {
 		printf("Unable to open TTF font: %s\n", TTF_GetError());
 	if (!(hugeFont = TTF_OpenFont(filePath, 96)))
 		printf("Unable to open TTF font: %s\n", TTF_GetError());
-	menuTitle = TTF_RenderText_Solid(veryLargeFont, title, textwhite);
+	if(title != NULL)
+		menuTitle = TTF_RenderText_Solid(veryLargeFont, title, textwhite);
 	back = TTF_RenderText_Solid(largeFont, "back", textwhite);
 }
 Menu::~Menu() {
@@ -44,7 +45,8 @@ int Menu::show() {
 }
 
 void Menu::drawTitle() {
-	screen->draw(menuTitle, 320 - (menuTitle->w >> 1), 50);
+	if(menuTitle != NULL)
+		screen->draw(menuTitle, 320 - (menuTitle->w >> 1), 50);
 }
 
 int Menu::eventloop() {

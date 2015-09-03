@@ -1,10 +1,7 @@
 #ifndef MENU_OPTIONS
 #define MENU_OPTIONS
-#include "screen.h"
-#include "platform.h"
 #include "labyrinth.h"
 #include "menu.h"
-#include <SDL/SDL_ttf.h>
 
 class MenuOptions : public Menu {
 	public:

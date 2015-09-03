@@ -1,6 +1,7 @@
 #include "menu_main.h"
 
 MenuMain::MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *labyrinth):
+	Menu(screen),
 	selection(0){
 		this->screen = screen;
 		this->pacman = pacman;
@@ -28,25 +29,25 @@ MenuMain::MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *l
 		if (!hugeFont) {
 			printf("Unable to open TTF font: %s\n", TTF_GetError());
 		}
-		appTitle1 = TTF_RenderText_Solid(hugeFont, "Pa", textweiss);
-		appTitle2 = TTF_RenderText_Solid(hugeFont, "man", textweiss);
+		appTitle1 = TTF_RenderText_Solid(hugeFont, "Pa", textwhite);
+		appTitle2 = TTF_RenderText_Solid(hugeFont, "man", textwhite);
 		getFilePath(filePath, "gfx/title_pacman.png");
 		titlePacman = screen->LoadSurface(filePath, 0);
 		version = TTF_RenderText_Solid(smallFont, "version 0.7.0", textgray);
 		menu = new SDL_Surface*[NUM_MENU_ENTRIES];
 		menu_sel = new SDL_Surface*[NUM_MENU_ENTRIES];
 		menu[0] = TTF_RenderText_Solid(font, "Start Game", textgray);
-		menu_sel[0] = TTF_RenderText_Solid(largeFont, "Start Game", textweiss);
+		menu_sel[0] = TTF_RenderText_Solid(largeFont, "Start Game", textwhite);
 		menu[1] = TTF_RenderText_Solid(font, "Options", textgray);
-		menu_sel[1] = TTF_RenderText_Solid(largeFont, "Options", textweiss);
+		menu_sel[1] = TTF_RenderText_Solid(largeFont, "Options", textwhite);
 		menu[2] = TTF_RenderText_Solid(font, "About", textgray);
-		menu_sel[2] = TTF_RenderText_Solid(largeFont, "About", textweiss);
+		menu_sel[2] = TTF_RenderText_Solid(largeFont, "About", textwhite);
 		menu[3] = TTF_RenderText_Solid(font, "Quit", textgray);
-		menu_sel[3] = TTF_RenderText_Solid(largeFont, "Quit", textweiss);
-		animScore200 = TTF_RenderText_Solid(smallFont, "200", textweiss);
-		animScore400 = TTF_RenderText_Solid(smallFont, "400", textweiss);
-		animScore800 = TTF_RenderText_Solid(smallFont, "800", textweiss);
-		animScore1600 = TTF_RenderText_Solid(smallFont, "1600", textweiss);
+		menu_sel[3] = TTF_RenderText_Solid(largeFont, "Quit", textwhite);
+		animScore200 = TTF_RenderText_Solid(smallFont, "200", textwhite);
+		animScore400 = TTF_RenderText_Solid(smallFont, "400", textwhite);
+		animScore800 = TTF_RenderText_Solid(smallFont, "800", textwhite);
+		animScore1600 = TTF_RenderText_Solid(smallFont, "1600", textwhite);
 		pacmanName = TTF_RenderText_Solid(largeFont, "Pacman", textyellow);
 		blinkyName = TTF_RenderText_Solid(largeFont, "Blinky", textred);
 		pinkyName = TTF_RenderText_Solid(largeFont, "Pinky", textmagenta);
@@ -70,14 +71,14 @@ MenuMain::MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *l
 		getFilePath(filePath, "gfx/pear.png");       animFruits[6] = screen->LoadSurface(filePath, 255);
 		getFilePath(filePath, "gfx/key.png");        animFruits[7] = screen->LoadSurface(filePath, 255);
 		animScores = new SDL_Surface*[NUM_FRUITS];
-		animScores[0] = TTF_RenderText_Solid(smallFont,  "100", textweiss);
-		animScores[1] = TTF_RenderText_Solid(smallFont,  "300", textweiss);
-		animScores[2] = TTF_RenderText_Solid(smallFont,  "500", textweiss);
-		animScores[3] = TTF_RenderText_Solid(smallFont,  "700", textweiss);
-		animScores[4] = TTF_RenderText_Solid(smallFont, "1000", textweiss);
-		animScores[5] = TTF_RenderText_Solid(smallFont, "2000", textweiss);
-		animScores[6] = TTF_RenderText_Solid(smallFont, "3000", textweiss);
-		animScores[7] = TTF_RenderText_Solid(smallFont, "5000", textweiss);
+		animScores[0] = TTF_RenderText_Solid(smallFont,  "100", textwhite);
+		animScores[1] = TTF_RenderText_Solid(smallFont,  "300", textwhite);
+		animScores[2] = TTF_RenderText_Solid(smallFont,  "500", textwhite);
+		animScores[3] = TTF_RenderText_Solid(smallFont,  "700", textwhite);
+		animScores[4] = TTF_RenderText_Solid(smallFont, "1000", textwhite);
+		animScores[5] = TTF_RenderText_Solid(smallFont, "2000", textwhite);
+		animScores[6] = TTF_RenderText_Solid(smallFont, "3000", textwhite);
+		animScores[7] = TTF_RenderText_Solid(smallFont, "5000", textwhite);
 		draw();
 }
 

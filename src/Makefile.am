@@ -13,6 +13,8 @@ AM_CFLAGS =\
 
 
 pacman_SOURCES =  \
+	constants.cpp \
+	constants.h \
 	figur.cpp \
 	figur.h \
 	game.cpp \

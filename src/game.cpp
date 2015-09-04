@@ -56,7 +56,7 @@ void Game::init() {
 		Ghost::allGhosts[i]->setVisibility(1);
 		Ghost::allGhosts[i]->draw();
 	}
-	pacman->setRemainingLives(INITIAL_LIVES);
+	pacman->setRemainingLives(Constants::INITIAL_LIVES);
 	Labyrinth::getInstance()->resetScore();
 	setGameOver(0);
 	Screen::getInstance()->draw(score, 530, 30);
@@ -70,10 +70,10 @@ int Game::getDelayTime(Uint32 *currentTicks) {
 	Uint32 lastTicks = *currentTicks;
 	*currentTicks = SDL_GetTicks();
 	int deltaT = (int) (*currentTicks - lastTicks);
-	if (deltaT < MIN_FRAME_DURATION) {
-		SDL_Delay(MIN_FRAME_DURATION - deltaT);
-		deltaT = MIN_FRAME_DURATION;
-		*currentTicks = lastTicks + MIN_FRAME_DURATION;  // otherwise, the waiting time would cause problems within the next frame
+	if (deltaT < Constants::MIN_FRAME_DURATION) {
+		SDL_Delay(Constants::MIN_FRAME_DURATION - deltaT);
+		deltaT = Constants::MIN_FRAME_DURATION;
+		*currentTicks = lastTicks + Constants::MIN_FRAME_DURATION;  // otherwise, the waiting time would cause problems within the next frame
 	}
 	return deltaT;
 
@@ -146,7 +146,7 @@ void Game::stop(uint16_t stop) {
 void Game::setGameOver(int gameOver) {
 	this->gameOver = gameOver;
 	if(gameOver)
-		Labyrinth::getInstance()->setInitText("Game over", RED);
+		Labyrinth::getInstance()->setInitText("Game over", Constants::RED);
 }
 
 int Game::isGameOver() {
@@ -155,12 +155,12 @@ int Game::isGameOver() {
 
 void Game::start() {
 	init();
-	int start_offset = START_OFFSET;
+	int start_offset = Constants::START_OFFSET;
 	int specialEventTime;
 	int animation_counter = 0;
 	int currentScore = 0, lastScore = 0;
 	Uint32 currentTicks = SDL_GetTicks();
-	int deltaT = MIN_FRAME_DURATION;
+	int deltaT = Constants::MIN_FRAME_DURATION;
 	Ghost::allGhosts[0]->set_leader(1);  // Blinky will be the reference sprite for redrawing
 	stop(true);  // at first, stop all figures
 	Sounds::getInstance()->intro();
@@ -195,7 +195,7 @@ void Game::start() {
 							Ghost::allGhosts[i]->setVisibility(0);
 					} else {
 						Labyrinth::getInstance()->setInitText("Get Ready!");
-						start_offset = START_OFFSET_2;
+						start_offset = Constants::START_OFFSET_2;
 					}
 				    Screen::getInstance()->AddUpdateRects(0, 0, background->w, background->h);
 				}
@@ -261,7 +261,7 @@ void Game::start() {
 			resetAllFigures();
 			stop(true);
 			Labyrinth::getInstance()->initNewLevel();
-			start_offset = START_OFFSET;
+			start_offset = Constants::START_OFFSET;
 		    Labyrinth::getInstance()->draw_pillen();  // including background
 		    Screen::getInstance()->AddUpdateRects(0, 0, background->w, background->h);
 			continue;

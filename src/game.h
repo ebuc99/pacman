@@ -3,14 +3,9 @@
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
+#include "constants.h"
 #include "pacman_figur.h"
 #include "ghost_figur.h"
-
-const int MIN_FRAME_DURATION  = 30;    // duration of a loop in milliseconds (i.e. minimum time between frames)
-const uint16_t START_OFFSET   = 4500;  // waiting time when the level starts, in ms
-const uint16_t START_OFFSET_2 = 1500;  // waiting time after respawn, in ms
-const int RED                 = 2;     // color red for init text
-const int INITIAL_LIVES       = 3;     // number of times the player must die to get the "game over"
 
 class Game {
 	private:

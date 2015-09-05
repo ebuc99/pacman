@@ -1,5 +1,21 @@
 #include "game.h"
 
+Game *Game::instance = NULL;
+
+Game *Game::getInstance() {
+	if (instance == NULL) {
+		instance = new Game();
+	}
+	return instance;
+}
+
+void Game::cleanUpInstance() {
+	if (instance) {
+		delete instance;
+		instance = NULL;
+	}
+}
+
 Game::Game():
 	numberGhosts(4),
 	gameOver(0),

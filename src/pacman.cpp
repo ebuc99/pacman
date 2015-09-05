@@ -14,24 +14,24 @@ int main(int argc, char *argv[]) {
 	Ghost *inky   = new Ghost(280, 222, Constants::INTELLIGENCE_INKY,   Figur::UP,   Constants::INIT_UP_DOWN_INKY,  Ghost::INKY);
 	Ghost *clyde  = new Ghost(340, 222, Constants::INTELLIGENCE_CLYDE,  Figur::UP,   Constants::INIT_UP_DOWN_CLYDE, Ghost::CLYDE);
 
-	Game *game = new Game();
+	Game::getInstance();  // still necessary here for initialization of SDL
 	MenuMain *menu = new MenuMain(Screen::getInstance(), Pacman::getInstance(), Ghost::allGhosts, Labyrinth::getInstance());
 
 	while(menu->show()) {
-		game->start();
+		Game::getInstance()->start();
 		menu->draw();
 	}
 
+	Game::cleanUpInstance();
+	//delete menu;
+	Labyrinth::cleanUpInstance();
+	Screen::cleanUpInstance();
+	Sounds::cleanUpInstance();
 	Pacman::cleanUpInstance();
 	delete blinky;
 	delete pinky;
 	delete inky;
 	delete clyde;
-	//delete menu;
-	delete game;
-	Labyrinth::cleanUpInstance();
-	Screen::cleanUpInstance();
-	Sounds::cleanUpInstance();
 
 	return EXIT_SUCCESS;
 }

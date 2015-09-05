@@ -36,7 +36,6 @@ class Sounds {
 		Mix_Music *music_siren_slow = NULL;
 		Mix_Music *music_superpill_loop = NULL;
 		Mix_Music *music_eat_ghost = NULL;
-		int channel_siren;
 		Mix_Chunk *chunk_dying = NULL;
 		Mix_Chunk *chunk_extra_man = NULL;
 		Mix_Chunk *chunk_fruit = NULL;

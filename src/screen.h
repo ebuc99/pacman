@@ -2,6 +2,7 @@
 #define SCREEN_H
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include <SDL/SDL_ttf.h>
 
 class Screen {
 	public:
@@ -9,9 +10,9 @@ class Screen {
 		static void cleanUpInstance();
 
 	    // initialization
-        // return the initialization's error code (currently EXIT_FAILURE if an error occured)
-        int occuredInitSdlError() {
-            return sdl_init_error;
+        // return whether an occured during the initialization of SDL
+        bool hasSDLInitErrorOccured() {
+            return sdlInitErrorOccured;
         }
 
         // methods for drawing
@@ -58,7 +59,7 @@ class Screen {
 		SDL_Rect rects[200];
 		int rect_num;
 		SDL_Surface *screen_surface;
-		int sdl_init_error;
+		bool sdlInitErrorOccured;
 		bool fullscreen;
 };
 #endif

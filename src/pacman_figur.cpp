@@ -1,6 +1,7 @@
 #include "pacman_figur.h"
 #include "ghost_figur.h"
 #include "math.h"
+#include <iostream>
 
 Pacman *Pacman::instance = NULL;
 

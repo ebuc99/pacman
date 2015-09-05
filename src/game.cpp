@@ -1,4 +1,5 @@
 #include "game.h"
+#include <iostream>
 
 Game *Game::instance = NULL;
 
@@ -26,9 +27,6 @@ Game::Game():
 	char filePath[256];
 	getFilePath(filePath, "gfx/hintergrund2.png");
     background = Screen::getInstance()->LoadSurface(filePath);
-	if(TTF_Init() == -1) {
-		printf("Unable to init TTF: %s\n", TTF_GetError());
-	}
 	getFilePath(filePath, "fonts/Cheapmot.TTF");
 	font = TTF_OpenFont(filePath, 20);
 	if(!font) {
@@ -48,7 +46,6 @@ Game::Game():
 Game::~Game() {
 	SDL_FreeSurface(background);
 	TTF_CloseFont(font);
-    TTF_Quit();
 }
 
 void Game::resetAllFigures() {

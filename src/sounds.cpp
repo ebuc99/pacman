@@ -1,4 +1,5 @@
 #include "sounds.h"
+#include <iostream>
 
 Sounds *Sounds::instance = NULL;
 
@@ -17,6 +18,7 @@ void Sounds::cleanUpInstance() {
 }
 
 Sounds::Sounds():
+	channel_munch(-1),
 	munch_toggle(true),
 	eat_ghost_cnt(0),
 	enabled(true) {
@@ -27,58 +29,58 @@ Sounds::Sounds():
 	char filePath[256];
 
 	if(Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers) != 0) {
-		fprintf(stderr, "Unable to initialize audio: %s\n", Mix_GetError());
+		std::cerr << "Unable to initialize audio: " << Mix_GetError() << std::endl;
 		exit(1);
 	}
 	getFilePath(filePath, "sounds/munch_a.wav");
 	chunk_munch_a = Mix_LoadWAV(filePath);
 	if(chunk_munch_a == NULL) {
-		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
+		std::cerr << "Unable to load WAV file: " << Mix_GetError() << std::endl;
 	}
 	getFilePath(filePath, "sounds/munch_b.wav");
 	chunk_munch_b = Mix_LoadWAV(filePath);
-	if(chunk_munch_a == NULL) {
-		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
+	if(chunk_munch_b == NULL) {
+		std::cerr << "Unable to load WAV file: " << Mix_GetError() << std::endl;
 	}
 	getFilePath(filePath, "sounds/intro.wav");
 	music_intro = Mix_LoadMUS(filePath);
 	if(music_intro == NULL) {
-		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
+		std::cerr << "Unable to load WAV file: " << Mix_GetError() << std::endl;
 	}
 	getFilePath(filePath, "sounds/siren_slow.wav");
 	music_siren_slow = Mix_LoadMUS(filePath);
 	if(music_siren_slow == NULL) {
-		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
+		std::cerr << "Unable to load WAV file: " << Mix_GetError() << std::endl;
 	}
 	getFilePath(filePath, "sounds/death_1.wav");
 	chunk_dying = Mix_LoadWAV(filePath);
 	if(chunk_dying == NULL) {
-		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
+		std::cerr << "Unable to load WAV file: " << Mix_GetError() << std::endl;
 	}
 	getFilePath(filePath, "sounds/extra_man.wav");
 	chunk_extra_man = Mix_LoadWAV(filePath);
 	if(chunk_extra_man == NULL) {
-		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
+		std::cerr << "Unable to load WAV file: " << Mix_GetError() << std::endl;
 	}
 	getFilePath(filePath, "sounds/fruit.wav");
 	chunk_fruit = Mix_LoadWAV(filePath);
 	if(chunk_fruit == NULL) {
-		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
+		std::cerr << "Unable to load WAV file: " << Mix_GetError() << std::endl;
 	}
 	getFilePath(filePath, "sounds/large_pellet_loop.wav");
 	music_superpill_loop = Mix_LoadMUS(filePath);
 	if(music_superpill_loop == NULL) {
-		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
+		std::cerr << "Unable to load WAV file: " << Mix_GetError() << std::endl;
 	}
 	getFilePath(filePath, "sounds/ghost_eat_3.wav");
 	chunk_eat_ghost = Mix_LoadWAV(filePath);
 	if(chunk_eat_ghost == NULL) {
-		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
+		std::cerr << "Unable to load WAV file: " << Mix_GetError() << std::endl;
 	}
 	getFilePath(filePath, "sounds/ghost_eat_1.wav");
 	music_eat_ghost = Mix_LoadMUS(filePath);
 	if(music_eat_ghost == NULL) {
-		fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
+		std::cerr << "Unable to load WAV file: " << Mix_GetError() << std::endl;
 	}
 }
 
@@ -116,42 +118,42 @@ void Sounds::toggleEnabled() {
 
 void Sounds::munch() {
 	if(enabled) {
-		Mix_HaltChannel(channel_munch);
+		if (channel_munch != -1) {
+			Mix_HaltChannel(channel_munch);
+		}
 		if(munch_toggle) {
-			munch_toggle = false;
-			channel_munch = Mix_PlayChannel(-1, chunk_munch_a, 0);
+			channel_munch = Mix_PlayChannel(channel_munch, chunk_munch_a, 0);
 		} else {
-			munch_toggle = true;
-			channel_munch = Mix_PlayChannel(-1, chunk_munch_b, 0);
+			channel_munch = Mix_PlayChannel(channel_munch, chunk_munch_b, 0);
 		}
-
 		if(channel_munch == -1) {
-			fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+			std::cerr << "Unable to play WAV file: " << Mix_GetError() << std::endl;
 		}
+		munch_toggle = !munch_toggle;
 	}
 }
 
 void Sounds::intro() {
 	if(enabled && !Mix_PlayingMusic())
 		if((Mix_PlayMusic(music_intro, 1)) == -1)
-			fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+			std::cerr << "Unable to play WAV file: " << Mix_GetError() << std::endl;
 }
 void Sounds::siren_start() {
 	if(enabled && !Mix_PlayingMusic())
 		if((Mix_PlayMusic(music_siren_slow, -1)) == -1)
-			fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+			std::cerr << "Unable to play WAV file: " << Mix_GetError() << std::endl;
 }
 void Sounds::superpill_start() {
 	if(enabled && !Mix_PlayingMusic())
 		if((Mix_PlayMusic(music_superpill_loop, -1)) == -1)
-			fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+			std::cerr << "Unable to play WAV file: " << Mix_GetError() << std::endl;
 }
 
 void Sounds::eat_ghost_start() {
 	if(eat_ghost_cnt) {
 		this->music_stop();
 		if(enabled && (Mix_PlayMusic(music_eat_ghost, -1)) == -1)
-			fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+			std::cerr << "Unable to play WAV file: " << Mix_GetError() << std::endl;
 	}
 }
 
@@ -205,7 +207,7 @@ void Sounds::playSingleSound(SingleSounds singlesounds) {
 			return;
 
 		if(channel == -1) {
-			fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+			std::cerr << "Unable to play WAV file: " << Mix_GetError() << std::endl;
 		}
 	}
 }

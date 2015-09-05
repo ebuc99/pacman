@@ -12,8 +12,7 @@ class Ghost : public Figur {
 	public:
 		/* constructor and destructor */
 		Ghost(int init_x, int init_y, int init_intelligence,
-		      Direction init_direction, int init_up_down, int ghost_ident,
-		      Pacman *pacman);
+		      Direction init_direction, int init_up_down, int ghost_ident);
 		~Ghost();
 
 		/* draw ghost */
@@ -91,7 +90,6 @@ class Ghost : public Figur {
 		SDL_Surface *ghost_1, *ghost_2, *ar_ghost[4];
 		SDL_Surface *augen_0, *augen_1, *augen_2, *augen_3;
 		SDL_Surface *escape_1, *escape_2, *escape_white_1, *escape_white_2;
-		Pacman *pacman;
 		int idxCurrentRail;
 };
 #endif

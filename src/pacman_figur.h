@@ -8,9 +8,9 @@
 
 class Pacman : public Figur {
 	public:
-		// constructor and destructor
-		Pacman(int init_x, int init_y, int lives);
-		~Pacman();
+		static Pacman *getInstance();
+		static void cleanUpInstance();
+
 		// draw pacman
 		virtual void draw();
 
@@ -76,6 +76,10 @@ class Pacman : public Figur {
 		void setRemainingLives(int lives);
 
 	private:
+		// constructor and destructor
+		Pacman();
+		virtual ~Pacman();
+		static Pacman *instance;
 		int pacman_stopped;
 		int animation;
 		int cnt_animation;

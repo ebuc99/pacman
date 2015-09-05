@@ -9,7 +9,6 @@
 
 class Game {
 	private:
-		Pacman *pacman;
 		SDL_Surface *background, *score;
 		TTF_Font *font, *smallFont;
 		SDL_Color textweiss = {255, 255, 255, 0};
@@ -20,7 +19,7 @@ class Game {
 		uint16_t pause;
 		void resetAllFigures();
 	public:
-		Game(Pacman *pacman);
+		Game();
 		~Game();
 		void init();
 		int getDelayTime(Uint32 *currentTicks);

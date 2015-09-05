@@ -8,24 +8,21 @@ int main(int argc, char *argv[]) {
 	if(Screen::getInstance()->occuredInitSdlError() == EXIT_FAILURE)
 		return EXIT_FAILURE;
 
-	// create an instance of pacman
-	Pacman *pacman = new Pacman(Constants::PACMAN_INITIAL_X, Constants::PACMAN_INITIAL_Y, Constants::INITIAL_LIVES);
-
 	// init ghosts
-	Ghost *blinky = new Ghost(310, 174, Constants::INTELLIGENCE_BLINKY, Figur::LEFT, Constants::INIT_UP_DOWN,       Ghost::BLINKY, pacman);
-	Ghost *pinky  = new Ghost(310, 222, Constants::INTELLIGENCE_PINKY,  Figur::UP,   Constants::INIT_UP_DOWN,       Ghost::PINKY,  pacman);
-	Ghost *inky   = new Ghost(280, 222, Constants::INTELLIGENCE_INKY,   Figur::UP,   Constants::INIT_UP_DOWN_INKY,  Ghost::INKY,   pacman);
-	Ghost *clyde  = new Ghost(340, 222, Constants::INTELLIGENCE_CLYDE,  Figur::UP,   Constants::INIT_UP_DOWN_CLYDE, Ghost::CLYDE,  pacman);
+	Ghost *blinky = new Ghost(310, 174, Constants::INTELLIGENCE_BLINKY, Figur::LEFT, Constants::INIT_UP_DOWN,       Ghost::BLINKY);
+	Ghost *pinky  = new Ghost(310, 222, Constants::INTELLIGENCE_PINKY,  Figur::UP,   Constants::INIT_UP_DOWN,       Ghost::PINKY);
+	Ghost *inky   = new Ghost(280, 222, Constants::INTELLIGENCE_INKY,   Figur::UP,   Constants::INIT_UP_DOWN_INKY,  Ghost::INKY);
+	Ghost *clyde  = new Ghost(340, 222, Constants::INTELLIGENCE_CLYDE,  Figur::UP,   Constants::INIT_UP_DOWN_CLYDE, Ghost::CLYDE);
 
-	Game *game = new Game(pacman);
-	MenuMain *menu = new MenuMain(Screen::getInstance(), pacman, Ghost::allGhosts, Labyrinth::getInstance());
+	Game *game = new Game();
+	MenuMain *menu = new MenuMain(Screen::getInstance(), Pacman::getInstance(), Ghost::allGhosts, Labyrinth::getInstance());
 
 	while(menu->show()) {
 		game->start();
 		menu->draw();
 	}
 
-	delete pacman;
+	Pacman::cleanUpInstance();
 	delete blinky;
 	delete pinky;
 	delete inky;

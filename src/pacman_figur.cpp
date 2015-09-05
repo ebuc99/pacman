@@ -2,19 +2,35 @@
 #include "ghost_figur.h"
 #include "math.h"
 
-Pacman::Pacman(int init_x, int init_y, int lives):
-	Figur(init_x, init_y, Constants::PACMAN_V_FAST),
+Pacman *Pacman::instance = NULL;
+
+Pacman *Pacman::getInstance() {
+	if (instance == NULL) {
+		instance = new Pacman();
+	}
+	return instance;
+}
+
+void Pacman::cleanUpInstance() {
+	if (instance) {
+		delete instance;
+		instance = NULL;
+	}
+}
+
+Pacman::Pacman():
+	Figur(Constants::PACMAN_INITIAL_X, Constants::PACMAN_INITIAL_Y, Constants::PACMAN_V_FAST),
 	animation(0),
 	cnt_animation(0),
 	pacman_stopped(0),
 	dying(0),
 	die_counter(0),
-	remainingLives(lives),
+	remainingLives(Constants::INITIAL_LIVES),
 	idxCurrentRail(33)
 {
     wechsel_rate = Constants::PACMAN_WECHSEL_RATE;
-	wechsel_x = init_x;
-	wechsel_y = init_y;
+	wechsel_x = Constants::PACMAN_INITIAL_X;
+	wechsel_y = Constants::PACMAN_INITIAL_Y;
 	direction = LEFT;
 	direction_pre = LEFT;
 	char filePath[256];
@@ -87,7 +103,7 @@ Pacman::Pacman(int init_x, int init_y, int lives):
     ar_pacman_die[14] = Screen::getInstance()->LoadSurface(filePath, 255);
     ar_pacman_die[15] = Screen::getInstance()->LoadSurface(filePath, 255);
 
-	this->pacman_sf = ar_pacman_links[0];
+	pacman_sf = ar_pacman_links[0];
 }
 
 Pacman::~Pacman() {

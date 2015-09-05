@@ -6,8 +6,7 @@ int Ghost::numGhosts = 0;
 int Ghost::was_moving_leader = 1;
 
 Ghost::Ghost(int init_x, int init_y, int init_intelligence,
-             Direction init_direction, int init_up_down, int ghost_ident,
-             Pacman *pacman):
+             Direction init_direction, int init_up_down, int ghost_ident):
 	Figur(init_x, init_y, Constants::GHOSTS_V_NORMAL),
 	its_leader(0),
 	initial_intelligence(init_intelligence),
@@ -24,7 +23,6 @@ Ghost::Ghost(int init_x, int init_y, int init_intelligence,
 	intelligence = init_intelligence;
 	up_down = init_up_down;
 	this->set_hunter(GHOST);
-	this->pacman = pacman;
 	char filePath[256];
 	// Surfaces
 	if(ghost_ident == BLINKY) {
@@ -357,7 +355,7 @@ void Ghost::move_on_rails(int ms, Rail **ar_s) {
 		}
 	}
 	if (!moved && sammel_counter > 0) {
-		int richtung_pacman = this->direction_to_point(pacman->x, pacman->y);
+		int richtung_pacman = this->direction_to_point(Pacman::getInstance()->x, Pacman::getInstance()->y);
 		int new_dir = choose_direction(sammel_richtung, richtung_pacman, sammel_counter, get_intelligence());
 		if (new_dir==LEFT && idxLeft>=0)
 			idxCurrentRail = idxLeft;
@@ -432,7 +430,7 @@ bool Ghost::touched() {
 		set_speed(Constants::GHOSTS_V_NORMAL);
 		set_leader();
 		setVisibility(0);
-		pacman->setVisibility(0);
+		Pacman::getInstance()->setVisibility(0);
 		Labyrinth::getInstance()->addBonusScore(this->x + (ghost_sf->w >> 1), this->y + (ghost_sf->h >> 1));
 		Labyrinth::getInstance()->increaseBonusStage();
 		Labyrinth::getInstance()->sleep(400);

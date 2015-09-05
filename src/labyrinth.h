@@ -2,6 +2,7 @@
 #define LABYRINTH_H
 
 #include <SDL/SDL_ttf.h>
+#include "constants.h"
 #include "screen.h"
 #include "pille.h"
 #include "rail.h"
@@ -16,8 +17,6 @@ class Labyrinth {
 		Labyrinth();
 		~Labyrinth();
 
-		static const int NUMBER_RAILS = 91; // number of rails
-		static const int NUMBER_RAILS_PILLS = 69; // number of pill-filled rails
 		int cnt_pill_animation;
 		Rail *s0,  *s1,  *s2,  *s3,  *s4,  *s5,  *s6,  *s7,  *s8,  *s9,
 		    *s10, *s11, *s12, *s13, *s14, *s15, *s16, *s17, *s18, *s19,
@@ -69,11 +68,10 @@ class Labyrinth {
 		Screen *screen;
 		int sdl_init_error;
 
-		static const int NUMBER_PILLS = 246; // number of pills
-		Pille pillen[NUMBER_PILLS];
+		Pille pillen[Constants::NUMBER_PILLS];
 
-		Rail *array_rails[NUMBER_RAILS];
-		Rail *array_rails_pills[NUMBER_RAILS_PILLS];
+		Rail *array_rails[Constants::NUMBER_RAILS];
+		Rail *array_rails_pills[Constants::NUMBER_RAILS_PILLS];
 
 		int cnt_hunting_mode;
 

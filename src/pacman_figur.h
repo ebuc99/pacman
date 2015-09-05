@@ -1,6 +1,7 @@
 #ifndef PACMAN_FIGUR_H
 #define PACMAN_FIGUR_H
 
+#include "constants.h"
 #include "labyrinth.h"
 #include "figur.h"
 #include "rail.h"
@@ -75,9 +76,6 @@ class Pacman : public Figur {
 		void setRemainingLives(int lives);
 
 	private:
-		static const int PACMAN_V_FAST = 100;   // pacman's speed when not eating
-		static const int PACMAN_V_SLOW = 90;    // pacman's speed while eating
-		static const uint16_t WECHSEL_RATE = 7; // load a new image for pacman after a movement of this number of pixels
 		int pacman_stopped;
 		int animation;
 		int cnt_animation;

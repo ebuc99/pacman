@@ -1,14 +1,14 @@
 #include "ghost_figur.h"
 #include <stdlib.h>
 
-Ghost **Ghost::allGhosts = new Ghost*[Ghost::TOTAL_NUM_GHOSTS];
+Ghost **Ghost::allGhosts = new Ghost*[Constants::TOTAL_NUM_GHOSTS];
 int Ghost::numGhosts = 0;
 int Ghost::was_moving_leader = 1;
 
 Ghost::Ghost(int init_x, int init_y, int init_intelligence,
              Direction init_direction, int init_up_down, int ghost_ident,
              Pacman *pacman):
-	Figur(init_x, init_y, GHOSTS_V_NORMAL),
+	Figur(init_x, init_y, Constants::GHOSTS_V_NORMAL),
 	its_leader(0),
 	initial_intelligence(init_intelligence),
 	initial_direction(init_direction),
@@ -16,7 +16,7 @@ Ghost::Ghost(int init_x, int init_y, int init_intelligence,
 	ghost_ident(ghost_ident),
 	idxCurrentRail(-1)  // should first be determined
 {
-	if (numGhosts < TOTAL_NUM_GHOSTS) {
+	if (numGhosts < Constants::TOTAL_NUM_GHOSTS) {
 		allGhosts[numGhosts] = this;
 		++numGhosts;
 	}
@@ -413,11 +413,11 @@ Figur::Hunter Ghost::get_hunter() const {
 
 void Ghost::set_hunter(Hunter hunter) {
 	if(hunter == PACMAN) {
-		this->set_speed(GHOSTS_V_SLOW);
+		this->set_speed(Constants::GHOSTS_V_SLOW);
 		ar_ghost[0] = escape_1;
 		ar_ghost[1] = escape_2;
 	} else {
-		this->set_speed(GHOSTS_V_NORMAL);
+		this->set_speed(Constants::GHOSTS_V_NORMAL);
 		ar_ghost[0] = ghost_1;
 		ar_ghost[1] = ghost_2;
 	}
@@ -429,7 +429,7 @@ bool Ghost::touched() {
 	if(this->get_hunter() == PACMAN) {
 		// ghost has been eaten by pacman
 		hunter = NONE;
-		set_speed(GHOSTS_V_NORMAL);
+		set_speed(Constants::GHOSTS_V_NORMAL);
 		set_leader();
 		setVisibility(0);
 		pacman->setVisibility(0);

@@ -1,6 +1,7 @@
 #ifndef GHOST_FIGUR_H
 #define GHOST_FIGUR_H
 
+#include "constants.h"
 #include "labyrinth.h"
 #include "figur.h"
 #include "pacman_figur.h"
@@ -77,10 +78,7 @@ class Ghost : public Figur {
 		static Ghost **allGhosts;
 
 	private:
-		static const int TOTAL_NUM_GHOSTS = 4;   // total number of ghosts in the game
 		static int numGhosts;                    // current number of ghosts
-		static const int GHOSTS_V_NORMAL  = 90;  // normal speed of the ghosts
-		static const int GHOSTS_V_SLOW    = 50;  // speed at hunting mode
 		bool its_leader;
 		int up_down;
 		Direction initial_direction;

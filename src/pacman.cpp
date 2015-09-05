@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 
 	// create an instance of pacman
-	Pacman *pacman = new Pacman(310, 339, Constants::INITIAL_LIVES);
+	Pacman *pacman = new Pacman(Constants::PACMAN_INITIAL_X, Constants::PACMAN_INITIAL_Y, Constants::INITIAL_LIVES);
 
 	// init ghosts
 	Ghost *blinky = new Ghost(310, 174, Constants::INTELLIGENCE_BLINKY, Figur::LEFT, Constants::INIT_UP_DOWN,       Ghost::BLINKY, pacman);

@@ -173,26 +173,26 @@ Labyrinth::Labyrinth():
 	s89 = new Rail(310, 175, 310, 222);  // vertical, the middle (long) one - 1 pixel too short, so it usually is a one-way outwards
 	s90 = new Rail(340, 200, 340, 222);  // vertical, the right one
 
-	Rail *array_rails_temp[this->NUMBER_RAILS] = {s0,  s1,  s2,  s3,  s4,  s5,  s6,  s7,  s8,  s9,
-	                                             s10, s11, s12, s13, s14, s15, s16, s17, s18, s19,
-	                                             s20, s21, s22, s23, s24, s25, s26, s27, s28, s29,
-	                                             s30, s31, s32, s33, s34, s35, s36, s37, s38, s39,
-	                                             s40, s41, s42, s43, s44, s45, s46, s47, s48, s49,
-	                                             s50, s51, s52, s53, s54, s55, s56, s57, s58, s59,
-	                                             s60, s61, s62, s63, s64, s65, s66, s67, s68, s69,
-	                                             s70, s71, s72, s73, s74, s75, s76, s77, s78, s79,
-	                                             s80, s81, s82, s83, s84, s85, s86, s87, s88, s89,
-	                                             s90};
+	Rail *array_rails_temp[Constants::NUMBER_RAILS] = {s0,  s1,  s2,  s3,  s4,  s5,  s6,  s7,  s8,  s9,
+													   s10, s11, s12, s13, s14, s15, s16, s17, s18, s19,
+													   s20, s21, s22, s23, s24, s25, s26, s27, s28, s29,
+													   s30, s31, s32, s33, s34, s35, s36, s37, s38, s39,
+													   s40, s41, s42, s43, s44, s45, s46, s47, s48, s49,
+													   s50, s51, s52, s53, s54, s55, s56, s57, s58, s59,
+													   s60, s61, s62, s63, s64, s65, s66, s67, s68, s69,
+													   s70, s71, s72, s73, s74, s75, s76, s77, s78, s79,
+													   s80, s81, s82, s83, s84, s85, s86, s87, s88, s89,
+													   s90};
 	memcpy(array_rails, array_rails_temp, sizeof(array_rails_temp));
-	Rail *array_rails_pills_temp[this->NUMBER_RAILS_PILLS] = {s0,  s1,  s2,  s3,  s4,  s5,  s6,  s7,  s8,  s9,
-	                                                         s10, s11, s12, s13, s14,
-	                                                                             s24, s25, s26, s27, s28, s29,
-	                                                         s30, s31, s32, s33, s34, s35, s36, s37, s38, s39,
-	                                                         s40, s41, s42, s43, s44, s45, s46, s47, s48, s49,
-	                                                         s50, s51, s52, s53, s54, s55, s56, s57,
-	                                                              s61, s62,      s64, s65, s66,      s68, s69,
-	                                                         s70,                s74, s75, s76, s77, s78, s79,
-	                                                         s80, s81, s82, s83, s84, s85};
+	Rail *array_rails_pills_temp[Constants::NUMBER_RAILS_PILLS] = {s0,  s1,  s2,  s3,  s4,  s5,  s6,  s7,  s8,  s9,
+																   s10, s11, s12, s13, s14,
+																					   s24, s25, s26, s27, s28, s29,
+																   s30, s31, s32, s33, s34, s35, s36, s37, s38, s39,
+																   s40, s41, s42, s43, s44, s45, s46, s47, s48, s49,
+																   s50, s51, s52, s53, s54, s55, s56, s57,
+																		s61, s62,      s64, s65, s66,      s68, s69,
+																   s70,                s74, s75, s76, s77, s78, s79,
+																   s80, s81, s82, s83, s84, s85};
 	memcpy(array_rails_pills, array_rails_pills_temp, sizeof(array_rails_pills_temp));
 
 	char filePath[256];
@@ -246,15 +246,15 @@ void Labyrinth::init_pillen(SDL_Surface *background, bool firstInit) {
 	if (firstInit) {
 		int m = -1;
 		int s = 0;
-		this->cnt_pills = this->NUMBER_PILLS;
+		this->cnt_pills = Constants::NUMBER_PILLS;
 		int i_ar_pille_x[26] = {148,162,176,190,204,217,231,245,259,273,287,300,314,327,340,354,368,381,395,409,422,436,449,462,476,490};
 		int i_ar_pille_y[29] = {47,61,75,89,102,116,130,143,157,170,184,197,211,225,239,252,266,280,294,308,321,335,349,362,376,390,404,417,431};
-		for(int k = 0; k < NUMBER_RAILS; k++)
+		for(int k = 0; k < Constants::NUMBER_RAILS; k++)
 			array_rails[k]->numPills = 0;
 		for(int i = 0; i < 26; i++) {
 			for(int j = 0; j < 29; j++) {
 				bool created = false;
-				for(int k = 0; k < NUMBER_RAILS_PILLS; k++) {
+				for(int k = 0; k < Constants::NUMBER_RAILS_PILLS; k++) {
 					if (array_rails_pills[k]->x1 <= i_ar_pille_x[i]-10 && i_ar_pille_x[i]-10 <= array_rails_pills[k]->x2 && array_rails_pills[k]->y1 <= i_ar_pille_y[j]-10 && i_ar_pille_y[j]-10 <= array_rails_pills[k]->y2) {
 						m++;
 						pillen[m].x = i_ar_pille_x[i];
@@ -271,7 +271,7 @@ void Labyrinth::init_pillen(SDL_Surface *background, bool firstInit) {
 					}
 				}
 				if (created) {
-					for(int k = 0; k < NUMBER_RAILS; k++) {
+					for(int k = 0; k < Constants::NUMBER_RAILS; k++) {
 						if (array_rails[k]->x1 <= i_ar_pille_x[i]-10 && i_ar_pille_x[i]-10 <= array_rails[k]->x2 && array_rails[k]->y1 <= i_ar_pille_y[j]-10 && i_ar_pille_y[j]-10 <= array_rails[k]->y2) {
 							array_rails[k]->idxPills[array_rails[k]->numPills] = m;
 							array_rails[k]->numPills++;
@@ -282,8 +282,8 @@ void Labyrinth::init_pillen(SDL_Surface *background, bool firstInit) {
 		}
 	} else {
 		// initialization of pills has already taken place, only reset them
-		this->cnt_pills = this->NUMBER_PILLS;
-		for (int i = 0; i < NUMBER_PILLS; i++)
+		this->cnt_pills = Constants::NUMBER_PILLS;
+		for (int i = 0; i < Constants::NUMBER_PILLS; i++)
 			pillen[i].sichtbar = 1;
 	}
 	if (background)
@@ -295,7 +295,7 @@ void Labyrinth::init_pillen(SDL_Surface *background, bool firstInit) {
 		}
 		SDL_BlitSurface(bgSurface, NULL, pillSurface, NULL);
 		SDL_Rect dest;
-		for (int i = 0; i < NUMBER_PILLS; i++) {
+		for (int i = 0; i < Constants::NUMBER_PILLS; i++) {
 			if (!pillen[i].superpille) {
 				dest.x = (short int) pillen[i].x;
 				dest.y = (short int) pillen[i].y;
@@ -319,7 +319,7 @@ void Labyrinth::draw_pillen() {
 }
 
 int Labyrinth::number_rails() const {
-	return this->NUMBER_RAILS;
+	return Constants::NUMBER_RAILS;
 }
 
 void Labyrinth::pill_animation() {
@@ -584,7 +584,7 @@ void Labyrinth::drawInfoFruit() {
 
 void Labyrinth::getRailsForPoint(int x, int y, int *left, int *right, int *up, int *down) {
 	*left = *right = *up = *down = -1;
-	for (int i = 0; i < NUMBER_RAILS; ++i) {
+	for (int i = 0; i < Constants::NUMBER_RAILS; ++i) {
 		if (array_rails[i]->y1 == y && array_rails[i]->y2 == y) {
 			if (array_rails[i]->x1 <= x && x <= array_rails[i]->x2) {
 				// overlapping horizontal rail - left or right or both

@@ -3,7 +3,7 @@
 #include "math.h"
 
 Pacman::Pacman(int init_x, int init_y, int lives):
-	Figur(init_x, init_y, PACMAN_V_FAST),
+	Figur(init_x, init_y, Constants::PACMAN_V_FAST),
 	animation(0),
 	cnt_animation(0),
 	pacman_stopped(0),
@@ -12,7 +12,7 @@ Pacman::Pacman(int init_x, int init_y, int lives):
 	remainingLives(lives),
 	idxCurrentRail(33)
 {
-    wechsel_rate = WECHSEL_RATE;
+    wechsel_rate = Constants::PACMAN_WECHSEL_RATE;
 	wechsel_x = init_x;
 	wechsel_y = init_y;
 	direction = LEFT;
@@ -350,7 +350,7 @@ void Pacman::check_eat_pills() {
 			if(i >= 0 && Labyrinth::getInstance()->pillen[i].sichtbar && ((Labyrinth::getInstance()->pillen[i].x - 10) >= least(this->x,tmp_last_x)) && ((Labyrinth::getInstance()->pillen[i].x - 10) <= greatest(this->x,tmp_last_x)) && ((Labyrinth::getInstance()->pillen[i].y - 10) >= least(this->y,this->last_y)) && ((Labyrinth::getInstance()->pillen[i].y - 10) <= greatest(this->y,this->last_y))) {
 				cnt_slow = 15;
 				Labyrinth::getInstance()->hidePill(i);
-				set_speed(PACMAN_V_SLOW);
+				set_speed(Constants::PACMAN_V_SLOW);
 				Labyrinth::getInstance()->addScore(10);
 				Labyrinth::getInstance()->decreasePills();
 				Sounds::getInstance()->munch();
@@ -369,7 +369,7 @@ void Pacman::check_eat_pills() {
 		if(cnt_slow > 0)
 			cnt_slow--;
 		if(cnt_slow <= 0)
-			set_speed(PACMAN_V_FAST); // make pacman fast again
+			set_speed(Constants::PACMAN_V_FAST); // make pacman fast again
 
 		// fruit eaten?
 		if(Labyrinth::getInstance()->fruitIsDisplayed() && this->y == 257 && ((this->x>=310 && this->last_x<=310) || (this->x<=310 && this->last_x>=310))) {

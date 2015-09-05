@@ -234,14 +234,14 @@ void Pacman::move_on_rails(int ms, Rail **ar_s) {
 	}
 	if (!moved) {
 		// check the tunnel
-		if((this->direction_pre != RIGHT) && (this->x <= 100) && (this->y == 215)) {
-	 		this->x = 515;
+		if((this->direction_pre != RIGHT) && (this->x <= Constants::LEFT_TUNNEL_BLOCK_X) && (this->y == Constants::TUNNEL_BLOCK_Y)) {
+	 		this->x = Constants::RIGHT_TUNNEL_BLOCK_X;
 	 		this->cur_x = this->x << 10;
 	 		this->direction_pre = LEFT;
 	 		idxCurrentRail = 22;
 	 		moved = true;
-		} else if((this->direction_pre != LEFT) && (this->x >= 515) && (this->y == 215)) {
-	 		this->x = 100;
+		} else if((this->direction_pre != LEFT) && (this->x >= Constants::RIGHT_TUNNEL_BLOCK_X) && (this->y == Constants::TUNNEL_BLOCK_Y)) {
+	 		this->x = Constants::LEFT_TUNNEL_BLOCK_X;
 	 		this->cur_x = this->x << 10;
 	 		this->direction_pre = RIGHT;
 	 		idxCurrentRail = 19;
@@ -355,20 +355,17 @@ bool Pacman::ghostTouched() const{
 
 void Pacman::check_eat_pills() {
 	if(was_moving() && !is_dying()){
-		int tmp_last_x = this->last_x;
-		if (this->y == 215) {
-			if (this->last_x < 310 && this->x > 310)  // tunnel crossed - gone out to the left and coming in from the right
-				tmp_last_x = 516;  // if we did not pretend something like this, a pill would be eaten that Pacman did not really pass
-			if (this->last_x > 310 && this->x < 310)  // tunnel crossed - gone out to the right and coming in from the left
-				tmp_last_x = 99;  // if we did not pretend something like this, a pill would be eaten that Pacman did not really pass
+		int tmp_last_x = last_x;
+		if (this->y == Constants::TUNNEL_BLOCK_Y) {
+			if (last_x < 310 && x > 310)  // tunnel crossed - gone out to the left and coming in from the right
+				tmp_last_x = Constants::RIGHT_TUNNEL_BLOCK_X + 1;  // if we did not pretend something like this, a pill would be eaten that Pacman did not really pass
+			if (last_x > 310 && x < 310)  // tunnel crossed - gone out to the right and coming in from the left
+				tmp_last_x = Constants::LEFT_TUNNEL_BLOCK_X - 1;  // if we did not pretend something like this, a pill would be eaten that Pacman did not really pass
 		}
 		for (int k = 0; k < Labyrinth::getInstance()->array_rails[idxCurrentRail]->numPills; k++) {
 			int i = Labyrinth::getInstance()->array_rails[idxCurrentRail]->idxPills[k];
 			if(i >= 0 && Labyrinth::getInstance()->pillen[i].sichtbar && ((Labyrinth::getInstance()->pillen[i].x - 10) >= least(this->x,tmp_last_x)) && ((Labyrinth::getInstance()->pillen[i].x - 10) <= greatest(this->x,tmp_last_x)) && ((Labyrinth::getInstance()->pillen[i].y - 10) >= least(this->y,this->last_y)) && ((Labyrinth::getInstance()->pillen[i].y - 10) <= greatest(this->y,this->last_y))) {
-				cnt_slow = 15;
 				Labyrinth::getInstance()->hidePill(i);
-				set_speed(Constants::PACMAN_V_SLOW);
-				Labyrinth::getInstance()->addScore(10);
 				Labyrinth::getInstance()->decreasePills();
 				Sounds::getInstance()->munch();
 				if(Labyrinth::getInstance()->pillen[i].superpille) {
@@ -377,8 +374,12 @@ void Pacman::check_eat_pills() {
 							Ghost::allGhosts[j]->set_hunter(PACMAN);
 					}
 					Labyrinth::getInstance()->startHuntingMode();
-					Labyrinth::getInstance()->addScore(40);
+					Labyrinth::getInstance()->addScore(Constants::SUPER_PILL_SCORE);
+				} else {
+					Labyrinth::getInstance()->addScore(Constants::NORMAL_PILL_SCORE);
 				}
+				set_speed(Constants::PACMAN_V_SLOW);
+				cnt_slow = 15;
 				break;
 			}
 		}
@@ -389,12 +390,12 @@ void Pacman::check_eat_pills() {
 			set_speed(Constants::PACMAN_V_FAST); // make pacman fast again
 
 		// fruit eaten?
-		if(Labyrinth::getInstance()->fruitIsDisplayed() && this->y == 257 && ((this->x>=310 && this->last_x<=310) || (this->x<=310 && this->last_x>=310))) {
+		if(Labyrinth::getInstance()->fruitIsDisplayed() && this->y == Constants::FRUIT_Y && ((this->x>=Constants::FRUIT_X && this->last_x<=Constants::FRUIT_X) || (this->x<=Constants::FRUIT_X && this->last_x>=Constants::FRUIT_X))) {
 			Labyrinth::getInstance()->playSoundFruit();
 			Labyrinth::getInstance()->hideFruit();
-			Labyrinth::getInstance()->addScore(Labyrinth::getInstance()->getFruitBonus(), 310 + 10, 257 + 10);
+			Labyrinth::getInstance()->addScore(Labyrinth::getInstance()->getFruitBonus(), Constants::FRUIT_X + 10, Constants::FRUIT_Y + 10);
 			setVisibility(0);
-			Labyrinth::getInstance()->sleep(400);
+			Labyrinth::getInstance()->sleep(Constants::PAUSE_AFTER_BONUS_SCORE);
 		}
 	}
 }
@@ -427,12 +428,10 @@ void Pacman::addUpdateRect() {
 }
 
 void Pacman::drawLives() {
-	const int X_POS = 530;
-	const int Y_POS = 110;
-	const int X_OFFSET = pacman_links_1->w + 3;
+	const int X_OFFSET = pacman_links_1->w + Constants::LIVES_DISTANCE;
 	for (int i = 0; i < remainingLives-1; ++i)
-		Screen::getInstance()->draw(pacman_links_1, X_POS+(i*X_OFFSET), Y_POS);
-	Screen::getInstance()->AddUpdateRects(X_POS, Y_POS, (remainingLives*X_OFFSET)+pacman_links_1->w, pacman_links_1->h);
+		Screen::getInstance()->draw(pacman_links_1, Constants::LIVES_X+(i*X_OFFSET), Constants::LIVES_Y);
+	Screen::getInstance()->AddUpdateRects(Constants::LIVES_X, Constants::LIVES_Y, (remainingLives*X_OFFSET)+pacman_links_1->w, pacman_links_1->h);
 }
 
 void Pacman::addLives(int num) {

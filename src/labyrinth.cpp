@@ -228,15 +228,11 @@ Labyrinth::~Labyrinth(){
 
 void Labyrinth::draw_blocks() {
   	SDL_Rect b1, b2;
-  	b1.x = 100;
-  	b1.y = 215;
-  	b1.w = 30;
-  	b1.h = 30;
-
- 	b2.x = 515;
-  	b2.y = 215;
-  	b2.w = 30;
-  	b2.h = 30;
+  	b1.x = Constants::LEFT_TUNNEL_BLOCK_X;
+ 	b2.x = Constants::RIGHT_TUNNEL_BLOCK_X;
+  	b1.y = b2.y = Constants::TUNNEL_BLOCK_Y;
+  	b1.w = b2.w = Constants::TUNNEL_BLOCK_WIDTH;
+  	b1.h = b2.h = Constants::TUNNEL_BLOCK_HEIGHT;
 
   	SDL_FillRect(Screen::getInstance()->getSurface(), &b1, SDL_MapRGB(Screen::getInstance()->getSurface()->format, 0, 0, 0));
   	SDL_FillRect(Screen::getInstance()->getSurface(), &b2, SDL_MapRGB(Screen::getInstance()->getSurface()->format, 0, 0, 0));
@@ -323,41 +319,38 @@ int Labyrinth::number_rails() const {
 }
 
 void Labyrinth::pill_animation() {
-	if(cnt_pill_animation == 4)
-		cnt_pill_animation = 0;
-	else
-		cnt_pill_animation++;
+	cnt_pill_animation = (cnt_pill_animation + 1) % 5;
 	superpille = ar_superpille[cnt_pill_animation];
 }
 
 void Labyrinth::compute_score() {
 	char char_punktestand[8] = "0";
-	sprintf(char_punktestand, "%d", this->punktestand);
-	if(this->score)
-		SDL_FreeSurface(this->score);
-	this->score = TTF_RenderText_Solid(font, char_punktestand, textgelb);
-	Screen::getInstance()->draw_dynamic_content(this->score, 530, 60);
+	sprintf(char_punktestand, "%d", punktestand);
+	if(score)
+		SDL_FreeSurface(score);
+	score = TTF_RenderText_Solid(font, char_punktestand, textgelb);
+	Screen::getInstance()->draw_dynamic_content(score, 530, 60);
 }
 
 void Labyrinth::startHuntingMode() {
-	this->bonus_stage = 200;
+	bonus_stage = 200;
 	Sounds::getInstance()->music_stop();
 	Sounds::getInstance()->superpill_start();
 	if (cnt_hunting_mode < 0)
-		this->cnt_hunting_mode = 7000;
+		cnt_hunting_mode = 7000;
 	else // hunting mode was still active - prolong the it's duration
-		this->cnt_hunting_mode += 7000;
+		cnt_hunting_mode += 7000;
 }
 
 void Labyrinth::stopHuntingMode() {
-	this->cnt_hunting_mode = -1;
-	this->bonus_stage = 200;
+	cnt_hunting_mode = -1;
+	bonus_stage = 200;
 	Sounds::getInstance()->eat_ghost_stop();
 	Sounds::getInstance()->music_stop();
 }
 
 void Labyrinth::increaseBonusStage() {
-	if (this->bonus_stage < 1600)
+	if (bonus_stage < 1600)
 		bonus_stage <<= 1;  // bit shifting is faster than bonus_stage *= 2;
 }
 
@@ -366,11 +359,11 @@ void Labyrinth::sleep(int frames) {
 }
 
 void Labyrinth::addScore(int value, int show_x, int show_y) {
-	this->punktestand += value;
+	punktestand += value;
 	// show the score at the specified position
 	char ch[8] = "0";
 	sprintf(ch, "%d", value);
-	smallScore = TTF_RenderText_Solid(this->smallFont, ch, this->textweiss);
+	smallScore = TTF_RenderText_Solid(smallFont, ch, textweiss);
 	if (smallScore == NULL) {
 		printf("Unable to render text: %s\n", TTF_GetError());
 		return;
@@ -394,15 +387,15 @@ void Labyrinth::hideSmallScore() {
 }
 
 void Labyrinth::addScore(int value) {
-	this->punktestand += value;
+	punktestand += value;
 }
 
 void Labyrinth::addBonusScore(int show_x, int show_y) {
-	this->addScore(this->bonus_stage, show_x, show_y);
+	addScore(bonus_stage, show_x, show_y);
 }
 
 int Labyrinth::getScore() {
-	return this->punktestand;
+	return punktestand;
 }
 
 void Labyrinth::setFonts(TTF_Font* font, TTF_Font* smallFont) {
@@ -434,37 +427,37 @@ int Labyrinth::getExisitingPills() const {
 }
 
 void Labyrinth::setInitText(const char *text, int color) {
-	initText = TTF_RenderText_Solid(font, text, (color==1) ? this->textgelb : ((color==2)?this->textrot:this->textweiss));
+	initText = TTF_RenderText_Solid(font, text, (color==Constants::YELLOW) ? textgelb : ((color==Constants::RED)?textrot:textweiss));
 }
 
 void Labyrinth::drawInitText() {
 	if(initText)
-		Screen::getInstance()->draw_dynamic_content(initText, 320-(initText->w >> 1), 268-(initText->h >> 1));
+		Screen::getInstance()->draw_dynamic_content(initText, Constants::INIT_TEXT_X-(initText->w >> 1), Constants::INIT_TEXT_Y-(initText->h >> 1));
 }
 
 void Labyrinth::hideInitText() {
 	if (initText) {
-		Screen::getInstance()->AddUpdateRects(320-(initText->w >> 1), 268-(initText->h >> 1), initText->w, initText->h);
+		Screen::getInstance()->AddUpdateRects(Constants::INIT_TEXT_X-(initText->w >> 1), Constants::INIT_TEXT_Y-(initText->h >> 1), initText->w, initText->h);
 		SDL_FreeSurface(initText);
 		initText = NULL;
 	}
 }
 
 void Labyrinth::initNewLevel() {
-	this->stopHuntingMode();
-	this->compute_score();
-	Screen::getInstance()->AddUpdateRects(0, 0, 500, 512);
+	stopHuntingMode();
+	compute_score();
+	Screen::getInstance()->addTotalUpdateRect();
 	Screen::getInstance()->Refresh();
-	this->init_pillen(NULL, level==0);
-	this->draw_pillen();
-	this->hideFruit();
-	this->startFruitRandomizer(true);
+	init_pillen(NULL, level==0);
+	draw_pillen();
+	hideFruit();
+	startFruitRandomizer(true);
 	setLevel(level + 1);
 	char char_level[20];
-	sprintf(char_level, "  Level %d", this->getLevel());
-	this->setInitText(char_level);
-	SDL_Delay(1000);
-	Screen::getInstance()->AddUpdateRects(0, 0, 500, 512);
+	sprintf(char_level, "  Level %d", getLevel());
+	setInitText(char_level);
+	SDL_Delay(Constants::WAIT_FOR_NEW_LEVEL);
+	Screen::getInstance()->addTotalUpdateRect();
 	Screen::getInstance()->Refresh();
 }
 
@@ -516,7 +509,7 @@ void Labyrinth::setLevel(int level) {
 	infoFruit = Screen::getInstance()->LoadSurface(fruit_file, 255);
 	fruit = NULL;
 	drawInfoFruit();
-	Screen::getInstance()->AddUpdateRects(525, 430, infoFruit->w, infoFruit->h);
+	Screen::getInstance()->AddUpdateRects(Constants::INFO_FRUIT_X, Constants::INFO_FRUIT_Y, infoFruit->w, infoFruit->h);
 }
 
 void Labyrinth::startFruitRandomizer(int new_level) {
@@ -547,7 +540,7 @@ void Labyrinth::checkFruit(int ms) {
 
 void Labyrinth::hideFruit() {
 	if (fruit) {
-		Screen::getInstance()->AddUpdateRects(310, 257, fruit->w, fruit->h);
+		Screen::getInstance()->AddUpdateRects(Constants::FRUIT_X, Constants::FRUIT_Y, fruit->w, fruit->h);
 		fruit = NULL;
 		fruit_display_time = 0;
 		if (cnt_displayed_fruits < 2) {
@@ -574,12 +567,12 @@ int Labyrinth::getFruitBonus() const {
 
 void Labyrinth::drawFruit() {
 	if (fruit)
-		Screen::getInstance()->draw_dynamic_content(fruit, 310, 257);
+		Screen::getInstance()->draw_dynamic_content(fruit, Constants::FRUIT_X, Constants::FRUIT_Y);
 }
 
 void Labyrinth::drawInfoFruit() {
 	if (infoFruit)
-		Screen::getInstance()->draw(infoFruit, 525, 430);
+		Screen::getInstance()->draw(infoFruit, Constants::INFO_FRUIT_X, Constants::INFO_FRUIT_Y);
 }
 
 void Labyrinth::getRailsForPoint(int x, int y, int *left, int *right, int *up, int *down) {

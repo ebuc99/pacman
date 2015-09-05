@@ -31,7 +31,7 @@ Screen::Screen():
         sdlInitErrorOccured = true;
 	}
 	if (!sdlInitErrorOccured) {
-		screen_surface = SDL_SetVideoMode(640, 480, 24, SDL_HWSURFACE);
+		screen_surface = SDL_SetVideoMode(Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT, Constants::BITS_PER_PIXEL, SDL_HWSURFACE);
 		if(screen_surface == 0) {
 			printf("Setting video mode failed: %s\n",SDL_GetError());
 			sdlInitErrorOccured = true;
@@ -49,32 +49,37 @@ Screen::~Screen() {
 }
 
 void Screen::AddUpdateRects(int x, int y, int w, int h) {
-    if (rect_num >= 200)
-        return;  // prevent index out of bounds problems
-    if (x < 0) {
-        w += x;
-        x = 0;
-    }
-    if (y < 0) {
-        h += y;
-        y = 0;
-    }
-    if (x + w > this->screen_surface->w)
-        w = this->screen_surface->w - x;
-    if (y + h > this->screen_surface->h)
-        h = this->screen_surface->h - y;
-    if (w <= 0 || h <= 0)
-        return;
-	rects[rect_num].x = (short int)x;
-	rects[rect_num].y = (short int)y;
-	rects[rect_num].w = (short int)w;
-	rects[rect_num].h = (short int)h;
+	if (rect_num >= Constants::MAX_UPDATE_RECTS)
+		return;  // prevent index out of bounds problems
+	if (x < 0) {
+		w += x;
+		x = 0;
+	}
+	if (y < 0) {
+		h += y;
+		y = 0;
+	}
+	if (x + w > screen_surface->w)
+		w = screen_surface->w - x;
+	if (y + h > screen_surface->h)
+		h = screen_surface->h - y;
+	if (w <= 0 || h <= 0)
+		return;
+	rects[rect_num].x = (short int) x;
+	rects[rect_num].y = (short int) y;
+	rects[rect_num].w = (short int) w;
+	rects[rect_num].h = (short int) h;
 	rect_num++;
 }
 
+void Screen::addTotalUpdateRect() {
+	rect_num = 0;  // all other update rects will be included in this one
+	AddUpdateRects(0, 0, screen_surface->w, screen_surface->h);
+}
+
 void Screen::Refresh() {
-	SDL_UpdateRects(this->screen_surface, this->rect_num, this->rects);
-	this->rect_num = 0;
+	SDL_UpdateRects(screen_surface, rect_num, rects);
+	rect_num = 0;
 }
 
 void Screen::draw_dynamic_content(SDL_Surface *surface, int x, int y) {
@@ -100,13 +105,10 @@ void Screen::setFullscreen(bool fs) {
     if (fs == fullscreen)
         return;  // the desired mode already has been activated, so do nothing
     SDL_Surface* newScreen;
-    if(fs)
-        newScreen = SDL_SetVideoMode(640, 480, 24, SDL_HWSURFACE | SDL_FULLSCREEN);
-	else
-        newScreen = SDL_SetVideoMode(640, 480, 24, SDL_HWSURFACE);
+	newScreen = SDL_SetVideoMode(Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT, Constants::BITS_PER_PIXEL, fs ? (SDL_HWSURFACE | SDL_FULLSCREEN) : SDL_HWSURFACE);
     if (NULL != newScreen) {  // successful? NULL indicates failure
-        this->screen_surface = newScreen;  // take it, but do not dispose of the old screen (says SDL documentation)
-        this->AddUpdateRects(0, 0, this->screen_surface->w, this->screen_surface->h);
+        screen_surface = newScreen;  // take it, but do not dispose of the old screen (says SDL documentation)
+        AddUpdateRects(0, 0, screen_surface->w, screen_surface->h);
         // no Refresh() here, because at this moment nothing has been drawn to the new screen
         fullscreen = fs;
     }
@@ -163,8 +165,8 @@ SDL_Surface *Screen::LoadSurface(const char *filename, int transparent_color) {
 }
 
 void Screen::clear() {
-	SDL_Rect rect {0, 0, 640,480};
-	this->fillRect(&rect, 0, 0, 0);
+	SDL_Rect rect {0, 0, screen_surface->w, screen_surface->h};
+	fillRect(&rect, 0, 0, 0);
 }
 
 void Screen::fillRect(SDL_Rect *rect, Uint8 r, Uint8 g, Uint8 b) {

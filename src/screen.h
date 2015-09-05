@@ -1,8 +1,10 @@
 #ifndef SCREEN_H
 #define SCREEN_H
+
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
+#include "constants.h"
 
 class Screen {
 	public:
@@ -17,7 +19,8 @@ class Screen {
 
         // methods for drawing
 		// register graphic parts for updating
-		void AddUpdateRects(int x, int y, int w, int h);
+		void AddUpdateRects(int x, int y, int w, int h);  // should be renamed to addUpdateRect
+		void addTotalUpdateRect();
 		// actually display the updated rectangles
 		void Refresh();
 
@@ -56,7 +59,7 @@ class Screen {
 		Screen();
 		~Screen();
 
-		SDL_Rect rects[200];
+		SDL_Rect rects[Constants::MAX_UPDATE_RECTS];
 		int rect_num;
 		SDL_Surface *screen_surface;
 		bool sdlInitErrorOccured;

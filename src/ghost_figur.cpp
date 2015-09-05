@@ -200,20 +200,19 @@ int Ghost::choose_direction(Direction * sammel_richtung, int richtung_pacman, in
 	int zufallswert;
 	int idx_direction;
 	int castle_direction;
-	int castle_x = 310, castle_y = 190;
 
 	if(sammel_counter == 1)
 		return sammel_richtung[0];
 
 	if (this->get_hunter() == NONE) {
 		// try to return to the ghost castle
-		castle_direction = this->direction_to_point(castle_x, castle_y);
+		castle_direction = this->direction_to_point(Constants::CASTLE_X, Constants::CASTLE_Y);
 		for (int i = 0; i < sammel_counter; ++i) {
 			if (sammel_richtung[i] == castle_direction)
 				return castle_direction;
 		}
 		// try an alternative direction
-		castle_direction = this->alternative_direction_to_point(castle_x, castle_y);
+		castle_direction = this->alternative_direction_to_point(Constants::CASTLE_X, Constants::CASTLE_Y);
 		for (int i = 0; i < sammel_counter; ++i) {
 			if (sammel_richtung[i] == castle_direction)
 				return castle_direction;
@@ -257,19 +256,19 @@ void Ghost::move_on_rails(int ms, Rail **ar_s) {
 		// first, try to keep moving on the current rail
 		if (ar_s[idxCurrentRail]->y1 == ar_s[idxCurrentRail]->y2) {
 			// horizontal rail
-			if (old_dir == LEFT && this->x > ar_s[idxCurrentRail]->x1 - ((idxCurrentRail==87)?1:0)) {
-				this->move_left(ms, ar_s[idxCurrentRail]->x1 - ((idxCurrentRail==87)?1:0));
+			if (old_dir == LEFT && x > ar_s[idxCurrentRail]->x1 - ((idxCurrentRail==87)?1:0)) {
+				move_left(ms, ar_s[idxCurrentRail]->x1 - ((idxCurrentRail==87)?1:0));
 				moved = true;
-			} else if (old_dir == RIGHT && this->x < ar_s[idxCurrentRail]->x2 + ((idxCurrentRail==86)?1:0)) {
-				this->move_right(ms, ar_s[idxCurrentRail]->x2 + ((idxCurrentRail==86)?1:0));
+			} else if (old_dir == RIGHT && x < ar_s[idxCurrentRail]->x2 + ((idxCurrentRail==86)?1:0)) {
+				move_right(ms, ar_s[idxCurrentRail]->x2 + ((idxCurrentRail==86)?1:0));
 				moved = true;
 			}
 		} else {
 			// vertical rail
-			if (old_dir == UP && this->y > ar_s[idxCurrentRail]->y1 - ((idxCurrentRail==89)?1:0)) {
+			if (old_dir == UP && y > ar_s[idxCurrentRail]->y1 - ((idxCurrentRail==89)?1:0)) {
 				this->move_up(ms, ar_s[idxCurrentRail]->y1 - ((idxCurrentRail==89)?1:0));
 				moved = true;
-			} else if (old_dir == DOWN && this->y < ar_s[idxCurrentRail]->y2) {
+			} else if (old_dir == DOWN && y < ar_s[idxCurrentRail]->y2) {
 				this->move_down(ms, ar_s[idxCurrentRail]->y2);
 				moved = true;
 			}
@@ -277,22 +276,22 @@ void Ghost::move_on_rails(int ms, Rail **ar_s) {
 	}
 	if (!moved) {
 		// check the tunnel
-		if ((old_dir != RIGHT) && (this->x <= 100) && (this->y == 215)) {
-	 		this->x = 515;
-	 		this->cur_x = this->x << 10;
+		if ((old_dir != RIGHT) && (x <= Constants::LEFT_TUNNEL_BLOCK_X) && (y == Constants::TUNNEL_BLOCK_Y)) {
+	 		x = Constants::RIGHT_TUNNEL_BLOCK_X;
+	 		cur_x = x << 10;
 	 		old_dir = LEFT;
 	 		idxCurrentRail = 22;
 	 		moved = true;
-		} else if ((old_dir != LEFT) && (this->x >= 515) && (this->y == 215)) {
-	 		this->x = 100;
-	 		this->cur_x = this->x << 10;
+		} else if ((old_dir != LEFT) && (x >= Constants::RIGHT_TUNNEL_BLOCK_X) && (y == Constants::TUNNEL_BLOCK_Y)) {
+	 		x = Constants::LEFT_TUNNEL_BLOCK_X;
+	 		cur_x = x << 10;
 	 		old_dir = RIGHT;
 	 		idxCurrentRail = 19;
 	 		moved = true;
 		}
 	}
 	if (!moved) {
-		if (idxCurrentRail==89 && old_dir==DOWN && this->y>=ar_s[89]->y2) {
+		if (idxCurrentRail==89 && old_dir==DOWN && y>=ar_s[89]->y2) {
 			// special case: at the bottom of the castle's vertical center rail, the ghost must invert it's direction (i.e. go up again)
 			sammel_richtung[0] = UP;
 			sammel_counter = 1;
@@ -301,13 +300,13 @@ void Ghost::move_on_rails(int ms, Rail **ar_s) {
 				set_hunter(GHOST);
 				Sounds::getInstance()->eat_ghost_stop();
 			}
-		} else if (this->up_down) {
+		} else if (up_down) {
 			sammel_richtung[sammel_counter] = ((old_dir==UP) ? DOWN : UP);
 			++sammel_counter;
-			this->up_down--;
+			up_down--;
 		} else {
 			// Find the rails that the ghost may take next
-			Labyrinth::getInstance()->getRailsForPoint(this->x, this->y, &idxLeft, &idxRight, &idxUp, &idxDown);
+			Labyrinth::getInstance()->getRailsForPoint(x, y, &idxLeft, &idxRight, &idxUp, &idxDown);
 			// eliminate the direction the ghost came from
 			switch (old_dir) {
 			case LEFT:
@@ -324,16 +323,16 @@ void Ghost::move_on_rails(int ms, Rail **ar_s) {
 				break;
 			}
 			// for a returning eyes-only ghost, open the door to the castle
-			if (get_hunter() == NONE && this->x == ar_s[89]->x1 && this->y == ar_s[89]->y1-1)
+			if (get_hunter() == NONE && x == ar_s[89]->x1 && y == ar_s[89]->y1-1)
 				idxDown = 89;
 			// eliminate the directions where the rail end has already been reached
-			if (old_dir == LEFT && idxLeft>=0 && this->x <= ar_s[idxLeft]->x1 && ar_s[idxLeft]->y1==ar_s[idxLeft]->y2)
+			if (old_dir == LEFT && idxLeft>=0 && x <= ar_s[idxLeft]->x1 && ar_s[idxLeft]->y1==ar_s[idxLeft]->y2)
 				idxLeft = -1;
-			if (old_dir == RIGHT && idxRight>=0 && this->x >= ar_s[idxRight]->x2 && ar_s[idxLeft]->y1==ar_s[idxLeft]->y2)
+			if (old_dir == RIGHT && idxRight>=0 && x >= ar_s[idxRight]->x2 && ar_s[idxLeft]->y1==ar_s[idxLeft]->y2)
 				idxRight = -1;
-			if (old_dir == UP && idxUp>=0 && this->y <= ar_s[idxUp]->y1 && ar_s[idxLeft]->x1==ar_s[idxLeft]->x2)
+			if (old_dir == UP && idxUp>=0 && y <= ar_s[idxUp]->y1 && ar_s[idxLeft]->x1==ar_s[idxLeft]->x2)
 				idxUp = -1;
-			if (old_dir == DOWN && idxDown>=0 && this->y >= ar_s[idxDown]->y2 && ar_s[idxLeft]->x1==ar_s[idxLeft]->x2)
+			if (old_dir == DOWN && idxDown>=0 && y >= ar_s[idxDown]->y2 && ar_s[idxLeft]->x1==ar_s[idxLeft]->x2)
 				idxDown = -1;
 			// insert the directions to the array
 			if (idxLeft >= 0) {
@@ -431,9 +430,9 @@ bool Ghost::touched() {
 		set_leader();
 		setVisibility(0);
 		Pacman::getInstance()->setVisibility(0);
-		Labyrinth::getInstance()->addBonusScore(this->x + (ghost_sf->w >> 1), this->y + (ghost_sf->h >> 1));
+		Labyrinth::getInstance()->addBonusScore(x + (ghost_sf->w >> 1), y + (ghost_sf->h >> 1));
 		Labyrinth::getInstance()->increaseBonusStage();
-		Labyrinth::getInstance()->sleep(400);
+		Labyrinth::getInstance()->sleep(Constants::PAUSE_AFTER_BONUS_SCORE);
 		Labyrinth::getInstance()->playEatGhost();
 	}
 	if(get_hunter() == NONE)

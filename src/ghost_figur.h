@@ -10,10 +10,8 @@
 
 class Ghost : public Figur {
 	public:
-		/* constructor and destructor */
-		Ghost(int init_x, int init_y, int init_intelligence,
-		      Direction init_direction, int init_up_down, int ghost_ident);
-		~Ghost();
+		static Ghost **getGhostArray();
+		static void cleanUpGhostArray();
 
 		/* draw ghost */
 		virtual void draw();
@@ -74,7 +72,11 @@ class Ghost : public Figur {
 
 		Ghosts getGhostIdent() const;
 
-		static Ghost **allGhosts;
+	protected:
+		/* constructor and destructor */
+		Ghost(int init_x, int init_y, int init_intelligence,
+		      Direction init_direction, int init_up_down, int ghost_ident);
+		virtual ~Ghost();
 
 	private:
 		static int numGhosts;                    // current number of ghosts
@@ -91,5 +93,47 @@ class Ghost : public Figur {
 		SDL_Surface *augen_0, *augen_1, *augen_2, *augen_3;
 		SDL_Surface *escape_1, *escape_2, *escape_white_1, *escape_white_2;
 		int idxCurrentRail;
+		static Ghost **ghostArray;
 };
+
+class Blinky : public Ghost {
+	public:
+		static Blinky *getInstance();
+		static void cleanUpInstance();
+	private:
+		static Blinky *instance;
+		Blinky();
+		virtual ~Blinky() {}
+};
+
+class Pinky : public Ghost {
+	public:
+		static Pinky *getInstance();
+		static void cleanUpInstance();
+	private:
+		static Pinky *instance;
+		Pinky();
+		virtual ~Pinky() {}
+};
+
+class Inky : public Ghost {
+	public:
+		static Inky *getInstance();
+		static void cleanUpInstance();
+	private:
+		static Inky *instance;
+		Inky();
+		virtual ~Inky() {}
+};
+
+class Clyde : public Ghost {
+	public:
+		static Clyde *getInstance();
+		static void cleanUpInstance();
+	private:
+		static Clyde *instance;
+		Clyde();
+		virtual ~Clyde() {}
+};
+
 #endif

@@ -26,7 +26,6 @@ class Game {
 		SDL_Surface *background, *score;
 		TTF_Font *font, *smallFont;
 		SDL_Color textweiss = {255, 255, 255, 0};
-		int numberGhosts;
 		int gameOver;
 		int stop_moving;
 		int refresh_ghosts;

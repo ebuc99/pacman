@@ -6,7 +6,7 @@
 Pacman *Pacman::instance = NULL;
 
 Pacman *Pacman::getInstance() {
-	if (instance == NULL) {
+	if (!instance) {
 		instance = new Pacman();
 	}
 	return instance;
@@ -343,10 +343,10 @@ bool Pacman::ghostTouched() const{
 	int touch_result = 0;
 
     for(int i = 0; i < 4; i++) {
-    	int x_real_ghost = Ghost::allGhosts[i]->x + (int)(Ghost::allGhosts[i]->get_Surface()->w * 0.5);
-		int y_real_ghost = Ghost::allGhosts[i]->y + (int)(Ghost::allGhosts[i]->get_Surface()->h * 0.5);
+    	int x_real_ghost = Ghost::getGhostArray()[i]->x + (int)(Ghost::getGhostArray()[i]->get_Surface()->w * 0.5);
+		int y_real_ghost = Ghost::getGhostArray()[i]->y + (int)(Ghost::getGhostArray()[i]->get_Surface()->h * 0.5);
 		if((x_real_ghost >= x_left_pacman) && (x_real_ghost <= x_right_pacman) && (y_real_ghost >= y_up_pacman) && (y_real_ghost <= y_down_pacman))
-			touch_result = Ghost::allGhosts[i]->touched();
+			touch_result = Ghost::getGhostArray()[i]->touched();
 			if(touch_result != 0)
 				return true;
 	}
@@ -370,8 +370,8 @@ void Pacman::check_eat_pills() {
 				Sounds::getInstance()->munch();
 				if(Labyrinth::getInstance()->pillen[i].superpille) {
 					for(int j = 0; j < 4; ++j) {
-						if(Ghost::allGhosts[j]->get_hunter() != NONE)  // eaten ghosts still have to return to the castle
-							Ghost::allGhosts[j]->set_hunter(PACMAN);
+						if(Ghost::getGhostArray()[j]->get_hunter() != NONE)  // eaten ghosts still have to return to the castle
+							Ghost::getGhostArray()[j]->set_hunter(PACMAN);
 					}
 					Labyrinth::getInstance()->startHuntingMode();
 					Labyrinth::getInstance()->addScore(Constants::SUPER_PILL_SCORE);

@@ -9,7 +9,8 @@ class Constants {
 		static const uint16_t INTELLIGENCE_PINKY      = 60;
 		static const uint16_t INTELLIGENCE_INKY       = 30;
 		static const uint16_t INTELLIGENCE_CLYDE      = 0;
-		static const uint16_t INIT_UP_DOWN            = 0;     // initial up/down cycles before the ghost will be allowed to leave the castle
+		static const uint16_t INIT_UP_DOWN_BLINKY     = 0;     // initial up/down cycles before the ghost will be allowed to leave the castle
+		static const uint16_t INIT_UP_DOWN_PINKY      = 0;
 		static const uint16_t INIT_UP_DOWN_INKY       = 5;
 		static const uint16_t INIT_UP_DOWN_CLYDE      = 11;
 		static const int MIN_FRAME_DURATION           = 30;    // duration of a loop in milliseconds (i.e. minimum time between frames)

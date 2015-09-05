@@ -1,9 +1,29 @@
 #include "ghost_figur.h"
 #include <stdlib.h>
 
-Ghost **Ghost::allGhosts = new Ghost*[Constants::TOTAL_NUM_GHOSTS];
-int Ghost::numGhosts = 0;
 int Ghost::was_moving_leader = 1;
+Ghost **Ghost::ghostArray = NULL;
+
+Ghost **Ghost::getGhostArray() {
+	if (!ghostArray) {
+		ghostArray = new Ghost*[Constants::TOTAL_NUM_GHOSTS];
+		ghostArray[0] = Blinky::getInstance();
+		ghostArray[1] = Pinky::getInstance();
+		ghostArray[2] = Inky::getInstance();
+		ghostArray[3] = Clyde::getInstance();
+	}
+	return ghostArray;
+}
+void Ghost::cleanUpGhostArray() {
+	if (ghostArray) {
+		Blinky::cleanUpInstance();
+		Pinky::cleanUpInstance();
+		Inky::cleanUpInstance();
+		Clyde::cleanUpInstance();
+		delete [] ghostArray;
+		ghostArray = NULL;
+	}
+}
 
 Ghost::Ghost(int init_x, int init_y, int init_intelligence,
              Direction init_direction, int init_up_down, int ghost_ident):
@@ -15,10 +35,6 @@ Ghost::Ghost(int init_x, int init_y, int init_intelligence,
 	ghost_ident(ghost_ident),
 	idxCurrentRail(-1)  // should first be determined
 {
-	if (numGhosts < Constants::TOTAL_NUM_GHOSTS) {
-		allGhosts[numGhosts] = this;
-		++numGhosts;
-	}
 	direction = init_direction;
 	intelligence = init_intelligence;
 	up_down = init_up_down;
@@ -79,16 +95,6 @@ Ghost::Ghost(int init_x, int init_y, int init_intelligence,
 }
 
 Ghost::~Ghost() {
-	for (int i = 0; i < numGhosts; ++i) {
-		if (allGhosts[i] == this) {
-			for (int j = i; j < numGhosts-1; ++j) {
-				allGhosts[j] = allGhosts[j+1];
-			}
-			allGhosts[numGhosts-1] = NULL;
-			--numGhosts;
-			break;
-		}
-	}
 	SDL_FreeSurface(ghost_1);
 	SDL_FreeSurface(ghost_2);
 	SDL_FreeSurface(augen_0);
@@ -137,12 +143,11 @@ void Ghost::set_leader(bool leader) {
 }
 
 void Ghost::set_leader() {
-	int i;
-	for(i = 0;i < 4; i++) {
-		if(allGhosts[i]->getGhostIdent() == this->getGhostIdent())
-			allGhosts[i]->set_leader(true);
+	for(int i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i) {
+		if(getGhostArray()[i]->getGhostIdent() == this->getGhostIdent())
+			getGhostArray()[i]->set_leader(true);
 		else
-			allGhosts[i]->set_leader(false);
+			getGhostArray()[i]->set_leader(false);
 	}
 }
 
@@ -449,3 +454,75 @@ void Ghost::blink() {
 Ghost::Ghosts Ghost::getGhostIdent() const {
 	return (Ghosts)ghost_ident;
 }
+
+// --- BLINKY ---
+Blinky *Blinky::instance = NULL;
+Blinky *Blinky::getInstance() {
+	if (!instance) {
+		instance = new Blinky();
+	}
+	return instance;
+}
+void Blinky::cleanUpInstance() {
+	if (instance) {
+		delete instance;
+		instance = NULL;
+	}
+}
+Blinky::Blinky():
+	Ghost(Constants::BLINKY_INITIAL_X, Constants::BLINKY_INITIAL_Y, Constants::INTELLIGENCE_BLINKY, Figur::LEFT, Constants::INIT_UP_DOWN_BLINKY, Ghost::BLINKY)
+{}
+
+// --- PINKY ---
+Pinky *Pinky::instance = NULL;
+Pinky *Pinky::getInstance() {
+	if (!instance) {
+		instance = new Pinky();
+	}
+	return instance;
+}
+void Pinky::cleanUpInstance() {
+	if (instance) {
+		delete instance;
+		instance = NULL;
+	}
+}
+Pinky::Pinky():
+	Ghost(Constants::PINKY_INITIAL_X, Constants::PINKY_INITIAL_Y, Constants::INTELLIGENCE_PINKY, Figur::UP, Constants::INIT_UP_DOWN_PINKY, Ghost::PINKY)
+{}
+
+// --- INKY ---
+Inky *Inky::instance = NULL;
+Inky *Inky::getInstance() {
+	if (!instance) {
+		instance = new Inky();
+	}
+	return instance;
+}
+void Inky::cleanUpInstance() {
+	if (instance) {
+		delete instance;
+		instance = NULL;
+	}
+}
+Inky::Inky():
+	Ghost(Constants::INKY_INITIAL_X, Constants::INKY_INITIAL_Y, Constants::INTELLIGENCE_INKY, Figur::UP, Constants::INIT_UP_DOWN_INKY, Ghost::INKY)
+{}
+
+// --- CLYDE ---
+Clyde *Clyde::instance = NULL;
+Clyde *Clyde::getInstance() {
+	if (!instance) {
+		instance = new Clyde();
+	}
+	return instance;
+}
+void Clyde::cleanUpInstance() {
+	if (instance) {
+		delete instance;
+		instance = NULL;
+	}
+}
+Clyde::Clyde():
+	Ghost(Constants::CLYDE_INITIAL_X, Constants::CLYDE_INITIAL_Y, Constants::INTELLIGENCE_CLYDE, Figur::UP, Constants::INIT_UP_DOWN_CLYDE, Ghost::CLYDE)
+{}

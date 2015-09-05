@@ -4,7 +4,7 @@
 Game *Game::instance = NULL;
 
 Game *Game::getInstance() {
-	if (instance == NULL) {
+	if (!instance) {
 		instance = new Game();
 	}
 	return instance;
@@ -18,11 +18,11 @@ void Game::cleanUpInstance() {
 }
 
 Game::Game():
-	numberGhosts(4),
-	gameOver(0),
-	stop_moving(0),
-	refresh_ghosts(0),
-	pause(0) {
+	gameOver(false),
+	stop_moving(false),
+	refresh_ghosts(false),
+	pause(false)
+{
 	// initialize background graphic
 	char filePath[256];
 	getFilePath(filePath, "gfx/hintergrund2.png");
@@ -50,7 +50,7 @@ Game::~Game() {
 
 void Game::resetAllFigures() {
 	for(int i = 0; i < 4; ++i)
-		Ghost::allGhosts[i]->reset();
+		Ghost::getGhostArray()[i]->reset();
 	Pacman::getInstance()->reset();
 }
 
@@ -63,9 +63,9 @@ void Game::init() {
 	resetAllFigures();
 	Pacman::getInstance()->setVisibility(1);
 	Pacman::getInstance()->draw();
-	for (int i = 0; i < numberGhosts; ++i) {
-		Ghost::allGhosts[i]->setVisibility(1);
-		Ghost::allGhosts[i]->draw();
+	for (int i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i) {
+		Ghost::getGhostArray()[i]->setVisibility(true);
+		Ghost::getGhostArray()[i]->draw();
 	}
 	Pacman::getInstance()->setRemainingLives(Constants::INITIAL_LIVES);
 	Labyrinth::getInstance()->resetScore();
@@ -141,14 +141,14 @@ void Game::stop(uint16_t stop) {
 	if(stop) {
 		Pacman::getInstance()->set_stop(true);
 		for (int i = 0; i < 4; ++i)
-			Ghost::allGhosts[i]->set_stop(true);
+			Ghost::getGhostArray()[i]->set_stop(true);
 		stop_moving = 1;
 		Sounds::getInstance()->music_stop();
 		Sounds::getInstance()->channelStop();
 	} else {
 		Pacman::getInstance()->set_stop(false);
 		for (int i = 0; i < 4; ++i)
-			Ghost::allGhosts[i]->set_stop(false);
+			Ghost::getGhostArray()[i]->set_stop(false);
 		stop_moving = 0;
 		Sounds::getInstance()->siren_start();
 	}
@@ -172,7 +172,7 @@ void Game::start() {
 	int currentScore = 0, lastScore = 0;
 	Uint32 currentTicks = SDL_GetTicks();
 	int deltaT = Constants::MIN_FRAME_DURATION;
-	Ghost::allGhosts[0]->set_leader(1);  // Blinky will be the reference sprite for redrawing
+	Ghost::getGhostArray()[0]->set_leader(1);  // Blinky will be the reference sprite for redrawing
 	stop(true);  // at first, stop all figures
 	Sounds::getInstance()->intro();
 	// game loop
@@ -187,8 +187,8 @@ void Game::start() {
 		if(animation_counter > 100) {
 			// ghost animations
 			refresh_ghosts = 1;
-			for(i = 0; i < numberGhosts; ++i)
-				Ghost::allGhosts[i]->animation();
+			for(i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i)
+				Ghost::getGhostArray()[i]->animation();
 
 			// Pacman die animation
 			if(Pacman::getInstance()->is_dying()) {
@@ -201,9 +201,9 @@ void Game::start() {
 					if (Pacman::getInstance()->getRemainingLives() <= 0) {
 						setGameOver(1);
 						start_offset = -1;  // do not start again
-						Pacman::getInstance()->setVisibility(0);  // Pacman does not exist anymore
-						for(i = 0; i < numberGhosts; ++i)
-							Ghost::allGhosts[i]->setVisibility(0);
+						Pacman::getInstance()->setVisibility(false);  // Pacman does not exist anymore
+						for(i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i)
+							Ghost::getGhostArray()[i]->setVisibility(false);
 					} else {
 						Labyrinth::getInstance()->setInitText("Get Ready!");
 						start_offset = Constants::START_OFFSET_2;
@@ -230,15 +230,15 @@ void Game::start() {
 	 	// hunting mode - ghosts can be eaten after eating a superpill, but only for a defined time
 		if(Labyrinth::getInstance()->cnt_hunting_mode > 0 && !pause && Labyrinth::getInstance()->cnt_sleep <= 0) {
 			if (Labyrinth::getInstance()->cnt_hunting_mode > 2000 && Labyrinth::getInstance()->cnt_hunting_mode-deltaT <= 2000) {
-				for(i = 0; i < numberGhosts; ++i)
-					Ghost::allGhosts[i]->blink();
+				for(i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i)
+					Ghost::getGhostArray()[i]->blink();
 			}
 			Labyrinth::getInstance()->cnt_hunting_mode -= deltaT;
 			if (Labyrinth::getInstance()->cnt_hunting_mode <= 0) {
 				if (!Pacman::getInstance()->is_dying()) {
-					for(i = 0; i < numberGhosts; ++i) {
-						if (Ghost::allGhosts[i]->get_hunter() != Figur::NONE)  // eaten ghosts still have to return to the castle
-							Ghost::allGhosts[i]->set_hunter(Figur::GHOST);
+					for(i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i) {
+						if (Ghost::getGhostArray()[i]->get_hunter() != Figur::NONE)  // eaten ghosts still have to return to the castle
+							Ghost::getGhostArray()[i]->set_hunter(Figur::GHOST);
 					}
 				}
 				Labyrinth::getInstance()->stopHuntingMode();
@@ -252,8 +252,8 @@ void Game::start() {
 				Labyrinth::getInstance()->cnt_sleep = 0;
 				Labyrinth::getInstance()->hideSmallScore();
 				Pacman::getInstance()->setVisibility(true);
-				for(i = 0; i < numberGhosts; ++i)
-					Ghost::allGhosts[i]->setVisibility(true);
+				for(i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i)
+					Ghost::getGhostArray()[i]->setVisibility(true);
 				Sounds::getInstance()->eat_ghost_start();
 			}
 		}
@@ -261,8 +261,8 @@ void Game::start() {
 		// move all figures
 		if (!pause && Labyrinth::getInstance()->cnt_sleep <= 0) {
 			Pacman::getInstance()->move(deltaT);
-			for(i = 0; i < numberGhosts; ++i)
-				Ghost::allGhosts[i]->move(deltaT);
+			for(i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i)
+				Ghost::getGhostArray()[i]->move(deltaT);
 		}
 
 		// did something special happen during the move?
@@ -319,9 +319,9 @@ void Game::start() {
 			Pacman::getInstance()->animate();
 			Pacman::getInstance()->draw();
 			Pacman::getInstance()->addUpdateRect();
-			for(i = 0; i < numberGhosts; ++i) {
-				Ghost::allGhosts[i]->draw();
-				Ghost::allGhosts[i]->addUpdateRect();
+			for(i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i) {
+				Ghost::getGhostArray()[i]->draw();
+				Ghost::getGhostArray()[i]->addUpdateRect();
 			}
 			// topmost things within the level
 		    Labyrinth::getInstance()->draw_blocks();
@@ -337,8 +337,8 @@ void Game::start() {
 		}
 		deltaT = getDelayTime(&currentTicks);
 	}
-	Pacman::getInstance()->setVisibility(0);
-	for(int i = 0; i < numberGhosts; ++i) {
-		Ghost::allGhosts[i]->setVisibility(0);
+	Pacman::getInstance()->setVisibility(false);
+	for(int i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i) {
+		Ghost::getGhostArray()[i]->setVisibility(false);
 	}
 }

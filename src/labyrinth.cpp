@@ -4,7 +4,7 @@
 Labyrinth *Labyrinth::instance = NULL;
 
 Labyrinth *Labyrinth::getInstance() {
-	if (instance == NULL) {
+	if (!instance) {
 		instance = new Labyrinth();
 	}
 	return instance;

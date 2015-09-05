@@ -3,7 +3,7 @@
 Screen *Screen::instance = NULL;
 
 Screen *Screen::getInstance() {
-	if (instance == NULL) {
+	if (!instance) {
 		instance = new Screen();
 	}
 	return instance;

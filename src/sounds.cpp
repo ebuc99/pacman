@@ -4,7 +4,7 @@
 Sounds *Sounds::instance = NULL;
 
 Sounds *Sounds::getInstance() {
-	if (instance == NULL) {
+	if (!instance) {
 		instance = new Sounds();
 	}
 	return instance;

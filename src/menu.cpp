@@ -1,6 +1,7 @@
 #include "menu.h"
 
-Menu::Menu(Screen *screen, const char* title) {
+Menu::Menu(Screen *screen, const char* title):
+	selection(0) {
 	this->screen = screen;
 	textwhite.r = textwhite.g = textwhite.b = 255;
 	textgray.r = textgray.g = textgray.b = 192;
@@ -18,11 +19,13 @@ Menu::Menu(Screen *screen, const char* title) {
 		printf("Unable to open TTF font: %s\n", TTF_GetError());
 	if(title != NULL)
 		menuTitle = TTF_RenderText_Solid(veryLargeFont, title, textwhite);
-	back = TTF_RenderText_Solid(largeFont, "back", textwhite);
 }
 Menu::~Menu() {
 	SDL_FreeSurface(menuTitle);
-	SDL_FreeSurface(back);
+	/*for(int i = 0; i < menuItems.size(); ++i) {
+		SDL_FreeSurface(menuItems.at(i));
+		SDL_FreeSurface(menuItemsSel.at(i));
+	}*/
 	TTF_CloseFont(font);
 	TTF_CloseFont(smallFont);
 	TTF_CloseFont(largeFont);
@@ -33,9 +36,19 @@ Menu::~Menu() {
 void Menu::draw() {
 	screen->clear();
 	this->drawTitle();
-	screen->draw(back, 320 - (back->w >> 1), 430 - (back->h >> 1));
+	this->drawMenuItems();
 	screen->AddUpdateRects(0, 0, 640, 480);
 	screen->Refresh();
+}
+
+void Menu::drawMenuItems() {
+	for(int i = 0; i < menuItems.size(); ++i) {
+		if(selection == i)
+			menuItems.at(i)->setSelection(true);
+		else
+			menuItems.at(i)->setSelection(false);
+		screen->draw(menuItems.at(i)->getCurrentMenuItem(), 320 - (menuItems.at(i)->getCurrentMenuItem()->w >> 1), (430 - (i)*30) - (menuItems.at(i)->getCurrentMenuItem()->h >> 1));
+	}		
 }
 
 int Menu::show() {
@@ -47,6 +60,10 @@ int Menu::show() {
 void Menu::drawTitle() {
 	if(menuTitle != NULL)
 		screen->draw(menuTitle, 320 - (menuTitle->w >> 1), 50);
+}
+
+void Menu::addMenuItem(const char* menuItem, const char* menuItemAlt) {
+	menuItems.push_back(new MenuItem(menuItem));
 }
 
 int Menu::eventloop() {
@@ -68,4 +85,14 @@ int Menu::eventloop() {
 		}
 	}
 	return 0;
+}
+
+void Menu::menuItemUp() {
+	selection = (--selection + menuItems.size()) % menuItems.size();
+	draw();
+}
+
+void Menu::menuItemDown() {
+	selection = ++selection % menuItems.size();
+	draw();
 }

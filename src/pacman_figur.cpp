@@ -23,13 +23,11 @@ Pacman::Pacman():
 	Figur(Constants::PACMAN_INITIAL_X, Constants::PACMAN_INITIAL_Y, Constants::PACMAN_V_FAST),
 	animation(0),
 	cnt_animation(0),
-	pacman_stopped(0),
 	dying(0),
 	die_counter(0),
 	remainingLives(Constants::INITIAL_LIVES),
 	idxCurrentRail(33)
 {
-    wechsel_rate = Constants::PACMAN_WECHSEL_RATE;
 	wechsel_x = Constants::PACMAN_INITIAL_X;
 	wechsel_y = Constants::PACMAN_INITIAL_Y;
 	direction = LEFT;
@@ -127,7 +125,10 @@ void Pacman::draw() {
 }
 
 void Pacman::checkAnimationChange() {
-	if ((wechsel_rate > 0) && ((abs(x-wechsel_x)>=wechsel_rate)||(abs(y-wechsel_y)>=wechsel_rate))) {
+	if (abs(x-wechsel_x)>=Constants::PACMAN_WECHSEL_RATE ||
+	    abs(y-wechsel_y)>=Constants::PACMAN_WECHSEL_RATE ||
+	    directionChanged)
+	{
 		wechsel_x = x;
 		wechsel_y = y;
 		animation = 1;
@@ -135,9 +136,9 @@ void Pacman::checkAnimationChange() {
 }
 
 void Pacman::move(int ms) {
-	this->move_on_rails(ms, Labyrinth::getInstance()->array_rails);
+	move_on_rails(ms, Labyrinth::getInstance()->array_rails);
 	if (last_x != x || last_y != y)
-		this->addUpdateRect();
+		addUpdateRect();
 }
 void Pacman::move_left(int ms, int stop_at) {
 	Figur::move_left(ms, stop_at);
@@ -160,44 +161,43 @@ void Pacman::move_down(int ms, int stop_at) {
 }
 
 void Pacman::left_pic(int cnt_pic) {
-	this->pacman_sf = ar_pacman_links[cnt_pic];
+	pacman_sf = ar_pacman_links[cnt_pic];
 }
 
 void Pacman::up_pic(int cnt_pic) {
-	this->pacman_sf = ar_pacman_oben[cnt_pic];
+	pacman_sf = ar_pacman_oben[cnt_pic];
 }
 
 void Pacman::right_pic(int cnt_pic) {
-	this->pacman_sf = ar_pacman_rechts[cnt_pic];
+	pacman_sf = ar_pacman_rechts[cnt_pic];
 }
 
 void Pacman::down_pic(int cnt_pic) {
-	this->pacman_sf = ar_pacman_unten[cnt_pic];
+	pacman_sf = ar_pacman_unten[cnt_pic];
 }
 
 void Pacman::die_pic(int cnt_pic) {
-	this->pacman_sf = ar_pacman_die[cnt_pic];
+	pacman_sf = ar_pacman_die[cnt_pic];
 }
 void Pacman::animate() {
 	if (animation) {
 		animation = 0;
-		switch(this->get_direction()) {
+		switch(get_direction()) {
 			case 0:
-				this->left_pic(cnt_animation);
+				left_pic(cnt_animation);
 				break;
 			case 1:
-				this->up_pic(cnt_animation);
+				up_pic(cnt_animation);
 				break;
 			case 2:
-				this->right_pic(cnt_animation);
+				right_pic(cnt_animation);
 				break;
 			case 3:
-				this->down_pic(cnt_animation);
+				down_pic(cnt_animation);
+				break;
 		}
-	  	cnt_animation++;
+	  	cnt_animation = (cnt_animation + 1) % 4;
 	}
-	if(cnt_animation > 3)
-			cnt_animation = 0;
 }
 
 void Pacman::move_on_rails(int ms, Rail **ar_s) {
@@ -296,24 +296,36 @@ void Pacman::move_on_rails(int ms, Rail **ar_s) {
 		}
 	}
 	if (new_dir != old_dir)
-		this->animation = 1;
+		animation = 1;
 	if (!moved)
-		this->pacman_stopped = 1;
+		stopped();
 }
 
-int Pacman::is_pacman_stopped() {
-	if(pacman_stopped) {
-		pacman_stopped = 0;
-		return 1;
-	} else
-		return 0;
+void Pacman::stopped() {
+	// if pacman stops, please set it to "normal"
+	if (!is_dying()) {
+		switch(get_direction()) {
+			case Figur::LEFT:
+				left_pic(0);
+				break;
+			case Figur::UP:
+				up_pic(0);
+				break;
+			case Figur::RIGHT:
+				right_pic(0);
+				break;
+			case Figur::DOWN:
+				down_pic(0);
+				break;
+		}
+		parking();
+	}
 }
 
 void Pacman::reset() {
 	x = initial_x;
 	y = initial_y;
-	dx = initial_v;
-	dy = initial_v;
+	speed = initial_v;
 	last_x = initial_x;
 	last_y = initial_y;
 	cur_x = initial_x << 10;
@@ -324,7 +336,6 @@ void Pacman::reset() {
 	direction_pre = LEFT;
 	animation = 1;
 	cnt_animation = 0;
-	pacman_stopped = 0;
 	idxCurrentRail = 33;
 	visible = true;
 	dying = 0;

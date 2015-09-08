@@ -58,10 +58,15 @@ class Constants {
 		static const int LIVES_X                      = 530;   // position (upper left corner) of the lives display
 		static const int LIVES_Y                      = 110;
 		static const int LIVES_DISTANCE               = 3;     // distance between lives pictures
+		static const int SCORE_X                      = 530;   // position (upper left corner) of the score display
+		static const int SCORE_Y                      = 30;
+		static const int SCORE_VALUE_Y                = 60;
 		static const int WINDOW_WIDTH                 = 640;   // screen settings
 		static const int WINDOW_HEIGHT                = 480;
 		static const int BITS_PER_PIXEL               = 24;
 		static const int MAX_UPDATE_RECTS             = 200;
+
+		static SDL_Color WHITE_COLOR;
 
 	private:
 		Constants();

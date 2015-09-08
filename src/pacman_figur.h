@@ -38,9 +38,6 @@ class Pacman : public Figur {
 		void move_right(int ms, int stop_at = 999);
 		void move_down(int ms, int stop_at = 999);
 
-		// returns whether pacman has stopped
-		int is_pacman_stopped();
-
 		// direction that pacman will next go to
 		Direction direction_pre;
 
@@ -80,7 +77,6 @@ class Pacman : public Figur {
 		Pacman();
 		virtual ~Pacman();
 		static Pacman *instance;
-		int pacman_stopped;
 		int animation;
 		int cnt_animation;
 		int cnt_slow; // number of loops that pacman will stay slow
@@ -96,5 +92,6 @@ class Pacman : public Figur {
 		SDL_Surface *ar_pacman_die[16];
 		void checkAnimationChange();
 		int idxCurrentRail;
+		void stopped();
 };
 #endif

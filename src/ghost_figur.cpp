@@ -380,8 +380,7 @@ void Ghost::move_on_rails(int ms, Rail **ar_s) {
 void Ghost::reset() {
 	x = initial_x;
 	y = initial_y;
-	dx = initial_v;
-	dy = initial_v;
+	speed = initial_v;
 	last_x = initial_x;
 	last_y = initial_y;
 	cur_x = initial_x << 10;

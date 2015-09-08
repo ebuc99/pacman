@@ -1,7 +1,5 @@
 #include "pacman.h"
 
-
-// main function, contains the game loop
 int main(int argc, char *argv[]) {
 	srand((unsigned int)time(0)); // init randomize
 

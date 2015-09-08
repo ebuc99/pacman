@@ -55,9 +55,6 @@ class Figur {
 		// sets the position of the figure
 		void set_position(int new_x, int new_y);
 
-		// start/stop the figure
-		void set_stop(int stop);
-
 		// return the surface, must be implemented by subclasses
 		virtual SDL_Surface* get_Surface() const = 0;  // makes the class abstract
 
@@ -87,14 +84,14 @@ class Figur {
 		int wechsel_x;
 		int wechsel_y;
 		int wechsel_rate;
-		int dx, dy;
+		int speed;
 		Direction direction;
 		int intelligence;
 		int initial_x;
 		int initial_y;
 		int initial_v;
-		int last_speed;
 		Hunter hunter;
 		int visible;
+		bool directionChanged;
 };
 #endif

@@ -20,6 +20,7 @@ void Labyrinth::cleanUpInstance() {
 Labyrinth::Labyrinth():
 	cnt_pill_animation(0),
 	punktestand(0),
+	lastPunktestand(0),
 	bonus_stage(200),
 	cnt_hunting_mode(-1),
 	cnt_sleep(-1),
@@ -324,12 +325,14 @@ void Labyrinth::pill_animation() {
 }
 
 void Labyrinth::compute_score() {
-	char char_punktestand[8] = "0";
-	sprintf(char_punktestand, "%d", punktestand);
-	if(score)
-		SDL_FreeSurface(score);
-	score = TTF_RenderText_Solid(font, char_punktestand, textgelb);
-	Screen::getInstance()->draw_dynamic_content(score, 530, 60);
+	if (punktestand != lastPunktestand || !score) {
+		char char_punktestand[8] = "0";
+		sprintf(char_punktestand, "%d", punktestand);
+		if (score)
+			SDL_FreeSurface(score);
+		score = TTF_RenderText_Solid(font, char_punktestand, textgelb);
+	}
+	Screen::getInstance()->draw_dynamic_content(score, Constants::SCORE_X, Constants::SCORE_VALUE_Y);
 }
 
 void Labyrinth::startHuntingMode() {
@@ -622,6 +625,11 @@ Sounds* Labyrinth::getSounds() {
 
 void Labyrinth::resetScore() {
 	punktestand = 0;
+	lastPunktestand = 0;
+	if (score) {
+		SDL_FreeSurface(score);
+		score = NULL;
+	}
 }
 
 SDL_Surface* Labyrinth::get_superpill_sf() {

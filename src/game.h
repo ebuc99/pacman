@@ -35,6 +35,8 @@ class Game {
 		Uint32 currentTicks;
 
 		void resetAllFigures();
+		void preselectDirection(int keycode);
+		void togglePause();
 		bool eventloop();
 
 		int deltaT;
@@ -54,8 +56,9 @@ class Game {
 		void checkScoreForExtraLife();
 		void checkedMove();
 		void checkedRedraw();
+		void checkGameOver();
 
-		SDL_Surface *background, *score;
+		SDL_Surface *background, *scoreLabel;
 		TTF_Font *font, *smallFont;
 };
 

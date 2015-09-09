@@ -38,60 +38,43 @@ Ghost::Ghost(int init_x, int init_y, int init_intelligence,
 	direction = init_direction;
 	intelligence = init_intelligence;
 	up_down = init_up_down;
-	this->set_hunter(GHOST);
-	char filePath[256];
+	set_hunter(GHOST);
 	// Surfaces
 	if(ghost_ident == BLINKY) {
-		getFilePath(filePath, "gfx/blinky_1.png");
-		ghost_1 = Screen::getInstance()->LoadSurface(filePath, 255);
-		getFilePath(filePath, "gfx/blinky_2.png");
-		ghost_2 = Screen::getInstance()->LoadSurface(filePath, 255);
+		ghost_1 = Screen::loadImage("gfx/blinky_1.png", 255);
+		ghost_2 = Screen::loadImage("gfx/blinky_2.png", 255);
 		idxCurrentRail = 16;
 	}
 	else if(ghost_ident == PINKY) {
-		getFilePath(filePath, "gfx/pinky_1.png");
-		ghost_1 = Screen::getInstance()->LoadSurface(filePath, 255);
-		getFilePath(filePath, "gfx/pinky_2.png");
-		ghost_2 = Screen::getInstance()->LoadSurface(filePath, 255);
+		ghost_1 = Screen::loadImage("gfx/pinky_1.png", 255);
+		ghost_2 = Screen::loadImage("gfx/pinky_2.png", 255);
 		idxCurrentRail = 89;
 	}
 	else if(ghost_ident == INKY) {
-		getFilePath(filePath, "gfx/inky_1.png");
-		ghost_1 = Screen::getInstance()->LoadSurface(filePath, 255);
-		getFilePath(filePath, "gfx/inky_2.png");
-		ghost_2 = Screen::getInstance()->LoadSurface(filePath, 255);
+		ghost_1 = Screen::loadImage("gfx/inky_1.png", 255);
+		ghost_2 = Screen::loadImage("gfx/inky_2.png", 255);
 		idxCurrentRail = 88;
 	}
 	else if(ghost_ident == CLYDE) {
-		getFilePath(filePath, "gfx/clyde_1.png");
-		ghost_1 = Screen::getInstance()->LoadSurface(filePath, 255);
-		getFilePath(filePath, "gfx/clyde_2.png");
-		ghost_2 = Screen::getInstance()->LoadSurface(filePath, 255);
+		ghost_1 = Screen::loadImage("gfx/clyde_1.png", 255);
+		ghost_2 = Screen::loadImage("gfx/clyde_2.png", 255);
 		idxCurrentRail = 90;
 	}
-	getFilePath(filePath, "gfx/augen_0.png");
-	augen_0 = Screen::getInstance()->LoadSurface(filePath, 0);
-	getFilePath(filePath, "gfx/augen_1.png");
-	augen_1 = Screen::getInstance()->LoadSurface(filePath, 0);
-	getFilePath(filePath, "gfx/augen_2.png");
-	augen_2 = Screen::getInstance()->LoadSurface(filePath, 0);
-	getFilePath(filePath, "gfx/augen_3.png");
-	augen_3 = Screen::getInstance()->LoadSurface(filePath, 0);
-	getFilePath(filePath, "gfx/escaping_ghost_1.png");
-	escape_1 = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/escaping_ghost_2.png");
-	escape_2 = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/escaping_ghost_white_1.png");
-	escape_white_1 = Screen::getInstance()->LoadSurface(filePath, 0);
-	getFilePath(filePath, "gfx/escaping_ghost_white_2.png");
-	escape_white_2 = Screen::getInstance()->LoadSurface(filePath, 0);
+	augen_0        = Screen::loadImage("gfx/augen_0.png", 0);
+	augen_1        = Screen::loadImage("gfx/augen_1.png", 0);
+	augen_2        = Screen::loadImage("gfx/augen_2.png", 0);
+	augen_3        = Screen::loadImage("gfx/augen_3.png", 0);
+	escape_1       = Screen::loadImage("gfx/escaping_ghost_1.png", 255);
+	escape_2       = Screen::loadImage("gfx/escaping_ghost_2.png", 255);
+	escape_white_1 = Screen::loadImage("gfx/escaping_ghost_white_1.png", 0);
+	escape_white_2 = Screen::loadImage("gfx/escaping_ghost_white_2.png", 0);
 	ar_ghost[0] = ghost_1;
 	ar_ghost[1] = ghost_2;
 	ar_ghost[2] = escape_white_1;
 	ar_ghost[3] = escape_white_2;
 	num_animation_frames = 2;
 	idx_animation = 1;
-	this->ghost_sf = ar_ghost[idx_animation];
+	ghost_sf = ar_ghost[idx_animation];
 }
 
 Ghost::~Ghost() {

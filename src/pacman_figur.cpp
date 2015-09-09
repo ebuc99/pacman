@@ -32,25 +32,15 @@ Pacman::Pacman():
 	wechsel_y = Constants::PACMAN_INITIAL_Y;
 	direction = LEFT;
 	direction_pre = LEFT;
-	char filePath[256];
-	getFilePath(filePath, "gfx/pacman.png");
-	pacman_normal = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_links_1.png");
-	pacman_links_1 = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_links_2.png");
-    pacman_links_2 = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_oben_1.png");
-    pacman_oben_1 = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_oben_2.png");
-    pacman_oben_2 = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_rechts_1.png");
-    pacman_rechts_1 = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_rechts_2.png");
-    pacman_rechts_2 = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_unten_1.png");
-    pacman_unten_1 = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_unten_2.png");
-    pacman_unten_2 = Screen::getInstance()->LoadSurface(filePath, 255);
+	pacman_normal   = Screen::loadImage("gfx/pacman.png", 255);
+	pacman_links_1  = Screen::loadImage("gfx/pacman_links_1.png", 255);
+    pacman_links_2  = Screen::loadImage("gfx/pacman_links_2.png", 255);
+    pacman_oben_1   = Screen::loadImage("gfx/pacman_oben_1.png", 255);
+    pacman_oben_2   = Screen::loadImage("gfx/pacman_oben_2.png", 255);
+    pacman_rechts_1 = Screen::loadImage("gfx/pacman_rechts_1.png", 255);
+    pacman_rechts_2 = Screen::loadImage("gfx/pacman_rechts_2.png", 255);
+    pacman_unten_1  = Screen::loadImage("gfx/pacman_unten_1.png", 255);
+    pacman_unten_2  = Screen::loadImage("gfx/pacman_unten_2.png", 255);
 	// initialize all pacman images
     ar_pacman_links[0] = pacman_links_1;
     ar_pacman_links[1] = pacman_links_2;
@@ -72,35 +62,22 @@ Pacman::Pacman():
     ar_pacman_unten[2] = pacman_unten_1;
     ar_pacman_unten[3] = pacman_normal;
 
-	getFilePath(filePath, "gfx/pacman_die_1.png");
-    ar_pacman_die[0] = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_2.png");
-    ar_pacman_die[1] = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_3.png");
-    ar_pacman_die[2] = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_4.png");
-    ar_pacman_die[3] = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_5.png");
-    ar_pacman_die[4] = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_6.png");
-    ar_pacman_die[5] = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_10.png");
-	ar_pacman_die[6] = Screen::getInstance()->LoadSurface(filePath, 255);
-	ar_pacman_die[7] = Screen::getInstance()->LoadSurface(filePath, 255);
-	ar_pacman_die[8] = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_7.png");
-	ar_pacman_die[9] = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_8.png");
-    ar_pacman_die[10] = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_9.png");
-    ar_pacman_die[11] = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_7.png");
-    ar_pacman_die[12] = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_8.png");
-    ar_pacman_die[13] = Screen::getInstance()->LoadSurface(filePath, 255);
-	getFilePath(filePath, "gfx/pacman_die_9.png");
-    ar_pacman_die[14] = Screen::getInstance()->LoadSurface(filePath, 255);
-    ar_pacman_die[15] = Screen::getInstance()->LoadSurface(filePath, 255);
+    ar_pacman_die[0]  = Screen::loadImage("gfx/pacman_die_1.png",  255);
+    ar_pacman_die[1]  = Screen::loadImage("gfx/pacman_die_2.png",  255);
+    ar_pacman_die[2]  = Screen::loadImage("gfx/pacman_die_3.png",  255);
+    ar_pacman_die[3]  = Screen::loadImage("gfx/pacman_die_4.png",  255);
+    ar_pacman_die[4]  = Screen::loadImage("gfx/pacman_die_5.png",  255);
+    ar_pacman_die[5]  = Screen::loadImage("gfx/pacman_die_6.png",  255);
+	ar_pacman_die[6]  = Screen::loadImage("gfx/pacman_die_10.png", 255);
+	ar_pacman_die[7]  = Screen::loadImage("gfx/pacman_die_10.png", 255);
+	ar_pacman_die[8]  = Screen::loadImage("gfx/pacman_die_10.png", 255);
+	ar_pacman_die[9]  = Screen::loadImage("gfx/pacman_die_7.png",  255);
+    ar_pacman_die[10] = Screen::loadImage("gfx/pacman_die_8.png",  255);
+    ar_pacman_die[11] = Screen::loadImage("gfx/pacman_die_9.png",  255);
+    ar_pacman_die[12] = Screen::loadImage("gfx/pacman_die_7.png",  255);
+    ar_pacman_die[13] = Screen::loadImage("gfx/pacman_die_8.png",  255);
+    ar_pacman_die[14] = Screen::loadImage("gfx/pacman_die_9.png",  255);
+    ar_pacman_die[15] = Screen::loadImage("gfx/pacman_die_9.png",  255);
 
 	pacman_sf = ar_pacman_links[0];
 }
@@ -120,8 +97,11 @@ Pacman::~Pacman() {
 }
 
 void Pacman::draw() {
-	if (visible)
-	    Screen::getInstance()->draw(pacman_sf, x, y);
+	if (visible) {
+		animate();
+		Screen::getInstance()->draw(pacman_sf, x, y);
+		Screen::getInstance()->AddUpdateRects(least(x,last_x), least(y,last_y), pacman_sf->w + abs(x-last_x), pacman_sf->h + abs(y-last_y));
+	}
 }
 
 void Pacman::checkAnimationChange() {
@@ -434,8 +414,9 @@ int Pacman::die_animation(bool skipSound) {
 	}
 }
 
+// deprecated
 void Pacman::addUpdateRect() {
-	Screen::getInstance()->AddUpdateRects(least(x,last_x), least(y,last_y), pacman_sf->w + abs(x-last_x), pacman_sf->h + abs(y-last_y));
+	// do nothing, has moved to draw()
 }
 
 void Pacman::drawLives() {

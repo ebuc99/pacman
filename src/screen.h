@@ -4,7 +4,9 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
+#include <iostream>
 #include "constants.h"
+#include "platform.h"
 
 class Screen {
 	public:
@@ -48,11 +50,24 @@ class Screen {
 		// draw a horizontal or vertical line using the specified color
 		void drawHorizontalLine(int x1, int x2, int y, Uint8 r, Uint8 g, Uint8 b);
 		void drawVerticalLine(int x, int y1, int y2, Uint8 r, Uint8 g, Uint8 b);
-		SDL_Surface *LoadSurface(const char *filename, int transparent_color = -1);
 		void clear();
+
+		static SDL_Surface *loadImage(const char *filename, int transparentColor = -1);
+		static TTF_Font *loadFont(const char *filename, int ptSize);
+		static SDL_Surface *getTextSurface(TTF_Font *font, const char *text, SDL_Color color);
 
 		// draw a filled rectangle
 		void fillRect(SDL_Rect *rect, Uint8 r, Uint8 g, Uint8 b);
+
+		// deprecated functions, will be removed in the future
+		SDL_Surface *LoadSurface(const char *filename, int transparent_color = -1);
+
+		static TTF_Font *getSmallFont();
+		static TTF_Font *getFont();
+		static TTF_Font *getLargeFont();
+		static TTF_Font *getVeryLargeFont();
+		static TTF_Font *getHugeFont();
+
 	private:
 		static Screen *instance;
         // constructor and destructor
@@ -64,5 +79,7 @@ class Screen {
 		SDL_Surface *screen_surface;
 		bool sdlInitErrorOccured;
 		bool fullscreen;
+
+		static TTF_Font *smallFont, *font, *largeFont, *veryLargeFont, *hugeFont;
 };
 #endif

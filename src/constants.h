@@ -20,6 +20,7 @@ class Constants {
 		static const uint16_t PAUSE_AFTER_BONUS_SCORE = 400;   // waiting time after eating a ghost or a fruit
 		static const int YELLOW                       = 1;     // colors for init text
 		static const int RED                          = 2;
+		static const int GRAY                         = 3;
 		static const int INITIAL_LIVES                = 3;     // number of times the player must die to get the "game over"
 		static const int PACMAN_INITIAL_X             = 310;   // starting position of Pacman
 		static const int PACMAN_INITIAL_Y             = 339;
@@ -67,6 +68,15 @@ class Constants {
 		static const int MAX_UPDATE_RECTS             = 200;
 
 		static SDL_Color WHITE_COLOR;
+		static SDL_Color YELLOW_COLOR;
+		static SDL_Color RED_COLOR;
+		static SDL_Color GRAY_COLOR;
+		static SDL_Color BLINKY_COLOR;
+		static SDL_Color PINKY_COLOR;
+		static SDL_Color INKY_COLOR;
+		static SDL_Color CLYDE_COLOR;
+
+		static SDL_Color getIndexedColor(int color);
 
 	private:
 		Constants();

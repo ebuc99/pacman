@@ -1,5 +1,11 @@
 #include "screen.h"
 
+TTF_Font *Screen::smallFont     = NULL;
+TTF_Font *Screen::font          = NULL;
+TTF_Font *Screen::largeFont     = NULL;
+TTF_Font *Screen::veryLargeFont = NULL;
+TTF_Font *Screen::hugeFont      = NULL;
+
 Screen *Screen::instance = NULL;
 
 Screen *Screen::getInstance() {
@@ -13,6 +19,26 @@ void Screen::cleanUpInstance() {
 	if (instance) {
 		delete instance;
 		instance = NULL;
+	}
+	if (smallFont) {
+		TTF_CloseFont(smallFont);
+		smallFont = NULL;
+	}
+	if (font) {
+		TTF_CloseFont(font);
+		font = NULL;
+	}
+	if (largeFont) {
+		TTF_CloseFont(largeFont);
+		largeFont = NULL;
+	}
+	if (veryLargeFont) {
+		TTF_CloseFont(veryLargeFont);
+		veryLargeFont = NULL;
+	}
+	if (hugeFont) {
+		TTF_CloseFont(hugeFont);
+		hugeFont = NULL;
 	}
 }
 
@@ -146,7 +172,10 @@ void Screen::drawVerticalLine(int x, int y1, int y2, Uint8 r, Uint8 g, Uint8 b) 
 		SDL_UnlockSurface(this->screen_surface);
 }
 
+// deprecated
 SDL_Surface *Screen::LoadSurface(const char *filename, int transparent_color) {
+	// deprecated
+	std::cerr << "Screen::LoadSurface is deprecated! Please use Screen::loadImage instead and provide a relative Path there." << std::endl;
 	SDL_Surface *surface, *temp;
 	temp = IMG_Load(filename);
 	if(!temp) {
@@ -164,6 +193,46 @@ SDL_Surface *Screen::LoadSurface(const char *filename, int transparent_color) {
     return surface;
 }
 
+SDL_Surface *Screen::loadImage(const char *filename, int transparentColor) {
+	char filePath[256];
+	getFilePath(filePath, filename);
+	SDL_Surface *surface, *temp;
+	temp = IMG_Load(filePath);
+	if (!temp) {
+		printf("Unable to load image: %s\n", IMG_GetError());
+		exit(EXIT_FAILURE);
+	}
+	if (transparentColor != -1)
+		SDL_SetColorKey(temp, SDL_SRCCOLORKEY | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, (uint8_t)transparentColor, (uint8_t)transparentColor, (uint8_t)transparentColor));
+	surface = SDL_DisplayFormat(temp);
+	if (surface == NULL) {
+		printf("Unable to convert image to display format: %s\n", SDL_GetError());
+		exit(EXIT_FAILURE);
+	}
+	SDL_FreeSurface(temp);
+	return surface;
+}
+
+TTF_Font *Screen::loadFont(const char *filename, int ptSize) {
+	char filePath[256];
+	getFilePath(filePath, filename);
+	TTF_Font *font = TTF_OpenFont(filePath, ptSize);
+	if (!font) {
+		printf("Unable to open TTF font: %s\n", TTF_GetError());
+		exit(EXIT_FAILURE);
+	}
+	return font;
+}
+
+SDL_Surface *Screen::getTextSurface(TTF_Font *font, const char *text, SDL_Color color) {
+	SDL_Surface *surface = TTF_RenderText_Solid(font, text, color);
+	if (!surface) {
+		printf("Unable to render text \"%s\": %s\n", text, TTF_GetError());
+		exit(EXIT_FAILURE);
+	}
+	return surface;
+}
+
 void Screen::clear() {
 	SDL_Rect rect {0, 0, screen_surface->w, screen_surface->h};
 	fillRect(&rect, 0, 0, 0);
@@ -171,4 +240,30 @@ void Screen::clear() {
 
 void Screen::fillRect(SDL_Rect *rect, Uint8 r, Uint8 g, Uint8 b) {
 	SDL_FillRect(screen_surface, rect, SDL_MapRGB(screen_surface->format, r, g, b));
+}
+
+TTF_Font *Screen::getSmallFont() {
+	if (!smallFont)
+		smallFont = loadFont("fonts/Cheapmot.TTF", 12);
+	return smallFont;
+}
+TTF_Font *Screen::getFont() {
+	if (!font)
+		font = loadFont("fonts/Cheapmot.TTF", 20);
+	return font;
+}
+TTF_Font *Screen::getLargeFont() {
+	if (!largeFont)
+		largeFont = loadFont("fonts/Cheapmot.TTF", 24);
+	return largeFont;
+}
+TTF_Font *Screen::getVeryLargeFont() {
+	if (!veryLargeFont)
+		veryLargeFont = loadFont("fonts/Cheapmot.TTF", 48);
+	return veryLargeFont;
+}
+TTF_Font *Screen::getHugeFont() {
+	if (!hugeFont)
+		hugeFont = loadFont("fonts/Cheapmot.TTF", 96);
+	return hugeFont;
 }

@@ -1,5 +1,6 @@
 #include "labyrinth.h"
 #include <string.h>
+#include <iostream>
 
 Labyrinth *Labyrinth::instance = NULL;
 
@@ -24,8 +25,6 @@ Labyrinth::Labyrinth():
 	bonus_stage(200),
 	cnt_hunting_mode(-1),
 	cnt_sleep(-1),
-	font(NULL),
-	smallFont(NULL),
 	smallScore(NULL),
 	score(NULL),
 	initText(NULL),
@@ -196,27 +195,13 @@ Labyrinth::Labyrinth():
 																   s80, s81, s82, s83, s84, s85};
 	memcpy(array_rails_pills, array_rails_pills_temp, sizeof(array_rails_pills_temp));
 
-	char filePath[256];
-	getFilePath(filePath, "gfx/pille.png");
-	pille = Screen::getInstance()->LoadSurface(filePath, 0);
-	getFilePath(filePath, "gfx/superpille_1.png");
-	ar_superpille[0] = Screen::getInstance()->LoadSurface(filePath, 0);
-	getFilePath(filePath, "gfx/superpille_2.png");
-	ar_superpille[1] = Screen::getInstance()->LoadSurface(filePath, 0);
-	getFilePath(filePath, "gfx/superpille_3.png");
-	ar_superpille[2] = Screen::getInstance()->LoadSurface(filePath, 0);
-	getFilePath(filePath, "gfx/superpille_3.png");
-	ar_superpille[3] = Screen::getInstance()->LoadSurface(filePath, 0);
-	getFilePath(filePath, "gfx/superpille_2.png");
-	ar_superpille[4] = Screen::getInstance()->LoadSurface(filePath, 0);
+	pille            = Screen::loadImage("gfx/pille.png", 0);
+	ar_superpille[0] = Screen::loadImage("gfx/superpille_1.png", 0);
+	ar_superpille[1] = Screen::loadImage("gfx/superpille_2.png", 0);
+	ar_superpille[2] = Screen::loadImage("gfx/superpille_3.png", 0);
+	ar_superpille[3] = Screen::loadImage("gfx/superpille_3.png", 0);
+	ar_superpille[4] = Screen::loadImage("gfx/superpille_2.png", 0);
 	superpille = ar_superpille[cnt_pill_animation];
-
-	textweiss.r = textweiss.g = textweiss.b = 255;
-	textgelb.r = 255;
-	textgelb.g = 247;
-	textgelb.b = 11;
-	textrot.r = 255;
-	textrot.g = textrot.b = 0;
 }
 
 Labyrinth::~Labyrinth(){
@@ -225,6 +210,7 @@ Labyrinth::~Labyrinth(){
 	SDL_FreeSurface(infoFruit);
 	SDL_FreeSurface(initText);
 	SDL_FreeSurface(pillSurface);
+	SDL_FreeSurface(bgSurface);
 }
 
 void Labyrinth::draw_blocks() {
@@ -239,7 +225,7 @@ void Labyrinth::draw_blocks() {
   	SDL_FillRect(Screen::getInstance()->getSurface(), &b2, SDL_MapRGB(Screen::getInstance()->getSurface()->format, 0, 0, 0));
 }
 
-void Labyrinth::init_pillen(SDL_Surface *background, bool firstInit) {
+void Labyrinth::init_pillen(bool firstInit) {
 	if (firstInit) {
 		int m = -1;
 		int s = 0;
@@ -283,8 +269,7 @@ void Labyrinth::init_pillen(SDL_Surface *background, bool firstInit) {
 		for (int i = 0; i < Constants::NUMBER_PILLS; i++)
 			pillen[i].sichtbar = 1;
 	}
-	if (background)
-		bgSurface = background;
+	getBackground();
 	if (bgSurface) {
 		if (!pillSurface) {
 			pillSurface = SDL_CreateRGBSurface(0, bgSurface->w, bgSurface->h, bgSurface->format->BitsPerPixel,
@@ -324,13 +309,13 @@ void Labyrinth::pill_animation() {
 	superpille = ar_superpille[cnt_pill_animation];
 }
 
-void Labyrinth::compute_score() {
+void Labyrinth::drawScoreValue() {
 	if (punktestand != lastPunktestand || !score) {
-		char char_punktestand[8] = "0";
-		sprintf(char_punktestand, "%d", punktestand);
+		char charPunktestand[8] = "0";
+		sprintf(charPunktestand, "%d", punktestand);
 		if (score)
 			SDL_FreeSurface(score);
-		score = TTF_RenderText_Solid(font, char_punktestand, textgelb);
+		score = Screen::getTextSurface(Screen::getFont(), charPunktestand, Constants::YELLOW_COLOR);
 	}
 	Screen::getInstance()->draw_dynamic_content(score, Constants::SCORE_X, Constants::SCORE_VALUE_Y);
 }
@@ -366,11 +351,7 @@ void Labyrinth::addScore(int value, int show_x, int show_y) {
 	// show the score at the specified position
 	char ch[8] = "0";
 	sprintf(ch, "%d", value);
-	smallScore = TTF_RenderText_Solid(smallFont, ch, textweiss);
-	if (smallScore == NULL) {
-		printf("Unable to render text: %s\n", TTF_GetError());
-		return;
-	}
+	smallScore = Screen::getTextSurface(Screen::getSmallFont(), ch, Constants::WHITE_COLOR);
 	smallScore_x = show_x - (smallScore->w >> 1);
 	smallScore_y = show_y - (smallScore->h >> 1);
 	drawSmallScore();
@@ -401,11 +382,6 @@ int Labyrinth::getScore() {
 	return punktestand;
 }
 
-void Labyrinth::setFonts(TTF_Font* font, TTF_Font* smallFont) {
-	this->font      = font;
-	this->smallFont = smallFont;
-}
-
 void Labyrinth::hidePill(int idxPill) {
 	if (idxPill >= 0) {
 		pillen[idxPill].sichtbar = 0;
@@ -430,7 +406,7 @@ int Labyrinth::getExisitingPills() const {
 }
 
 void Labyrinth::setInitText(const char *text, int color) {
-	initText = TTF_RenderText_Solid(font, text, (color==Constants::YELLOW) ? textgelb : ((color==Constants::RED)?textrot:textweiss));
+	initText = Screen::getTextSurface(Screen::getFont(), text, Constants::getIndexedColor(color));
 }
 
 void Labyrinth::drawInitText() {
@@ -446,20 +422,31 @@ void Labyrinth::hideInitText() {
 	}
 }
 
-void Labyrinth::initNewLevel() {
+void Labyrinth::nextLevel() {
 	stopHuntingMode();
-	compute_score();
+	hideFruit();
+	drawScoreValue();
 	Screen::getInstance()->addTotalUpdateRect();
 	Screen::getInstance()->Refresh();
-	init_pillen(NULL, level==0);
-	draw_pillen();
-	hideFruit();
-	startFruitRandomizer(true);
-	setLevel(level + 1);
-	char char_level[20];
-	sprintf(char_level, "  Level %d", getLevel());
-	setInitText(char_level);
 	SDL_Delay(Constants::WAIT_FOR_NEW_LEVEL);
+	level++;
+	resetLevel();
+}
+
+void Labyrinth::resetLevel(int level) {
+	if (level >= 1)
+		this->level = level;
+	init_pillen(this->level <= 1);
+	draw_pillen();  // including background
+	loadLevelFruit();
+	startFruitRandomizer(true);
+	if (this->level == 1) {
+		setInitText("Get Ready!");
+	} else {
+		char charLevel[20];
+		sprintf(charLevel, "Level %d", this->level);
+		setInitText(charLevel);
+	}
 	Screen::getInstance()->addTotalUpdateRect();
 	Screen::getInstance()->Refresh();
 }
@@ -468,49 +455,46 @@ int Labyrinth::getLevel() const {
 	return level;
 }
 
-void Labyrinth::setLevel(int level) {
-	char fruit_file[256];
-	this->level = level;
-	switch(this->level) {
+void Labyrinth::loadLevelFruit() {
+	fruit = NULL;
+	switch(level) {
 		case 1:
 			setFruitBonus(100);
-			getFilePath(fruit_file, "gfx/cherry.png");
+			infoFruit = Screen::loadImage("gfx/cherry.png", 255);
 			break;
 		case 2:
 			setFruitBonus(300);
-			getFilePath(fruit_file, "gfx/strawberry.png");
+			infoFruit = Screen::loadImage("gfx/strawberry.png", 255);
 			break;
 		case 3:
 		case 4:
 			setFruitBonus(500);
-			getFilePath(fruit_file, "gfx/orange.png");
+			infoFruit = Screen::loadImage("gfx/orange.png", 255);
 			break;
 		case 5:
 		case 6:
 			setFruitBonus(700);
-			getFilePath(fruit_file, "gfx/apple.png");
+			infoFruit = Screen::loadImage("gfx/apple.png", 255);
 			break;
 		case 7:
 		case 8:
 			setFruitBonus(1000);
-			getFilePath(fruit_file, "gfx/grapes.png");
+			infoFruit = Screen::loadImage("gfx/grapes.png", 255);
 			break;
 		case 9:
 		case 10:
 			setFruitBonus(2000);
-			getFilePath(fruit_file, "gfx/banana.png");
+			infoFruit = Screen::loadImage("gfx/banana.png", 255);
 			break;
 		case 11:
 		case 12:
 			setFruitBonus(3000);
-			getFilePath(fruit_file, "gfx/pear.png");
+			infoFruit = Screen::loadImage("gfx/pear.png", 255);
 			break;
 		default:
 			setFruitBonus(5000);
-			getFilePath(fruit_file, "gfx/key.png");
+			infoFruit = Screen::loadImage("gfx/key.png", 255);
 	};
-	infoFruit = Screen::getInstance()->LoadSurface(fruit_file, 255);
-	fruit = NULL;
 	drawInfoFruit();
 	Screen::getInstance()->AddUpdateRects(Constants::INFO_FRUIT_X, Constants::INFO_FRUIT_Y, infoFruit->w, infoFruit->h);
 }
@@ -527,10 +511,10 @@ void Labyrinth::startFruitRandomizer(int new_level) {
 
 void Labyrinth::checkFruit(int ms) {
 	if(fruit) {
-		if (this->cnt_sleep <= 0) {
+		if (cnt_sleep <= 0) {
 			fruit_display_time -= ms;
 			if (fruit_display_time <= 0)
-				this->hideFruit();
+				hideFruit();
 		}
 	} else {
 		if(getExisitingPills() <= next_fruit) {
@@ -634,4 +618,11 @@ void Labyrinth::resetScore() {
 
 SDL_Surface* Labyrinth::get_superpill_sf() {
 	return superpille;
+}
+
+SDL_Surface *Labyrinth::getBackground() {
+	if (!bgSurface) {
+		bgSurface = Screen::loadImage("gfx/hintergrund2.png");
+	}
+	return bgSurface;
 }

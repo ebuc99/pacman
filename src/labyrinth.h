@@ -31,10 +31,8 @@ class Labyrinth {
 		SDL_Surface *pille, *superpille, *ar_superpille[5];
 		int punktestand, lastPunktestand;
 		int bonus_stage; //200, 400, 800, 1600
-		TTF_Font *font, *smallFont;
 		SDL_Surface *smallScore, *initText, *score, *infoFruit, *fruit, *pillSurface, *bgSurface;
 		int smallScore_x, smallScore_y;
-		SDL_Color textweiss, textgelb, textrot;
 		int cnt_pills;
 		int level;
 		int next_fruit;
@@ -53,7 +51,7 @@ class Labyrinth {
 		void draw_blocks();
 
 		/* initially, throw some pills across the level */
-		void init_pillen(SDL_Surface *background, bool firstInit);
+		void init_pillen(bool firstInit);
 
 		/* draw pills, but only if Blinky has moved */
 		void draw_pillen();
@@ -61,7 +59,7 @@ class Labyrinth {
 		// superpill animation
 		void pill_animation();
 
-		void compute_score(/*SDL_Surface *punkte, SDL_Color *textgelb*/);
+		void drawScoreValue();
 
 		int number_rails() const;
 
@@ -94,9 +92,6 @@ class Labyrinth {
 		void sleep(int frames);
 		int cnt_sleep;
 
-		// assigns fonts
-		void setFonts(TTF_Font* font, TTF_Font* smallFont);
-
 		// hide the pill having the specified index
 		void hidePill(int idxPill);
 
@@ -116,13 +111,14 @@ class Labyrinth {
 		void hideInitText();
 
 		// init new level
-		void initNewLevel();
+		void nextLevel();
+		void resetLevel(int level = 0);
 
 		// get level
 		int getLevel() const;
 
-		// set level
-		void setLevel(int level);
+		// load the fruit that belongs to the current level
+		void loadLevelFruit();
 
 		// start the fruit randomizer
 		// first fruit after 50, 60, 70 or 80
@@ -174,5 +170,8 @@ class Labyrinth {
 
 		// Return the current surface of the superpill
 		SDL_Surface *get_superpill_sf();
+
+		// Return the background image, will be loaded if not yet done
+		SDL_Surface *getBackground();
 };
 #endif

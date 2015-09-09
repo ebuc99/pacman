@@ -57,7 +57,7 @@ class Pacman : public Figur {
 		int is_dying() const;
 		int die_animation(bool skipSound = false);
 
-		// registers pacman's rectangle (last and current position) for redrawing
+		// deprecated - has been inlined to draw(), so no longer needs to be called
 		virtual void addUpdateRect();
 
 		// draw the number of lives (as small pacman images) to the screen

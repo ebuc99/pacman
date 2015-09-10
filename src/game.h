@@ -13,6 +13,7 @@ class Game {
 		static void cleanUpInstance();
 
 		void start();
+		void checkMusic();
 
 	private:
 		Game();
@@ -34,7 +35,6 @@ class Game {
 		int startOffset;
 		Uint32 currentTicks;
 
-		void resetAllFigures();
 		void preselectDirection(int keycode);
 		void togglePause();
 		bool eventloop();

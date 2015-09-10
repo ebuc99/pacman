@@ -1,4 +1,5 @@
 #include "labyrinth.h"
+#include "game.h"
 #include <string.h>
 #include <iostream>
 
@@ -322,19 +323,17 @@ void Labyrinth::drawScoreValue() {
 
 void Labyrinth::startHuntingMode() {
 	bonus_stage = 200;
-	Sounds::getInstance()->music_stop();
-	Sounds::getInstance()->superpill_start();
 	if (cnt_hunting_mode < 0)
 		cnt_hunting_mode = 7000;
 	else // hunting mode was still active - prolong the it's duration
 		cnt_hunting_mode += 7000;
+	Game::getInstance()->checkMusic();
 }
 
 void Labyrinth::stopHuntingMode() {
 	cnt_hunting_mode = -1;
 	bonus_stage = 200;
-	Sounds::getInstance()->eat_ghost_stop();
-	Sounds::getInstance()->music_stop();
+	Game::getInstance()->checkMusic();
 }
 
 void Labyrinth::increaseBonusStage() {
@@ -422,6 +421,13 @@ void Labyrinth::hideInitText() {
 	}
 }
 
+void Labyrinth::resetAllFigures() {
+	for(int i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i)
+		Ghost::getGhostArray()[i]->reset();
+	Ghost::getGhostArray()[0]->set_leader(1);  // Blinky is the reference for redrawing
+	Pacman::getInstance()->reset();
+}
+
 void Labyrinth::nextLevel() {
 	stopHuntingMode();
 	hideFruit();
@@ -434,6 +440,9 @@ void Labyrinth::nextLevel() {
 }
 
 void Labyrinth::resetLevel(int level) {
+	stopHuntingMode();
+	hideFruit();
+	resetAllFigures();
 	if (level >= 1)
 		this->level = level;
 	init_pillen(this->level <= 1);

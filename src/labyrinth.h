@@ -8,6 +8,8 @@
 #include "rail.h"
 #include "sounds.h"
 #include "platform.h"
+#include "ghost_figur.h"
+#include "pacman_figur.h"
 
 class Labyrinth {
 	private:
@@ -110,7 +112,8 @@ class Labyrinth {
 		// hide init text
 		void hideInitText();
 
-		// init new level
+		// (re-)init level
+		void resetAllFigures();
 		void nextLevel();
 		void resetLevel(int level = 0);
 

@@ -100,7 +100,6 @@ void Pacman::draw() {
 	if (visible) {
 		animate();
 		Screen::getInstance()->draw(pacman_sf, x, y);
-		Screen::getInstance()->AddUpdateRects(least(x,last_x), least(y,last_y), pacman_sf->w + abs(x-last_x), pacman_sf->h + abs(y-last_y));
 	}
 }
 
@@ -358,7 +357,7 @@ void Pacman::check_eat_pills() {
 			if(i >= 0 && Labyrinth::getInstance()->pillen[i].sichtbar && ((Labyrinth::getInstance()->pillen[i].x - 10) >= least(this->x,tmp_last_x)) && ((Labyrinth::getInstance()->pillen[i].x - 10) <= greatest(this->x,tmp_last_x)) && ((Labyrinth::getInstance()->pillen[i].y - 10) >= least(this->y,this->last_y)) && ((Labyrinth::getInstance()->pillen[i].y - 10) <= greatest(this->y,this->last_y))) {
 				Labyrinth::getInstance()->hidePill(i);
 				Labyrinth::getInstance()->decreasePills();
-				Sounds::getInstance()->munch();
+				Sounds::getInstance()->playMunch();
 				if(Labyrinth::getInstance()->pillen[i].superpille) {
 					for(int j = 0; j < 4; ++j) {
 						if(Ghost::getGhostArray()[j]->get_hunter() != NONE)  // eaten ghosts still have to return to the castle
@@ -385,7 +384,7 @@ void Pacman::check_eat_pills() {
 			Labyrinth::getInstance()->playSoundFruit();
 			Labyrinth::getInstance()->hideFruit();
 			Labyrinth::getInstance()->addScore(Labyrinth::getInstance()->getFruitBonus(), Constants::FRUIT_X + 10, Constants::FRUIT_Y + 10);
-			setVisibility(0);
+			setVisibility(false);
 			Labyrinth::getInstance()->sleep(Constants::PAUSE_AFTER_BONUS_SCORE);
 		}
 	}
@@ -414,9 +413,8 @@ int Pacman::die_animation(bool skipSound) {
 	}
 }
 
-// deprecated
 void Pacman::addUpdateRect() {
-	// do nothing, has moved to draw()
+	Screen::getInstance()->AddUpdateRects(least(x,last_x), least(y,last_y), pacman_sf->w + abs(x-last_x), pacman_sf->h + abs(y-last_y));
 }
 
 void Pacman::drawLives() {

@@ -27,19 +27,23 @@ Game::Game():
 }
 
 Game::~Game() {
-	SDL_FreeSurface(scoreLabel);
-}
-
-void Game::resetAllFigures() {
-	for(int i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i)
-		Ghost::getGhostArray()[i]->reset();
-	Pacman::getInstance()->reset();
+	if (scoreLabel) {
+		SDL_FreeSurface(scoreLabel);
+		scoreLabel = NULL;
+	}
 }
 
 void Game::init() {
+	gameOver         = false;
+	refreshGhosts    = false;
+	stopMoving       = false;
+	pause            = false;
+	stopMoving       = true;
+	animationCounter = 0;
+	deltaT           = Constants::MIN_FRAME_DURATION;
+	startOffset      = Constants::START_OFFSET;
+
 	Labyrinth::getInstance()->resetLevel(1);
-	resetAllFigures();
-	Ghost::getGhostArray()[0]->set_leader(1);  // Blinky will be the reference sprite for redrawing
 
 	// TODO: extract new class Player with a method reset()?
 	Pacman::getInstance()->setRemainingLives(Constants::INITIAL_LIVES);
@@ -49,14 +53,6 @@ void Game::init() {
 	Screen::getInstance()->draw(scoreLabel, Constants::SCORE_X, Constants::SCORE_Y);
 	Screen::getInstance()->addTotalUpdateRect();
 	Screen::getInstance()->Refresh();
-	gameOver         = false;
-	refreshGhosts    = false;
-	stopMoving       = false;
-	pause            = false;
-	stopMoving       = true;
-	animationCounter = 0;
-	deltaT           = Constants::MIN_FRAME_DURATION;
-	startOffset      = Constants::START_OFFSET;
 	currentTicks     = SDL_GetTicks();
 }
 
@@ -87,9 +83,9 @@ void Game::preselectDirection(int keycode) {
 void Game::togglePause() {
 	pause = !pause;
 	if(pause) {
-		Sounds::getInstance()->pause_all();
+		Sounds::getInstance()->pauseAll();
 	} else {
-		Sounds::getInstance()->resume_all();
+		Sounds::getInstance()->resumeAll();
 	}
 }
 
@@ -109,6 +105,9 @@ bool Game::eventloop() {
 			    currentTicks += (SDL_GetTicks() - ticksBefore);
 			} else if(event.key.keysym.sym == SDLK_s) {
 				Sounds::getInstance()->toggleEnabled();
+				if (Sounds::getInstance()->isEnabled()) {
+					checkMusic();
+				}
 			} else if(event.key.keysym.sym == SDLK_p) {
 				if(!Pacman::getInstance()->is_dying()) {
 					togglePause();
@@ -127,11 +126,10 @@ bool Game::eventloop() {
 void Game::stop(bool stop) {
 	stopMoving = stop;
 	if(stop) {
-		Sounds::getInstance()->music_stop();
-		Sounds::getInstance()->channelStop();
+		Sounds::getInstance()->stopMusic();
+		Sounds::getInstance()->stopChannels();
 	} else {
-		// TODO: sound start/stop, correctly
-		Sounds::getInstance()->siren_start();
+		checkMusic();
 	}
 }
 
@@ -145,7 +143,7 @@ void Game::setGameOver(bool gameOver) {
 
 void Game::start() {
 	init();
-	Sounds::getInstance()->intro();
+	Sounds::getInstance()->playIntro();
 	// game loop
 	while (eventloop()) {
 		handleAnimations();
@@ -195,8 +193,8 @@ void Game::handleAnimations() {
 		if(Pacman::getInstance()->is_dying()) {
 			if(!Pacman::getInstance()->die_animation()) {
 				Labyrinth::getInstance()->stopHuntingMode();
+				Labyrinth::getInstance()->resetAllFigures();
 				Labyrinth::getInstance()->hideFruit();
-				resetAllFigures();
 				stop(true);
 				Pacman::getInstance()->addLives(-1);
 				checkGameOver();
@@ -238,7 +236,7 @@ void Game::handleHuntingMode() {
 				}
 			}
 			Labyrinth::getInstance()->stopHuntingMode();
-			Sounds::getInstance()->siren_start();
+			checkMusic();
 		}
 	}
 }
@@ -252,8 +250,8 @@ void Game::handleSleep() {
 			Labyrinth::getInstance()->hideSmallScore();
 			Pacman::getInstance()->setVisibility(true);
 			for(int i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i)
-				Ghost::getGhostArray()[i]->setVisibility(true);  // TODO: not necessary for the fruit
-			Sounds::getInstance()->eat_ghost_start();  // TODO: what happens after the fruit?
+				Ghost::getGhostArray()[i]->setVisibility(true);
+			checkMusic();
 		}
 	}
 }
@@ -269,7 +267,6 @@ bool Game::checkLastPillEaten() {
 	if(Labyrinth::getInstance()->getExisitingPills() <= 0) {
 		// init new level
 		stop(true);
-		resetAllFigures();
 		Labyrinth::getInstance()->nextLevel();
 		startOffset = Constants::START_OFFSET;
 		return true;
@@ -302,9 +299,10 @@ void Game::checkedRedraw() {
 		Labyrinth::getInstance()->drawFruit();
 		// figures
 		Pacman::getInstance()->draw();
+		Pacman::getInstance()->addUpdateRect();
 		for(int i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i) {
 			Ghost::getGhostArray()[i]->draw();
-			Ghost::getGhostArray()[i]->addUpdateRect();  // TODO: into draw()? !! It is also called from move().
+			Ghost::getGhostArray()[i]->addUpdateRect();
 		}
 		// topmost things within the level
 		Labyrinth::getInstance()->draw_blocks();
@@ -324,5 +322,31 @@ void Game::checkGhostTouched() {
 	if(Pacman::getInstance()->ghostTouched() && !Pacman::getInstance()->is_dying()) {
 		stop(true);
 		Pacman::getInstance()->set_dying(10);
+	}
+}
+
+void Game::checkMusic() {
+	if (pause || stopMoving || startOffset >= 1 || Pacman::getInstance()->is_dying()) {
+		Sounds::getInstance()->stopMusic();
+	} else if (Labyrinth::getInstance()->cnt_hunting_mode <= 0) {
+		Sounds::getInstance()->playNormalMusic();
+	} else {
+		int numBlue = 0, numNormal = 0, numEscaping = 0;
+		for (int i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i) {
+			if (Ghost::getGhostArray()[i]->get_hunter() == Figur::PACMAN) {
+				++numBlue;
+			} else if (Ghost::getGhostArray()[i]->get_hunter() == Figur::NONE) {
+				++numEscaping;
+			} else {
+				++numNormal;
+			}
+		}
+		if (numEscaping) {
+			Sounds::getInstance()->playGhostEatenMusic();
+		} else if (numBlue) {
+			Sounds::getInstance()->playSuperpillMusic();
+		} else {
+			Sounds::getInstance()->playNormalMusic();
+		}
 	}
 }

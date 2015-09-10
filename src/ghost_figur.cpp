@@ -1,4 +1,5 @@
 #include "ghost_figur.h"
+#include "game.h"
 #include <stdlib.h>
 
 int Ghost::was_moving_leader = 1;
@@ -286,7 +287,7 @@ void Ghost::move_on_rails(int ms, Rail **ar_s) {
 			// make an eyes-only ghost normal again
 			if (get_hunter() == NONE) {
 				set_hunter(GHOST);
-				Sounds::getInstance()->eat_ghost_stop();
+				Game::getInstance()->checkMusic();
 			}
 		} else if (up_down) {
 			sammel_richtung[sammel_counter] = ((old_dir==UP) ? DOWN : UP);
@@ -410,13 +411,13 @@ void Ghost::set_hunter(Hunter hunter) {
 }
 
 bool Ghost::touched() {
-	if(this->get_hunter() == PACMAN) {
+	if(get_hunter() == PACMAN) {
 		// ghost has been eaten by pacman
 		hunter = NONE;
 		set_speed(Constants::GHOSTS_V_NORMAL);
 		set_leader();
-		setVisibility(0);
-		Pacman::getInstance()->setVisibility(0);
+		setVisibility(false);
+		Pacman::getInstance()->setVisibility(false);
 		Labyrinth::getInstance()->addBonusScore(x + (ghost_sf->w >> 1), y + (ghost_sf->h >> 1));
 		Labyrinth::getInstance()->increaseBonusStage();
 		Labyrinth::getInstance()->sleep(Constants::PAUSE_AFTER_BONUS_SCORE);
@@ -428,7 +429,7 @@ bool Ghost::touched() {
 }
 
 void Ghost::blink() {
-	if(this->get_hunter() == PACMAN) {
+	if(get_hunter() == PACMAN) {
 		num_animation_frames = 4;
 	}
 }

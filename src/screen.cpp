@@ -16,10 +16,6 @@ Screen *Screen::getInstance() {
 }
 
 void Screen::cleanUpInstance() {
-	if (instance) {
-		delete instance;
-		instance = NULL;
-	}
 	if (smallFont) {
 		TTF_CloseFont(smallFont);
 		smallFont = NULL;
@@ -39,6 +35,10 @@ void Screen::cleanUpInstance() {
 	if (hugeFont) {
 		TTF_CloseFont(hugeFont);
 		hugeFont = NULL;
+	}
+	if (instance) {
+		delete instance;
+		instance = NULL;
 	}
 }
 

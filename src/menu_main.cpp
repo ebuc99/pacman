@@ -1,49 +1,20 @@
 #include "menu_main.h"
 
 MenuMain::MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *labyrinth):
-	Menu(screen),
-	selection(0){
-		this->screen = screen;
+	Menu(screen){
 		this->pacman = pacman;
 		this->labyrinth = labyrinth;
 		this->ghosts = ghosts;
 		char filePath[256];
-		getFilePath(filePath, "fonts/Cheapmot.TTF");
-		font = TTF_OpenFont(filePath, 20);
-		if(!font) {
-			printf("Unable to open TTF font: %s\n", TTF_GetError());
-		}
-		smallFont = TTF_OpenFont(filePath, 12);
-		if (!smallFont) {
-			printf("Unable to open TTF font: %s\n", TTF_GetError());
-		}
-		largeFont = TTF_OpenFont(filePath, 24);
-		if (!largeFont) {
-			printf("Unable to open TTF font: %s\n", TTF_GetError());
-		}
-		veryLargeFont = TTF_OpenFont(filePath, 48);
-		if (!veryLargeFont) {
-			printf("Unable to open TTF font: %s\n", TTF_GetError());
-		}
-		hugeFont = TTF_OpenFont(filePath, 96);
-		if (!hugeFont) {
-			printf("Unable to open TTF font: %s\n", TTF_GetError());
-		}
 		appTitle1 = TTF_RenderText_Solid(hugeFont, "Pa", textwhite);
 		appTitle2 = TTF_RenderText_Solid(hugeFont, "man", textwhite);
 		getFilePath(filePath, "gfx/title_pacman.png");
 		titlePacman = screen->LoadSurface(filePath, 0);
 		version = TTF_RenderText_Solid(smallFont, "version 0.7.0", textgray);
-		menu = new SDL_Surface*[NUM_MENU_ENTRIES];
-		menu_sel = new SDL_Surface*[NUM_MENU_ENTRIES];
-		menu[0] = TTF_RenderText_Solid(font, "Start Game", textgray);
-		menu_sel[0] = TTF_RenderText_Solid(largeFont, "Start Game", textwhite);
-		menu[1] = TTF_RenderText_Solid(font, "Options", textgray);
-		menu_sel[1] = TTF_RenderText_Solid(largeFont, "Options", textwhite);
-		menu[2] = TTF_RenderText_Solid(font, "About", textgray);
-		menu_sel[2] = TTF_RenderText_Solid(largeFont, "About", textwhite);
-		menu[3] = TTF_RenderText_Solid(font, "Quit", textgray);
-		menu_sel[3] = TTF_RenderText_Solid(largeFont, "Quit", textwhite);
+		this->addMenuItem("back");
+		this->addMenuItem("About");
+		this->addMenuItem("Options");
+		this->addMenuItem("Start Game");
 		animScore200 = TTF_RenderText_Solid(smallFont, "200", textwhite);
 		animScore400 = TTF_RenderText_Solid(smallFont, "400", textwhite);
 		animScore800 = TTF_RenderText_Solid(smallFont, "800", textwhite);
@@ -53,12 +24,6 @@ MenuMain::MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *l
 		pinkyName = TTF_RenderText_Solid(largeFont, "Pinky", textmagenta);
 		inkyName = TTF_RenderText_Solid(largeFont, "Inky", textcyan);
 		clydeName = TTF_RenderText_Solid(largeFont, "Clyde",textorange);
-		for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
-			menu_entry_rects[i].x = (short int) (320 - (menu_sel[i]->w >> 1));
-			menu_entry_rects[i].y = (short int) (325 + i*35 - (menu_sel[i]->h >> 1));
-			menu_entry_rects[i].w = (short int) menu_sel[i]->w;
-			menu_entry_rects[i].h = (short int) menu_sel[i]->h;
-		}
 		menuoptions = new MenuOptions(this->screen, this->labyrinth);
 		menuabout = new MenuAbout(this->screen);
 		animFruits = new SDL_Surface*[NUM_FRUITS];
@@ -94,16 +59,6 @@ MenuMain::~MenuMain() {
 	SDL_FreeSurface(blinkyName);
 	SDL_FreeSurface(inkyName);
 	SDL_FreeSurface(clydeName);
-	TTF_CloseFont(font);
-	TTF_CloseFont(largeFont);
-	TTF_CloseFont(veryLargeFont);
-	TTF_CloseFont(hugeFont);
-	for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
-		SDL_FreeSurface(menu[i]);
-		SDL_FreeSurface(menu_sel[i]);
-	}
-	delete[] menu;
-	delete[] menu_sel;
 	delete menuoptions;
 	delete menuabout;
 	for (int i = 0; i < NUM_FRUITS; i++) {
@@ -112,8 +67,8 @@ MenuMain::~MenuMain() {
 	}
 	delete[] animFruits;
 }
-void MenuMain::draw() {
-	screen->clear();
+
+void MenuMain::drawTitle() {
 	SDL_Rect rect;
 	rect.x = 0;
 	rect.y = 0;
@@ -125,11 +80,7 @@ void MenuMain::draw() {
 	screen->draw(appTitle2, rect.x, 30);
 	rect.x = (short int) (rect.x - titlePacman->w);
 	screen->draw(titlePacman, rect.x, 40);
-	//rect.x = (short int) (rect.x - version->w);
 	screen->draw(version, (short int)(320 - (version->w >> 1)), 140);
-	setEntrySelection(selection);
-	screen->AddUpdateRects(0, 0, 640, 480);
-	screen->Refresh();
 }
 
 int MenuMain::show() {
@@ -664,75 +615,18 @@ int MenuMain::show() {
 		return 0;
 }
 
-int MenuMain::eventloop() {
-	SDL_Event event;
-	while(SDL_PollEvent(&event)) {
-		switch(event.type) {
-		case SDL_KEYDOWN:
-				if(event.key.keysym.sym == SDLK_RETURN)
-					return handleSelection();
-				else if(event.key.keysym.sym == SDLK_UP) {
-					selection = (--selection + NUM_MENU_ENTRIES) % NUM_MENU_ENTRIES;
-					setEntrySelection(selection);
-				}
-				else if(event.key.keysym.sym == SDLK_DOWN) {
-					selection = ++selection % NUM_MENU_ENTRIES;
-					setEntrySelection(selection);
-				}
-				else if((event.key.keysym.sym == SDLK_q)||(event.key.keysym.sym == SDLK_ESCAPE)) {
-					return 2;
-				}
-				break;
-		case SDL_MOUSEMOTION:
-			for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
-				if (menu_entry_rects[i].x <= event.motion.x && event.motion.x <= menu_entry_rects[i].x+menu_entry_rects[i].w && menu_entry_rects[i].y <= event.motion.y && event.motion.y <= menu_entry_rects[i].y+menu_entry_rects[i].h) {
-					setEntrySelection(selection = i);
-					break;
-				}
-			}
-			break;
-		case SDL_MOUSEBUTTONDOWN:
-			if (event.button.button == SDL_BUTTON_LEFT) {
-				for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
-					if (menu_entry_rects[i].x <= event.motion.x && event.motion.x <= menu_entry_rects[i].x+menu_entry_rects[i].w && menu_entry_rects[i].y <= event.motion.y && event.motion.y <= menu_entry_rects[i].y+menu_entry_rects[i].h) {
-						return handleSelection();
-					}
-				}
-			}
-			break;
-		case SDL_QUIT:
-				return 2;
-		}
-	}
-	return 0;
-}
-
-void MenuMain::setEntrySelection(int selection) {
-	for (int i = 0; i < NUM_MENU_ENTRIES; i++) {
-		screen->fillRect(&menu_entry_rects[i], 0, 0, 0);
-		if(selection == i)
-			screen->draw(menu_sel[i], menu_entry_rects[i].x, menu_entry_rects[i].y);
-		else
-			screen->draw(menu[i], 320-(menu[i]->w >> 1), menu_entry_rects[i].y + ((menu_sel[i]->h - menu[i]->h) >> 1));
-		screen->AddUpdateRects(menu_entry_rects[i].x, menu_entry_rects[i].y, menu_entry_rects[i].w, menu_entry_rects[i].h);
-	}
-	screen->Refresh();
-}
-
 int MenuMain::handleSelection() {
-	if(selection == 0)
-			return 1;
-		else if(selection == 1) {
-			menuoptions->draw();
-			menuoptions->show();
-			this->draw();
-		}
-		else if(selection == 2) {
-			menuabout->draw();
-			menuabout->show();
-			this->draw();
-		}
-		else if(selection == 3)
-			return 2;
+	if(selection == STARTGAME)
+		return 1;
+	else if(selection == OPTIONS) {
+		menuoptions->show();
+		this->draw();
+	}
+	else if(selection == ABOUT) {
+		menuabout->show();
+		this->draw();
+	}
+	else if(selection == BACK)
+		return 2;
 	return 0;
 }

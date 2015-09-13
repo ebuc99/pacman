@@ -14,16 +14,16 @@ class Menu {
 		virtual ~Menu();
 		virtual void draw();
 		virtual int show();
-		void drawTitle();
+		virtual void drawTitle();
 		void addMenuItem(const char* menuItem, const char* menuItemAlt = NULL);
 		void menuItemUp();
 		void menuItemDown();
-	private:
-		static const int MIN_FRAME_DURATION = 30;
-		virtual int eventloop();
-		vector<MenuItem*> menuItems;
-		int selection;
+		void menuItemSelect(int selection);
+		MenuItem* getSelectedMenuItem();
 	protected:
+		static const int MIN_FRAME_DURATION = 30;
+		int selection;
+		vector<MenuItem*> menuItems;
 		Screen *screen;
 		SDL_Surface *menuTitle;
 		SDL_Color textwhite = {255, 255, 255, 0};
@@ -34,6 +34,8 @@ class Menu {
 		SDL_Color textcyan    = {  0, 255, 255, 0};
 		SDL_Color textorange  = {255, 127,   0, 0};
 		TTF_Font *font, *smallFont, *largeFont, *veryLargeFont, *hugeFont;
+		virtual int eventloop();
 		void drawMenuItems();
+		virtual int handleSelection();
 };
 #endif

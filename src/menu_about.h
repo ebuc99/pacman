@@ -8,8 +8,8 @@ class MenuAbout : public Menu {
 		~MenuAbout();
 		void draw();
 	private:
-		int eventloop();
-		SDL_Surface *back, *back_sel, *test, *test_sel;
+		enum Entries {BACK};
+		int handleSelection();
 		SDL_Surface *idea, *coding, *coding2;
 };
 #endif

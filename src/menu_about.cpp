@@ -1,26 +1,16 @@
 #include "menu_about.h"
 
 MenuAbout::MenuAbout(Screen *screen):
-		Menu(screen, "About")
-{
-			idea = TTF_RenderText_Solid(largeFont, "idea: Toro Iwatani - Namco", textgray);
-			coding = TTF_RenderText_Solid(largeFont, "coding: Martin Prussak", textgray);
-			coding2 = TTF_RenderText_Solid(largeFont, "         Daniel Wuerfel", textgray);
-			back = TTF_RenderText_Solid(font, "back", textgray);
-			back_sel = TTF_RenderText_Solid(largeFont, "back", textwhite);
-			test = TTF_RenderText_Solid(font, "test", textgray);
-			test_sel = TTF_RenderText_Solid(largeFont, "test", textwhite);
-			this->addMenuItem("back");
-			this->addMenuItem("test");
+	Menu(screen, "About") {
+		idea = TTF_RenderText_Solid(largeFont, "idea: Toro Iwatani - Namco", textgray);
+		coding = TTF_RenderText_Solid(largeFont, "coding: Martin Prussak", textgray);
+		coding2 = TTF_RenderText_Solid(largeFont, "         Daniel Wuerfel", textgray);
+		this->addMenuItem("back");
 }
 MenuAbout::~MenuAbout() {
 	SDL_FreeSurface(idea);
 	SDL_FreeSurface(coding);
 	SDL_FreeSurface(coding2);
-	SDL_FreeSurface(back);
-	SDL_FreeSurface(back_sel);
-	SDL_FreeSurface(test);
-	SDL_FreeSurface(test_sel);
 }
 
 
@@ -35,29 +25,7 @@ void MenuAbout::draw() {
 	screen->Refresh();
 }
 
-int MenuAbout::eventloop() {
-	SDL_Event event;
-	while(SDL_PollEvent(&event)) {
-		switch(event.type) {
-		case SDL_KEYDOWN:
-				if(event.key.keysym.sym == SDLK_RETURN)
-					return 1;
-				if((event.key.keysym.sym == SDLK_q)||(event.key.keysym.sym == SDLK_ESCAPE))
-					return 1;
-				if(event.key.keysym.sym == SDLK_UP) {
-					menuItemUp();
-				}
-				else if(event.key.keysym.sym == SDLK_DOWN) {
-					menuItemDown();
-				}
-				break;
-		case SDL_MOUSEBUTTONDOWN:
-			if (event.button.button == SDL_BUTTON_LEFT)
-					return 1;
-			break;
-		case SDL_QUIT:
-				return 1;
-		}
-	}
-	return 0;
+int MenuAbout::handleSelection() {
+	if(selection == BACK)
+		return 2;
 }

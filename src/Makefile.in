@@ -106,7 +106,8 @@ am_pacman_OBJECTS = pacman-figur.$(OBJEXT) \
 	pacman-rail.$(OBJEXT) pacman-sounds.$(OBJEXT) \
 	pacman-platform.$(OBJEXT) pacman-menu_main.$(OBJEXT) \
 	pacman-menu_options.$(OBJEXT) pacman-menu_about.$(OBJEXT) \
-	pacman-menu.$(OBJEXT) pacman-menu_item.$(OBJEXT)
+	pacman-menu.$(OBJEXT) pacman-menu_item.$(OBJEXT) \
+	pacman-funny_animation.$(OBJEXT)
 pacman_OBJECTS = $(am_pacman_OBJECTS)
 am__DEPENDENCIES_1 =
 pacman_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -320,7 +321,9 @@ pacman_SOURCES = \
 	menu.h \
 	menu.cpp \
 	menu_item.cpp \
-	menu_item.h
+	menu_item.h \
+	funny_animation.h \
+	funny_animation.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \
@@ -437,6 +440,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-figur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-funny_animation.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-ghost_figur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-labyrinth.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-menu.Po@am__quote@
@@ -675,6 +679,20 @@ pacman-menu_item.obj: menu_item.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='menu_item.cpp' object='pacman-menu_item.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-menu_item.obj `if test -f 'menu_item.cpp'; then $(CYGPATH_W) 'menu_item.cpp'; else $(CYGPATH_W) '$(srcdir)/menu_item.cpp'; fi`
+
+pacman-funny_animation.o: funny_animation.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-funny_animation.o -MD -MP -MF $(DEPDIR)/pacman-funny_animation.Tpo -c -o pacman-funny_animation.o `test -f 'funny_animation.cpp' || echo '$(srcdir)/'`funny_animation.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-funny_animation.Tpo $(DEPDIR)/pacman-funny_animation.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='funny_animation.cpp' object='pacman-funny_animation.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-funny_animation.o `test -f 'funny_animation.cpp' || echo '$(srcdir)/'`funny_animation.cpp
+
+pacman-funny_animation.obj: funny_animation.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-funny_animation.obj -MD -MP -MF $(DEPDIR)/pacman-funny_animation.Tpo -c -o pacman-funny_animation.obj `if test -f 'funny_animation.cpp'; then $(CYGPATH_W) 'funny_animation.cpp'; else $(CYGPATH_W) '$(srcdir)/funny_animation.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-funny_animation.Tpo $(DEPDIR)/pacman-funny_animation.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='funny_animation.cpp' object='pacman-funny_animation.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-funny_animation.obj `if test -f 'funny_animation.cpp'; then $(CYGPATH_W) 'funny_animation.cpp'; else $(CYGPATH_W) '$(srcdir)/funny_animation.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

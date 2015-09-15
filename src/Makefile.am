@@ -42,7 +42,9 @@ pacman_SOURCES =  \
 	menu.h \
 	menu.cpp \
 	menu_item.cpp \
-	menu_item.h
+	menu_item.h \
+	funny_animation.h \
+	funny_animation.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \

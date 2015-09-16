@@ -6,7 +6,7 @@ class MenuAbout : public Menu {
 	public:
 		MenuAbout(Screen *screen);
 		~MenuAbout();
-		void draw();
+		void draw(bool updateAll = true);
 	private:
 		enum Entries {BACK};
 		int handleSelection();

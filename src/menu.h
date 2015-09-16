@@ -12,7 +12,7 @@ class Menu {
 	public:
 		Menu(Screen *screen, const char* title = NULL);
 		virtual ~Menu();
-		virtual void draw();
+		virtual void draw(bool updateAll = true);
 		virtual int show();
 		virtual void drawTitle();
 		void addMenuItem(const char* menuItem, const char* menuItemAlt = NULL);

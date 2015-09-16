@@ -15,6 +15,7 @@ MenuMain::MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *l
 		this->addMenuItem("About");
 		this->addMenuItem("Options");
 		this->addMenuItem("Start Game");
+		this->selection = STARTGAME;
 		menuoptions = new MenuOptions(this->screen, this->labyrinth);
 		menuabout = new MenuAbout(this->screen);
 		draw();

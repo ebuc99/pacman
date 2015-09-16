@@ -31,11 +31,12 @@ Menu::~Menu() {
 	TTF_CloseFont(hugeFont);
 }
 
-void Menu::draw() {
+void Menu::draw(bool updateAll) {
 	screen->clear();
 	this->drawTitle();
 	this->drawMenuItems();
-	screen->AddUpdateRects(0, 0, 640, 480);
+	if(updateAll)
+		screen->AddUpdateRects(0, 0, 640, 480);
 	screen->Refresh();
 }
 
@@ -46,7 +47,8 @@ void Menu::drawMenuItems() {
 		else
 			menuItems.at(i)->setSelectMenuItem(false);
 		screen->draw(menuItems.at(i)->getCurrentMenuItem(), 320 - (menuItems.at(i)->getCurrentMenuItem()->w >> 1), (430 - (i)*35) - (menuItems.at(i)->getCurrentMenuItem()->h >> 1));
-	}		
+	}
+	screen->AddUpdateRects(0, 300, 640, 180); // update lower area of the menu, no good coding
 }
 
 int Menu::show() {
@@ -58,7 +60,7 @@ int Menu::show() {
 
 void Menu::drawTitle() {
 	if(menuTitle)
-		screen->draw(menuTitle, 320 - (menuTitle->w >> 1), 50);
+		screen->draw_dynamic_content(menuTitle, 320 - (menuTitle->w >> 1), 50);
 }
 
 void Menu::addMenuItem(const char* menuItem, const char* menuItemAlt) {
@@ -115,17 +117,17 @@ int Menu::eventloop() {
 
 void Menu::menuItemDown() {
 	selection = (--selection + menuItems.size()) % menuItems.size();
-	draw();
+	draw(false);
 }
 
 void Menu::menuItemUp() {
 	selection = ++selection % menuItems.size();
-	draw();
+	draw(false);
 }
 
 void Menu::menuItemSelect(int selection) {
 	this->selection = selection;
-	draw();
+	draw(false);
 }
 
 MenuItem* Menu::getSelectedMenuItem() {

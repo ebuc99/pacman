@@ -4,12 +4,12 @@
 
 class MenuAbout : public Menu {
 	public:
-		MenuAbout(Screen *screen, const char* title);
+		MenuAbout(Screen *screen);
 		~MenuAbout();
-		void draw();
+		void draw(bool updateAll = true);
 	private:
-		SDL_Surface *idea;
-		SDL_Surface *coding;
-		SDL_Surface *coding2;
+		enum Entries {BACK};
+		int handleSelection();
+		SDL_Surface *idea, *coding, *coding2;
 };
 #endif

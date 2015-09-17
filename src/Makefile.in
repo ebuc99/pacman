@@ -99,15 +99,15 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_pacman_OBJECTS = pacman-figur.$(OBJEXT) \
-	pacman-ghost_figur.$(OBJEXT) pacman-pacman.$(OBJEXT) \
-	pacman-pacman_figur.$(OBJEXT) pacman-pille.$(OBJEXT) \
-	pacman-labyrinth.$(OBJEXT) pacman-screen.$(OBJEXT) \
-	pacman-rail.$(OBJEXT) pacman-sounds.$(OBJEXT) \
-	pacman-platform.$(OBJEXT) pacman-menu_main.$(OBJEXT) \
-	pacman-menu_options.$(OBJEXT) pacman-menu_about.$(OBJEXT) \
-	pacman-menu.$(OBJEXT) pacman-menu_item.$(OBJEXT) \
-	pacman-funny_animation.$(OBJEXT)
+am_pacman_OBJECTS = pacman-constants.$(OBJEXT) pacman-figur.$(OBJEXT) \
+	pacman-game.$(OBJEXT) pacman-ghost_figur.$(OBJEXT) \
+	pacman-pacman.$(OBJEXT) pacman-pacman_figur.$(OBJEXT) \
+	pacman-pille.$(OBJEXT) pacman-labyrinth.$(OBJEXT) \
+	pacman-screen.$(OBJEXT) pacman-rail.$(OBJEXT) \
+	pacman-sounds.$(OBJEXT) pacman-platform.$(OBJEXT) \
+	pacman-menu_main.$(OBJEXT) pacman-menu_options.$(OBJEXT) \
+	pacman-menu_about.$(OBJEXT) pacman-menu.$(OBJEXT) \
+	pacman-menu_item.$(OBJEXT) pacman-funny_animation.$(OBJEXT)
 pacman_OBJECTS = $(am_pacman_OBJECTS)
 am__DEPENDENCIES_1 =
 pacman_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -292,8 +292,12 @@ AM_CFLAGS = \
 	 -g
 
 pacman_SOURCES = \
+	constants.cpp \
+	constants.h \
 	figur.cpp \
 	figur.h \
+	game.cpp \
+	game.h \
 	ghost_figur.cpp \
 	ghost_figur.h \
 	pacman.cpp \
@@ -341,9 +345,9 @@ pacman_CXXFLAGS = -ansi \
 	-Wfloat-equal \
 	-Wunreachable-code \
 	-Wno-reorder \
-	-D_GNU_SOURCE 
+	-D_GNU_SOURCE
 
-pacman_LDFLAGS = $(SDL_CFLAGS) 
+pacman_LDFLAGS = $(SDL_CFLAGS)
 pacman_LDADD = \
 	$(SDL_LIBS) \
 	-lSDL_mixer
@@ -351,7 +355,7 @@ pacman_LDADD = \
 pacmanEXTRA_DIST = libsdl \
 	sdl-image \
 	sdl-ttf \
-	sdl-mixer 
+	sdl-mixer
 
 all: all-am
 
@@ -439,8 +443,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-constants.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-figur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-funny_animation.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-game.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-ghost_figur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-labyrinth.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-menu.Po@am__quote@
@@ -470,6 +476,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
+pacman-constants.o: constants.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-constants.o -MD -MP -MF $(DEPDIR)/pacman-constants.Tpo -c -o pacman-constants.o `test -f 'constants.cpp' || echo '$(srcdir)/'`constants.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-constants.Tpo $(DEPDIR)/pacman-constants.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='constants.cpp' object='pacman-constants.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-constants.o `test -f 'constants.cpp' || echo '$(srcdir)/'`constants.cpp
+
+pacman-constants.obj: constants.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-constants.obj -MD -MP -MF $(DEPDIR)/pacman-constants.Tpo -c -o pacman-constants.obj `if test -f 'constants.cpp'; then $(CYGPATH_W) 'constants.cpp'; else $(CYGPATH_W) '$(srcdir)/constants.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-constants.Tpo $(DEPDIR)/pacman-constants.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='constants.cpp' object='pacman-constants.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-constants.obj `if test -f 'constants.cpp'; then $(CYGPATH_W) 'constants.cpp'; else $(CYGPATH_W) '$(srcdir)/constants.cpp'; fi`
+
 pacman-figur.o: figur.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-figur.o -MD -MP -MF $(DEPDIR)/pacman-figur.Tpo -c -o pacman-figur.o `test -f 'figur.cpp' || echo '$(srcdir)/'`figur.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-figur.Tpo $(DEPDIR)/pacman-figur.Po
@@ -483,6 +503,20 @@ pacman-figur.obj: figur.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='figur.cpp' object='pacman-figur.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-figur.obj `if test -f 'figur.cpp'; then $(CYGPATH_W) 'figur.cpp'; else $(CYGPATH_W) '$(srcdir)/figur.cpp'; fi`
+
+pacman-game.o: game.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-game.o -MD -MP -MF $(DEPDIR)/pacman-game.Tpo -c -o pacman-game.o `test -f 'game.cpp' || echo '$(srcdir)/'`game.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-game.Tpo $(DEPDIR)/pacman-game.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='game.cpp' object='pacman-game.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-game.o `test -f 'game.cpp' || echo '$(srcdir)/'`game.cpp
+
+pacman-game.obj: game.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-game.obj -MD -MP -MF $(DEPDIR)/pacman-game.Tpo -c -o pacman-game.obj `if test -f 'game.cpp'; then $(CYGPATH_W) 'game.cpp'; else $(CYGPATH_W) '$(srcdir)/game.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-game.Tpo $(DEPDIR)/pacman-game.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='game.cpp' object='pacman-game.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-game.obj `if test -f 'game.cpp'; then $(CYGPATH_W) 'game.cpp'; else $(CYGPATH_W) '$(srcdir)/game.cpp'; fi`
 
 pacman-ghost_figur.o: ghost_figur.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-ghost_figur.o -MD -MP -MF $(DEPDIR)/pacman-ghost_figur.Tpo -c -o pacman-ghost_figur.o `test -f 'ghost_figur.cpp' || echo '$(srcdir)/'`ghost_figur.cpp

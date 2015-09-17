@@ -1,7 +1,7 @@
 #include "menu_options.h"
 
-MenuOptions::MenuOptions(Screen *screen, Labyrinth *labyrinth):
-	Menu(screen, "Options"),
+MenuOptions::MenuOptions(Labyrinth *labyrinth):
+	Menu("Options"),
 	labyrinth(labyrinth) {
 	this->addMenuItem("back");
 	this->addMenuItem("Window 640x480", "Fullscreen");

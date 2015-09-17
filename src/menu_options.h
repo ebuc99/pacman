@@ -5,7 +5,7 @@
 
 class MenuOptions : public Menu {
 	public:
-		MenuOptions(Screen *screen, Labyrinth *labyrinth);
+		MenuOptions(Labyrinth *labyrinth);
 		~MenuOptions();
 		int show();
 	private:

@@ -8,7 +8,7 @@
 
 class MenuMain : public Menu {
 	public:
-		MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *labyrinth);
+		MenuMain(Pacman *pacman, Ghost *ghosts[], Labyrinth *labyrinth);
 		~MenuMain();
 		int show();
 	private:

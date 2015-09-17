@@ -1,7 +1,6 @@
 #include "menu_main.h"
 
-MenuMain::MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *labyrinth):
-	Menu(screen){
+MenuMain::MenuMain(Pacman *pacman, Ghost *ghosts[], Labyrinth *labyrinth) {
 		this->pacman = pacman;
 		this->labyrinth = labyrinth;
 		this->ghosts = ghosts;
@@ -16,8 +15,8 @@ MenuMain::MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *l
 		this->addMenuItem("Options");
 		this->addMenuItem("Start Game");
 		this->selection = STARTGAME;
-		menuoptions = new MenuOptions(this->screen, this->labyrinth);
-		menuabout = new MenuAbout(this->screen);
+		menuoptions = new MenuOptions(this->labyrinth);
+		menuabout = new MenuAbout();
 		draw();
 }
 

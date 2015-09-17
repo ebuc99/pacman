@@ -3,7 +3,6 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 #include "platform.h"
-#include "screen.h"
 
 class MenuItem {
 	public:

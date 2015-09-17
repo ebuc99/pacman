@@ -1,8 +1,8 @@
 #include "menu.h"
 
-Menu::Menu(Screen *screen, const char* title):
+Menu::Menu(const char* title):
 	selection(0) {
-	this->screen = screen;
+	this->screen = Screen::getInstance();
 	textwhite.r = textwhite.g = textwhite.b = 255;
 	textgray.r = textgray.g = textgray.b = 192;
 	char filePath[256];

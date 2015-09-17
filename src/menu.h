@@ -10,7 +10,7 @@ using namespace std;
 
 class Menu {
 	public:
-		Menu(Screen *screen, const char* title = NULL);
+		Menu(const char* title = NULL);
 		virtual ~Menu();
 		virtual void draw(bool updateAll = true);
 		virtual int show();

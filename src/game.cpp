@@ -310,7 +310,7 @@ void Game::checkedRedraw() {
 		Labyrinth::getInstance()->drawInitText();
 		// information area: score, lives, the level's fruit
 		Labyrinth::getInstance()->drawScoreValue();
-		Screen::getInstance()->draw(scoreLabel, Constants::SCORE_X, Constants::SCORE_Y);
+		Screen::getInstance()->draw_dynamic_content(scoreLabel, Constants::SCORE_X, Constants::SCORE_Y);
 		Pacman::getInstance()->drawLives();
 		Labyrinth::getInstance()->drawInfoFruit();
 		// bring it to the screen, really

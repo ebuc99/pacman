@@ -58,8 +58,7 @@ class Game {
 		void checkedRedraw();
 		void checkGameOver();
 
-		SDL_Surface *background, *scoreLabel;
-		TTF_Font *font, *smallFont;
+		SDL_Surface *scoreLabel;
 };
 
 #endif

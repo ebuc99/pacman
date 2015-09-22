@@ -4,12 +4,10 @@ MenuMain::MenuMain(Pacman *pacman, Ghost *ghosts[], Labyrinth *labyrinth) {
 		this->pacman = pacman;
 		this->labyrinth = labyrinth;
 		this->ghosts = ghosts;
-		char filePath[256];
-		appTitle1 = TTF_RenderText_Solid(hugeFont, "Pa", textwhite);
-		appTitle2 = TTF_RenderText_Solid(hugeFont, "man", textwhite);
-		getFilePath(filePath, "gfx/title_pacman.png");
-		titlePacman = screen->LoadSurface(filePath, 0);
-		version = TTF_RenderText_Solid(smallFont, "version 0.7.0", textgray);
+		appTitle1 = TTF_RenderText_Solid(Screen::getHugeFont(), "Pa", Constants::WHITE_COLOR);
+		appTitle2 = TTF_RenderText_Solid(Screen::getHugeFont(), "man", Constants::WHITE_COLOR);
+		titlePacman = Screen::loadImage("gfx/title_pacman.png", 0);
+		version = TTF_RenderText_Solid(Screen::getSmallFont(), "version 0.7.0", Constants::GRAY_COLOR);
 		this->addMenuItem("back");
 		this->addMenuItem("About");
 		this->addMenuItem("Options");
@@ -51,10 +49,7 @@ int MenuMain::show() {
 		funnyAnimation->animate();
 	}
 	delete funnyAnimation;
-	if(event == 1)
-		return 1;
-	else
-		return 0;
+	return (event == 1 ? 1 : 0); 
 }
 
 int MenuMain::handleSelection() {

@@ -3,19 +3,11 @@
 MenuItem::MenuItem(const char* menuItem, const char* menuItemAlt):
 	selected(false),
 	altMenu(false){
-	textwhite.r = textwhite.g = textwhite.b = 255;
-	textgray.r = textgray.g = textgray.b = 192;
-	char filePath[256];
-	getFilePath(filePath, "fonts/Cheapmot.TTF");
-	if(!(font = TTF_OpenFont(filePath, 20)))
-		printf("Unable to open TTF font: %s\n", TTF_GetError());
-	if (!(largeFont = TTF_OpenFont(filePath, 24)))
-		printf("Unable to open TTF font: %s\n", TTF_GetError());
-	this->menuItem = TTF_RenderText_Solid(font, menuItem, textgray);
-	this->menuItemSel = TTF_RenderText_Solid(largeFont, menuItem, textwhite);
+	this->menuItem = TTF_RenderText_Solid(Screen::getFont(), menuItem, Constants::GRAY_COLOR);
+	this->menuItemSel = TTF_RenderText_Solid(Screen::getLargeFont(), menuItem, Constants::WHITE_COLOR);
 	if(menuItemAlt) {
-		this->menuItemAlt = TTF_RenderText_Solid(font, menuItemAlt, textgray);
-		this->menuItemSelAlt = TTF_RenderText_Solid(largeFont, menuItemAlt, textwhite);
+		this->menuItemAlt = TTF_RenderText_Solid(Screen::getFont(), menuItemAlt, Constants::GRAY_COLOR);
+		this->menuItemSelAlt = TTF_RenderText_Solid(Screen::getLargeFont(), menuItemAlt, Constants::WHITE_COLOR);
 	}
 }
 

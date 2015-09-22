@@ -1,6 +1,5 @@
 #ifndef MENU_H
 #define MENU_H
-#include "screen.h"
 #include "platform.h"
 #include <SDL/SDL_ttf.h>
 #include <vector>
@@ -26,14 +25,6 @@ class Menu {
 		vector<MenuItem*> menuItems;
 		Screen *screen;
 		SDL_Surface *menuTitle;
-		SDL_Color textwhite = {255, 255, 255, 0};
-		SDL_Color textgray    = {191, 191, 191, 0};
-		SDL_Color textyellow  = {255, 255,   0, 0};
-		SDL_Color textred     = {255,   0,   0, 0};
-		SDL_Color textmagenta = {255,   0, 255, 0};
-		SDL_Color textcyan    = {  0, 255, 255, 0};
-		SDL_Color textorange  = {255, 127,   0, 0};
-		TTF_Font *font, *smallFont, *largeFont, *veryLargeFont, *hugeFont;
 		virtual int eventloop();
 		void drawMenuItems();
 		virtual int handleSelection();

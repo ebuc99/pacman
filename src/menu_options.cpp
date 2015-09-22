@@ -16,6 +16,7 @@ int MenuOptions::show() {
 	int event;
 	while(!(event = eventloop()))
 		SDL_Delay(MIN_FRAME_DURATION);
+	return (event == 1 ? 1 : 0);
 }
 
 int MenuOptions::handleSelection() {

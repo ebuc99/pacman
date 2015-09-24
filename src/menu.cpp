@@ -17,19 +17,22 @@ void Menu::draw(bool updateAll) {
 	this->drawTitle();
 	this->drawMenuItems();
 	if(updateAll)
-		screen->AddUpdateRects(0, 0, 640, 480);
+		screen->AddUpdateRects(0, 0, Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
 	screen->Refresh();
 }
 
 void Menu::drawMenuItems() {
-	for(int i = 0; i < menuItems.size(); ++i) {
+	const int vertical_pad = 35;
+	int i;
+	for(i = 0; i < menuItems.size(); ++i) {
 		if(selection == i)
 			menuItems.at(i)->setSelectMenuItem(true);
 		else
 			menuItems.at(i)->setSelectMenuItem(false);
-		screen->draw(menuItems.at(i)->getCurrentMenuItem(), 320 - (menuItems.at(i)->getCurrentMenuItem()->w >> 1), (430 - (i)*35) - (menuItems.at(i)->getCurrentMenuItem()->h >> 1));
+		screen->draw(menuItems.at(i)->getCurrentMenuItem(), 320 - (menuItems.at(i)->getCurrentMenuItem()->w >> 1), (430 - (i)*vertical_pad) - (menuItems.at(i)->getCurrentMenuItem()->h >> 1));
 	}
-	screen->AddUpdateRects(0, 300, 640, 180); // update lower area of the menu, no good coding
+	screen->AddUpdateRects(0, (430 - (i)*vertical_pad), 
+	                       Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT-(430 - (i)*vertical_pad));
 }
 
 int Menu::show() {

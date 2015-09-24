@@ -25,6 +25,13 @@ SDL_Surface* MenuItem::getCurrentMenuItem() {
 		return (altMenu ? menuItemAlt : menuItem);
 }
 
+SDL_Surface* MenuItem::getBiggestMenuItem() {
+	/*if(menuItemSelAlt)
+		return (menuItemSel->w > menuItemSelAlt->w) ? menuItemSel : menuItemSelAlt;
+	else*/
+		return menuItemSel;
+}
+
 void MenuItem::setSelectMenuItem(bool set) {
 	selected = set;
 }

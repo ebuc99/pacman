@@ -11,6 +11,7 @@ class MenuItem {
 		MenuItem(const char* menuItem, const char* menuItemAlt = NULL);
 		~MenuItem();
 		SDL_Surface* getCurrentMenuItem();
+		SDL_Surface* getBiggestMenuItem();
 		void setSelectMenuItem(bool set = false);
 		void toggleMenuItem();
 		void setMenuItemAlt(bool set = false);

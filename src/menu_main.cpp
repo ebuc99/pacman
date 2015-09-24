@@ -1,9 +1,6 @@
 #include "menu_main.h"
 
-MenuMain::MenuMain(Pacman *pacman, Ghost *ghosts[], Labyrinth *labyrinth) {
-		this->pacman = pacman;
-		this->labyrinth = labyrinth;
-		this->ghosts = ghosts;
+MenuMain::MenuMain() {
 		appTitle1 = TTF_RenderText_Solid(Screen::getHugeFont(), "Pa", Constants::WHITE_COLOR);
 		appTitle2 = TTF_RenderText_Solid(Screen::getHugeFont(), "man", Constants::WHITE_COLOR);
 		titlePacman = Screen::loadImage("gfx/title_pacman.png", 0);
@@ -13,7 +10,7 @@ MenuMain::MenuMain(Pacman *pacman, Ghost *ghosts[], Labyrinth *labyrinth) {
 		this->addMenuItem("Options");
 		this->addMenuItem("Start Game");
 		this->selection = STARTGAME;
-		menuoptions = new MenuOptions(this->labyrinth);
+		menuoptions = new MenuOptions();
 		menuabout = new MenuAbout();
 		draw();
 }
@@ -22,6 +19,7 @@ MenuMain::~MenuMain() {
 	SDL_FreeSurface(appTitle1);
 	SDL_FreeSurface(appTitle2);
 	SDL_FreeSurface(titlePacman);
+	SDL_FreeSurface(version);
 	delete menuoptions;
 	delete menuabout;
 }
@@ -43,7 +41,7 @@ void MenuMain::drawTitle() {
 
 int MenuMain::show() {
 	int event;
-	FunnyAnimation *funnyAnimation = new FunnyAnimation(screen, pacman, ghosts, labyrinth);
+	FunnyAnimation *funnyAnimation = new FunnyAnimation();
 	while(!(event = eventloop())) {
 		SDL_Delay(MIN_FRAME_DURATION);
 		funnyAnimation->animate();

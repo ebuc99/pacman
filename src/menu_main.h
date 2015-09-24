@@ -8,17 +8,14 @@
 
 class MenuMain : public Menu {
 	public:
-		MenuMain(Pacman *pacman, Ghost *ghosts[], Labyrinth *labyrinth);
+		MenuMain();
 		~MenuMain();
 		int show();
 	private:
 		enum Entries {BACK, ABOUT, OPTIONS, STARTGAME};
 		Menu *menuoptions;
 		Menu *menuabout;
-		Pacman *pacman;
-		Ghost **ghosts;
 		SDL_Surface *appTitle1, *appTitle2, *titlePacman, *version;
-		Labyrinth *labyrinth;
 		int handleSelection();
 		void drawTitle();
 };

@@ -7,7 +7,7 @@
 
 class FunnyAnimation {
 	public:
-		FunnyAnimation(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *labyrinth);
+		FunnyAnimation();
 		~FunnyAnimation();
 		void animate();
 	private:

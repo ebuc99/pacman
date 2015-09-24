@@ -5,12 +5,11 @@
 
 class MenuOptions : public Menu {
 	public:
-		MenuOptions(Labyrinth *labyrinth);
+		MenuOptions();
 		~MenuOptions();
 		int show();
 	private:
 		enum Entries {BACK, FULLSCREEN, SOUND};
-		Labyrinth *labyrinth;
 		void setMenuSelections();
 		int handleSelection();	
 };

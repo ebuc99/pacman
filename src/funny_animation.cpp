@@ -1,11 +1,10 @@
 #include "funny_animation.h"
 
-FunnyAnimation::FunnyAnimation(Screen *screen, Pacman *pacman, 
-                               Ghost *ghosts[], Labyrinth *labyrinth):
-	screen(screen),
-	pacman(pacman),
-	ghosts(ghosts),
-	labyrinth(labyrinth){
+FunnyAnimation::FunnyAnimation():
+	screen(Screen::getInstance()),
+	pacman(Pacman::getInstance()),
+	ghosts(Ghost::getGhostArray()),
+	labyrinth(Labyrinth::getInstance()){
 		char filePath[256];
 		getFilePath(filePath, "fonts/Cheapmot.TTF");
 		if(!(font = TTF_OpenFont(filePath, 20)))

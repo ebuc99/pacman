@@ -420,8 +420,8 @@ bool Ghost::touched() {
 		Pacman::getInstance()->setVisibility(false);
 		Labyrinth::getInstance()->addBonusScore(x + (ghost_sf->w >> 1), y + (ghost_sf->h >> 1));
 		Labyrinth::getInstance()->increaseBonusStage();
-		Labyrinth::getInstance()->sleep(Constants::PAUSE_AFTER_BONUS_SCORE);
-		Labyrinth::getInstance()->playEatGhost();
+		Game::getInstance()->sleep(Constants::PAUSE_AFTER_BONUS_SCORE);
+		Sounds::getInstance()->playSingleSound(Sounds::EAT_GHOST);
 	}
 	if(get_hunter() == NONE)
 		return false;  // no problem for pacman

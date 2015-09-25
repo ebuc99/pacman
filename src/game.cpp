@@ -21,7 +21,8 @@ Game::Game():
 	gameOver(false),
 	stopMoving(false),
 	refreshGhosts(false),
-	pause(false)
+	pause(false),
+	cnt_hunting_mode(-1)
 {
 	scoreLabel = Screen::getTextSurface(Screen::getFont(), "Score", Constants::WHITE_COLOR);
 }
@@ -42,12 +43,15 @@ void Game::init() {
 	animationCounter = 0;
 	deltaT           = Constants::MIN_FRAME_DURATION;
 	startOffset      = Constants::START_OFFSET;
+	cnt_hunting_mode = -1;
+	cnt_sleep        = -1;
 
 	Labyrinth::getInstance()->resetLevel(1);
 
 	// TODO: extract new class Player with a method reset()?
 	Pacman::getInstance()->setRemainingLives(Constants::INITIAL_LIVES);
 	Labyrinth::getInstance()->resetScore();
+	Labyrinth::getInstance()->resetBonusStage();
 
 	currentScore = Labyrinth::getInstance()->getScore();
 	Screen::getInstance()->draw(scoreLabel, Constants::SCORE_X, Constants::SCORE_Y);
@@ -141,6 +145,25 @@ void Game::setGameOver(bool gameOver) {
 	}
 }
 
+void Game::startHuntingMode() {
+	Labyrinth::getInstance()->resetBonusStage();
+	if (cnt_hunting_mode < 0)
+		cnt_hunting_mode = 7000;
+	else // hunting mode was still active - prolong the it's duration
+		cnt_hunting_mode += 7000;
+	checkMusic();
+}
+
+void Game::stopHuntingMode() {
+	cnt_hunting_mode = -1;
+	Labyrinth::getInstance()->resetBonusStage();
+	checkMusic();
+}
+
+void Game::sleep(int ms) {
+	cnt_sleep = ms;
+}
+
 void Game::start() {
 	init();
 	Sounds::getInstance()->playIntro();
@@ -192,7 +215,7 @@ void Game::handleAnimations() {
 		// Pacman die animation
 		if(Pacman::getInstance()->is_dying()) {
 			if(!Pacman::getInstance()->die_animation()) {
-				Labyrinth::getInstance()->stopHuntingMode();
+				stopHuntingMode();
 				Labyrinth::getInstance()->resetAllFigures();
 				Labyrinth::getInstance()->hideFruit();
 				stop(true);
@@ -222,20 +245,20 @@ void Game::handleStartOffset() {
 
 void Game::handleHuntingMode() {
 	// During the "hunting mode", ghosts can be eaten after eating a superpill, but only for a defined time.
-	if(Labyrinth::getInstance()->cnt_hunting_mode > 0 && !pause && Labyrinth::getInstance()->cnt_sleep <= 0) {
-		if (Labyrinth::getInstance()->cnt_hunting_mode > 2000 && Labyrinth::getInstance()->cnt_hunting_mode-deltaT <= 2000) {
+	if(cnt_hunting_mode > 0 && !pause && cnt_sleep <= 0) {
+		if (cnt_hunting_mode > 2000 && cnt_hunting_mode-deltaT <= 2000) {
 			for(int i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i)
 				Ghost::getGhostArray()[i]->blink();
 		}
-		Labyrinth::getInstance()->cnt_hunting_mode -= deltaT;
-		if (Labyrinth::getInstance()->cnt_hunting_mode <= 0) {
+		cnt_hunting_mode -= deltaT;
+		if (cnt_hunting_mode <= 0) {
 			if (!Pacman::getInstance()->is_dying()) {
 				for(int i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i) {
 					if (Ghost::getGhostArray()[i]->get_hunter() != Figur::NONE)  // eaten ghosts still have to return to the castle
 						Ghost::getGhostArray()[i]->set_hunter(Figur::GHOST);
 				}
 			}
-			Labyrinth::getInstance()->stopHuntingMode();
+			stopHuntingMode();
 			checkMusic();
 		}
 	}
@@ -243,10 +266,10 @@ void Game::handleHuntingMode() {
 
 void Game::handleSleep() {
 	// The "sleep counter" becomes active when the player got a special score (e.g. after eating a ghost or a fruit).
-	if (Labyrinth::getInstance()->cnt_sleep > 0 && !pause) {
-		Labyrinth::getInstance()->cnt_sleep -= deltaT;
-		if (Labyrinth::getInstance()->cnt_sleep <= 0) {
-			Labyrinth::getInstance()->cnt_sleep = 0;
+	if (cnt_sleep > 0 && !pause) {
+		cnt_sleep -= deltaT;
+		if (cnt_sleep <= 0) {
+			cnt_sleep = 0;
 			Labyrinth::getInstance()->hideSmallScore();
 			Pacman::getInstance()->setVisibility(true);
 			for(int i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i)
@@ -258,7 +281,7 @@ void Game::handleSleep() {
 
 void Game::handleFruit() {
 	// The fruit will only be displayed for a defined period. After that, it will disappear if it still has not been eaten.
-	if (!pause && Labyrinth::getInstance()->cnt_sleep <= 0) {
+	if (!pause && cnt_sleep <= 0) {
 		Labyrinth::getInstance()->checkFruit(deltaT);
 	}
 }
@@ -267,6 +290,7 @@ bool Game::checkLastPillEaten() {
 	if(Labyrinth::getInstance()->getExisitingPills() <= 0) {
 		// init new level
 		stop(true);
+		stopHuntingMode();
 		Labyrinth::getInstance()->nextLevel();
 		startOffset = Constants::START_OFFSET;
 		return true;
@@ -279,12 +303,12 @@ void Game::checkScoreForExtraLife() {
 	currentScore = Labyrinth::getInstance()->getScore();
 	if ((lastScore<10000 && currentScore>=10000) || (lastScore<30000 && currentScore>=30000)) {
 		Pacman::getInstance()->addLives(1);
-		Labyrinth::getInstance()->playSoundExtraMan();
+		Sounds::getInstance()->playSingleSound(Sounds::EXTRA_MAN);
 	}
 }
 
 void Game::checkedMove() {
-	if (!pause && Labyrinth::getInstance()->cnt_sleep <= 0 && !stopMoving) {
+	if (!pause && cnt_sleep <= 0 && !stopMoving) {
 		Pacman::getInstance()->move(deltaT);
 		for(int i = 0; i < Constants::TOTAL_NUM_GHOSTS; ++i)
 			Ghost::getGhostArray()[i]->move(deltaT);
@@ -328,7 +352,7 @@ void Game::checkGhostTouched() {
 void Game::checkMusic() {
 	if (pause || stopMoving || startOffset >= 1 || Pacman::getInstance()->is_dying()) {
 		Sounds::getInstance()->stopMusic();
-	} else if (Labyrinth::getInstance()->cnt_hunting_mode <= 0) {
+	} else if (cnt_hunting_mode <= 0) {
 		Sounds::getInstance()->playNormalMusic();
 	} else {
 		int numBlue = 0, numNormal = 0, numEscaping = 0;

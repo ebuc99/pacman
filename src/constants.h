@@ -18,7 +18,8 @@ class Constants {
 		static const uint16_t START_OFFSET_2          = 1500;  // waiting time after respawn, in ms
 		static const uint16_t WAIT_FOR_NEW_LEVEL      = 1000;  // waiting time between eating last pill and display of the new level
 		static const uint16_t PAUSE_AFTER_BONUS_SCORE = 400;   // waiting time after eating a ghost or a fruit
-		static const int YELLOW                       = 1;     // colors for init text
+		static const int WHITE                        = 0;     // colors for init text
+		static const int YELLOW                       = 1;
 		static const int RED                          = 2;
 		static const int GRAY                         = 3;
 		static const int INITIAL_LIVES                = 3;     // number of times the player must die to get the "game over"

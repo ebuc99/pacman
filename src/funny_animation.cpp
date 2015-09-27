@@ -1,51 +1,36 @@
 #include "funny_animation.h"
 
+FunnyAnimation* FunnyAnimation::instance = NULL;
+
 FunnyAnimation::FunnyAnimation():
 	screen(Screen::getInstance()),
 	pacman(Pacman::getInstance()),
 	ghosts(Ghost::getGhostArray()),
 	labyrinth(Labyrinth::getInstance()){
-		char filePath[256];
-		getFilePath(filePath, "fonts/Cheapmot.TTF");
-		if(!(font = TTF_OpenFont(filePath, 20)))
-			printf("Unable to open TTF font: %s\n", TTF_GetError());
-		if (!(smallFont = TTF_OpenFont(filePath, 12)))
-			printf("Unable to open TTF font: %s\n", TTF_GetError());
-		if (!(largeFont = TTF_OpenFont(filePath, 24)))
-			printf("Unable to open TTF font: %s\n", TTF_GetError());
-		if (!(veryLargeFont = TTF_OpenFont(filePath, 48)))
-			printf("Unable to open TTF font: %s\n", TTF_GetError());
-		if (!(hugeFont = TTF_OpenFont(filePath, 96)))
-			printf("Unable to open TTF font: %s\n", TTF_GetError());
-		animScore200 = TTF_RenderText_Solid(smallFont, "200", textwhite);
-		animScore400 = TTF_RenderText_Solid(smallFont, "400", textwhite);
-		animScore800 = TTF_RenderText_Solid(smallFont, "800", textwhite);
-		animScore1600 = TTF_RenderText_Solid(smallFont, "1600", textwhite);
-		pacmanName = TTF_RenderText_Solid(largeFont, "Pacman", textyellow);
-		blinkyName = TTF_RenderText_Solid(largeFont, "Blinky", textred);
-		pinkyName = TTF_RenderText_Solid(largeFont, "Pinky", textmagenta);
-		inkyName = TTF_RenderText_Solid(largeFont, "Inky", textcyan);
-		clydeName = TTF_RenderText_Solid(largeFont, "Clyde",textorange);
+		animScore200 = TTF_RenderText_Solid(Screen::getSmallFont(), "200", Constants::WHITE_COLOR);
+		animScore400 = TTF_RenderText_Solid(Screen::getSmallFont(), "400", Constants::WHITE_COLOR);
+		animScore800 = TTF_RenderText_Solid(Screen::getSmallFont(), "800", Constants::WHITE_COLOR);
+		animScore1600 = TTF_RenderText_Solid(Screen::getSmallFont(), "1600", Constants::WHITE_COLOR);
+		pacmanName = TTF_RenderText_Solid(Screen::getLargeFont(), "Pacman", Constants::YELLOW_COLOR);
+		blinkyName = TTF_RenderText_Solid(Screen::getLargeFont(), "Blinky", Constants::BLINKY_COLOR);
+		pinkyName = TTF_RenderText_Solid(Screen::getLargeFont(), "Pinky", Constants::PINKY_COLOR);
+		inkyName = TTF_RenderText_Solid(Screen::getLargeFont(), "Inky", Constants::INKY_COLOR);
+		clydeName = TTF_RenderText_Solid(Screen::getLargeFont(), "Clyde", Constants::CLYDE_COLOR);
 		animFruits = new SDL_Surface*[NUM_FRUITS];
-		getFilePath(filePath, "gfx/cherry.png");     animFruits[0] = screen->LoadSurface(filePath, 255);
-		getFilePath(filePath, "gfx/strawberry.png"); animFruits[1] = screen->LoadSurface(filePath, 255);
-		getFilePath(filePath, "gfx/orange.png");     animFruits[2] = screen->LoadSurface(filePath, 255);
-		getFilePath(filePath, "gfx/apple.png");      animFruits[3] = screen->LoadSurface(filePath, 255);
-		getFilePath(filePath, "gfx/grapes.png");     animFruits[4] = screen->LoadSurface(filePath, 255);
-		getFilePath(filePath, "gfx/banana.png");     animFruits[5] = screen->LoadSurface(filePath, 255);
-		getFilePath(filePath, "gfx/pear.png");       animFruits[6] = screen->LoadSurface(filePath, 255);
-		getFilePath(filePath, "gfx/key.png");        animFruits[7] = screen->LoadSurface(filePath, 255);
 		animScores = new SDL_Surface*[NUM_FRUITS];
-		animScores[0] = TTF_RenderText_Solid(smallFont,  "100", textwhite);
-		animScores[1] = TTF_RenderText_Solid(smallFont,  "300", textwhite);
-		animScores[2] = TTF_RenderText_Solid(smallFont,  "500", textwhite);
-		animScores[3] = TTF_RenderText_Solid(smallFont,  "700", textwhite);
-		animScores[4] = TTF_RenderText_Solid(smallFont, "1000", textwhite);
-		animScores[5] = TTF_RenderText_Solid(smallFont, "2000", textwhite);
-		animScores[6] = TTF_RenderText_Solid(smallFont, "3000", textwhite);
-		animScores[7] = TTF_RenderText_Solid(smallFont, "5000", textwhite);
-
-		
+		const char* fruits[NUM_FRUITS][2] = {{"gfx/cherry.png", "100"},
+											 {"gfx/strawberry.png", "300"},
+											 {"gfx/orange.png", "500"},
+											 {"gfx/apple.png", "700"},
+											 {"gfx/grapes.png", "1000"},
+											 {"gfx/banana.png", "2000"},
+											 {"gfx/pear.png", "3000"},
+											 {"gfx/key.png", "5000"}};
+		for(int i = 0; i < NUM_FRUITS; ++i) {
+			animFruits[i] = Screen::loadImage(fruits[i][0], 255);
+			animScores[i] = TTF_RenderText_Solid(Screen::getSmallFont(),  fruits[i][1], Constants::WHITE_COLOR);
+		}
+	
 		animRect.x = 0;
 		animRect.y = 200;
 		animRect.w = 640;
@@ -87,6 +72,19 @@ FunnyAnimation::~FunnyAnimation() {
 	delete[] animFruits;
 }
 
+FunnyAnimation* FunnyAnimation::getInstance() {
+	if(!instance)
+		instance = new FunnyAnimation();
+	return instance;
+}
+
+void FunnyAnimation::cleanUpInstance() {
+	if(instance) {
+		delete(instance);
+		instance = NULL;
+	}
+}
+	
 void FunnyAnimation::animate() {
 	lastAnimTime = animationTime;
 	animationTime += MIN_FRAME_DURATION;

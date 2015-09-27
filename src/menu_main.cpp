@@ -41,12 +41,11 @@ void MenuMain::drawTitle() {
 
 int MenuMain::show() {
 	int event;
-	FunnyAnimation *funnyAnimation = new FunnyAnimation();
 	while(!(event = eventloop())) {
 		SDL_Delay(MIN_FRAME_DURATION);
-		funnyAnimation->animate();
+		FunnyAnimation::getInstance()->animate();
 	}
-	delete funnyAnimation;
+	FunnyAnimation::cleanUpInstance();
 	return (event == 1 ? 1 : 0); 
 }
 

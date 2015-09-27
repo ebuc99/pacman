@@ -3,6 +3,8 @@
 MenuItem::MenuItem(const char* menuItem, const char* menuItemAlt):
 	selected(false),
 	altMenu(false),
+	menuItem(NULL),
+	menuItemSel(NULL),
 	menuItemAlt(NULL), 
 	menuItemSelAlt(NULL) {
 	this->menuItem = TTF_RenderText_Solid(Screen::getFont(), menuItem, Constants::GRAY_COLOR);
@@ -16,10 +18,8 @@ MenuItem::MenuItem(const char* menuItem, const char* menuItemAlt):
 MenuItem::~MenuItem() {
 	SDL_FreeSurface(menuItem);
 	SDL_FreeSurface(menuItemSel);
-	if(menuItemAlt) {
-		SDL_FreeSurface(menuItemAlt);
-		SDL_FreeSurface(menuItemSelAlt);
-	}
+	SDL_FreeSurface(menuItemAlt);
+	SDL_FreeSurface(menuItemSelAlt);
 }
 
 SDL_Surface* MenuItem::getCurrentMenuItem() {	 	   

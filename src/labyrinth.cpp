@@ -364,7 +364,7 @@ int Labyrinth::getScore() {
 	return punktestand;
 }
 
-void Labyrinth::hidePill(int idxPill) {
+void Labyrinth::removePill(int idxPill) {
 	if (idxPill >= 0) {
 		pillen[idxPill].sichtbar = 0;
 		if (pillSurface && bgSurface) {
@@ -375,15 +375,11 @@ void Labyrinth::hidePill(int idxPill) {
 			dest.h = (short int) pille->h;
 			SDL_BlitSurface(bgSurface, &dest, pillSurface, &dest);
 		}
+		--cnt_pills;
 	}
 }
 
-// decrease pills
-void Labyrinth::decreasePills() {
-	--cnt_pills;
-}
-// get exisiting pills
-int Labyrinth::getExisitingPills() const {
+int Labyrinth::getNumRemainingPills() const {
 	return cnt_pills;
 }
 
@@ -492,7 +488,7 @@ void Labyrinth::startFruitRandomizer(int new_level) {
 		return;
 	fruit_display_time = 0;
 	next_fruit = ((rand() % 4) + 5) * 10;
-	next_fruit = getExisitingPills() - next_fruit;
+	next_fruit = getNumRemainingPills() - next_fruit;
 }
 
 void Labyrinth::checkFruit(int ms) {
@@ -501,7 +497,7 @@ void Labyrinth::checkFruit(int ms) {
 		if (fruit_display_time <= 0)
 			hideFruit();
 	} else {
-		if(getExisitingPills() <= next_fruit) {
+		if(getNumRemainingPills() <= next_fruit) {
 			fruit = infoFruit;
 			fruit_display_time = 10000;
 			++cnt_displayed_fruits;

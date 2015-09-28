@@ -221,7 +221,7 @@ void Game::handleAnimations() {
 				stop(true);
 				Pacman::getInstance()->addLives(-1);
 				checkGameOver();
-				Screen::getInstance()->AddUpdateRects(0, 0, Labyrinth::getInstance()->getBackground()->w, Labyrinth::getInstance()->getBackground()->h);
+				Screen::getInstance()->addTotalUpdateRect();
 			}
 		}
 		Labyrinth::getInstance()->pill_animation();
@@ -287,7 +287,7 @@ void Game::handleFruit() {
 }
 
 bool Game::checkLastPillEaten() {
-	if(Labyrinth::getInstance()->getExisitingPills() <= 0) {
+	if(Labyrinth::getInstance()->getNumRemainingPills() <= 0) {
 		// init new level
 		stop(true);
 		stopHuntingMode();

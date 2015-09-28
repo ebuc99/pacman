@@ -47,14 +47,11 @@ class Labyrinth {
 		// retrieve current score
 		int getScore();  // TODO: move to Player
 
-		// hide the pill having the specified index
-		void hidePill(int idxPill);  // TODO: put together with decreasePills
+		// remove the pill from the level (after it was eaten)
+		void removePill(int idxPill);
 
-		// decrease pills
-		void decreasePills();  // TODO: put together with hidePill
-
-		// get exisiting pills
-		int getExisitingPills() const;  // TODO: rename to getNumExistingPills
+		// get number of remaining pills
+		int getNumRemainingPills() const;
 
 		// set init text, color is 1=yellow, 2=red, white otherwise.
 		void setInitText(const char *text, int color = Constants::WHITE);
@@ -89,15 +86,12 @@ class Labyrinth {
 		Sounds* getSounds();  // TODO: eliminate after eliminating all references
 
 		// Return indexes of the Rails from the specified point (x,y), -1 if there is no such rail.
-		void getRailsForPoint(int x, int y, int *left, int *right, int *up, int *down);  // TODO: move to Rail
+		void getRailsForPoint(int x, int y, int *left, int *right, int *up, int *down);
 
 		void resetScore();  // TODO: move to Player
 
 		// Return the current surface of the superpill according to their animation step.
 		SDL_Surface *get_superpill_sf();
-
-		// Return the background image, will be loaded if not yet done
-		SDL_Surface *getBackground();  // TODO: Current usage is strange. Better make it an addBackgroundUpdateRect() method for the current purpose.
 
 	private:
 		static Labyrinth *instance;
@@ -116,7 +110,7 @@ class Labyrinth {
 		    *s60, *s61, *s62, *s63, *s64, *s65, *s66, *s67, *s68, *s69,
 		    *s70, *s71, *s72, *s73, *s74, *s75, *s76, *s77, *s78, *s79,
 		    *s80, *s81, *s82, *s83, *s84, *s85, *s86, *s87, *s88, *s89,
-		    *s90;  // TODO: move to Rail
+		    *s90;  // TODO: really necessary? Try to eliminate it, and use the arrays only.
 
 		SDL_Surface *pille, *superpille, *ar_superpille[5];
 		int punktestand, lastPunktestand;
@@ -135,7 +129,7 @@ class Labyrinth {
 		void init_pillen(bool firstInit);
 		int number_rails() const;
 
-		Rail *array_rails_pills[Constants::NUMBER_RAILS_PILLS];
+		Rail *array_rails_pills[Constants::NUMBER_RAILS_PILLS];  // TODO: could by removed if the Rails know about whether they have pills or not.
 
 		// load the fruit that belongs to the current level
 		void loadLevelFruit();
@@ -145,5 +139,8 @@ class Labyrinth {
 		void startFruitRandomizer(int new_level);
 		// set fruit bonus
 		void setFruitBonus(int fruit_bonus);
+
+		// Return the background image, will be loaded if not yet done
+		SDL_Surface *getBackground();
 };
 #endif

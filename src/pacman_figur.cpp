@@ -355,8 +355,7 @@ void Pacman::check_eat_pills() {
 		for (int k = 0; k < Labyrinth::getInstance()->array_rails[idxCurrentRail]->numPills; k++) {
 			int i = Labyrinth::getInstance()->array_rails[idxCurrentRail]->idxPills[k];
 			if(i >= 0 && Labyrinth::getInstance()->pillen[i].sichtbar && ((Labyrinth::getInstance()->pillen[i].x - 10) >= least(this->x,tmp_last_x)) && ((Labyrinth::getInstance()->pillen[i].x - 10) <= greatest(this->x,tmp_last_x)) && ((Labyrinth::getInstance()->pillen[i].y - 10) >= least(this->y,this->last_y)) && ((Labyrinth::getInstance()->pillen[i].y - 10) <= greatest(this->y,this->last_y))) {
-				Labyrinth::getInstance()->hidePill(i);
-				Labyrinth::getInstance()->decreasePills();
+				Labyrinth::getInstance()->removePill(i);
 				Sounds::getInstance()->playMunch();
 				if(Labyrinth::getInstance()->pillen[i].superpille) {
 					for(int j = 0; j < 4; ++j) {

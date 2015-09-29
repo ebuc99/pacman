@@ -8,10 +8,13 @@
 
 class MenuMain : public Menu {
 	public:
-		MenuMain();
-		~MenuMain();
+		static MenuMain* getInstance();
+		static void cleanUpInstance();
 		int show();
 	private:
+		MenuMain();
+		~MenuMain();
+		static MenuMain* instance;
 		enum Entries {BACK, ABOUT, OPTIONS, STARTGAME};
 		Menu *menuoptions;
 		Menu *menuabout;

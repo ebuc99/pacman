@@ -1,5 +1,18 @@
 #include "menu_main.h"
 
+MenuMain* MenuMain::instance = NULL;
+
+MenuMain* MenuMain::getInstance() {
+	if(!instance)
+		instance = new MenuMain();
+	return instance;
+}
+
+void MenuMain::cleanUpInstance() {
+	if(instance)
+		delete instance;
+	instance = NULL;
+}
 MenuMain::MenuMain() {
 		appTitle1 = TTF_RenderText_Solid(Screen::getHugeFont(), "Pa", Constants::WHITE_COLOR);
 		appTitle2 = TTF_RenderText_Solid(Screen::getHugeFont(), "man", Constants::WHITE_COLOR);
@@ -40,6 +53,7 @@ void MenuMain::drawTitle() {
 }
 
 int MenuMain::show() {
+	draw();
 	int event;
 	while(!(event = eventloop())) {
 		SDL_Delay(MIN_FRAME_DURATION);

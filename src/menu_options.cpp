@@ -7,7 +7,8 @@ MenuOptions::MenuOptions():
 	this->addMenuItem("Sound: on", "Sound: off");
 }
 
-MenuOptions::~MenuOptions() {}
+MenuOptions::~MenuOptions() {
+}
 
 int MenuOptions::show() {
 	setMenuSelections();

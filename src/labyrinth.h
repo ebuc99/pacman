@@ -12,6 +12,87 @@
 #include "pacman_figur.h"
 
 class Labyrinth {
+	public:
+		static Labyrinth* getInstance();
+		static void cleanUpInstance();
+
+		// At the left and right of the tunnel, there are two black rectangles,
+		// below which pacman and the ghosts will disappear if they leave the
+		// level to the left or right.
+		void draw_blocks();
+
+		/* draw pills, but only if Blinky has moved */
+		void draw_pillen();
+
+		// superpill animation
+		void pill_animation();
+
+		void drawScoreValue();
+
+		Pille pillen[Constants::NUMBER_PILLS];  // TODO: hide (currently used within Pacman::check_eat_pills)
+		Rail *array_rails[Constants::NUMBER_RAILS];  // TODO: hide (currently used within Pacman::move and Pacman::check_eat_pills)
+
+		// increases the bonus stage to the next value: 200 -> 400 -> 800 -> 1600
+		void increaseBonusStage();  // TODO: move to new class Player
+		void resetBonusStage();  // reset to 200  // TODO: move to Player
+
+		// adds a value to the player's score
+		// TODO: move both addScore methods to Player, create new method setSmallScore(value,x,y) here
+		void addScore(int value, int show_x, int show_y);  // use this method if the score should be displayed
+		void addScore(int value);                          // use this method if the score should not be displayed
+		void drawSmallScore();
+		void hideSmallScore();
+		// adds the current bonus stage to the player's score
+		void addBonusScore(int show_x, int show_y);  // TODO: move to Player
+		// retrieve current score
+		int getScore();  // TODO: move to Player
+
+		// remove the pill from the level (after it was eaten)
+		void removePill(int idxPill);
+
+		// get number of remaining pills
+		int getNumRemainingPills() const;
+
+		// set init text, color is 1=yellow, 2=red, white otherwise.
+		void setInitText(const char *text, int color = Constants::WHITE);
+
+		// level init text
+		void drawInitText();
+
+		// hide init text
+		void hideInitText();
+
+		// (re-)init level
+		void resetAllFigures();
+		void nextLevel();
+		void resetLevel(int level = 0);
+
+		// Check whether enough pills have been eaten to display the next fruit.
+		// If the fruit is displayed, decrement it's display time, and hide it
+		// if 10 s are over.
+		void checkFruit(int ms);
+		// hide the fruit (when it's display time is over, or it has been eaten)
+		void hideFruit();
+		// fruit is displayed
+		int fruitIsDisplayed();
+		// get fruit bonus
+		int getFruitBonus() const;
+		// draws the fruit, if it is displayed
+		void drawFruit();
+		// draw fruit in info area
+		void drawInfoFruit();
+
+		// deprecated (use Sounds::getInstance() instead)
+		Sounds* getSounds();  // TODO: eliminate after eliminating all references
+
+		// Return indexes of the Rails from the specified point (x,y), -1 if there is no such rail.
+		void getRailsForPoint(int x, int y, int *left, int *right, int *up, int *down);
+
+		void resetScore();  // TODO: move to Player
+
+		// Return the current surface of the superpill according to their animation step.
+		SDL_Surface *get_superpill_sf();
+
 	private:
 		static Labyrinth *instance;
 
@@ -29,10 +110,11 @@ class Labyrinth {
 		    *s60, *s61, *s62, *s63, *s64, *s65, *s66, *s67, *s68, *s69,
 		    *s70, *s71, *s72, *s73, *s74, *s75, *s76, *s77, *s78, *s79,
 		    *s80, *s81, *s82, *s83, *s84, *s85, *s86, *s87, *s88, *s89,
-		    *s90;
+		    *s90;  // TODO: really necessary? Try to eliminate it, and use the arrays only.
+
 		SDL_Surface *pille, *superpille, *ar_superpille[5];
 		int punktestand, lastPunktestand;
-		int bonus_stage; //200, 400, 800, 1600
+		int bonus_stage;  // 200, 400, 800, 1600 (increases for each eaten ghost)
 		SDL_Surface *smallScore, *initText, *score, *infoFruit, *fruit, *pillSurface, *bgSurface;
 		int smallScore_x, smallScore_y;
 		int cnt_pills;
@@ -43,136 +125,20 @@ class Labyrinth {
 		int fruit_displayed;
 		int fruit_bonus;
 		int idxSuperpills[4];
-	public:
-		static Labyrinth* getInstance();
-		static void cleanUpInstance();
-
-		// At the left and right of the tunnel, there are two black rectangles,
-		// below which pacman and the ghosts will disappear if they leave the
-		// level to the left or right.
-		void draw_blocks();
-
-		/* initially, throw some pills across the level */
+		// initially, throw some pills across the level
 		void init_pillen(bool firstInit);
-
-		/* draw pills, but only if Blinky has moved */
-		void draw_pillen();
-
-		// superpill animation
-		void pill_animation();
-
-		void drawScoreValue();
-
 		int number_rails() const;
 
-		Screen *screen;
-		int sdl_init_error;
-
-		Pille pillen[Constants::NUMBER_PILLS];
-
-		Rail *array_rails[Constants::NUMBER_RAILS];
-		Rail *array_rails_pills[Constants::NUMBER_RAILS_PILLS];
-
-		int cnt_hunting_mode;
-
-		// call these methods when hunting mode starts and ends
-		void startHuntingMode();
-		void stopHuntingMode();
-		// increases the bonus stage to the next value: 200 -> 400 -> 800 -> 1600
-		void increaseBonusStage();
-		// adds a value to the player's score
-		void addScore(int value, int show_x, int show_y);  // use this method if the score should be displayed
-		void addScore(int value);                          // use this method if the score should not be displayed
-		void drawSmallScore();
-		void hideSmallScore();
-		// adds the current bonus stage to the player's score
-		void addBonusScore(int show_x, int show_y);
-		// retrieve current score
-		int getScore();
-
-		// sleep for a short time - should be used after a ghost or a fruit has been eaten (display score, sleep shortly, remove score)
-		void sleep(int frames);
-		int cnt_sleep;
-
-		// hide the pill having the specified index
-		void hidePill(int idxPill);
-
-		// decrease pills
-		void decreasePills();
-
-		// get exisiting pills
-		int getExisitingPills() const;
-
-		// set init text, color is 1=yellow, 2=red, white otherwise.
-		void setInitText(const char *text, int color = 0);
-
-		// level init text
-		void drawInitText();
-
-		// hide init text
-		void hideInitText();
-
-		// (re-)init level
-		void resetAllFigures();
-		void nextLevel();
-		void resetLevel(int level = 0);
-
-		// get level
-		int getLevel() const;
+		Rail *array_rails_pills[Constants::NUMBER_RAILS_PILLS];  // TODO: could by removed if the Rails know about whether they have pills or not.
 
 		// load the fruit that belongs to the current level
 		void loadLevelFruit();
-
 		// start the fruit randomizer
 		// first fruit after 50, 60, 70 or 80
 		// eaten pills
 		void startFruitRandomizer(int new_level);
-
-		// Check whether enough pills have been eaten to display the next fruit.
-		// If the fruit is displayed, decrement it's display time, and hide it
-		// if 10 s are over.
-		void checkFruit(int ms);
-
-		// dont show fruit
-		void hideFruit();
-
-		// fruit is displayed
-		int fruitIsDisplayed();
-
 		// set fruit bonus
 		void setFruitBonus(int fruit_bonus);
-
-		// get fruit bonus
-		int getFruitBonus() const;
-
-		// draws the fruit, if it is displayed
-		void drawFruit();
-
-		// draw fruit in info area
-		void drawInfoFruit();
-
-		// play sound extra man
-		void playSoundExtraMan();
-
-		// eating the fruit sound
-		void playSoundFruit();
-
-		// the sound of dying
-		void playSoundDying();
-
-		// pacman eats ghost
-		void playEatGhost();
-
-		// get all the fancy sounds
-		Sounds* getSounds();
-
-		// Return indexes of the Rails from the specified point (x,y), -1 if there is no such rail.
-		void getRailsForPoint(int x, int y, int *left, int *right, int *up, int *down);
-
-		void resetScore();
-
-		// Return the current surface of the superpill
-		SDL_Surface *get_superpill_sf();
 
 		// Return the background image, will be loaded if not yet done
 		SDL_Surface *getBackground();

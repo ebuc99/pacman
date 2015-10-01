@@ -2,6 +2,7 @@
 #define GHOST_FIGUR_H
 
 #include "constants.h"
+#include "game.h"
 #include "labyrinth.h"
 #include "figur.h"
 #include "pacman_figur.h"

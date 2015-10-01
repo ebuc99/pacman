@@ -14,6 +14,8 @@ class Game {
 
 		void start();
 		void checkMusic();
+		void startHuntingMode();
+		void sleep(int ms);  // sleep for a short time - should be used after a ghost or a fruit has been eaten (display score, sleep shortly, remove score)
 
 	private:
 		Game();
@@ -34,6 +36,11 @@ class Game {
 
 		int startOffset;
 		Uint32 currentTicks;
+
+		int cnt_sleep;
+
+		int cnt_hunting_mode;
+		void stopHuntingMode();
 
 		void preselectDirection(int keycode);
 		void togglePause();
@@ -58,8 +65,7 @@ class Game {
 		void checkedRedraw();
 		void checkGameOver();
 
-		SDL_Surface *background, *scoreLabel;
-		TTF_Font *font, *smallFont;
+		SDL_Surface *scoreLabel;
 };
 
 #endif

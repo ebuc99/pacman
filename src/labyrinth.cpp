@@ -24,8 +24,6 @@ Labyrinth::Labyrinth():
 	punktestand(0),
 	lastPunktestand(0),
 	bonus_stage(200),
-	cnt_hunting_mode(-1),
-	cnt_sleep(-1),
 	smallScore(NULL),
 	score(NULL),
 	initText(NULL),
@@ -321,28 +319,13 @@ void Labyrinth::drawScoreValue() {
 	Screen::getInstance()->draw_dynamic_content(score, Constants::SCORE_X, Constants::SCORE_VALUE_Y);
 }
 
-void Labyrinth::startHuntingMode() {
-	bonus_stage = 200;
-	if (cnt_hunting_mode < 0)
-		cnt_hunting_mode = 7000;
-	else // hunting mode was still active - prolong the it's duration
-		cnt_hunting_mode += 7000;
-	Game::getInstance()->checkMusic();
-}
-
-void Labyrinth::stopHuntingMode() {
-	cnt_hunting_mode = -1;
-	bonus_stage = 200;
-	Game::getInstance()->checkMusic();
-}
-
 void Labyrinth::increaseBonusStage() {
 	if (bonus_stage < 1600)
 		bonus_stage <<= 1;  // bit shifting is faster than bonus_stage *= 2;
 }
 
-void Labyrinth::sleep(int frames) {
-	cnt_sleep = frames;
+void Labyrinth::resetBonusStage() {
+	bonus_stage = 200;
 }
 
 void Labyrinth::addScore(int value, int show_x, int show_y) {
@@ -381,7 +364,7 @@ int Labyrinth::getScore() {
 	return punktestand;
 }
 
-void Labyrinth::hidePill(int idxPill) {
+void Labyrinth::removePill(int idxPill) {
 	if (idxPill >= 0) {
 		pillen[idxPill].sichtbar = 0;
 		if (pillSurface && bgSurface) {
@@ -392,15 +375,11 @@ void Labyrinth::hidePill(int idxPill) {
 			dest.h = (short int) pille->h;
 			SDL_BlitSurface(bgSurface, &dest, pillSurface, &dest);
 		}
+		--cnt_pills;
 	}
 }
 
-// decrease pills
-void Labyrinth::decreasePills() {
-	--cnt_pills;
-}
-// get exisiting pills
-int Labyrinth::getExisitingPills() const {
+int Labyrinth::getNumRemainingPills() const {
 	return cnt_pills;
 }
 
@@ -429,7 +408,6 @@ void Labyrinth::resetAllFigures() {
 }
 
 void Labyrinth::nextLevel() {
-	stopHuntingMode();
 	hideFruit();
 	drawScoreValue();
 	Screen::getInstance()->addTotalUpdateRect();
@@ -440,7 +418,6 @@ void Labyrinth::nextLevel() {
 }
 
 void Labyrinth::resetLevel(int level) {
-	stopHuntingMode();
 	hideFruit();
 	resetAllFigures();
 	if (level >= 1)
@@ -458,10 +435,6 @@ void Labyrinth::resetLevel(int level) {
 	}
 	Screen::getInstance()->addTotalUpdateRect();
 	Screen::getInstance()->Refresh();
-}
-
-int Labyrinth::getLevel() const {
-	return level;
 }
 
 void Labyrinth::loadLevelFruit() {
@@ -515,18 +488,16 @@ void Labyrinth::startFruitRandomizer(int new_level) {
 		return;
 	fruit_display_time = 0;
 	next_fruit = ((rand() % 4) + 5) * 10;
-	next_fruit = getExisitingPills() - next_fruit;
+	next_fruit = getNumRemainingPills() - next_fruit;
 }
 
 void Labyrinth::checkFruit(int ms) {
 	if(fruit) {
-		if (cnt_sleep <= 0) {
-			fruit_display_time -= ms;
-			if (fruit_display_time <= 0)
-				hideFruit();
-		}
+		fruit_display_time -= ms;
+		if (fruit_display_time <= 0)
+			hideFruit();
 	} else {
-		if(getExisitingPills() <= next_fruit) {
+		if(getNumRemainingPills() <= next_fruit) {
 			fruit = infoFruit;
 			fruit_display_time = 10000;
 			++cnt_displayed_fruits;
@@ -596,23 +567,8 @@ void Labyrinth::getRailsForPoint(int x, int y, int *left, int *right, int *up, i
 	}
 }
 
-void Labyrinth::playSoundDying() {
-	Sounds::getInstance()->playSingleSound(Sounds::DYING);
-}
-
-void Labyrinth::playSoundExtraMan() {
-	Sounds::getInstance()->playSingleSound(Sounds::EXTRA_MAN);
-}
-
-void Labyrinth::playSoundFruit() {
-	Sounds::getInstance()->playSingleSound(Sounds::FRUIT);
-}
-
-void Labyrinth::playEatGhost() {
-	Sounds::getInstance()->playSingleSound(Sounds::EAT_GHOST);
-}
-
 Sounds* Labyrinth::getSounds() {
+	std::cerr << "Labyrinth::getSounds() is deprecated! Please use Sounds::getInstance() instead." << std::endl;
 	return Sounds::getInstance();
 }
 

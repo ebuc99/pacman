@@ -355,15 +355,14 @@ void Pacman::check_eat_pills() {
 		for (int k = 0; k < Labyrinth::getInstance()->array_rails[idxCurrentRail]->numPills; k++) {
 			int i = Labyrinth::getInstance()->array_rails[idxCurrentRail]->idxPills[k];
 			if(i >= 0 && Labyrinth::getInstance()->pillen[i].sichtbar && ((Labyrinth::getInstance()->pillen[i].x - 10) >= least(this->x,tmp_last_x)) && ((Labyrinth::getInstance()->pillen[i].x - 10) <= greatest(this->x,tmp_last_x)) && ((Labyrinth::getInstance()->pillen[i].y - 10) >= least(this->y,this->last_y)) && ((Labyrinth::getInstance()->pillen[i].y - 10) <= greatest(this->y,this->last_y))) {
-				Labyrinth::getInstance()->hidePill(i);
-				Labyrinth::getInstance()->decreasePills();
+				Labyrinth::getInstance()->removePill(i);
 				Sounds::getInstance()->playMunch();
 				if(Labyrinth::getInstance()->pillen[i].superpille) {
 					for(int j = 0; j < 4; ++j) {
 						if(Ghost::getGhostArray()[j]->get_hunter() != NONE)  // eaten ghosts still have to return to the castle
 							Ghost::getGhostArray()[j]->set_hunter(PACMAN);
 					}
-					Labyrinth::getInstance()->startHuntingMode();
+					Game::getInstance()->startHuntingMode();
 					Labyrinth::getInstance()->addScore(Constants::SUPER_PILL_SCORE);
 				} else {
 					Labyrinth::getInstance()->addScore(Constants::NORMAL_PILL_SCORE);
@@ -381,11 +380,11 @@ void Pacman::check_eat_pills() {
 
 		// fruit eaten?
 		if(Labyrinth::getInstance()->fruitIsDisplayed() && this->y == Constants::FRUIT_Y && ((this->x>=Constants::FRUIT_X && this->last_x<=Constants::FRUIT_X) || (this->x<=Constants::FRUIT_X && this->last_x>=Constants::FRUIT_X))) {
-			Labyrinth::getInstance()->playSoundFruit();
+			Sounds::getInstance()->playSingleSound(Sounds::FRUIT);
 			Labyrinth::getInstance()->hideFruit();
 			Labyrinth::getInstance()->addScore(Labyrinth::getInstance()->getFruitBonus(), Constants::FRUIT_X + 10, Constants::FRUIT_Y + 10);
 			setVisibility(false);
-			Labyrinth::getInstance()->sleep(Constants::PAUSE_AFTER_BONUS_SCORE);
+			Game::getInstance()->sleep(Constants::PAUSE_AFTER_BONUS_SCORE);
 		}
 	}
 }
@@ -403,7 +402,7 @@ int Pacman::die_animation(bool skipSound) {
 		return dying--;
 	else {
 		if(!die_counter && !skipSound)
-			Labyrinth::getInstance()->playSoundDying();
+			Sounds::getInstance()->playSingleSound(Sounds::DYING);
 		this->die_pic(die_counter++);
 		if(die_counter == 16) {
 			die_counter = 0;

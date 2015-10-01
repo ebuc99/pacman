@@ -1,34 +1,15 @@
 #include "menu.h"
 
-Menu::Menu(Screen *screen, const char* title):
+Menu::Menu(const char* title):
 	selection(0) {
-	this->screen = screen;
-	textwhite.r = textwhite.g = textwhite.b = 255;
-	textgray.r = textgray.g = textgray.b = 192;
-	char filePath[256];
-	getFilePath(filePath, "fonts/Cheapmot.TTF");
-	if(!(font = TTF_OpenFont(filePath, 20)))
-		printf("Unable to open TTF font: %s\n", TTF_GetError());
-	if (!(smallFont = TTF_OpenFont(filePath, 12)))
-		printf("Unable to open TTF font: %s\n", TTF_GetError());
-	if (!(largeFont = TTF_OpenFont(filePath, 24)))
-		printf("Unable to open TTF font: %s\n", TTF_GetError());
-	if (!(veryLargeFont = TTF_OpenFont(filePath, 48)))
-		printf("Unable to open TTF font: %s\n", TTF_GetError());
-	if (!(hugeFont = TTF_OpenFont(filePath, 96)))
-		printf("Unable to open TTF font: %s\n", TTF_GetError());
+	this->screen = Screen::getInstance();
 	if(title)
-		menuTitle = TTF_RenderText_Solid(veryLargeFont, title, textwhite);
+		menuTitle = TTF_RenderText_Solid(Screen::getVeryLargeFont(), title, Constants::WHITE_COLOR);
 }
 Menu::~Menu() {
 	SDL_FreeSurface(menuTitle);
 	for(int i = 0; i < menuItems.size(); ++i)
 		delete menuItems.at(i);
-	TTF_CloseFont(font);
-	TTF_CloseFont(smallFont);
-	TTF_CloseFont(largeFont);
-	TTF_CloseFont(veryLargeFont);
-	TTF_CloseFont(hugeFont);
 }
 
 void Menu::draw(bool updateAll) {
@@ -36,19 +17,22 @@ void Menu::draw(bool updateAll) {
 	this->drawTitle();
 	this->drawMenuItems();
 	if(updateAll)
-		screen->AddUpdateRects(0, 0, 640, 480);
+		screen->AddUpdateRects(0, 0, Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
 	screen->Refresh();
 }
 
 void Menu::drawMenuItems() {
-	for(int i = 0; i < menuItems.size(); ++i) {
+	const int vertical_pad = 35;
+	int i;
+	for(i = 0; i < menuItems.size(); ++i) {
 		if(selection == i)
 			menuItems.at(i)->setSelectMenuItem(true);
 		else
 			menuItems.at(i)->setSelectMenuItem(false);
-		screen->draw(menuItems.at(i)->getCurrentMenuItem(), 320 - (menuItems.at(i)->getCurrentMenuItem()->w >> 1), (430 - (i)*35) - (menuItems.at(i)->getCurrentMenuItem()->h >> 1));
+		screen->draw(menuItems.at(i)->getCurrentMenuItem(), 320 - (menuItems.at(i)->getCurrentMenuItem()->w >> 1), (430 - (i)*vertical_pad) - (menuItems.at(i)->getCurrentMenuItem()->h >> 1));
 	}
-	screen->AddUpdateRects(0, 300, 640, 180); // update lower area of the menu, no good coding
+	screen->AddUpdateRects(0, (430 - (i)*vertical_pad), 
+	                       Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT-(430 - (i)*vertical_pad));
 }
 
 int Menu::show() {

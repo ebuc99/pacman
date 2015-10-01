@@ -1,23 +1,30 @@
 #include "menu_main.h"
 
-MenuMain::MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *labyrinth):
-	Menu(screen){
-		this->pacman = pacman;
-		this->labyrinth = labyrinth;
-		this->ghosts = ghosts;
-		char filePath[256];
-		appTitle1 = TTF_RenderText_Solid(hugeFont, "Pa", textwhite);
-		appTitle2 = TTF_RenderText_Solid(hugeFont, "man", textwhite);
-		getFilePath(filePath, "gfx/title_pacman.png");
-		titlePacman = screen->LoadSurface(filePath, 0);
-		version = TTF_RenderText_Solid(smallFont, "version 0.7.0", textgray);
+MenuMain* MenuMain::instance = NULL;
+
+MenuMain* MenuMain::getInstance() {
+	if(!instance)
+		instance = new MenuMain();
+	return instance;
+}
+
+void MenuMain::cleanUpInstance() {
+	if(instance)
+		delete instance;
+	instance = NULL;
+}
+MenuMain::MenuMain() {
+		appTitle1 = TTF_RenderText_Solid(Screen::getHugeFont(), "Pa", Constants::WHITE_COLOR);
+		appTitle2 = TTF_RenderText_Solid(Screen::getHugeFont(), "man", Constants::WHITE_COLOR);
+		titlePacman = Screen::loadImage("gfx/title_pacman.png", 0);
+		version = TTF_RenderText_Solid(Screen::getSmallFont(), "version 0.7.1", Constants::GRAY_COLOR);
 		this->addMenuItem("back");
 		this->addMenuItem("About");
 		this->addMenuItem("Options");
 		this->addMenuItem("Start Game");
 		this->selection = STARTGAME;
-		menuoptions = new MenuOptions(this->screen, this->labyrinth);
-		menuabout = new MenuAbout(this->screen);
+		menuoptions = new MenuOptions();
+		menuabout = new MenuAbout();
 		draw();
 }
 
@@ -25,6 +32,7 @@ MenuMain::~MenuMain() {
 	SDL_FreeSurface(appTitle1);
 	SDL_FreeSurface(appTitle2);
 	SDL_FreeSurface(titlePacman);
+	SDL_FreeSurface(version);
 	delete menuoptions;
 	delete menuabout;
 }
@@ -45,17 +53,14 @@ void MenuMain::drawTitle() {
 }
 
 int MenuMain::show() {
+	draw();
 	int event;
-	FunnyAnimation *funnyAnimation = new FunnyAnimation(screen, pacman, ghosts, labyrinth);
 	while(!(event = eventloop())) {
 		SDL_Delay(MIN_FRAME_DURATION);
-		funnyAnimation->animate();
+		FunnyAnimation::getInstance()->animate();
 	}
-	delete funnyAnimation;
-	if(event == 1)
-		return 1;
-	else
-		return 0;
+	FunnyAnimation::cleanUpInstance();
+	return (event == 1 ? 1 : 0); 
 }
 
 int MenuMain::handleSelection() {

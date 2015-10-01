@@ -1,10 +1,10 @@
 #include "menu_about.h"
 
-MenuAbout::MenuAbout(Screen *screen):
-	Menu(screen, "About") {
-		idea = TTF_RenderText_Solid(largeFont, "idea: Toro Iwatani - Namco", textgray);
-		coding = TTF_RenderText_Solid(largeFont, "coding: Martin Prussak", textgray);
-		coding2 = TTF_RenderText_Solid(largeFont, "         Daniel Wuerfel", textgray);
+MenuAbout::MenuAbout():
+	Menu("About") {
+		idea = TTF_RenderText_Solid(Screen::getLargeFont(), "idea: Toro Iwatani - Namco", Constants::GRAY_COLOR);
+		coding = TTF_RenderText_Solid(Screen::getLargeFont(), "coding: Martin Prussak", Constants::GRAY_COLOR);
+		coding2 = TTF_RenderText_Solid(Screen::getLargeFont(), "         Daniel Wuerfel", Constants::GRAY_COLOR);
 		this->addMenuItem("back");
 }
 MenuAbout::~MenuAbout() {

@@ -1,14 +1,14 @@
 #include "menu_options.h"
 
-MenuOptions::MenuOptions(Screen *screen, Labyrinth *labyrinth):
-	Menu(screen, "Options"),
-	labyrinth(labyrinth) {
+MenuOptions::MenuOptions():
+	Menu("Options") {
 	this->addMenuItem("back");
 	this->addMenuItem("Window 640x480", "Fullscreen");
 	this->addMenuItem("Sound: on", "Sound: off");
 }
 
-MenuOptions::~MenuOptions() {}
+MenuOptions::~MenuOptions() {
+}
 
 int MenuOptions::show() {
 	setMenuSelections();
@@ -16,6 +16,7 @@ int MenuOptions::show() {
 	int event;
 	while(!(event = eventloop()))
 		SDL_Delay(MIN_FRAME_DURATION);
+	return (event == 1 ? 1 : 0);
 }
 
 int MenuOptions::handleSelection() {
@@ -24,14 +25,14 @@ int MenuOptions::handleSelection() {
 	if(selection == FULLSCREEN)
 		screen->toggleFullscreen();
 	else if(selection == SOUND)
-		labyrinth->getSounds()->toggleEnabled();
+		Labyrinth::getInstance()->getSounds()->toggleEnabled();
 	menuItems.at(selection)->toggleMenuItem();
 	this->draw();
 	return 0;
 }
 
 void MenuOptions::setMenuSelections() {
-	if (this->labyrinth->getSounds()->isEnabled())
+	if (Labyrinth::getInstance()->getSounds()->isEnabled())
 		menuItems.at(SOUND)->setMenuItemAlt(false);
 	else
 		menuItems.at(SOUND)->setMenuItemAlt(true);

@@ -6,15 +6,12 @@ int main(int argc, char *argv[]) {
 	if(Screen::getInstance()->hasSDLInitErrorOccured())
 		return EXIT_FAILURE;
 
-	MenuMain *menu = new MenuMain(Screen::getInstance(), Pacman::getInstance(), Ghost::getGhostArray(), Labyrinth::getInstance());
-
-	while(menu->show()) {
+	while(MenuMain::getInstance()->show()) {
 		Game::getInstance()->start();
-		menu->draw();
 	}
 
 	Game::cleanUpInstance();
-	//delete menu;
+	MenuMain::cleanUpInstance();
 	Labyrinth::cleanUpInstance();
 	Pacman::cleanUpInstance();
 	Ghost::cleanUpGhostArray();

@@ -4,7 +4,7 @@
 
 class MenuAbout : public Menu {
 	public:
-		MenuAbout(Screen *screen);
+		MenuAbout();
 		~MenuAbout();
 		void draw(bool updateAll = true);
 	private:

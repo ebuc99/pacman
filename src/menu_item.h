@@ -3,6 +3,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 #include "platform.h"
+#include "constants.h"
 #include "screen.h"
 
 class MenuItem {
@@ -20,9 +21,6 @@ class MenuItem {
 	private:
 		int x, y;
 		bool selected, altMenu;
-		SDL_Color textwhite = {255, 255, 255, 0};
-		SDL_Color textgray    = {191, 191, 191, 0};
-		TTF_Font *font, *largeFont;
 		SDL_Surface *menuItem, *menuItemSel; 
 		SDL_Surface *menuItemAlt, *menuItemSelAlt;
 };

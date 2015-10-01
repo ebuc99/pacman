@@ -8,17 +8,17 @@
 
 class MenuMain : public Menu {
 	public:
-		MenuMain(Screen *screen, Pacman *pacman, Ghost *ghosts[], Labyrinth *labyrinth);
-		~MenuMain();
+		static MenuMain* getInstance();
+		static void cleanUpInstance();
 		int show();
 	private:
+		MenuMain();
+		~MenuMain();
+		static MenuMain* instance;
 		enum Entries {BACK, ABOUT, OPTIONS, STARTGAME};
 		Menu *menuoptions;
 		Menu *menuabout;
-		Pacman *pacman;
-		Ghost **ghosts;
 		SDL_Surface *appTitle1, *appTitle2, *titlePacman, *version;
-		Labyrinth *labyrinth;
 		int handleSelection();
 		void drawTitle();
 };

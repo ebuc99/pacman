@@ -25,14 +25,14 @@ int MenuOptions::handleSelection() {
 	if(selection == FULLSCREEN)
 		screen->toggleFullscreen();
 	else if(selection == SOUND)
-		Labyrinth::getInstance()->getSounds()->toggleEnabled();
+		Sounds::getInstance()->toggleEnabled();
 	menuItems.at(selection)->toggleMenuItem();
 	this->draw();
 	return 0;
 }
 
 void MenuOptions::setMenuSelections() {
-	if (Labyrinth::getInstance()->getSounds()->isEnabled())
+	if (Sounds::getInstance()->isEnabled())
 		menuItems.at(SOUND)->setMenuItemAlt(false);
 	else
 		menuItems.at(SOUND)->setMenuItemAlt(true);

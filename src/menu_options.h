@@ -1,6 +1,6 @@
 #ifndef MENU_OPTIONS
 #define MENU_OPTIONS
-#include "labyrinth.h"
+#include "sounds.h"
 #include "menu.h"
 
 class MenuOptions : public Menu {

@@ -57,9 +57,9 @@ int MenuMain::show() {
 	int event;
 	while(!(event = eventloop())) {
 		SDL_Delay(MIN_FRAME_DURATION);
-		FunnyAnimation::getInstance()->animate();
+		//FunnyAnimation::getInstance()->animate();
 	}
-	FunnyAnimation::cleanUpInstance();
+	//FunnyAnimation::cleanUpInstance();
 	return (event == 1 ? 1 : 0); 
 }
 

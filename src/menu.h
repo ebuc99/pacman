@@ -1,7 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 #include "platform.h"
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 #include <vector>
 #include "menu_item.h"
 

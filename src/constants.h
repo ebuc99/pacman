@@ -1,7 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 class Constants {
 	public:

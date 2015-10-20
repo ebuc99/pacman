@@ -1,9 +1,9 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include "constants.h"
 #include "platform.h"
@@ -77,6 +77,7 @@ class Screen {
 		SDL_Rect rects[Constants::MAX_UPDATE_RECTS];
 		int rect_num;
 		SDL_Surface *screen_surface;
+		SDL_Renderer *renderer;
 		bool sdlInitErrorOccured;
 		bool fullscreen;
 

@@ -68,11 +68,13 @@ pacman_CXXFLAGS = -ansi \
 	-Wno-reorder \
 	-D_GNU_SOURCE
 
-pacman_LDFLAGS = $(SDL_CFLAGS)
+pacman_LDFLAGS = -I/usr/include/SDL2 -D_REENTRANT #$(SDL2_CFLAGS)
 
 pacman_LDADD =  \
-	$(SDL_LIBS) \
-	-lSDL_mixer
+	$(SDL2_LIBS) \
+	-lSDL2_mixer \
+	-L/usr/lib64 -lSDL2 -lpthread
+	
 
 
 pacmanEXTRA_DIST = libsdl \

@@ -1,7 +1,7 @@
 #ifndef SOUNDS_H
 #define SOUNDS_H
-#include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #include "platform.h"
 
 #define SAFE_FREE_CHUNK(x) if(x){Mix_FreeChunk(x);x=0;}

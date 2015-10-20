@@ -1,9 +1,9 @@
 #ifndef PACMAN_H
 #define PACMAN_H
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include "constants.h"
 #include "game.h"
 #include "ghost_figur.h"

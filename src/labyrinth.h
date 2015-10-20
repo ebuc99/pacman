@@ -1,7 +1,7 @@
 #ifndef LABYRINTH_H
 #define LABYRINTH_H
 
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 #include "constants.h"
 #include "screen.h"
 #include "pille.h"

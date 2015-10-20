@@ -1,7 +1,7 @@
 #ifndef MENU_ITEM_H
 #define MENU_ITEM_H
-#include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include "platform.h"
 #include "constants.h"
 #include "screen.h"

@@ -32,6 +32,11 @@ class Screen {
 		SDL_Surface* getSurface() {
 		    return screen_surface;
 		}
+		
+		// return the screen texture
+		SDL_Texture* getTexture() {
+			return txScreenSurface;
+		}
 		// draw another graphic to the screen's surface
 		void draw(SDL_Surface* graphic, int offset_x = 0, int offset_y = 0);
 
@@ -55,6 +60,7 @@ class Screen {
 		static SDL_Surface *loadImage(const char *filename, int transparentColor = -1);
 		static TTF_Font *loadFont(const char *filename, int ptSize);
 		static SDL_Surface *getTextSurface(TTF_Font *font, const char *text, SDL_Color color);
+		SDL_Renderer *getRenderer();
 
 		// draw a filled rectangle
 		void fillRect(SDL_Rect *rect, Uint8 r, Uint8 g, Uint8 b);
@@ -77,6 +83,7 @@ class Screen {
 		SDL_Rect rects[Constants::MAX_UPDATE_RECTS];
 		int rect_num;
 		SDL_Surface *screen_surface;
+		SDL_Texture *txScreenSurface;
 		SDL_Renderer *renderer;
 		bool sdlInitErrorOccured;
 		bool fullscreen;

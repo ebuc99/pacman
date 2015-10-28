@@ -116,7 +116,7 @@ class Labyrinth {
 		int punktestand, lastPunktestand;
 		int bonus_stage;  // 200, 400, 800, 1600 (increases for each eaten ghost)
 		SDL_Surface *smallScore, *initText, *score, *infoFruit, *fruit, *pillSurface, *bgSurface;
-		SDL_Texture *txPillSurface, *txPille, *bgTexture, *txSuperpille, *txar_superpille[5];
+		//SDL_Texture *txPillSurface, *txPille, *bgTexture, *txSuperpille, *txar_superpille[5];
 		int smallScore_x, smallScore_y;
 		int cnt_pills;
 		int level;
@@ -145,6 +145,6 @@ class Labyrinth {
 		SDL_Surface *getBackground();
 
 		// Return the background texture, will be loaded if not yet done
-		SDL_Texture *getBackgroundTexture();
+		//SDL_Texture *getBackgroundTexture();
 };
 #endif

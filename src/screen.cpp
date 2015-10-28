@@ -58,8 +58,8 @@ Screen::Screen():
 	}
 	if (!sdlInitErrorOccured) {
 		//screen_surface = SDL_SetVideoMode(Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT, Constants::BITS_PER_PIXEL, SDL_HWSURFACE);
-		SDL_Window* window = SDL_CreateWindow("Pacman", 
-		                                      SDL_WINDOWPOS_UNDEFINED,
+		window = SDL_CreateWindow("Pacman", 
+											  SDL_WINDOWPOS_UNDEFINED,
                                   		      SDL_WINDOWPOS_UNDEFINED,
                                   			  Constants::WINDOW_WIDTH,
                                   			  Constants::WINDOW_HEIGHT,
@@ -69,8 +69,8 @@ Screen::Screen():
 			printf("Setting video mode failed: %s\n",SDL_GetError());
 			sdlInitErrorOccured = true;
 		}
-		txScreenSurface = SDL_CreateTextureFromSurface(renderer, screen_surface);
-		renderer = SDL_CreateRenderer(window, -1, 0);
+		//txScreenSurface = SDL_CreateTextureFromSurface(renderer, screen_surface);
+		//renderer = SDL_CreateRenderer(window, -1, 0);
 	}
 	if (!sdlInitErrorOccured) {
 		//renderer = SDL_CreateRenderer(window, -1, 0);
@@ -79,10 +79,10 @@ Screen::Screen():
 }
 
 Screen::~Screen() {
-	if (renderer) {
+	/*if (renderer) {
 		SDL_DestroyRenderer(renderer);
 		renderer = NULL;
-	}
+	}*/
 	TTF_Quit();
 	SDL_Quit();
 }
@@ -118,7 +118,8 @@ void Screen::addTotalUpdateRect() {
 
 void Screen::Refresh() {
 	//SDL_UpdateRects(screen_surface, rect_num, rects);
-	SDL_RenderPresent(Screen::getRenderer());
+	//SDL_RenderPresent(Screen::getRenderer());
+	SDL_UpdateWindowSurfaceRects(window, rects, rect_num);
 	rect_num = 0;
 }
 
@@ -128,30 +129,30 @@ void Screen::draw_dynamic_content(SDL_Surface *surface, int x, int y) {
 	dest.y = (short int)y;
 	dest.w = (short int)surface->w;
 	dest.h = (short int)surface->h;
-	//SDL_BlitSurface(surface, NULL, this->screen_surface, &dest);
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_RenderCopy(renderer, texture, NULL, &dest);
+	SDL_BlitSurface(surface, NULL, this->screen_surface, &dest);
+	//SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+	//SDL_RenderCopy(renderer, texture, NULL, &dest);
 	//SDL_RenderPresent(renderer);
 	this->AddUpdateRects(dest.x, dest.y, surface->w + 10, surface->h);
-	SDL_DestroyTexture(texture);
+	//SDL_DestroyTexture(texture);
 }
 
 void Screen::draw(SDL_Surface* graphic, int offset_x, int offset_y) {
     if (0 == offset_x && 0 == offset_y) {
-        //SDL_BlitSurface(graphic, NULL, screen_surface, NULL);
-		SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, graphic);
-		SDL_RenderCopy(renderer, texture, NULL, NULL);
-		SDL_DestroyTexture(texture);
+        SDL_BlitSurface(graphic, NULL, screen_surface, NULL);
+		//SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, graphic);
+		//SDL_RenderCopy(renderer, texture, NULL, NULL);
+		//SDL_DestroyTexture(texture);
     } else {
         SDL_Rect position;
         position.x = (short int)offset_x;
         position.y = (short int)offset_y;
 		position.w = (short int)graphic->w;
 		position.h = (short int)graphic->h;
-        //SDL_BlitSurface(graphic, NULL, screen_surface, &position);
-		SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, graphic);
-		SDL_RenderCopy(renderer, texture, NULL, &position);
-		SDL_DestroyTexture(texture);
+        SDL_BlitSurface(graphic, NULL, screen_surface, &position);
+		//SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, graphic);
+		//SDL_RenderCopy(renderer, texture, NULL, &position);
+		//SDL_DestroyTexture(texture);
     }
 	//SDL_RenderPresent(renderer);
 
@@ -242,6 +243,7 @@ SDL_Surface *Screen::loadImage(const char *filename, int transparentColor) {
 		printf("Unable to convert image to display format: %s\n", SDL_GetError());
 		exit(EXIT_FAILURE);
 	}
+	return temp;
 	SDL_FreeSurface(temp);
 	return surface;
 }
@@ -266,16 +268,16 @@ SDL_Surface *Screen::getTextSurface(TTF_Font *font, const char *text, SDL_Color 
 	return surface;
 }
 
-SDL_Renderer *Screen::getRenderer() {
+/*SDL_Renderer *Screen::getRenderer() {
 	return renderer;
-}
+}*/
 
 void Screen::clear() {
-	//SDL_Rect rect {0, 0, screen_surface->w, screen_surface->h};
-	//fillRect(&rect, 0, 0, 0);
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_Rect rect {0, 0, screen_surface->w, screen_surface->h};
+	fillRect(&rect, 0, 0, 0);
+	/*SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
-	SDL_RenderPresent(renderer);
+	SDL_RenderPresent(renderer);*/
 }
 
 void Screen::fillRect(SDL_Rect *rect, Uint8 r, Uint8 g, Uint8 b) {

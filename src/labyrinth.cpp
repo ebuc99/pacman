@@ -32,6 +32,7 @@ Labyrinth::Labyrinth():
 	pillSurface(NULL),
 	bgSurface(NULL),
 	bgTexture(NULL),
+	txPillSurface(NULL),
 	level(1){
 	// horizontal rails, row by row, from left to right
 	s0  = new Rail(138,  37, 207,  37);
@@ -218,6 +219,12 @@ Labyrinth::~Labyrinth(){
 	SDL_FreeSurface(initText);
 	SDL_FreeSurface(pillSurface);
 	SDL_FreeSurface(bgSurface);
+	SDL_DestroyTexture(txPillSurface);
+	SDL_DestroyTexture(txPille);
+	SDL_DestroyTexture(bgTexture);
+	SDL_DestroyTexture(txSuperpille);
+	for(int i=0; i < 5; ++i)
+		SDL_DestroyTexture(txar_superpille[i]);
 }
 
 void Labyrinth::draw_blocks() {
@@ -286,31 +293,34 @@ void Labyrinth::init_pillen(bool firstInit) {
 			  bgSurface->format->Rmask, bgSurface->format->Gmask, bgSurface->format->Bmask, bgSurface->format->Amask);
 		}
 		SDL_RenderCopy(Screen::getInstance()->getRenderer(), getBackgroundTexture(), NULL, NULL);
-		if(!txPillSurface)
-			txPillSurface = SDL_CreateTextureFromSurface(Screen::getInstance()->getRenderer(), pillSurface);
-		SDL_RenderCopy(Screen::getInstance()->getRenderer(), txPillSurface, NULL, NULL);
-		//SDL_BlitSurface(bgSurface, NULL, pillSurface, NULL);
+		SDL_BlitSurface(bgSurface, NULL, pillSurface, NULL);
 		SDL_Rect dest;
 		for (int i = 0; i < Constants::NUMBER_PILLS; i++) {
 			if (!pillen[i].superpille) {
 				dest.x = (short int) pillen[i].x;
 				dest.y = (short int) pillen[i].y;
-				//SDL_BlitSurface(pille, NULL, pillSurface, &dest);
-				SDL_RenderCopy(Screen::getInstance()->getRenderer(), txPille, NULL, &dest);
+				dest.w = pille->w;
+				dest.h = pille->h;
+				SDL_BlitSurface(pille, NULL, pillSurface, &dest);
 			}
 		}
+		if(!txPillSurface)
+			txPillSurface = SDL_CreateTextureFromSurface(Screen::getInstance()->getRenderer(), pillSurface);
+		SDL_RenderCopy(Screen::getInstance()->getRenderer(), txPillSurface, NULL, NULL);
 	}
 }
 
 void Labyrinth::draw_pillen() {
 	//SDL_BlitSurface(pillSurface, NULL, Screen::getInstance()->getSurface(), NULL);
-	SDL_RenderCopy(Screen::getInstance()->getRenderer(), Screen::getInstance()->getTexture(), NULL, NULL);
+	//SDL_RenderCopy(Screen::getInstance()->getRenderer(), Screen::getInstance()->getTexture(), NULL, NULL);
 	SDL_RenderCopy(Screen::getInstance()->getRenderer(), txPillSurface, NULL, NULL);
 	SDL_Rect dest;
 	for (int i = 0; i < 4; i++) {
 		if (pillen[idxSuperpills[i]].sichtbar) {
 			dest.x = (short int) (pillen[idxSuperpills[i]].x - 4);
 			dest.y = (short int) (pillen[idxSuperpills[i]].y - 4);
+			dest.w = superpille->w;
+			dest.h = superpille->h;
 			//SDL_BlitSurface(superpille, NULL, Screen::getInstance()->getSurface(), &dest);
 			SDL_RenderCopy(Screen::getInstance()->getRenderer(), txSuperpille, NULL, &dest);
 

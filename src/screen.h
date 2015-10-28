@@ -84,10 +84,8 @@ class Screen {
 		int rect_num;
 		SDL_Surface *screen_surface;
 		SDL_Texture *txScreenSurface;
-		//SDL_Renderer *renderer;
 		bool sdlInitErrorOccured;
 		bool fullscreen;
-
 		static TTF_Font *smallFont, *font, *largeFont, *veryLargeFont, *hugeFont;
 };
 #endif

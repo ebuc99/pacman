@@ -217,7 +217,6 @@ SDL_Surface *Screen::loadImage(const char *filename, int transparentColor) {
 		printf("Unable to convert image to display format: %s\n", SDL_GetError());
 		exit(EXIT_FAILURE);
 	}
-	//return temp;
 	SDL_FreeSurface(temp);
 	return surface;
 }

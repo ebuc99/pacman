@@ -96,6 +96,12 @@ int Menu::eventloop() {
 				return 2;
 		}
 	}
+	// Redraw, when overlapped by foreign window
+	if(event.window.event == SDL_WINDOWEVENT_EXPOSED ||
+	   event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
+		Screen::getInstance()->addTotalUpdateRect();
+		Screen::getInstance()->Refresh();
+	}
 	return 0;
 }
 

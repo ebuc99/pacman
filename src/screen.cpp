@@ -62,7 +62,7 @@ Screen::Screen():
                                   SDL_WINDOWPOS_UNDEFINED,
                            		  Constants::WINDOW_WIDTH,
                            		  Constants::WINDOW_HEIGHT,
-                           		  SDL_WINDOW_RESIZABLE);
+                           		  0/*SDL_WINDOW_RESIZABLE*/);
 		screen_surface = SDL_GetWindowSurface(window);
 		if(screen_surface == 0) {
 			printf("Setting video mode failed: %s\n",SDL_GetError());
@@ -212,14 +212,14 @@ SDL_Surface *Screen::loadImage(const char *filename, int transparentColor) {
 	}
 	if (transparentColor != -1)
 		SDL_SetColorKey(temp, SDL_TRUE | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, (uint8_t)transparentColor, (uint8_t)transparentColor, (uint8_t)transparentColor));
-	surface = SDL_ConvertSurface(temp, temp->format, 0);
+	surface = SDL_ConvertSurface(temp,  Screen::getInstance()->getSurface()->format, 0);
 	if (surface == NULL) {
 		printf("Unable to convert image to display format: %s\n", SDL_GetError());
 		exit(EXIT_FAILURE);
 	}
-	return temp;
-	/*SDL_FreeSurface(temp);
-	return surface;*/
+	//return temp;
+	SDL_FreeSurface(temp);
+	return surface;
 }
 
 TTF_Font *Screen::loadFont(const char *filename, int ptSize) {

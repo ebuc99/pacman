@@ -137,15 +137,17 @@ void Screen::draw(SDL_Surface* graphic, int offset_x, int offset_y) {
 void Screen::setFullscreen(bool fs) {
     if (fs == fullscreen)
         return;  // the desired mode already has been activated, so do nothing
-    SDL_Surface* newScreen;
-	// here we must use the SDL 2 Fullscreen function
-	//newScreen = SDL_SetVideoMode(Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT, Constants::BITS_PER_PIXEL, fs ? (SDL_HWSURFACE | SDL_FULLSCREEN) : SDL_HWSURFACE);
-    if (NULL != newScreen) {  // successful? NULL indicates failure
-        screen_surface = newScreen;  // take it, but do not dispose of the old screen (says SDL documentation)
-        AddUpdateRects(0, 0, screen_surface->w, screen_surface->h);
-        // no Refresh() here, because at this moment nothing has been drawn to the new screen
-        fullscreen = fs;
-    }
+    if(fs)
+		SDL_SetWindowFullscreen(window, SDL_TRUE);
+	else
+		SDL_SetWindowFullscreen(window, SDL_FALSE);
+	//screen_surface = SDL_GetWindowSurface(window);
+	SDL_Surface* newScreen = SDL_GetWindowSurface(window);
+	if(newScreen) {
+		screen_surface = newScreen;
+		AddUpdateRects(0, 0, screen_surface->w, screen_surface->h);
+		fullscreen = fs;
+	}
 }
 
 void Screen::drawHorizontalLine(int x1, int x2, int y, Uint8 r, Uint8 g, Uint8 b) {

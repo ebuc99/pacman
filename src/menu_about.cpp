@@ -27,6 +27,7 @@ void MenuAbout::draw(bool updateAll) {
 }
 
 int MenuAbout::handleSelection() {
-	if(selection == BACK)
-		return 2;
+	/*if(selection == BACK)
+		return 2;*/
+	return selection == BACK ? 2 : 0;
 }

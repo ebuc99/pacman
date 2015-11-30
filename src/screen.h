@@ -5,6 +5,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
+#include "cmdline_options.h"
 #include "constants.h"
 #include "platform.h"
 
@@ -32,7 +33,7 @@ class Screen {
 		SDL_Surface* getSurface() {
 		    return screen_surface;
 		}
-		
+
 		// return the screen texture
 		SDL_Texture* getTexture() {
 			return txScreenSurface;

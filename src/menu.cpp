@@ -31,7 +31,7 @@ void Menu::drawMenuItems() {
 			menuItems.at(i)->setSelectMenuItem(false);
 		screen->draw(menuItems.at(i)->getCurrentMenuItem(), 320 - (menuItems.at(i)->getCurrentMenuItem()->w >> 1), (430 - (i)*vertical_pad) - (menuItems.at(i)->getCurrentMenuItem()->h >> 1));
 	}
-	screen->AddUpdateRects(0, (430 - (i)*vertical_pad), 
+	screen->AddUpdateRects(0, (430 - (i)*vertical_pad),
 	                       Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT-(430 - (i)*vertical_pad));
 }
 
@@ -66,12 +66,14 @@ int Menu::eventloop() {
 					menuItemDown();
 				else if(event.key.keysym.sym == SDLK_f) {
 					screen->toggleFullscreen();
+					updateMenuItemNames();
 					this->draw();
 				}
-				/*else if(event.key.keysym.sym == SDLK_s) {
-					labyrinth->getSounds()->toggleEnabled();
+				else if(event.key.keysym.sym == SDLK_s) {
+					Sounds::getInstance()->toggleEnabled();
+					updateMenuItemNames();
 					this->draw();
-				}*/
+				}
 				else if((event.key.keysym.sym == SDLK_q)||(event.key.keysym.sym == SDLK_ESCAPE))
 					return 2;
 				break;
@@ -85,9 +87,9 @@ int Menu::eventloop() {
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.button.button == SDL_BUTTON_LEFT) {
-					if(menuItems.at(selection)->getXPosition() <= event.motion.x && 
-					   event.motion.x <= menuItems.at(selection)->getXPosition()+menuItems.at(selection)->getCurrentMenuItem()->w && 
-					   menuItems.at(selection)->getYPosition() <= event.motion.y && 
+					if(menuItems.at(selection)->getXPosition() <= event.motion.x &&
+					   event.motion.x <= menuItems.at(selection)->getXPosition()+menuItems.at(selection)->getCurrentMenuItem()->w &&
+					   menuItems.at(selection)->getYPosition() <= event.motion.y &&
 					   event.motion.y <= menuItems.at(selection)->getYPosition()+menuItems.at(selection)->getCurrentMenuItem()->h)
 						return handleSelection();
 			}
@@ -106,12 +108,12 @@ int Menu::eventloop() {
 }
 
 void Menu::menuItemDown() {
-	selection = (--selection + menuItems.size()) % menuItems.size();
+	selection = (selection - 1 + menuItems.size()) % menuItems.size();
 	draw(false);
 }
 
 void Menu::menuItemUp() {
-	selection = ++selection % menuItems.size();
+	selection = (selection + 1) % menuItems.size();
 	draw(false);
 }
 
@@ -121,7 +123,9 @@ void Menu::menuItemSelect(int selection) {
 }
 
 MenuItem* Menu::getSelectedMenuItem() {
-	return menuItems.at(selection);	
+	return menuItems.at(selection);
 }
 
 int Menu::handleSelection() {}
+
+void Menu::updateMenuItemNames() {}

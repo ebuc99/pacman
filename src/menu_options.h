@@ -11,7 +11,8 @@ class MenuOptions : public Menu {
 	private:
 		enum Entries {BACK, FULLSCREEN, SOUND};
 		void setMenuSelections();
-		int handleSelection();	
+		int handleSelection();
+		void updateMenuItemNames();
 };
 
 #endif

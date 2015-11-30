@@ -44,7 +44,7 @@ void Screen::cleanUpInstance() {
 
 Screen::Screen():
 	sdlInitErrorOccured(false),
-	fullscreen(false),
+	fullscreen(CommandLineOptions::exists("f","fullscreen")),
 	rect_num(0)
 {
 	// initialize SDL
@@ -57,12 +57,12 @@ Screen::Screen():
         sdlInitErrorOccured = true;
 	}
 	if (!sdlInitErrorOccured) {
-		window = SDL_CreateWindow("Pacman", 
+		window = SDL_CreateWindow("Pacman",
 								  SDL_WINDOWPOS_UNDEFINED,
                                   SDL_WINDOWPOS_UNDEFINED,
                            		  Constants::WINDOW_WIDTH,
                            		  Constants::WINDOW_HEIGHT,
-                           		  0/*SDL_WINDOW_RESIZABLE*/);
+                           		  fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
 		screen_surface = SDL_GetWindowSurface(window);
 		if(screen_surface == 0) {
 			printf("Setting video mode failed: %s\n",SDL_GetError());
@@ -137,16 +137,25 @@ void Screen::draw(SDL_Surface* graphic, int offset_x, int offset_y) {
 void Screen::setFullscreen(bool fs) {
     if (fs == fullscreen)
         return;  // the desired mode already has been activated, so do nothing
+	SDL_SetWindowSize(window, Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
+	SDL_SetWindowPosition(window, 0, 0);
     if(fs)
-		SDL_SetWindowFullscreen(window, SDL_TRUE);
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 	else
-		SDL_SetWindowFullscreen(window, SDL_FALSE);
-	//screen_surface = SDL_GetWindowSurface(window);
+		SDL_SetWindowFullscreen(window, 0);
+	SDL_SetWindowSize(window, Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
+	SDL_SetWindowPosition(window, 0, 0);
 	SDL_Surface* newScreen = SDL_GetWindowSurface(window);
 	if(newScreen) {
 		screen_surface = newScreen;
 		AddUpdateRects(0, 0, screen_surface->w, screen_surface->h);
 		fullscreen = fs;
+	} else {
+		if (fs) {
+			printf("Switching to fullscreen mode failed: %s\n",SDL_GetError());
+		} else {
+			printf("Switching from fullscreen mode failed: %s\n",SDL_GetError());
+		}
 	}
 }
 

@@ -4,6 +4,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <vector>
 #include "menu_item.h"
+#include "sounds.h"
 
 using namespace std;
 
@@ -28,5 +29,6 @@ class Menu {
 		virtual int eventloop();
 		void drawMenuItems();
 		virtual int handleSelection();
+		virtual void updateMenuItemNames();
 };
 #endif

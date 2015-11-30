@@ -13,6 +13,8 @@ AM_CFLAGS =\
 
 
 pacman_SOURCES =  \
+	cmdline_options.cpp \
+	cmdline_options.h \
 	constants.cpp \
 	constants.h \
 	figur.cpp \
@@ -74,7 +76,7 @@ pacman_LDADD =  \
 	$(SDL2_LIBS) \
 	-lSDL2_mixer \
 	-L/usr/lib64 -lSDL2 -lpthread
-	
+
 
 
 pacmanEXTRA_DIST = libsdl \

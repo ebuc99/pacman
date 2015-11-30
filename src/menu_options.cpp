@@ -26,7 +26,7 @@ int MenuOptions::handleSelection() {
 		screen->toggleFullscreen();
 	else if(selection == SOUND)
 		Sounds::getInstance()->toggleEnabled();
-	menuItems.at(selection)->toggleMenuItem();
+	updateMenuItemNames();
 	this->draw();
 	return 0;
 }
@@ -39,6 +39,11 @@ void MenuOptions::setMenuSelections() {
 
 	if(screen->isFullscreen())
 		menuItems.at(FULLSCREEN)->setMenuItemAlt(true);
-	else 
+	else
 		menuItems.at(FULLSCREEN)->setMenuItemAlt(false);
+}
+
+void MenuOptions::updateMenuItemNames() {
+	menuItems.at(FULLSCREEN)->setMenuItemAlt(Screen::getInstance()->isFullscreen());
+	menuItems.at(SOUND)->setMenuItemAlt(!Sounds::getInstance()->isEnabled());
 }

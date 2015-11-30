@@ -21,7 +21,7 @@ Sounds::Sounds():
 	channel_munch(-1),
 	munch_toggle(true),
 	audioAvailable(true),
-	enabled(true),
+	enabled(!CommandLineOptions::exists("s","nosound")),
 	musicPlaying(NONE)
 {
 	int audio_rate = 44100;

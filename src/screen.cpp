@@ -253,7 +253,7 @@ SDL_Surface *Screen::getTextSurface(TTF_Font *font, const char *text, SDL_Color 
 }
 
 void Screen::clear() {
-	SDL_Rect rect {0, 0, screen_surface->w, screen_surface->h};
+	SDL_Rect rect = {0, 0, screen_surface->w, screen_surface->h};
 	fillRect(&rect, 0, 0, 0);
 }
 

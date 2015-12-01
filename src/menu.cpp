@@ -8,7 +8,7 @@ Menu::Menu(const char* title):
 }
 Menu::~Menu() {
 	SDL_FreeSurface(menuTitle);
-	for(int i = 0; i < menuItems.size(); ++i)
+	for(unsigned int i = 0; i < menuItems.size(); ++i)
 		delete menuItems.at(i);
 }
 
@@ -23,7 +23,7 @@ void Menu::draw(bool updateAll) {
 
 void Menu::drawMenuItems() {
 	const int vertical_pad = 35;
-	int i;
+	unsigned int i;
 	for(i = 0; i < menuItems.size(); ++i) {
 		if(selection == i)
 			menuItems.at(i)->setSelectMenuItem(true);
@@ -40,6 +40,7 @@ int Menu::show() {
 	int event;
 	while(!(event = eventloop()))
 		SDL_Delay(MIN_FRAME_DURATION);
+	return event;
 }
 
 void Menu::drawTitle() {
@@ -50,7 +51,7 @@ void Menu::drawTitle() {
 void Menu::addMenuItem(const char* menuItem, const char* menuItemAlt) {
 	menuItems.push_back(new MenuItem(menuItem, menuItemAlt));
 	menuItems.back()->setXPosition(320 -  (menuItems.back()->getCurrentMenuItem()->w >> 1));
-	menuItems.back()->setYPosition(430 - ((menuItems.size()-1)*35) - (menuItems.back()->getCurrentMenuItem()->h >> 1));
+	menuItems.back()->setYPosition(430 - (((int)menuItems.size()-1)*35) - (menuItems.back()->getCurrentMenuItem()->h >> 1));
 }
 
 int Menu::eventloop() {
@@ -78,7 +79,7 @@ int Menu::eventloop() {
 					return 2;
 				break;
 		case SDL_MOUSEMOTION:
-			for(int i = 0; i < menuItems.size(); ++i) {
+			for(unsigned int i = 0; i < menuItems.size(); ++i) {
 				if(menuItems.at(i)->getXPosition() <= event.motion.x && event.motion.x <= menuItems.at(i)->getXPosition()+menuItems.at(i)->getCurrentMenuItem()->w && menuItems.at(i)->getYPosition() <= event.motion.y && event.motion.y <= menuItems.at(i)->getYPosition()+menuItems.at(i)->getCurrentMenuItem()->h) {
 					menuItemSelect(i);
 					break;
@@ -108,12 +109,12 @@ int Menu::eventloop() {
 }
 
 void Menu::menuItemDown() {
-	selection = (selection - 1 + menuItems.size()) % menuItems.size();
+	selection = (selection - 1 + (unsigned int)menuItems.size()) % (unsigned int)menuItems.size();
 	draw(false);
 }
 
 void Menu::menuItemUp() {
-	selection = (selection + 1) % menuItems.size();
+	selection = (selection + 1) % (unsigned int)menuItems.size();
 	draw(false);
 }
 
@@ -126,6 +127,8 @@ MenuItem* Menu::getSelectedMenuItem() {
 	return menuItems.at(selection);
 }
 
-int Menu::handleSelection() {}
+int Menu::handleSelection() {
+	return 0;
+}
 
 void Menu::updateMenuItemNames() {}

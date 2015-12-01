@@ -99,7 +99,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_pacman_OBJECTS = pacman-constants.$(OBJEXT) pacman-figur.$(OBJEXT) \
+am_pacman_OBJECTS = pacman-cmdline_options.$(OBJEXT) \
+	pacman-constants.$(OBJEXT) pacman-figur.$(OBJEXT) \
 	pacman-game.$(OBJEXT) pacman-ghost_figur.$(OBJEXT) \
 	pacman-pacman.$(OBJEXT) pacman-pacman_figur.$(OBJEXT) \
 	pacman-pille.$(OBJEXT) pacman-labyrinth.$(OBJEXT) \
@@ -294,6 +295,8 @@ AM_CFLAGS = \
 	 -g
 
 pacman_SOURCES = \
+	cmdline_options.cpp \
+	cmdline_options.h \
 	constants.cpp \
 	constants.h \
 	figur.cpp \
@@ -446,6 +449,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-cmdline_options.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-constants.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-figur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-funny_animation.Po@am__quote@
@@ -478,6 +482,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+pacman-cmdline_options.o: cmdline_options.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-cmdline_options.o -MD -MP -MF $(DEPDIR)/pacman-cmdline_options.Tpo -c -o pacman-cmdline_options.o `test -f 'cmdline_options.cpp' || echo '$(srcdir)/'`cmdline_options.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-cmdline_options.Tpo $(DEPDIR)/pacman-cmdline_options.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='cmdline_options.cpp' object='pacman-cmdline_options.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-cmdline_options.o `test -f 'cmdline_options.cpp' || echo '$(srcdir)/'`cmdline_options.cpp
+
+pacman-cmdline_options.obj: cmdline_options.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-cmdline_options.obj -MD -MP -MF $(DEPDIR)/pacman-cmdline_options.Tpo -c -o pacman-cmdline_options.obj `if test -f 'cmdline_options.cpp'; then $(CYGPATH_W) 'cmdline_options.cpp'; else $(CYGPATH_W) '$(srcdir)/cmdline_options.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-cmdline_options.Tpo $(DEPDIR)/pacman-cmdline_options.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='cmdline_options.cpp' object='pacman-cmdline_options.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-cmdline_options.obj `if test -f 'cmdline_options.cpp'; then $(CYGPATH_W) 'cmdline_options.cpp'; else $(CYGPATH_W) '$(srcdir)/cmdline_options.cpp'; fi`
 
 pacman-constants.o: constants.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-constants.o -MD -MP -MF $(DEPDIR)/pacman-constants.Tpo -c -o pacman-constants.o `test -f 'constants.cpp' || echo '$(srcdir)/'`constants.cpp

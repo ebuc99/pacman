@@ -22,7 +22,7 @@ class Menu {
 		MenuItem* getSelectedMenuItem();
 	protected:
 		static const int MIN_FRAME_DURATION = 30;
-		int selection;
+		unsigned int selection;
 		vector<MenuItem*> menuItems;
 		Screen *screen;
 		SDL_Surface *menuTitle;

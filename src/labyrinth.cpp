@@ -31,6 +31,7 @@ Labyrinth::Labyrinth():
 	fruit(NULL),
 	pillSurface(NULL),
 	bgSurface(NULL),
+	levelNumber(NULL),
 	level(1){
 	// horizontal rails, row by row, from left to right
 	s0  = new Rail(138,  37, 207,  37);

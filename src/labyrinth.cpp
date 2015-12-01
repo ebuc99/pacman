@@ -31,6 +31,7 @@ Labyrinth::Labyrinth():
 	fruit(NULL),
 	pillSurface(NULL),
 	bgSurface(NULL),
+	levelNumber(NULL),
 	level(1){
 	// horizontal rails, row by row, from left to right
 	s0  = new Rail(138,  37, 207,  37);
@@ -323,6 +324,10 @@ void Labyrinth::drawScoreValue() {
 	Screen::getInstance()->draw_dynamic_content(score, Constants::SCORE_X, Constants::SCORE_VALUE_Y);
 }
 
+void Labyrinth::drawLevelNumber() {
+	Screen::getInstance()->draw_dynamic_content(levelNumber, Constants::LEVEL_X, Constants::LEVEL_NUMBER_Y);
+}
+
 void Labyrinth::increaseBonusStage() {
 	if (bonus_stage < 1600)
 		bonus_stage <<= 1;  // bit shifting is faster than bonus_stage *= 2;
@@ -430,13 +435,18 @@ void Labyrinth::resetLevel(int level) {
 	draw_pillen();  // including background
 	loadLevelFruit();
 	startFruitRandomizer(true);
+	char charLevel[20];
 	if (this->level == 1) {
 		setInitText("Get Ready!");
 	} else {
-		char charLevel[20];
 		sprintf(charLevel, "Level %d", this->level);
 		setInitText(charLevel);
 	}
+	if (levelNumber)
+		SDL_FreeSurface(levelNumber);
+	sprintf(charLevel, "%d", this->level);
+	levelNumber = Screen::getTextSurface(Screen::getVeryLargeFont(), charLevel, Constants::WHITE_COLOR);
+	drawLevelNumber();
 	Screen::getInstance()->addTotalUpdateRect();
 	Screen::getInstance()->Refresh();
 }
@@ -481,8 +491,8 @@ void Labyrinth::loadLevelFruit() {
 			setFruitBonus(5000);
 			infoFruit = Screen::loadImage("gfx/key.png", 255);
 	};
-	drawInfoFruit();
-	Screen::getInstance()->AddUpdateRects(Constants::INFO_FRUIT_X, Constants::INFO_FRUIT_Y, infoFruit->w, infoFruit->h);
+	cnt_displayed_fruits = 0;
+	drawInfoFruits();
 }
 
 void Labyrinth::startFruitRandomizer(int new_level) {
@@ -505,6 +515,7 @@ void Labyrinth::checkFruit(int ms) {
 			fruit = infoFruit;
 			fruit_display_time = 10000;
 			++cnt_displayed_fruits;
+			drawInfoFruits();
 		}
 	}
 }
@@ -541,9 +552,12 @@ void Labyrinth::drawFruit() {
 		Screen::getInstance()->draw_dynamic_content(fruit, Constants::FRUIT_X, Constants::FRUIT_Y);
 }
 
-void Labyrinth::drawInfoFruit() {
-	if (infoFruit)
-		Screen::getInstance()->draw(infoFruit, Constants::INFO_FRUIT_X, Constants::INFO_FRUIT_Y);
+void Labyrinth::drawInfoFruits() {
+	if (infoFruit) {
+		for (int i = 0; i < 2-cnt_displayed_fruits; ++i)
+			Screen::getInstance()->draw(infoFruit, Constants::INFO_FRUITS_X+i*(infoFruit->w+Constants::INFO_FRUITS_DISTANCE), Constants::INFO_FRUITS_Y);
+		Screen::getInstance()->AddUpdateRects(Constants::INFO_FRUITS_X, Constants::INFO_FRUITS_Y, 2*infoFruit->w + Constants::INFO_FRUITS_DISTANCE, infoFruit->h);
+	}
 }
 
 void Labyrinth::getRailsForPoint(int x, int y, int *left, int *right, int *up, int *down) {

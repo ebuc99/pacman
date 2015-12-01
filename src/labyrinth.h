@@ -28,6 +28,7 @@ class Labyrinth {
 		void pill_animation();
 
 		void drawScoreValue();
+		void drawLevelNumber();
 
 		Pille pillen[Constants::NUMBER_PILLS];  // TODO: hide (currently used within Pacman::check_eat_pills)
 		Rail *array_rails[Constants::NUMBER_RAILS];  // TODO: hide (currently used within Pacman::move and Pacman::check_eat_pills)
@@ -79,8 +80,8 @@ class Labyrinth {
 		int getFruitBonus() const;
 		// draws the fruit, if it is displayed
 		void drawFruit();
-		// draw fruit in info area
-		void drawInfoFruit();
+		// draw fruits in info area
+		void drawInfoFruits();
 
 		// deprecated (use Sounds::getInstance() instead)
 		Sounds* getSounds();  // TODO: eliminate after eliminating all references
@@ -115,7 +116,7 @@ class Labyrinth {
 		SDL_Surface *pille, *superpille, *ar_superpille[5];
 		int punktestand, lastPunktestand;
 		int bonus_stage;  // 200, 400, 800, 1600 (increases for each eaten ghost)
-		SDL_Surface *smallScore, *initText, *score, *infoFruit, *fruit, *pillSurface, *bgSurface;
+		SDL_Surface *smallScore, *initText, *score, *infoFruit, *fruit, *pillSurface, *bgSurface, *levelNumber;
 		int smallScore_x, smallScore_y;
 		int cnt_pills;
 		int level;

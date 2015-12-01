@@ -25,12 +25,17 @@ Game::Game():
 	cnt_hunting_mode(-1)
 {
 	scoreLabel = Screen::getTextSurface(Screen::getFont(), "Score", Constants::WHITE_COLOR);
+	levelLabel = Screen::getTextSurface(Screen::getFont(), "Level", Constants::WHITE_COLOR);
 }
 
 Game::~Game() {
 	if (scoreLabel) {
 		SDL_FreeSurface(scoreLabel);
 		scoreLabel = NULL;
+	}
+	if (levelLabel) {
+		SDL_FreeSurface(levelLabel);
+		levelLabel = NULL;
 	}
 }
 
@@ -55,6 +60,7 @@ void Game::init() {
 
 	currentScore = Labyrinth::getInstance()->getScore();
 	Screen::getInstance()->draw(scoreLabel, Constants::SCORE_X, Constants::SCORE_Y);
+	Screen::getInstance()->draw(levelLabel, Constants::LEVEL_X, Constants::LEVEL_Y);
 	Screen::getInstance()->addTotalUpdateRect();
 	Screen::getInstance()->Refresh();
 	currentTicks     = SDL_GetTicks();
@@ -341,8 +347,10 @@ void Game::checkedRedraw() {
 		// information area: score, lives, the level's fruit
 		Labyrinth::getInstance()->drawScoreValue();
 		Screen::getInstance()->draw_dynamic_content(scoreLabel, Constants::SCORE_X, Constants::SCORE_Y);
+		Labyrinth::getInstance()->drawLevelNumber();
+		Screen::getInstance()->draw_dynamic_content(levelLabel, Constants::LEVEL_X, Constants::LEVEL_Y);
 		Pacman::getInstance()->drawLives();
-		Labyrinth::getInstance()->drawInfoFruit();
+		Labyrinth::getInstance()->drawInfoFruits();
 		// bring it to the screen, really
 		Screen::getInstance()->Refresh();
 	}

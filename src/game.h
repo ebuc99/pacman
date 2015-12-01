@@ -65,7 +65,7 @@ class Game {
 		void checkedRedraw();
 		void checkGameOver();
 
-		SDL_Surface *scoreLabel;
+		SDL_Surface *scoreLabel, *levelLabel;
 };
 
 #endif

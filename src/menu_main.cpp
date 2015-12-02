@@ -9,9 +9,10 @@ MenuMain* MenuMain::getInstance() {
 }
 
 void MenuMain::cleanUpInstance() {
-	if(instance)
+	/*if(instance) {
 		delete instance;
-	instance = NULL;
+		instance = NULL;
+	}*/
 }
 MenuMain::MenuMain() {
 		appTitle1 = TTF_RenderText_Solid(Screen::getHugeFont(), "Pa", Constants::WHITE_COLOR);

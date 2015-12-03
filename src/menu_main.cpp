@@ -9,12 +9,13 @@ MenuMain* MenuMain::getInstance() {
 }
 
 void MenuMain::cleanUpInstance() {
-	/*if(instance) {
+	if(instance) {
 		delete instance;
 		instance = NULL;
-	}*/
+	}
 }
 MenuMain::MenuMain() {
+		this->menuTitle = NULL;
 		appTitle1 = TTF_RenderText_Solid(Screen::getHugeFont(), "Pa", Constants::WHITE_COLOR);
 		appTitle2 = TTF_RenderText_Solid(Screen::getHugeFont(), "man", Constants::WHITE_COLOR);
 		titlePacman = Screen::loadImage("gfx/title_pacman.png", 0);

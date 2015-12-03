@@ -19,7 +19,7 @@ MenuMain::MenuMain() {
 		appTitle1 = TTF_RenderText_Solid(Screen::getHugeFont(), "Pa", Constants::WHITE_COLOR);
 		appTitle2 = TTF_RenderText_Solid(Screen::getHugeFont(), "man", Constants::WHITE_COLOR);
 		titlePacman = Screen::loadImage("gfx/title_pacman.png", 0);
-		version = TTF_RenderText_Solid(Screen::getSmallFont(), "version 0.7.6", Constants::GRAY_COLOR);
+		version = TTF_RenderText_Solid(Screen::getSmallFont(), "version 0.8.0", Constants::GRAY_COLOR);
 		this->addMenuItem("back");
 		this->addMenuItem("About");
 		this->addMenuItem("Options");

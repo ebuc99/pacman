@@ -1,16 +1,8 @@
 new features to be implemented:
-- command line parameters
-  - initially use fullscreen mode
-  - initially switch sound off
-  - help (which prints the usage info to stdout, and quits the application afterwards)
-- switch sound on/off ingame (button [S] ?), shortcut key can also be used within the menu - similar to [F] (toggle fullscreen mode)
-- show level number somewhere
-- show the remaining fruits to come for the current level
+...
 
 necessary bug fixes:
-- When Pacman changes direction (especially within the last main menu animation), he seems to move backwards for a short time.
-- When the last pill is eaten, the background will not be redrawn - causing the score number to be painted over, and the last pill does not disappear even though it was eaten.
-- When a submenu (e.g. about) is selected, and the current animation displays a text, the text won't be redrawn when the user returns to the main menu and the animation continues.
+...
 
 in general:
 - the great refactoring

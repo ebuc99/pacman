@@ -13,11 +13,12 @@ One of the main goals of this implementation is an SDL application with a very l
 ## Install hint ##
 
 You have to compile the Linux version on your own. For this, you'll need
-* libsdl
-* sdl-image
-* sdl-ttf
-* and sdl-mixer.
+* libsdl2
+* sdl2-image
+* sdl2-ttf
+* and sdl2-mixer.
 
+(make sure to take the devel packages) 
 Then, download and extract the zip file or clone the pacman repository.
 Inside the pacman directory, run
 ```

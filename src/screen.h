@@ -29,6 +29,8 @@ class Screen {
 
 		void draw_dynamic_content(SDL_Surface *surface, int x, int y);
 
+		SDL_Window* getWindow() { return window; };
+
 		// return the screen surface pointer
 		SDL_Surface* getSurface() {
 		    return screen_surface;

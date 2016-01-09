@@ -15,6 +15,9 @@ void MenuMain::cleanUpInstance() {
 	}
 }
 MenuMain::MenuMain() {
+		SDL_Surface *icon = Screen::loadImage("gfx/pacman_desktop.png", 0);
+		SDL_SetWindowIcon(Screen::getInstance()->getWindow(), icon);
+		SDL_FreeSurface(icon);
 		this->menuTitle = NULL;
 		appTitle1 = TTF_RenderText_Solid(Screen::getHugeFont(), "Pa", Constants::WHITE_COLOR);
 		appTitle2 = TTF_RenderText_Solid(Screen::getHugeFont(), "man", Constants::WHITE_COLOR);

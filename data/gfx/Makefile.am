@@ -52,4 +52,5 @@ dist_datadir_gfx_DATA = augen_0.png \
 	pear.png \
 	key.png \
 	pacman_die_10.png \
-	title_pacman.png
+	title_pacman.png \
+	pacman_desktop.png

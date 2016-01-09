@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Pacman (SDL)
+Comment=Yet another pacman clone in C/C++ and SDL
+Exec=pacman
+Icon=/usr/local/share/pacman/gfx/pacman_desktop.png
+Type=Application
+Categories=Game;ArcadeGame;

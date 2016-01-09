@@ -12,6 +12,10 @@ dist_doc_DATA = \
 	NEWS \
 	TODO
 
+## Desktop DIR
+desktopdir = $(datadir)/applications
+desktop_in_files = pacman.desktop.in
+desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 INTLTOOL_FILES = intltool-extract.in \
 	intltool-merge.in \

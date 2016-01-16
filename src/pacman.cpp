@@ -1,11 +1,11 @@
 #include "pacman.h"
-
+#include "config.h"
 int main(int argc, char *argv[]) {
 	srand((unsigned int)time(0)); // init randomize
 
 	CommandLineOptions::set(argc, argv);
 	if (CommandLineOptions::exists("h", "help")) {
-		std::cout << "This game is a Pacman clone."                             << std::endl
+		std::cout << "This game is a Pacman clone (version " << VERSION << ")."                             << std::endl
 		          << "Usage: pacman [options]"                                  << std::endl
 		          << std::endl
 		          << "Options:"                                                 << std::endl
@@ -13,6 +13,10 @@ int main(int argc, char *argv[]) {
 		          << "  -f, --fullscreen   Start the game in fullscreen mode."  << std::endl
 		          << "  -s, --nosound      Start with sound switched off."      << std::endl
 		          << std::endl;
+		return EXIT_SUCCESS;
+	}
+	else if (CommandLineOptions::exists("v", "version")) {
+		std::cout << "pacman version " << VERSION << std::endl;
 		return EXIT_SUCCESS;
 	}
 

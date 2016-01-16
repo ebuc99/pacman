@@ -1,4 +1,5 @@
 #include "menu_main.h"
+#include "config.h"
 
 MenuMain* MenuMain::instance = NULL;
 
@@ -22,7 +23,9 @@ MenuMain::MenuMain() {
 		appTitle1 = TTF_RenderText_Solid(Screen::getHugeFont(), "Pa", Constants::WHITE_COLOR);
 		appTitle2 = TTF_RenderText_Solid(Screen::getHugeFont(), "man", Constants::WHITE_COLOR);
 		titlePacman = Screen::loadImage("gfx/title_pacman.png", 0);
-		version = TTF_RenderText_Solid(Screen::getSmallFont(), "version 0.8.2", Constants::GRAY_COLOR);
+		std::string str_version = "version ";
+		str_version.append(VERSION);
+		version = TTF_RenderText_Solid(Screen::getSmallFont(), str_version.c_str(), Constants::GRAY_COLOR);
 		this->addMenuItem("Quit");
 		this->addMenuItem("About");
 		this->addMenuItem("Options");

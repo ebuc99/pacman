@@ -355,6 +355,7 @@ DISTCLEANFILES = intltool-extract \
 	intltool-update \
 	po/.intltool-merge-cache
 
+UPDATE_DESKTOP = update-desktop-database -q || :
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -805,7 +806,8 @@ info: info-recursive
 info-am:
 
 install-data-am: install-desktopDATA install-dist_docDATA
-
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 install-dvi: install-dvi-recursive
 
 install-dvi-am:
@@ -852,8 +854,10 @@ ps-am:
 
 uninstall-am: uninstall-desktopDATA uninstall-dist_docDATA \
 	uninstall-local
-
-.MAKE: $(am__recursive_targets) all install-am install-strip
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
+.MAKE: $(am__recursive_targets) all install-am install-data-am \
+	install-strip uninstall-am
 
 .PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am \
 	am--refresh check check-am clean clean-cscope clean-generic \
@@ -862,15 +866,16 @@ uninstall-am: uninstall-desktopDATA uninstall-dist_docDATA \
 	distcheck distclean distclean-generic distclean-hdr \
 	distclean-tags distcleancheck distdir distuninstallcheck dvi \
 	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-desktopDATA \
-	install-dist_docDATA install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
-	pdf-am ps ps-am tags tags-am uninstall uninstall-am \
-	uninstall-desktopDATA uninstall-dist_docDATA uninstall-local
+	install-data install-data-am install-data-hook \
+	install-desktopDATA install-dist_docDATA install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	installdirs-am maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-generic pdf pdf-am ps ps-am tags \
+	tags-am uninstall uninstall-am uninstall-desktopDATA \
+	uninstall-dist_docDATA uninstall-hook uninstall-local
 
 .PRECIOUS: Makefile
 
@@ -878,6 +883,11 @@ uninstall-am: uninstall-desktopDATA uninstall-dist_docDATA \
 # Remove doc directory on uninstall
 uninstall-local:
 	-rm -r $(docdir)
+
+install-data-hook:
+	$(UPDATE_DESKTOP)
+uninstall-hook:
+	$(UPDATE_DESKTOP)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

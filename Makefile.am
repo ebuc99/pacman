@@ -34,3 +34,10 @@ DISTCLEANFILES = intltool-extract \
 # Remove doc directory on uninstall
 uninstall-local:
 	-rm -r $(docdir)
+
+UPDATE_DESKTOP = update-desktop-database -q || :
+
+install-data-hook:
+	$(UPDATE_DESKTOP)
+uninstall-hook:
+	$(UPDATE_DESKTOP)

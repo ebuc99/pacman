@@ -25,8 +25,8 @@ class Constants {
 		static const int INITIAL_LIVES                = 3;     // number of times the player must die to get the "game over"
 		static const int PACMAN_INITIAL_X             = 310;   // starting position of Pacman
 		static const int PACMAN_INITIAL_Y             = 339;
-		static const int PACMAN_V_FAST                = 100;   // pacman's speed when not eating
-		static const int PACMAN_V_SLOW                = 90;    // pacman's speed while eating
+		static const int PACMAN_V_FAST                = 120;   // pacman's speed when not eating
+		static const int PACMAN_V_SLOW                = 100;    // pacman's speed while eating
 		static const uint16_t PACMAN_WECHSEL_RATE     = 7;     // load a new image for pacman after a movement of this number of pixels
 		static const int BLINKY_INITIAL_X             = 310;   // starting positions of the ghosts
 		static const int BLINKY_INITIAL_Y             = 174;
@@ -37,8 +37,8 @@ class Constants {
 		static const int CLYDE_INITIAL_X              = 340;
 		static const int CLYDE_INITIAL_Y              = 222;
 		static const int TOTAL_NUM_GHOSTS             = 4;     // total number of ghosts in the game
-		static const int GHOSTS_V_NORMAL              = 90;    // normal speed of the ghosts
-		static const int GHOSTS_V_SLOW                = 50;    // speed at hunting mode
+		static const int GHOSTS_V_NORMAL              = 100;    // normal speed of the ghosts
+		static const int GHOSTS_V_SLOW                = 60;    // speed at hunting mode
 		static const int NUMBER_RAILS                 = 91;    // number of rails
 		static const int NUMBER_RAILS_PILLS           = 69;    // number of pill-filled rails
 		static const int NUMBER_PILLS                 = 246;   // number of pills

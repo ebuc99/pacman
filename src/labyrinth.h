@@ -67,6 +67,7 @@ class Labyrinth {
 		void resetAllFigures();
 		void nextLevel();
 		void resetLevel(int level = 0);
+		int getLevel() { return level; };
 
 		// Check whether enough pills have been eaten to display the next fruit.
 		// If the fruit is displayed, decrement it's display time, and hide it

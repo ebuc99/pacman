@@ -37,6 +37,7 @@ class Constants {
 		static const int CLYDE_INITIAL_X              = 340;
 		static const int CLYDE_INITIAL_Y              = 222;
 		static const int TOTAL_NUM_GHOSTS             = 4;     // total number of ghosts in the game
+		static const int GHOSTS_V_FAST                = 120;    // fast speed of the ghosts
 		static const int GHOSTS_V_NORMAL              = 100;    // normal speed of the ghosts
 		static const int GHOSTS_V_SLOW                = 60;    // speed at hunting mode
 		static const int NUMBER_RAILS                 = 91;    // number of rails

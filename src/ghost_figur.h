@@ -8,8 +8,9 @@
 #include "pacman_figur.h"
 #include "rail.h"
 #include <time.h>
+#include "labyrinth_observer.h"
 
-class Ghost : public Figur {
+class Ghost : public Figur, public LabyrinthObserver {
 	public:
 		static Ghost **getGhostArray();
 		static void cleanUpGhostArray();
@@ -72,7 +73,8 @@ class Ghost : public Figur {
 		//void setGhostArray(Ghost **ghost_array);
 
 		Ghosts getGhostIdent() const;
-
+		
+		void setPanicMode(int set);
 	protected:
 		/* constructor and destructor */
 		Ghost(int init_x, int init_y, int init_intelligence,
@@ -95,6 +97,7 @@ class Ghost : public Figur {
 		SDL_Surface *escape_1, *escape_2, *escape_white_1, *escape_white_2;
 		int idxCurrentRail;
 		static Ghost **ghostArray;
+		int panicMode;
 };
 
 class Blinky : public Ghost {

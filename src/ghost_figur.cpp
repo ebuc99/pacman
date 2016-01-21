@@ -12,6 +12,10 @@ Ghost **Ghost::getGhostArray() {
 		ghostArray[1] = Pinky::getInstance();
 		ghostArray[2] = Inky::getInstance();
 		ghostArray[3] = Clyde::getInstance();
+		Labyrinth::getInstance()->setLabyrinthObserver(Blinky::getInstance());
+		Labyrinth::getInstance()->setLabyrinthObserver(Pinky::getInstance());
+		Labyrinth::getInstance()->setLabyrinthObserver(Inky::getInstance());
+		Labyrinth::getInstance()->setLabyrinthObserver(Clyde::getInstance());
 	}
 	return ghostArray;
 }
@@ -34,7 +38,8 @@ Ghost::Ghost(int init_x, int init_y, int init_intelligence,
 	initial_direction(init_direction),
 	initial_up_down(init_up_down),
 	ghost_ident(ghost_ident),
-	idxCurrentRail(-1)  // should first be determined
+	idxCurrentRail(-1),  // should first be determined
+	panicMode(0)
 {
 	direction = init_direction;
 	intelligence = init_intelligence;
@@ -132,8 +137,7 @@ void Ghost::set_leader() {
 			getGhostArray()[i]->set_leader(true);
 		else
 			getGhostArray()[i]->set_leader(false);
-	}
-}
+	}}
 
 void Ghost::move_dir(int ms, int direction, int max_links, int max_oben, int max_rechts, int max_unten) {
 	if(direction == LEFT)
@@ -402,7 +406,7 @@ void Ghost::set_hunter(Hunter hunter) {
 		ar_ghost[0] = escape_1;
 		ar_ghost[1] = escape_2;
 	} else {
-		this->set_speed(Constants::GHOSTS_V_NORMAL);
+		this->set_speed(panicMode ? Constants::GHOSTS_V_FAST : Constants::GHOSTS_V_NORMAL);
 		ar_ghost[0] = ghost_1;
 		ar_ghost[1] = ghost_2;
 	}
@@ -414,7 +418,7 @@ bool Ghost::touched() {
 	if(get_hunter() == PACMAN) {
 		// ghost has been eaten by pacman
 		hunter = NONE;
-		set_speed(Constants::GHOSTS_V_NORMAL);
+		set_speed(panicMode ? Constants::GHOSTS_V_FAST : Constants::GHOSTS_V_NORMAL);
 		set_leader();
 		setVisibility(false);
 		Pacman::getInstance()->setVisibility(false);
@@ -436,6 +440,12 @@ void Ghost::blink() {
 
 Ghost::Ghosts Ghost::getGhostIdent() const {
 	return (Ghosts)ghost_ident;
+}
+
+void Ghost::setPanicMode(int set) {
+	panicMode = set;
+	if(this->hunter != PACMAN) 
+		this->set_speed(panicMode ? Constants::GHOSTS_V_FAST : Constants::GHOSTS_V_NORMAL);
 }
 
 // --- BLINKY ---

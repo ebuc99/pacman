@@ -2,6 +2,7 @@
 #define LABYRINTH_H
 
 #include <SDL2/SDL_ttf.h>
+#include <vector>
 #include "constants.h"
 #include "screen.h"
 #include "pille.h"
@@ -10,6 +11,8 @@
 #include "platform.h"
 #include "ghost_figur.h"
 #include "pacman_figur.h"
+#include "labyrinth_observer.h"
+using namespace std;
 
 class Labyrinth {
 	public:
@@ -95,6 +98,8 @@ class Labyrinth {
 		// Return the current surface of the superpill according to their animation step.
 		SDL_Surface *get_superpill_sf();
 
+		void setLabyrinthObserver(LabyrinthObserver* labyrinthObserver);
+
 	private:
 		static Labyrinth *instance;
 
@@ -102,6 +107,7 @@ class Labyrinth {
 		Labyrinth();
 		~Labyrinth();
 
+		LabyrinthObserver* labyrinthObserver[4];
 		int cnt_pill_animation;
 		Rail *s0,  *s1,  *s2,  *s3,  *s4,  *s5,  *s6,  *s7,  *s8,  *s9,
 		    *s10, *s11, *s12, *s13, *s14, *s15, *s16, *s17, *s18, *s19,
@@ -144,5 +150,6 @@ class Labyrinth {
 
 		// Return the background image, will be loaded if not yet done
 		SDL_Surface *getBackground();
+		vector<LabyrinthObserver*> vec_observer;
 };
 #endif

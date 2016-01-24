@@ -29,7 +29,7 @@ class Sounds {
 		void playGhostEatenMusic();
 		Mix_Chunk *loadWaveSound(const char *filename);
 		Mix_Music *loadWaveMusic(const char *filename);
-	protected:
+	private:
 		static Sounds *instance;
 		Sounds();
 		~Sounds();
@@ -42,6 +42,8 @@ class Sounds {
 		bool munch_toggle;
 		Mix_Music *music_intro = NULL;
 		Mix_Music *music_siren_slow = NULL;
+		Mix_Music *music_siren_medium = NULL;
+		Mix_Music *music_siren_fast = NULL;
 		Mix_Music *music_superpill_loop = NULL;
 		Mix_Music *music_eat_ghost = NULL;
 		Mix_Chunk *chunk_dying = NULL;

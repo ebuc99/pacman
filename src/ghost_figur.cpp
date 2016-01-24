@@ -12,10 +12,6 @@ Ghost **Ghost::getGhostArray() {
 		ghostArray[1] = Pinky::getInstance();
 		ghostArray[2] = Inky::getInstance();
 		ghostArray[3] = Clyde::getInstance();
-		Labyrinth::getInstance()->setLabyrinthObserver(Blinky::getInstance());
-		Labyrinth::getInstance()->setLabyrinthObserver(Pinky::getInstance());
-		Labyrinth::getInstance()->setLabyrinthObserver(Inky::getInstance());
-		Labyrinth::getInstance()->setLabyrinthObserver(Clyde::getInstance());
 	}
 	return ghostArray;
 }
@@ -81,6 +77,7 @@ Ghost::Ghost(int init_x, int init_y, int init_intelligence,
 	num_animation_frames = 2;
 	idx_animation = 1;
 	ghost_sf = ar_ghost[idx_animation];
+	Labyrinth::getInstance()->setLabyrinthObserver(this);
 }
 
 Ghost::~Ghost() {

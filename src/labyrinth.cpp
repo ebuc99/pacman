@@ -389,7 +389,7 @@ void Labyrinth::removePill(int idxPill) {
 		int pill_limit;
 		switch(level) {
 			case 1:
-				pill_limit = -1;
+				pill_limit = 50; // 50 only for test, right value is -1
 				break;
 			case 2:
 			case 3:

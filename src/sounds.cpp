@@ -35,16 +35,18 @@ Sounds::Sounds():
 		enabled        = false;
 	}
 	if (audioAvailable) {
-		chunk_munch_a   = loadWaveSound("sounds/munch_a.wav");
-		chunk_munch_b   = loadWaveSound("sounds/munch_b.wav");
-		chunk_dying     = loadWaveSound("sounds/death_1.wav");
+		chunk_munch_a = loadWaveSound("sounds/munch_a.wav");
+		chunk_munch_b = loadWaveSound("sounds/munch_b.wav");
+		chunk_dying = loadWaveSound("sounds/death_1.wav");
 		chunk_extra_man = loadWaveSound("sounds/extra_man.wav");
-		chunk_fruit     = loadWaveSound("sounds/fruit.wav");
+		chunk_fruit = loadWaveSound("sounds/fruit.wav");
 		chunk_eat_ghost = loadWaveSound("sounds/ghost_eat_3.wav");
-		music_intro          = loadWaveMusic("sounds/intro.wav");
-		music_siren_slow     = loadWaveMusic("sounds/siren_slow.wav");
+		music_intro = loadWaveMusic("sounds/intro.wav");
+		music_siren_slow = loadWaveMusic("sounds/siren_slow.wav");
+		music_siren_medium = loadWaveMusic("sounds/siren_medium.wav");
+		music_siren_fast = loadWaveMusic("sounds/siren_fast.wav");
 		music_superpill_loop = loadWaveMusic("sounds/large_pellet_loop.wav");
-		music_eat_ghost      = loadWaveMusic("sounds/ghost_eat_1.wav");
+		music_eat_ghost = loadWaveMusic("sounds/ghost_eat_1.wav");
 	}
 }
 

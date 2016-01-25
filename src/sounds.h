@@ -4,11 +4,12 @@
 #include <SDL2/SDL_mixer.h>
 #include "cmdline_options.h"
 #include "platform.h"
+#include "labyrinth_observer.h"
 
 #define SAFE_FREE_CHUNK(x) if(x){Mix_FreeChunk(x);x=0;}
 #define SAFE_FREE_MUSIC(x) if(x){Mix_FreeMusic(x);x=0;}
 
-class Sounds {
+class Sounds : public LabyrinthObserver {
 	public:
 		static Sounds *getInstance();
 		static void cleanUpInstance();
@@ -50,6 +51,8 @@ class Sounds {
 		Mix_Chunk *chunk_extra_man = NULL;
 		Mix_Chunk *chunk_fruit = NULL;
 		Mix_Chunk *chunk_eat_ghost = NULL;
+		void setPanicMode(int set);
+		int panicMode;
 };
 
 #endif

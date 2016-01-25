@@ -74,7 +74,6 @@ class Ghost : public Figur, public LabyrinthObserver {
 
 		Ghosts getGhostIdent() const;
 		
-		void setPanicMode(int set);
 	protected:
 		/* constructor and destructor */
 		Ghost(int init_x, int init_y, int init_intelligence,
@@ -97,6 +96,7 @@ class Ghost : public Figur, public LabyrinthObserver {
 		SDL_Surface *escape_1, *escape_2, *escape_white_1, *escape_white_2;
 		int idxCurrentRail;
 		static Ghost **ghostArray;
+		void setPanicMode(int set);
 		int panicMode;
 };
 

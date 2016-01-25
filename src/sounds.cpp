@@ -1,5 +1,6 @@
 #include "sounds.h"
 #include <iostream>
+#include "labyrinth.h"
 
 Sounds *Sounds::instance = NULL;
 
@@ -22,7 +23,8 @@ Sounds::Sounds():
 	munch_toggle(true),
 	audioAvailable(true),
 	enabled(!CommandLineOptions::exists("s","nosound")),
-	musicPlaying(NONE)
+	musicPlaying(NONE),
+	panicMode(false)
 {
 	int audio_rate = 44100;
 	Uint16 audio_format = AUDIO_S16SYS;
@@ -48,6 +50,7 @@ Sounds::Sounds():
 		music_superpill_loop = loadWaveMusic("sounds/large_pellet_loop.wav");
 		music_eat_ghost = loadWaveMusic("sounds/ghost_eat_1.wav");
 	}
+	Labyrinth::getInstance()->setLabyrinthObserver(this);
 }
 
 Sounds::~Sounds() {
@@ -117,9 +120,9 @@ void Sounds::playIntro() {
 }
 
 void Sounds::playNormalMusic() {
-	if (enabled && musicPlaying != NORMAL && music_siren_slow) {
+	if (enabled && musicPlaying != NORMAL && (music_siren_slow || music_siren_medium)) {
 		stopMusic();
-		if(Mix_PlayMusic(music_siren_slow,-1) == -1)
+		if(Mix_PlayMusic(panicMode ? music_siren_medium :music_siren_slow,-1) == -1)
 			std::cerr << "Unable to play WAV file: " << Mix_GetError() << std::endl;
 		musicPlaying = NORMAL;
 	}
@@ -204,4 +207,9 @@ Mix_Music *Sounds::loadWaveMusic(const char *filename) {
 		std::cerr << "Unable to load wave music file (" << filename << "): " << Mix_GetError() << std::endl;
 	}
 	return music;
+}
+
+void Sounds::setPanicMode(int set) {
+	panicMode = set;
+	musicPlaying = NONE;
 }

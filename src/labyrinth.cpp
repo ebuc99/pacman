@@ -386,7 +386,7 @@ void Labyrinth::removePill(int idxPill) {
 			SDL_BlitSurface(bgSurface, &dest, pillSurface, &dest);
 		}
 		--cnt_pills;
-		int pill_limit = 10;
+		int pill_limit = -1;
 		switch(level) {
 			case 1:
 				break;

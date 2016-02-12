@@ -1,4 +1,6 @@
 #include "level.h"
+#include <iostream>
+
 Level *Level::instance = NULL;
 
 Level *Level::getInstance() {

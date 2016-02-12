@@ -108,7 +108,8 @@ am_pacman_OBJECTS = pacman-cmdline_options.$(OBJEXT) \
 	pacman-sounds.$(OBJEXT) pacman-platform.$(OBJEXT) \
 	pacman-menu_main.$(OBJEXT) pacman-menu_options.$(OBJEXT) \
 	pacman-menu_about.$(OBJEXT) pacman-menu.$(OBJEXT) \
-	pacman-menu_item.$(OBJEXT) pacman-funny_animation.$(OBJEXT)
+	pacman-menu_item.$(OBJEXT) pacman-funny_animation.$(OBJEXT) \
+	pacman-level.$(OBJEXT)
 pacman_OBJECTS = $(am_pacman_OBJECTS)
 pacman_DEPENDENCIES =
 pacman_LINK = $(CXXLD) $(pacman_CXXFLAGS) $(CXXFLAGS) \
@@ -332,7 +333,9 @@ pacman_SOURCES = \
 	menu_item.cpp \
 	menu_item.h \
 	funny_animation.h \
-	funny_animation.cpp
+	funny_animation.cpp \
+	level.h \
+	level.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \
@@ -456,6 +459,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-game.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-ghost_figur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-labyrinth.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-level.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-menu.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-menu_about.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pacman-menu_item.Po@am__quote@
@@ -748,6 +752,20 @@ pacman-funny_animation.obj: funny_animation.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='funny_animation.cpp' object='pacman-funny_animation.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-funny_animation.obj `if test -f 'funny_animation.cpp'; then $(CYGPATH_W) 'funny_animation.cpp'; else $(CYGPATH_W) '$(srcdir)/funny_animation.cpp'; fi`
+
+pacman-level.o: level.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-level.o -MD -MP -MF $(DEPDIR)/pacman-level.Tpo -c -o pacman-level.o `test -f 'level.cpp' || echo '$(srcdir)/'`level.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-level.Tpo $(DEPDIR)/pacman-level.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='level.cpp' object='pacman-level.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-level.o `test -f 'level.cpp' || echo '$(srcdir)/'`level.cpp
+
+pacman-level.obj: level.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -MT pacman-level.obj -MD -MP -MF $(DEPDIR)/pacman-level.Tpo -c -o pacman-level.obj `if test -f 'level.cpp'; then $(CYGPATH_W) 'level.cpp'; else $(CYGPATH_W) '$(srcdir)/level.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/pacman-level.Tpo $(DEPDIR)/pacman-level.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='level.cpp' object='pacman-level.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(pacman_CXXFLAGS) $(CXXFLAGS) -c -o pacman-level.obj `if test -f 'level.cpp'; then $(CYGPATH_W) 'level.cpp'; else $(CYGPATH_W) '$(srcdir)/level.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

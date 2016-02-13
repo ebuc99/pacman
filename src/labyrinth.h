@@ -14,6 +14,8 @@
 #include "labyrinth_observer.h"
 using namespace std;
 
+class Level;
+
 class Labyrinth {
 	public:
 		static Labyrinth* getInstance();
@@ -70,7 +72,6 @@ class Labyrinth {
 		void resetAllFigures();
 		void nextLevel();
 		void resetLevel(int level = 0);
-		int getLevel() { return level; };
 
 		// Check whether enough pills have been eaten to display the next fruit.
 		// If the fruit is displayed, decrement it's display time, and hide it
@@ -126,7 +127,8 @@ class Labyrinth {
 		SDL_Surface *smallScore, *initText, *score, *infoFruit, *fruit, *pillSurface, *bgSurface, *levelNumber;
 		int smallScore_x, smallScore_y;
 		int cnt_pills;
-		int level;
+		//int level;
+		Level *level;
 		int next_fruit;
 		int fruit_display_time;
 		int cnt_displayed_fruits;

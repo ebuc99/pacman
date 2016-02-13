@@ -2,6 +2,7 @@
 #include "game.h"
 #include <string.h>
 #include <iostream>
+#include "level.h"
 
 Labyrinth *Labyrinth::instance = NULL;
 
@@ -32,7 +33,6 @@ Labyrinth::Labyrinth():
 	pillSurface(NULL),
 	bgSurface(NULL),
 	levelNumber(NULL),
-	level(1),
 	cnt_pills(0){
 	// horizontal rails, row by row, from left to right
 	s0  = new Rail(138,  37, 207,  37);
@@ -203,6 +203,7 @@ Labyrinth::Labyrinth():
 	ar_superpille[3] = Screen::loadImage("gfx/superpille_3.png", 0);
 	ar_superpille[4] = Screen::loadImage("gfx/superpille_2.png", 0);
 	superpille = ar_superpille[cnt_pill_animation];
+	level = Level::getInstance();
 }
 
 Labyrinth::~Labyrinth(){
@@ -386,22 +387,7 @@ void Labyrinth::removePill(int idxPill) {
 			SDL_BlitSurface(bgSurface, &dest, pillSurface, &dest);
 		}
 		--cnt_pills;
-		int pill_limit = -1;
-		switch(level) {
-			case 1:
-				break;
-			case 2:
-			case 3:
-				pill_limit = 5;
-				break;
-			case 4:
-			case 5:
-				pill_limit = 10;
-				break;
-			default:
-				pill_limit = 15;
-		}
-		if(cnt_pills == pill_limit) {
+		if(cnt_pills == level->getPillLimit()) {
 			for(unsigned int i = 0; i < vec_observer.size(); i++)
 				vec_observer.at(i)->setPanicMode(true);
 		}
@@ -442,7 +428,7 @@ void Labyrinth::nextLevel() {
 	Screen::getInstance()->addTotalUpdateRect();
 	Screen::getInstance()->Refresh();
 	SDL_Delay(Constants::WAIT_FOR_NEW_LEVEL);
-	level++;
+	level->nextLevel();
 	resetLevel();
 }
 
@@ -450,21 +436,21 @@ void Labyrinth::resetLevel(int level) {
 	hideFruit();
 	resetAllFigures();
 	if (level >= 1)
-		this->level = level;
-	init_pillen(this->level <= 1);
+		this->level->setLevel(level);
+	init_pillen(level <= 1);
 	draw_pillen();  // including background
 	loadLevelFruit();
 	startFruitRandomizer(true);
 	char charLevel[20];
-	if (this->level == 1) {
+	if (level == 1) {
 		setInitText("Get Ready!");
 	} else {
-		sprintf(charLevel, "Level %d", this->level);
+		sprintf(charLevel, "Level %d", this->level->getLevelNumber());
 		setInitText(charLevel);
 	}
 	if (levelNumber)
 		SDL_FreeSurface(levelNumber);
-	sprintf(charLevel, "%d", this->level);
+	sprintf(charLevel, "%d", this->level->getLevelNumber());
 	levelNumber = Screen::getTextSurface(Screen::getVeryLargeFont(), charLevel, Constants::WHITE_COLOR);
 	drawLevelNumber();
 	Screen::getInstance()->addTotalUpdateRect();
@@ -475,7 +461,7 @@ void Labyrinth::resetLevel(int level) {
 
 void Labyrinth::loadLevelFruit() {
 	fruit = NULL;
-	switch(level) {
+	switch(level->getLevelNumber()) {
 		case 1:
 			setFruitBonus(100);
 			infoFruit = Screen::loadImage("gfx/cherry.png", 255);

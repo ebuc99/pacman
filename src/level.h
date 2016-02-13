@@ -5,8 +5,10 @@ class Level {
 	public:
 		static Level *getInstance();
 		static void cleanUpInstance();
-		void operator=(int const level);
-		void operator++();
+		int getLevelNumber();
+		void setLevel(int const level);
+		void nextLevel();
+		int getPillLimit();
 	private:
 		static Level *instance;
 

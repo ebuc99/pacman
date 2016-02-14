@@ -213,6 +213,10 @@ Labyrinth::~Labyrinth(){
 	SDL_FreeSurface(initText);
 	SDL_FreeSurface(pillSurface);
 	SDL_FreeSurface(bgSurface);
+	if(level) {
+		level->cleanUpInstance();
+		level = NULL;
+	}
 }
 
 void Labyrinth::draw_blocks() {
@@ -521,7 +525,7 @@ void Labyrinth::checkFruit(int ms) {
 	} else {
 		if(getNumRemainingPills() <= next_fruit) {
 			fruit = infoFruit;
-			fruit_display_time = 10000;
+			fruit_display_time = level->getFruitDisplayTime(); //10000;
 			++cnt_displayed_fruits;
 			drawInfoFruits();
 		}

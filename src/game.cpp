@@ -1,4 +1,5 @@
 #include "game.h"
+#include "level.h"
 #include <iostream>
 
 Game *Game::instance = NULL;
@@ -160,9 +161,9 @@ void Game::setGameOver(bool gameOver) {
 void Game::startHuntingMode() {
 	Labyrinth::getInstance()->resetBonusStage();
 	if (cnt_hunting_mode < 0)
-		cnt_hunting_mode = 7000;
+		cnt_hunting_mode = Level::getInstance()->getHuntingModeTime(); 
 	else // hunting mode was still active - prolong the it's duration
-		cnt_hunting_mode += 7000;
+		cnt_hunting_mode += Level::getInstance()->getHuntingModeTime();
 	checkMusic();
 }
 

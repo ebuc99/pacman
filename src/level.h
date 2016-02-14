@@ -9,6 +9,8 @@ class Level {
 		void setLevel(int const level);
 		void nextLevel();
 		int getPillLimit();
+		int getHuntingModeTime();
+		int getFruitDisplayTime();
 	private:
 		static Level *instance;
 

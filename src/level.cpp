@@ -50,3 +50,38 @@ int Level::getPillLimit() {
 			return 15;
 	}
 }
+
+int Level::getHuntingModeTime() {
+	switch(level) {
+		case 1:
+		case 2:
+			return 7000;
+		case 3:
+		case 4:
+			return 6000;
+		case 5:
+			return 5000;
+		default:
+			return 4000;
+	}
+}
+
+int Level::getFruitDisplayTime() {
+	switch(level) {
+		case 1:
+			return 10000;
+		case 2:
+			return 9000;
+		case 3:
+		case 4:
+			return 8000;
+		case 5:
+		case 6:
+			return 7000;
+		case 7:
+		case 8:
+			return 6000;
+		default:
+			return 5000;
+	}
+}

@@ -11,6 +11,7 @@
 #include "ghost_figur.h"
 #include "pacman_figur.h"
 #include "menu_main.h"
+#include "highscore.h"
 
 #endif
 

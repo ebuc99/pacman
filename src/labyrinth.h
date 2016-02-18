@@ -52,6 +52,7 @@ class Labyrinth {
 		void addBonusScore(int show_x, int show_y);  // TODO: move to Player
 		// retrieve current score
 		int getScore();  // TODO: move to Player
+		int getLevelNumber();
 
 		// remove the pill from the level (after it was eaten)
 		void removePill(int idxPill);

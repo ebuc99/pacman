@@ -379,6 +379,10 @@ int Labyrinth::getScore() {
 	return punktestand;
 }
 
+int Labyrinth::getLevelNumber() {
+	return level->getLevelNumber();
+}
+
 void Labyrinth::removePill(int idxPill) {
 	if (idxPill >= 0) {
 		pillen[idxPill].sichtbar = 0;

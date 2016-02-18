@@ -52,7 +52,9 @@ pacman_SOURCES =  \
 	funny_animation.h \
 	funny_animation.cpp \
 	level.h \
-	level.cpp
+	level.cpp \
+	highscore.h \
+	highscore.cpp
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \

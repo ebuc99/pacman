@@ -34,6 +34,7 @@ int main(int argc, char *argv[]) {
 	Ghost::cleanUpGhostArray();
 	Sounds::cleanUpInstance();
 	Screen::cleanUpInstance();
+	HighscoreList::cleanUpInstance();
 	CommandLineOptions::cleanUp();
 
 	return EXIT_SUCCESS;

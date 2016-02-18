@@ -156,12 +156,14 @@ void Game::setGameOver(bool gameOver) {
 		stop(true);
 		Labyrinth::getInstance()->setInitText("Game over", Constants::RED);
 	}
+	HighscoreList::getInstance()->insertEntry(new HighscoreEntry("Player1", Labyrinth::getInstance()->getScore(), Labyrinth::getInstance()->getLevelNumber()));
+	HighscoreList::getInstance()->print();  // for testing purposes
 }
 
 void Game::startHuntingMode() {
 	Labyrinth::getInstance()->resetBonusStage();
 	if (cnt_hunting_mode < 0)
-		cnt_hunting_mode = Level::getInstance()->getHuntingModeTime(); 
+		cnt_hunting_mode = Level::getInstance()->getHuntingModeTime();
 	else // hunting mode was still active - prolong the it's duration
 		cnt_hunting_mode += Level::getInstance()->getHuntingModeTime();
 	checkMusic();

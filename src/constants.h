@@ -73,6 +73,7 @@ class Constants {
 		static const int BITS_PER_PIXEL               = 24;
 		static const int MAX_UPDATE_RECTS             = 200;
 		static const uint8_t HIGHSCORE_LIST_MAX_SIZE  = 10;    // maximum number of entries in highscore list
+		static const int HIGHSCORE_COLUMN_SPACING     = 20;    // space between the columns of the highscore table
 
 		static SDL_Color WHITE_COLOR;
 		static SDL_Color YELLOW_COLOR;

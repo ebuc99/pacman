@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <SDL2/SDL.h>
+#include "screen.h"
 
 class HighscoreEntry {
 	public:
@@ -25,6 +27,7 @@ class HighscoreList {
 		static void cleanUpInstance();
 		int insertEntry(HighscoreEntry *entry);  // returns index of the inserted entry (i.e. its position-1), or -1 if it was not inserted (e.g. because the score was not enough)
 		void print();
+		void draw();
 	private:
 		static HighscoreList *instance;
 		HighscoreList(uint8_t maxSize);
@@ -32,6 +35,8 @@ class HighscoreList {
 		uint8_t maxSize;
 		std::vector<HighscoreEntry*> *entries;
 		int idxLastInsertedEntry;
+		SDL_Surface *sfTitle, *sfPosTitle, *sfNameTitle, *sfScoreTitle, *sfLevelTitle;
+		SDL_Surface **sfPositions, **sfPlayerNames, **sfScores, **sfLevels;
 };
 
 #endif

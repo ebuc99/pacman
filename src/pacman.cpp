@@ -12,6 +12,7 @@ int main(int argc, char *argv[]) {
 		          << "  -h, --help         Display this help message and quit." << std::endl
 		          << "  -f, --fullscreen   Start the game in fullscreen mode."  << std::endl
 		          << "  -s, --nosound      Start with sound switched off."      << std::endl
+		          << "  -v, --version      Print version and quit."             << std::endl
 		          << std::endl;
 		return EXIT_SUCCESS;
 	}
@@ -25,7 +26,8 @@ int main(int argc, char *argv[]) {
 
 	while(MenuMain::getInstance()->show()) {
 		Game::getInstance()->start();
-		HighscoreList::getInstance()->draw();
+		if (Game::getInstance()->isGameOver())
+			HighscoreList::getInstance()->draw();
 	}
 
 	Game::cleanUpInstance();

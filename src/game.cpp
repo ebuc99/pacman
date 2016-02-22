@@ -391,3 +391,7 @@ void Game::checkMusic() {
 		}
 	}
 }
+
+bool Game::isGameOver() {
+	return gameOver;
+}

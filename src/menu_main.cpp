@@ -28,6 +28,7 @@ MenuMain::MenuMain() {
 		version = TTF_RenderText_Solid(Screen::getSmallFont(), str_version.c_str(), Constants::GRAY_COLOR);
 		this->addMenuItem("Quit");
 		this->addMenuItem("About");
+		this->addMenuItem("Highscore List");
 		this->addMenuItem("Options");
 		this->addMenuItem("Start Game");
 		this->selection = STARTGAME;
@@ -68,7 +69,7 @@ int MenuMain::show() {
 		FunnyAnimation::getInstance()->animate();
 	}
 	FunnyAnimation::cleanUpInstance();
-	return (event == 1 ? 1 : 0); 
+	return (event == 1 ? 1 : 0);
 }
 
 int MenuMain::handleSelection() {
@@ -76,6 +77,10 @@ int MenuMain::handleSelection() {
 		return 1;
 	else if(selection == OPTIONS) {
 		menuoptions->show();
+		this->draw();
+	}
+	else if(selection == HIGHSCORE) {
+		HighscoreList::getInstance()->show();
 		this->draw();
 	}
 	else if(selection == ABOUT) {

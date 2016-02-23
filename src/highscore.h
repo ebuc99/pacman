@@ -7,6 +7,7 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include "screen.h"
+#include "sounds.h"
 
 class HighscoreEntry {
 	public:
@@ -27,15 +28,17 @@ class HighscoreList {
 		static void cleanUpInstance();
 		int insertEntry(HighscoreEntry *entry);  // returns index of the inserted entry (i.e. its position-1), or -1 if it was not inserted (e.g. because the score was not enough)
 		void print();
-		void draw();
+		void show();
 	private:
 		static HighscoreList *instance;
 		HighscoreList(uint8_t maxSize);
 		~HighscoreList();
+		void draw();
+		bool eventloop();
 		uint8_t maxSize;
 		std::vector<HighscoreEntry*> *entries;
 		int idxLastInsertedEntry;
-		SDL_Surface *sfTitle, *sfPosTitle, *sfNameTitle, *sfScoreTitle, *sfLevelTitle;
+		SDL_Surface *sfTitle, *sfPosTitle, *sfNameTitle, *sfScoreTitle, *sfLevelTitle, *sfBackItem;
 		SDL_Surface **sfPositions, **sfPlayerNames, **sfScores, **sfLevels;
 };
 

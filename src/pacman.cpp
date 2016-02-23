@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
 	while(MenuMain::getInstance()->show()) {
 		Game::getInstance()->start();
 		if (Game::getInstance()->isGameOver())
-			HighscoreList::getInstance()->draw();
+			HighscoreList::getInstance()->show();
 	}
 
 	Game::cleanUpInstance();

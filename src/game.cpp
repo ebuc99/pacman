@@ -156,7 +156,7 @@ void Game::setGameOver(bool gameOver) {
 		stop(true);
 		Labyrinth::getInstance()->setInitText("Game over", Constants::RED);
 	}
-	HighscoreList::getInstance()->insertEntry(new HighscoreEntry("Player1", Labyrinth::getInstance()->getScore(), Labyrinth::getInstance()->getLevelNumber()));
+	HighscoreList::getInstance()->insertEntry(new HighscoreEntry("", Labyrinth::getInstance()->getScore(), Labyrinth::getInstance()->getLevelNumber()));
 	HighscoreList::getInstance()->print();  // for testing purposes
 }
 

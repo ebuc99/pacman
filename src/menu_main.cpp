@@ -80,7 +80,7 @@ int MenuMain::handleSelection() {
 		this->draw();
 	}
 	else if(selection == HIGHSCORE) {
-		HighscoreList::getInstance()->show();
+		HighscoreList::getInstance()->show(false, false);
 		this->draw();
 	}
 	else if(selection == ABOUT) {

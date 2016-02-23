@@ -5,7 +5,7 @@ int main(int argc, char *argv[]) {
 
 	CommandLineOptions::set(argc, argv);
 	if (CommandLineOptions::exists("h", "help")) {
-		std::cout << "This game is a Pacman clone (version " << VERSION << ")."                             << std::endl
+		std::cout << "This game is a Pacman clone (version " << VERSION << ")." << std::endl
 		          << "Usage: pacman [options]"                                  << std::endl
 		          << std::endl
 		          << "Options:"                                                 << std::endl
@@ -26,8 +26,10 @@ int main(int argc, char *argv[]) {
 
 	while(MenuMain::getInstance()->show()) {
 		Game::getInstance()->start();
-		if (Game::getInstance()->isGameOver())
-			HighscoreList::getInstance()->show();
+		if (Game::getInstance()->isGameOver()) {
+			HighscoreList::getInstance()->show(true, true);  // player name alterable, last entry highlighted
+			HighscoreList::getInstance()->show(false, true);
+		}
 	}
 
 	Game::cleanUpInstance();

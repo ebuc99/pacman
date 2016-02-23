@@ -11,11 +11,15 @@
 
 class HighscoreEntry {
 	public:
-		HighscoreEntry(char *playerName, int score, int level);
+		HighscoreEntry(const char *playerName, int score, int level);
 		~HighscoreEntry();
 		int getScore() { return score; }
 		int getLevel() { return level; }
 		const char *getPlayerName() { return playerName->c_str(); }
+		int getPlayerNameLength() { return playerName->length(); }
+		void addCharToPlayerName(const char c);
+		void removeLastCharFromPlayerName();
+		void setPlayerName(const char *newName) { *playerName = newName; }
 	private:
 		std::string *playerName;
 		int score;
@@ -28,17 +32,19 @@ class HighscoreList {
 		static void cleanUpInstance();
 		int insertEntry(HighscoreEntry *entry);  // returns index of the inserted entry (i.e. its position-1), or -1 if it was not inserted (e.g. because the score was not enough)
 		void print();
-		void show();
+		void show(bool nameAlterable, bool highlightLast);
 	private:
 		static HighscoreList *instance;
 		HighscoreList(uint8_t maxSize);
 		~HighscoreList();
-		void draw();
-		bool eventloop();
+		void draw(bool nameAlterable, bool highlightLast);
+		bool eventloop(bool nameAlterable, bool *redrawNeeded);
 		uint8_t maxSize;
 		std::vector<HighscoreEntry*> *entries;
-		int idxLastInsertedEntry;
-		SDL_Surface *sfTitle, *sfPosTitle, *sfNameTitle, *sfScoreTitle, *sfLevelTitle, *sfBackItem;
+		int idxLastInsertedEntry, idxHighlightedEntry;
+		SDL_Surface *sfTitle, *sfPosTitle, *sfNameTitle, *sfScoreTitle, *sfLevelTitle,
+		            *sfBackItem, *sfCaret, *sfCurrentPos, *sfCurrentName, *sfCurrentScore,
+		            *sfCurrentLevel;
 		SDL_Surface **sfPositions, **sfPlayerNames, **sfScores, **sfLevels;
 };
 

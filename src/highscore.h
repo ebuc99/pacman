@@ -5,23 +5,25 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include <SDL2/SDL.h>
 #include "screen.h"
 #include "sounds.h"
+#include "platform.h"
 
 class HighscoreEntry {
 	public:
-		HighscoreEntry(const char *playerName, int score, int level);
+		HighscoreEntry(std::string playerName, int score, int level);
 		~HighscoreEntry();
 		int getScore() { return score; }
 		int getLevel() { return level; }
-		const char *getPlayerName() { return playerName->c_str(); }
-		int getPlayerNameLength() { return playerName->length(); }
+		const char *getPlayerName() { return playerName.c_str(); }
+		int getPlayerNameLength() { return playerName.length(); }
 		void addCharToPlayerName(const char c);
 		void removeLastCharFromPlayerName();
-		void setPlayerName(const char *newName) { *playerName = newName; }
+		void setPlayerName(const char *newName) { playerName = newName; }
 	private:
-		std::string *playerName;
+		std::string playerName;
 		int score;
 		int level;
 };
@@ -33,6 +35,8 @@ class HighscoreList {
 		int insertEntry(HighscoreEntry *entry);  // returns index of the inserted entry (i.e. its position-1), or -1 if it was not inserted (e.g. because the score was not enough)
 		void print();
 		void show(bool nameAlterable, bool highlightLast);
+		void load();
+		void save();
 	private:
 		static HighscoreList *instance;
 		HighscoreList(uint8_t maxSize);
@@ -46,6 +50,7 @@ class HighscoreList {
 		            *sfBackItem, *sfCaret, *sfCurrentPos, *sfCurrentName, *sfCurrentScore,
 		            *sfCurrentLevel;
 		SDL_Surface **sfPositions, **sfPlayerNames, **sfScores, **sfLevels;
+		std::string filePath;
 };
 
 #endif

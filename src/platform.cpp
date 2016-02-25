@@ -1,10 +1,11 @@
 #include "platform.h"
-#include <string.h>
+
 #ifdef _WIN32
 #define WINDOWS 1
 #else
 #define WINDOWS 0
 #endif
+
 void getFilePath(char filePath[], const char file[]) {
      char installDir[256];
      if(WINDOWS)
@@ -13,4 +14,60 @@ void getFilePath(char filePath[], const char file[]) {
          strcpy(installDir, "/usr/local/share/pacman/");
      strcpy(filePath, installDir);
      strcat(filePath, file);
+}
+
+static char gameDirBase[256];
+
+void getGameDirPath(char filePath[], const char fileName[]) {
+	if (!gameDirBase[0]) {
+		if (WINDOWS) {
+			char *env = getenv("APPDATA");
+			if (env) {
+				strcat(gameDirBase, env);
+			} else {
+				// not found, trying %HOMEDRIVE%%HOMEPATH%
+				env = getenv("HOMEDRIVE");
+				char *env2 = getenv("HOMEPATH");
+				if (env && env2) {
+					strcat(gameDirBase, env);
+					strcat(gameDirBase, env2);
+				} else {
+					// not found, using current directory
+				}
+			}
+			if (env) {
+				int len = strlen(gameDirBase);
+				if (len == 0 || gameDirBase[len-1] != '\\')
+					strcat(gameDirBase, "\\");
+				strcat(gameDirBase, "pacman_sdl\\");
+			}
+		} else {
+			strcpy(gameDirBase, getenv("HOME"));
+			int len = strlen(gameDirBase);
+			if (len == 0 || gameDirBase[len-1] != '/')
+				strcat(gameDirBase, "/");
+			strcat(gameDirBase, ".pacman_sdl/");
+		}
+	}
+	strcpy(filePath, gameDirBase);
+	if (fileName)
+		strcat(filePath, fileName);
+}
+
+void createGameDir() {
+	char gameDir[256];
+	getGameDirPath(gameDir, NULL);
+#ifdef _WIN32
+	_mkdir(gameDir);
+#else
+	mkdir(gameDir, 0770);  // rwxrwx---
+#endif
+}
+
+bool fileExists(const char *filePath) {
+#ifdef _WIN32
+	return (0 == _access(filePath, 0));
+#else
+	return (0 == access(filePath, 0));
+#endif
 }

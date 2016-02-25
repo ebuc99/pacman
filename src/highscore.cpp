@@ -1,25 +1,21 @@
 #include "highscore.h"
 
-HighscoreEntry::HighscoreEntry(const char *playerName, int score, int level) {
-	this->playerName = new std::string(playerName);
+HighscoreEntry::HighscoreEntry(std::string playerName, int score, int level) {
+	this->playerName = std::string(playerName);
 	this->score      = score;
 	this->level      = level;
 }
 
 HighscoreEntry::~HighscoreEntry() {
-	if (playerName) {
-		delete playerName;
-		playerName = NULL;
-	}
 }
 
 void HighscoreEntry::addCharToPlayerName(const char c) {
-	playerName->append(1, c);
+	playerName += c;
 }
 
 void HighscoreEntry::removeLastCharFromPlayerName() {
-	if (playerName->length() >= 1) {
-		playerName->erase(playerName->length()-1, 1);
+	if (playerName.length() >= 1) {
+		playerName.erase(playerName.length()-1, 1);
 	}
 }
 
@@ -65,6 +61,13 @@ HighscoreList::HighscoreList(uint8_t maxSize):
 		sfPlayerNames[i] = NULL;
 		sfScores[i]      = NULL;
 		sfLevels[i]      = NULL;
+	}
+	filePath = std::string(CommandLineOptions::getValue("", "highscore"));
+	if (0 == filePath.length()) {
+		createGameDir();
+		char tmpFilePath[256];
+		getGameDirPath(tmpFilePath, "highscore");
+		filePath += tmpFilePath;
 	}
 }
 
@@ -467,6 +470,8 @@ bool HighscoreList::eventloop(bool nameAlterable, bool *redrawNeeded) {
 }
 
 void HighscoreList::show(bool nameAlterable, bool highlightLast) {
+	if (nameAlterable && idxLastInsertedEntry<0)
+		return;  // not a new highscore, so do not allow the player to enter a name
 	bool redrawNeeded, first = true;
 	while (eventloop(idxLastInsertedEntry>=0 ? nameAlterable : false, &redrawNeeded)) {
 		if (redrawNeeded || first) {
@@ -479,5 +484,50 @@ void HighscoreList::show(bool nameAlterable, bool highlightLast) {
 			redrawNeeded = false;
 		}
 		SDL_Delay(Constants::MIN_FRAME_DURATION);
+	}
+	if (nameAlterable)
+		save();
+}
+
+void HighscoreList::load() {
+	for (std::vector<HighscoreEntry*>::iterator it = entries->begin(); it != entries->end(); ++it) {
+		delete *it;
+	}
+	entries->clear();
+	if (fileExists(filePath.c_str())) {
+		std::ifstream f(filePath.c_str());
+		if (f.is_open()) {
+			std::string line;
+			while (std::getline(f, line)) {
+				int pos = line.find('|');
+				if (pos >= 0) {
+					std::string name = line.substr(0, pos);
+					line = line.substr(pos+1);
+					pos = line.find('|');
+					if (pos >= 0) {
+						int score = atoi(line.substr(0,pos).c_str());
+						int level = atoi(line.substr(pos+1).c_str());
+						entries->push_back(new HighscoreEntry(name, score, level));
+						if (entries->size() >= maxSize)
+							break;
+					}
+				}
+			}
+			f.close();
+		} else {
+			std::cerr << "Unable to read highscore file: " << filePath << std::endl;
+		}
+	}
+}
+
+void HighscoreList::save() {
+	std::ofstream f(filePath.c_str());
+	if (f.is_open()) {
+		for (std::vector<HighscoreEntry*>::iterator it = entries->begin(); it != entries->end(); ++it) {
+			f << (*it)->getPlayerName() << "|" << (*it)->getScore() << "|" << (*it)->getLevel() << "\n";
+		}
+		f.close();
+	} else {
+		std::cerr << "Unable to write highscore file: " << filePath << std::endl;
 	}
 }

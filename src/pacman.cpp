@@ -13,6 +13,8 @@ int main(int argc, char *argv[]) {
 		          << "  -f, --fullscreen   Start the game in fullscreen mode."  << std::endl
 		          << "  -s, --nosound      Start with sound switched off."      << std::endl
 		          << "  -v, --version      Print version and quit."             << std::endl
+		          << "  --name=...         Provide the player's name."          << std::endl
+		          << "  --highscore=...    Define path to highscore file."      << std::endl
 		          << std::endl;
 		return EXIT_SUCCESS;
 	}
@@ -27,6 +29,7 @@ int main(int argc, char *argv[]) {
 	while(MenuMain::getInstance()->show()) {
 		Game::getInstance()->start();
 		if (Game::getInstance()->isGameOver()) {
+			// do not load() here, this has been done at the time the game was over
 			HighscoreList::getInstance()->show(true, true);  // player name alterable, last entry highlighted
 			HighscoreList::getInstance()->show(false, true);
 		}

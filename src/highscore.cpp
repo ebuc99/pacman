@@ -485,15 +485,33 @@ void HighscoreList::show(bool nameAlterable, bool highlightLast) {
 		}
 		SDL_Delay(Constants::MIN_FRAME_DURATION);
 	}
-	if (nameAlterable)
-		save();
 }
 
 void HighscoreList::load() {
+	int i = 0;
 	for (std::vector<HighscoreEntry*>::iterator it = entries->begin(); it != entries->end(); ++it) {
 		delete *it;
+		if (sfPositions[i]) {
+			SDL_FreeSurface(sfPositions[i]);
+			sfPositions[i] = NULL;
+		}
+		if (sfPlayerNames[i]) {
+			SDL_FreeSurface(sfPlayerNames[i]);
+			sfPlayerNames[i] = NULL;
+		}
+		if (sfScores[i]) {
+			SDL_FreeSurface(sfScores[i]);
+			sfScores[i] = NULL;
+		}
+		if (sfLevels[i]) {
+			SDL_FreeSurface(sfLevels[i]);
+			sfLevels[i] = NULL;
+		}
+		++i;
 	}
 	entries->clear();
+	for (int i = 0; i < maxSize; ++i) {
+	}
 	if (fileExists(filePath.c_str())) {
 		std::ifstream f(filePath.c_str());
 		if (f.is_open()) {
@@ -529,5 +547,13 @@ void HighscoreList::save() {
 		f.close();
 	} else {
 		std::cerr << "Unable to write highscore file: " << filePath << std::endl;
+	}
+}
+
+HighscoreEntry *HighscoreList::getEntry(int index) {
+	if (0 <= index && index < (int) entries->size()) {
+		return entries->at(index);
+	} else {
+		return NULL;
 	}
 }

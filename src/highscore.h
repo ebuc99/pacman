@@ -33,10 +33,12 @@ class HighscoreList {
 		static HighscoreList *getInstance();
 		static void cleanUpInstance();
 		int insertEntry(HighscoreEntry *entry);  // returns index of the inserted entry (i.e. its position-1), or -1 if it was not inserted (e.g. because the score was not enough)
+		int getIdxLastInsertedEntry() { return idxLastInsertedEntry; }
 		void print();
 		void show(bool nameAlterable, bool highlightLast);
 		void load();
 		void save();
+		HighscoreEntry *getEntry(int index);
 	private:
 		static HighscoreList *instance;
 		HighscoreList(uint8_t maxSize);

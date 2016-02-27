@@ -31,6 +31,13 @@ int main(int argc, char *argv[]) {
 		if (Game::getInstance()->isGameOver()) {
 			// do not load() here, this has been done at the time the game was over
 			HighscoreList::getInstance()->show(true, true);  // player name alterable, last entry highlighted
+			if (HighscoreList::getInstance()->getIdxLastInsertedEntry() >= 0) {
+				HighscoreEntry *entry = HighscoreList::getInstance()->getEntry(HighscoreList::getInstance()->getIdxLastInsertedEntry());
+				entry = new HighscoreEntry(std::string(entry->getPlayerName()), entry->getScore(), entry->getLevel());
+				HighscoreList::getInstance()->load();
+				HighscoreList::getInstance()->insertEntry(entry);
+				HighscoreList::getInstance()->save();
+			}
 			HighscoreList::getInstance()->show(false, true);
 		}
 	}

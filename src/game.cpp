@@ -130,12 +130,12 @@ bool Game::eventloop() {
 		case SDL_QUIT:
 			return false;
 		}
-	}
-	// Redraw, when overlapped by foreign window
-	if(event.window.event == SDL_WINDOWEVENT_EXPOSED ||
-	   event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
-		Screen::getInstance()->addTotalUpdateRect();
-		Screen::getInstance()->Refresh();
+		// Redraw, when overlapped by foreign window
+		if(event.window.event == SDL_WINDOWEVENT_EXPOSED ||
+		   event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
+			Screen::getInstance()->addTotalUpdateRect();
+			Screen::getInstance()->Refresh();
+		}
 	}
 	return true;
 }

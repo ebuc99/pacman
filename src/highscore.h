@@ -18,7 +18,7 @@ class HighscoreEntry {
 		int getScore() { return score; }
 		int getLevel() { return level; }
 		const char *getPlayerName() { return playerName.c_str(); }
-		int getPlayerNameLength() { return playerName.length(); }
+		int getPlayerNameLength() { return (int)playerName.length(); }
 		void addCharToPlayerName(const char c);
 		void removeLastCharFromPlayerName();
 		void setPlayerName(const char *newName) { playerName = newName; }

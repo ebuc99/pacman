@@ -153,7 +153,7 @@ int HighscoreList::insertEntry(HighscoreEntry *entry) {
 	}
 	if ((int) entries->size() < maxSize) {
 		entries->push_back(entry);
-		idxLastInsertedEntry = entries->size()-1;
+		idxLastInsertedEntry = (int)entries->size()-1;
 	} else {
 		idxLastInsertedEntry = -1;
 	}
@@ -517,11 +517,11 @@ void HighscoreList::load() {
 		if (f.is_open()) {
 			std::string line;
 			while (std::getline(f, line)) {
-				int pos = line.find('|');
+				int pos = (int)line.find('|');
 				if (pos >= 0) {
 					std::string name = line.substr(0, pos);
 					line = line.substr(pos+1);
-					pos = line.find('|');
+					pos = (int)line.find('|');
 					if (pos >= 0) {
 						int score = atoi(line.substr(0,pos).c_str());
 						int level = atoi(line.substr(pos+1).c_str());

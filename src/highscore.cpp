@@ -48,7 +48,9 @@ HighscoreList::HighscoreList(uint8_t maxSize):
 	sfCurrentPos(NULL),
 	sfCurrentName(NULL),
 	sfCurrentScore(NULL),
-	sfCurrentLevel(NULL)
+	sfCurrentLevel(NULL),
+	fileIsEncrypted(false),
+	nextKeyPosition(0)
 {
 	this->maxSize = maxSize;
 	entries = new std::vector<HighscoreEntry*>();
@@ -68,6 +70,18 @@ HighscoreList::HighscoreList(uint8_t maxSize):
 		char tmpFilePath[256];
 		getGameDirPath(tmpFilePath, "highscore");
 		filePath += tmpFilePath;
+	}
+	encryptionKey = std::string(CommandLineOptions::getValue("", "hs-key"));
+	if (encryptionKey.length()) {
+		rawEncryptionKey = "";
+		for (uint8_t i = 0; i < encryptionKey.length(); ++i, ++i) {
+			if (i < encryptionKey.length()-1) {
+				char *endp;
+				rawEncryptionKey += (char) (strtol(encryptionKey.substr(i,2).c_str(), &endp, 16) & 0xff);
+			}
+		}
+		if (rawEncryptionKey.length())
+			fileIsEncrypted = true;
 	}
 }
 
@@ -487,7 +501,30 @@ void HighscoreList::show(bool nameAlterable, bool highlightLast) {
 	}
 }
 
+bool HighscoreList::readEncryptedLine(std::ifstream &f, std::string &line) {
+	line.clear();
+	if (f.eof())
+		return false;
+	while (!f.eof()) {
+		char c[2];
+		f.get(c[0]);
+		if (!f.eof()) {
+			f.get(c[1]);
+			char *endp;
+			char new_c = ((char) strtol(c, &endp, 16)) ^ rawEncryptionKey[nextKeyPosition];
+			nextKeyPosition = (nextKeyPosition+1) % rawEncryptionKey.length();
+			if ('\n' == new_c) {
+				return true;
+			} else {
+				line += new_c;
+			}
+		}
+	}
+	return true;
+}
+
 void HighscoreList::load() {
+	// clear any old entries
 	int i = 0;
 	for (std::vector<HighscoreEntry*>::iterator it = entries->begin(); it != entries->end(); ++it) {
 		delete *it;
@@ -510,13 +547,12 @@ void HighscoreList::load() {
 		++i;
 	}
 	entries->clear();
-	for (int i = 0; i < maxSize; ++i) {
-	}
+	nextKeyPosition = 0;  // always start from the beginning of the encryption key
 	if (fileExists(filePath.c_str())) {
 		std::ifstream f(filePath.c_str());
 		if (f.is_open()) {
 			std::string line;
-			while (std::getline(f, line)) {
+			while (fileIsEncrypted ? readEncryptedLine(f, line) : std::getline(f, line)) {
 				int pos = line.find('|');
 				if (pos >= 0) {
 					std::string name = line.substr(0, pos);
@@ -525,9 +561,11 @@ void HighscoreList::load() {
 					if (pos >= 0) {
 						int score = atoi(line.substr(0,pos).c_str());
 						int level = atoi(line.substr(pos+1).c_str());
-						entries->push_back(new HighscoreEntry(name, score, level));
-						if (entries->size() >= maxSize)
-							break;
+						if (score > 0 && level > 0) {  // atoi returns 0 if the char* did not contain a valid integer value
+							entries->push_back(new HighscoreEntry(name, score, level));
+							if (entries->size() >= maxSize)
+								break;
+						}
 					}
 				}
 			}
@@ -541,10 +579,31 @@ void HighscoreList::load() {
 void HighscoreList::save() {
 	std::ofstream f(filePath.c_str());
 	if (f.is_open()) {
-		for (std::vector<HighscoreEntry*>::iterator it = entries->begin(); it != entries->end(); ++it) {
-			f << (*it)->getPlayerName() << "|" << (*it)->getScore() << "|" << (*it)->getLevel() << "\n";
+		if (fileIsEncrypted) {
+			const char hexDigits[] = "0123456789abcdef";
+			nextKeyPosition = 0;
+			for (std::vector<HighscoreEntry*>::iterator it = entries->begin(); it != entries->end(); ++it) {
+				std::string line = std::string((*it)->getPlayerName()) + "|";
+				char c_val[10];
+				sprintf(c_val, "%d|", (*it)->getScore());
+				line += c_val;
+				sprintf(c_val, "%d\n", (*it)->getLevel());
+				line += c_val;
+				std::string encryptedLine = "";
+				for (uint8_t i = 0; i < line.length(); ++i) {
+					char c = line[i] ^ rawEncryptionKey[nextKeyPosition];
+					nextKeyPosition = (nextKeyPosition+1) % rawEncryptionKey.length();
+					encryptedLine += hexDigits[(c & 0xf0) >> 4];
+					encryptedLine += hexDigits[c & 0x0f];
+				}
+				f << encryptedLine;
+			}
+		} else {
+			for (std::vector<HighscoreEntry*>::iterator it = entries->begin(); it != entries->end(); ++it) {
+				f << (*it)->getPlayerName() << "|" << (*it)->getScore() << "|" << (*it)->getLevel() << "\n";
+			}
+			f.close();
 		}
-		f.close();
 	} else {
 		std::cerr << "Unable to write highscore file: " << filePath << std::endl;
 	}

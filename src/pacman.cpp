@@ -15,6 +15,7 @@ int main(int argc, char *argv[]) {
 		          << "  -v, --version      Print version and quit."             << std::endl
 		          << "  --name=...         Provide the player's name."          << std::endl
 		          << "  --highscore=...    Define path to highscore file."      << std::endl
+		          << "  --hs-key=...       Highscore encryption key (hex)."     << std::endl
 		          << std::endl;
 		return EXIT_SUCCESS;
 	}

@@ -36,14 +36,14 @@ void getGameDirPath(char filePath[], const char fileName[]) {
 				}
 			}
 			if (env) {
-				int len = strlen(gameDirBase);
+				size_t len = strlen(gameDirBase);
 				if (len == 0 || gameDirBase[len-1] != '\\')
 					strcat(gameDirBase, "\\");
 				strcat(gameDirBase, "pacman_sdl\\");
 			}
 		} else {
 			strcpy(gameDirBase, getenv("HOME"));
-			int len = strlen(gameDirBase);
+			size_t len = strlen(gameDirBase);
 			if (len == 0 || gameDirBase[len-1] != '/')
 				strcat(gameDirBase, "/");
 			strcat(gameDirBase, ".pacman_sdl/");

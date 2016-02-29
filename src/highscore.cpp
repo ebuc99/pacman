@@ -74,8 +74,8 @@ HighscoreList::HighscoreList(uint8_t maxSize):
 	encryptionKey = std::string(CommandLineOptions::getValue("", "hs-key"));
 	if (encryptionKey.length()) {
 		rawEncryptionKey = "";
-		for (uint8_t i = 0; i < encryptionKey.length(); ++i, ++i) {
-			if (i < encryptionKey.length()-1) {
+		for (std::string::size_type i = 0; i < encryptionKey.length(); ++i, ++i) {
+			if (i+1 < encryptionKey.length()) {
 				char *endp;
 				rawEncryptionKey += (char) (strtol(encryptionKey.substr(i,2).c_str(), &endp, 16) & 0xff);
 			}
@@ -553,12 +553,12 @@ void HighscoreList::load() {
 		if (f.is_open()) {
 			std::string line;
 			while (fileIsEncrypted ? readEncryptedLine(f, line) : std::getline(f, line)) {
-				int pos = line.find('|');
-				if (pos >= 0) {
+				std::string::size_type pos = line.find('|');
+				if (pos != std::string::npos) {
 					std::string name = line.substr(0, pos);
 					line = line.substr(pos+1);
 					pos = line.find('|');
-					if (pos >= 0) {
+					if (pos != std::string::npos) {
 						int score = atoi(line.substr(0,pos).c_str());
 						int level = atoi(line.substr(pos+1).c_str());
 						if (score > 0 && level > 0) {  // atoi returns 0 if the char* did not contain a valid integer value
@@ -590,7 +590,7 @@ void HighscoreList::save() {
 				sprintf(c_val, "%d\n", (*it)->getLevel());
 				line += c_val;
 				std::string encryptedLine = "";
-				for (uint8_t i = 0; i < line.length(); ++i) {
+				for (std::string::size_type i = 0; i < line.length(); ++i) {
 					char c = line[i] ^ rawEncryptionKey[nextKeyPosition];
 					nextKeyPosition = (nextKeyPosition+1) % rawEncryptionKey.length();
 					encryptedLine += hexDigits[(c & 0xf0) >> 4];

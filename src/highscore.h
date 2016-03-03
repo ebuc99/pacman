@@ -40,6 +40,7 @@ class HighscoreList {
 		void load();
 		void save();
 		HighscoreEntry *getEntry(int index);
+		bool isReadonly() { return readonly; }
 	private:
 		static HighscoreList *instance;
 		HighscoreList(uint8_t maxSize);
@@ -52,10 +53,10 @@ class HighscoreList {
 		int idxLastInsertedEntry, idxHighlightedEntry;
 		SDL_Surface *sfTitle, *sfPosTitle, *sfNameTitle, *sfScoreTitle, *sfLevelTitle,
 		            *sfBackItem, *sfCaret, *sfCurrentPos, *sfCurrentName, *sfCurrentScore,
-		            *sfCurrentLevel;
+		            *sfCurrentLevel, *sfReadonly;
 		SDL_Surface **sfPositions, **sfPlayerNames, **sfScores, **sfLevels;
 		std::string filePath, encryptionKey, rawEncryptionKey;
-		bool fileIsEncrypted;
+		bool fileIsEncrypted, readonly;
 		int nextKeyPosition;
 };
 

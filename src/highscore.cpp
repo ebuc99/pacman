@@ -49,8 +49,10 @@ HighscoreList::HighscoreList(uint8_t maxSize):
 	sfCurrentName(NULL),
 	sfCurrentScore(NULL),
 	sfCurrentLevel(NULL),
+	sfReadonly(NULL),
 	fileIsEncrypted(false),
-	nextKeyPosition(0)
+	nextKeyPosition(0),
+	readonly(false)
 {
 	this->maxSize = maxSize;
 	entries = new std::vector<HighscoreEntry*>();
@@ -129,6 +131,8 @@ HighscoreList::~HighscoreList() {
 		SDL_FreeSurface(sfCurrentScore);
 	if (sfCurrentLevel)
 		SDL_FreeSurface(sfCurrentLevel);
+	if (sfReadonly)
+		SDL_FreeSurface(sfReadonly);
 }
 
 int HighscoreList::insertEntry(HighscoreEntry *entry) {
@@ -202,6 +206,8 @@ void HighscoreList::draw(bool nameAlterable, bool highlightLast) {
 		sfBackItem = Screen::getTextSurface(Screen::getLargeFont(), "back to menu", Constants::WHITE_COLOR);
 	if (nameAlterable && !sfCaret && idxLastInsertedEntry >= 0)
 		sfCaret = Screen::getTextSurface(Screen::getVeryLargeFont(), "-", Constants::YELLOW_COLOR);
+	if (readonly && !sfReadonly)
+		sfReadonly = Screen::getTextSurface(Screen::getFont(), "Highscore file could not be read!", Constants::RED_COLOR);
 	char ch_array[8];
 	if (idxLastInsertedEntry < 0 || !highlightLast) {
 		idxHighlightedEntry = -1;
@@ -311,6 +317,8 @@ void HighscoreList::draw(bool nameAlterable, bool highlightLast) {
 				Screen::getInstance()->draw(sfLevels[i], x4 + maxWidthLevel - sfLevels[i]->w - 10, y);
 		}
 	}
+	if (readonly)
+		Screen::getInstance()->draw(sfReadonly, (Constants::WINDOW_WIDTH-sfReadonly->w)>>1, (Constants::WINDOW_HEIGHT-sfReadonly->h)>>1);
 	if (!nameAlterable)
 		Screen::getInstance()->draw(sfBackItem, (Constants::WINDOW_WIDTH-sfBackItem->w)>>1, 430);
 	Screen::getInstance()->addTotalUpdateRect();
@@ -524,6 +532,8 @@ bool HighscoreList::readEncryptedLine(std::ifstream &f, std::string &line) {
 }
 
 void HighscoreList::load() {
+	if (readonly)
+		return;
 	// clear any old entries
 	int i = 0;
 	for (std::vector<HighscoreEntry*>::iterator it = entries->begin(); it != entries->end(); ++it) {
@@ -552,60 +562,80 @@ void HighscoreList::load() {
 		std::ifstream f(filePath.c_str());
 		if (f.is_open()) {
 			std::string line;
+			uint8_t linesRead = 0, validLines = 0;
 			while (fileIsEncrypted ? readEncryptedLine(f, line) : std::getline(f, line)) {
-				std::string::size_type pos = line.find('|');
-				if (pos != std::string::npos) {
-					std::string name = line.substr(0, pos);
-					line = line.substr(pos+1);
-					pos = line.find('|');
+				if (line.length() >= 1) {
+					++linesRead;
+					std::string::size_type pos = line.find('|');
 					if (pos != std::string::npos) {
-						int score = atoi(line.substr(0,pos).c_str());
-						int level = atoi(line.substr(pos+1).c_str());
-						if (score > 0 && level > 0) {  // atoi returns 0 if the char* did not contain a valid integer value
-							entries->push_back(new HighscoreEntry(name, score, level));
-							if (entries->size() >= maxSize)
-								break;
+						std::string name = line.substr(0, pos);
+						line = line.substr(pos+1);
+						pos = line.find('|');
+						if (pos != std::string::npos) {
+							int score = atoi(line.substr(0,pos).c_str());
+							int level = atoi(line.substr(pos+1).c_str());
+							if (score > 0 && level > 0) {  // atoi returns 0 if the char* did not contain a valid integer value
+								++validLines;
+								entries->push_back(new HighscoreEntry(name, score, level));
+								if (entries->size() >= maxSize)
+									break;
+							}
 						}
 					}
 				}
 			}
 			f.close();
+			if (linesRead >= 1 && validLines < linesRead) {
+				if (validLines) {
+					std::cerr << "Highscore file " << filePath << " did not contain only valid entries." << std::endl;
+				} else {
+					std::cerr << "Highscore file " << filePath << " did not contain any valid entry." << std::endl;
+				}
+				std::cerr << "Perhaps you specified the wrong encryption key via --hs-key, or the file has been corrupted." << std::endl;
+				std::cerr << "For security reasons, the highscore list will be readonly!" << std::endl;
+				readonly = true;
+			}
 		} else {
 			std::cerr << "Unable to read highscore file: " << filePath << std::endl;
+			readonly = true;
 		}
 	}
 }
 
 void HighscoreList::save() {
-	std::ofstream f(filePath.c_str());
-	if (f.is_open()) {
-		if (fileIsEncrypted) {
-			const char hexDigits[] = "0123456789abcdef";
-			nextKeyPosition = 0;
-			for (std::vector<HighscoreEntry*>::iterator it = entries->begin(); it != entries->end(); ++it) {
-				std::string line = std::string((*it)->getPlayerName()) + "|";
-				char c_val[10];
-				sprintf(c_val, "%d|", (*it)->getScore());
-				line += c_val;
-				sprintf(c_val, "%d\n", (*it)->getLevel());
-				line += c_val;
-				std::string encryptedLine = "";
-				for (std::string::size_type i = 0; i < line.length(); ++i) {
-					char c = line[i] ^ rawEncryptionKey[nextKeyPosition];
-					nextKeyPosition = (nextKeyPosition+1) % rawEncryptionKey.length();
-					encryptedLine += hexDigits[(c & 0xf0) >> 4];
-					encryptedLine += hexDigits[c & 0x0f];
+	if (readonly) {
+		std::cerr << "Highscore list is readonly, and therefore cannot be saved!" << std::endl;
+	} else {
+		std::ofstream f(filePath.c_str());
+		if (f.is_open()) {
+			if (fileIsEncrypted) {
+				const char hexDigits[] = "0123456789abcdef";
+				nextKeyPosition = 0;
+				for (std::vector<HighscoreEntry*>::iterator it = entries->begin(); it != entries->end(); ++it) {
+					std::string line = std::string((*it)->getPlayerName()) + "|";
+					char c_val[10];
+					sprintf(c_val, "%d|", (*it)->getScore());
+					line += c_val;
+					sprintf(c_val, "%d\n", (*it)->getLevel());
+					line += c_val;
+					std::string encryptedLine = "";
+					for (std::string::size_type i = 0; i < line.length(); ++i) {
+						char c = line[i] ^ rawEncryptionKey[nextKeyPosition];
+						nextKeyPosition = (nextKeyPosition+1) % rawEncryptionKey.length();
+						encryptedLine += hexDigits[(c & 0xf0) >> 4];
+						encryptedLine += hexDigits[c & 0x0f];
+					}
+					f << encryptedLine;
 				}
-				f << encryptedLine;
+			} else {
+				for (std::vector<HighscoreEntry*>::iterator it = entries->begin(); it != entries->end(); ++it) {
+					f << (*it)->getPlayerName() << "|" << (*it)->getScore() << "|" << (*it)->getLevel() << "\n";
+				}
+				f.close();
 			}
 		} else {
-			for (std::vector<HighscoreEntry*>::iterator it = entries->begin(); it != entries->end(); ++it) {
-				f << (*it)->getPlayerName() << "|" << (*it)->getScore() << "|" << (*it)->getLevel() << "\n";
-			}
-			f.close();
+			std::cerr << "Unable to write highscore file: " << filePath << std::endl;
 		}
-	} else {
-		std::cerr << "Unable to write highscore file: " << filePath << std::endl;
 	}
 }
 

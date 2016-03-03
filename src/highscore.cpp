@@ -348,6 +348,27 @@ bool HighscoreList::eventloop(bool nameAlterable, bool *redrawNeeded) {
 				} else if (event.key.keysym.sym == SDLK_SPACE) {
 					entries->at(idxLastInsertedEntry)->addCharToPlayerName(' ');
 					*redrawNeeded = true;
+				} else if (event.key.keysym.sym == SDLK_SEMICOLON || (upper && event.key.keysym.sym == SDLK_COMMA)) {
+					entries->at(idxLastInsertedEntry)->addCharToPlayerName(';');
+					*redrawNeeded = true;
+				} else if (event.key.keysym.sym == SDLK_COLON || (upper && event.key.keysym.sym == SDLK_PERIOD)) {
+					entries->at(idxLastInsertedEntry)->addCharToPlayerName(':');
+					*redrawNeeded = true;
+				} else if (event.key.keysym.sym == SDLK_COMMA) {
+					entries->at(idxLastInsertedEntry)->addCharToPlayerName(',');
+					*redrawNeeded = true;
+				} else if (event.key.keysym.sym == SDLK_PERIOD) {
+					entries->at(idxLastInsertedEntry)->addCharToPlayerName('.');
+					*redrawNeeded = true;
+				} else if (event.key.keysym.sym == SDLK_EXCLAIM || (upper && event.key.keysym.sym == SDLK_1)) {
+					entries->at(idxLastInsertedEntry)->addCharToPlayerName('!');
+					*redrawNeeded = true;
+				} else if (event.key.keysym.sym == SDLK_QUESTION || (upper && event.key.keysym.sym == SDLK_PLUS)) {
+					entries->at(idxLastInsertedEntry)->addCharToPlayerName('?');
+					*redrawNeeded = true;
+				} else if (event.key.keysym.sym == SDLK_MINUS || event.key.keysym.sym == SDLK_KP_MINUS) {
+					entries->at(idxLastInsertedEntry)->addCharToPlayerName('-');
+					*redrawNeeded = true;
 				} else if (event.key.keysym.sym == SDLK_1 || event.key.keysym.sym == SDLK_KP_1) {
 					entries->at(idxLastInsertedEntry)->addCharToPlayerName('1');
 					*redrawNeeded = true;

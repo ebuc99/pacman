@@ -71,3 +71,13 @@ bool fileExists(const char *filePath) {
 	return (0 == access(filePath, 0));
 #endif
 }
+
+bool isDirectory(const char *path) {
+	struct stat s;
+	if (stat(path, &s) >= 0) {
+		return (s.st_mode & S_IFDIR) != 0;
+	} else {
+		std::cerr << "isDirectory: stat failed." << std::endl;
+		return false;
+	}
+}

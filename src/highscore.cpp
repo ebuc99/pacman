@@ -72,6 +72,11 @@ HighscoreList::HighscoreList(uint8_t maxSize):
 		char tmpFilePath[256];
 		getGameDirPath(tmpFilePath, "highscore");
 		filePath += tmpFilePath;
+	} else if (isDirectory(filePath.c_str())) {  // A path has been provided. If this path points to a directory, append default filename to it.
+		if (filePath[filePath.length()-1] != Constants::FILE_SEPARATOR)
+			filePath += Constants::FILE_SEPARATOR;
+		filePath += "highscore";
+		std::cerr << "Please provide a path to a file rather than a directory via the --highscore parameter. Changed to " << filePath << std::endl;
 	}
 	encryptionKey = std::string(CommandLineOptions::getValue("", "hs-key"));
 	if (encryptionKey.length()) {
@@ -536,17 +541,20 @@ bool HighscoreList::readEncryptedLine(std::ifstream &f, std::string &line) {
 		return false;
 	while (!f.eof()) {
 		char c[2];
-		f.get(c[0]);
-		if (!f.eof()) {
-			f.get(c[1]);
-			char *endp;
-			char new_c = ((char) strtol(c, &endp, 16)) ^ rawEncryptionKey[nextKeyPosition];
-			nextKeyPosition = (nextKeyPosition+1) % rawEncryptionKey.length();
-			if ('\n' == new_c) {
-				return true;
-			} else {
-				line += new_c;
+		if (f.get(c[0])) {
+			if (!f.eof()) {
+				f.get(c[1]);
+				char *endp;
+				char new_c = ((char) strtol(c, &endp, 16)) ^ rawEncryptionKey[nextKeyPosition];
+				nextKeyPosition = (nextKeyPosition+1) % rawEncryptionKey.length();
+				if ('\n' == new_c) {
+					return true;
+				} else {
+					line += new_c;
+				}
 			}
+		} else {
+			return false;
 		}
 	}
 	return true;

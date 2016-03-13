@@ -10,6 +10,7 @@
 #include "screen.h"
 #include "sounds.h"
 #include "platform.h"
+#include <stdlib.h>
 
 class HighscoreEntry {
 	public:
@@ -39,20 +40,24 @@ class HighscoreList {
 		void load();
 		void save();
 		HighscoreEntry *getEntry(int index);
+		bool isReadonly() { return readonly; }
 	private:
 		static HighscoreList *instance;
 		HighscoreList(uint8_t maxSize);
 		~HighscoreList();
 		void draw(bool nameAlterable, bool highlightLast);
 		bool eventloop(bool nameAlterable, bool *redrawNeeded);
+		bool readEncryptedLine(std::ifstream &f, std::string &line);
 		uint8_t maxSize;
 		std::vector<HighscoreEntry*> *entries;
 		int idxLastInsertedEntry, idxHighlightedEntry;
 		SDL_Surface *sfTitle, *sfPosTitle, *sfNameTitle, *sfScoreTitle, *sfLevelTitle,
 		            *sfBackItem, *sfCaret, *sfCurrentPos, *sfCurrentName, *sfCurrentScore,
-		            *sfCurrentLevel;
+		            *sfCurrentLevel, *sfReadonly;
 		SDL_Surface **sfPositions, **sfPlayerNames, **sfScores, **sfLevels;
-		std::string filePath;
+		std::string filePath, encryptionKey, rawEncryptionKey;
+		bool fileIsEncrypted, readonly;
+		int nextKeyPosition;
 };
 
 #endif

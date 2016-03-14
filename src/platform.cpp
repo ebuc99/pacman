@@ -76,8 +76,12 @@ bool isDirectory(const char *path) {
 	struct stat s;
 	if (stat(path, &s) >= 0) {
 		return (s.st_mode & S_IFDIR) != 0;
+	} else if (errno == ENOENT) {
+		// ENOENT = the path simply does not exist, so it cannot point to a directory.
+		return false;
 	} else {
-		std::cerr << "isDirectory: stat failed." << std::endl;
+		// another problem occured (access, memory, etc.)
+		std::cerr << "isDirectory: stat failed (errno=" << errno << ")." << std::endl;
 		return false;
 	}
 }

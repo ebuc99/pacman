@@ -537,27 +537,30 @@ void HighscoreList::show(bool nameAlterable, bool highlightLast) {
 
 bool HighscoreList::readEncryptedLine(std::ifstream &f, std::string &line) {
 	line.clear();
-	if (f.eof())
+	if (f.eof()) {
 		return false;
-	while (!f.eof()) {
-		char c[2];
-		if (f.get(c[0])) {
-			if (!f.eof()) {
-				f.get(c[1]);
-				char *endp;
-				char new_c = ((char) strtol(c, &endp, 16)) ^ rawEncryptionKey[nextKeyPosition];
-				nextKeyPosition = (nextKeyPosition+1) % rawEncryptionKey.length();
-				if ('\n' == new_c) {
-					return true;
-				} else {
-					line += new_c;
+	} else {
+		char read_c;
+		uint8_t c_pos = 0;
+		char c[3];
+		c[2] = '\0';
+		while (f.get(read_c)) {
+			if (('0' <= read_c && read_c <= '9') || ('a' <= read_c && read_c <= 'f') || ('A' <= read_c && read_c <= 'F')) {
+				c[c_pos++] = read_c;
+				if (c_pos >= 2) {
+					char new_c = ((char) strtoul(c, NULL, 16)) ^ rawEncryptionKey[nextKeyPosition];
+					nextKeyPosition = (nextKeyPosition+1) % rawEncryptionKey.length();
+					if ('\n' == new_c) {
+						return true;
+					} else {
+						line += new_c;
+					}
+					c_pos = 0;
 				}
 			}
-		} else {
-			return false;
 		}
+		return (line.length() > 0);
 	}
-	return true;
 }
 
 void HighscoreList::load() {

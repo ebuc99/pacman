@@ -176,7 +176,7 @@ int HighscoreList::insertEntry(HighscoreEntry *entry) {
 	}
 	if ((int) entries->size() < maxSize) {
 		entries->push_back(entry);
-		idxLastInsertedEntry = entries->size()-1;
+		idxLastInsertedEntry = (int)entries->size()-1;
 	} else {
 		idxLastInsertedEntry = -1;
 	}
@@ -549,7 +549,7 @@ bool HighscoreList::readEncryptedLine(std::ifstream &f, std::string &line) {
 				c[c_pos++] = read_c;
 				if (c_pos >= 2) {
 					char new_c = ((char) strtoul(c, NULL, 16)) ^ rawEncryptionKey[nextKeyPosition];
-					nextKeyPosition = (nextKeyPosition+1) % rawEncryptionKey.length();
+					nextKeyPosition = (int)((nextKeyPosition+1) % rawEncryptionKey.length());
 					if ('\n' == new_c) {
 						return true;
 					} else {
@@ -653,7 +653,7 @@ void HighscoreList::save() {
 					std::string encryptedLine = "";
 					for (std::string::size_type i = 0; i < line.length(); ++i) {
 						char c = line[i] ^ rawEncryptionKey[nextKeyPosition];
-						nextKeyPosition = (nextKeyPosition+1) % rawEncryptionKey.length();
+						nextKeyPosition = (int)((nextKeyPosition+1) % rawEncryptionKey.length());
 						encryptedLine += hexDigits[(c & 0xf0) >> 4];
 						encryptedLine += hexDigits[c & 0x0f];
 					}

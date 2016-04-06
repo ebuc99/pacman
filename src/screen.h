@@ -55,9 +55,6 @@ class Screen {
 		    setFullscreen(!fullscreen);
 		}
 
-		// draw a horizontal or vertical line using the specified color
-		void drawHorizontalLine(int x1, int x2, int y, Uint8 r, Uint8 g, Uint8 b);
-		void drawVerticalLine(int x, int y1, int y2, Uint8 r, Uint8 g, Uint8 b);
 		void clear();
 
 		static SDL_Surface *loadImage(const char *filename, int transparentColor = -1);
@@ -68,14 +65,14 @@ class Screen {
 		// draw a filled rectangle
 		void fillRect(SDL_Rect *rect, Uint8 r, Uint8 g, Uint8 b);
 
-		// deprecated functions, will be removed in the future
-		SDL_Surface *LoadSurface(const char *filename, int transparent_color = -1);
-
 		static TTF_Font *getSmallFont();
 		static TTF_Font *getFont();
 		static TTF_Font *getLargeFont();
 		static TTF_Font *getVeryLargeFont();
 		static TTF_Font *getHugeFont();
+
+		int getOffsetX() { return clipRect.x; }
+		int getOffsetY() { return clipRect.y; }
 
 	private:
 		static Screen *instance;
@@ -83,12 +80,13 @@ class Screen {
 		Screen();
 		~Screen();
 		SDL_Window *window;
-		SDL_Rect rects[Constants::MAX_UPDATE_RECTS];
+		SDL_Rect rects[Constants::MAX_UPDATE_RECTS], clipRect;
 		int rect_num;
 		SDL_Surface *screen_surface;
 		SDL_Texture *txScreenSurface;
 		bool sdlInitErrorOccured;
 		bool fullscreen;
 		static TTF_Font *smallFont, *font, *largeFont, *veryLargeFont, *hugeFont;
+		void computeClipRect();
 };
 #endif

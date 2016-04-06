@@ -227,8 +227,8 @@ void Labyrinth::draw_blocks() {
   	b1.w = b2.w = Constants::TUNNEL_BLOCK_WIDTH;
   	b1.h = b2.h = Constants::TUNNEL_BLOCK_HEIGHT;
 
-  	SDL_FillRect(Screen::getInstance()->getSurface(), &b1, SDL_MapRGB(Screen::getInstance()->getSurface()->format, 0, 0, 0));
-  	SDL_FillRect(Screen::getInstance()->getSurface(), &b2, SDL_MapRGB(Screen::getInstance()->getSurface()->format, 0, 0, 0));
+	Screen::getInstance()->fillRect(&b1, 0, 0, 0);
+	Screen::getInstance()->fillRect(&b2, 0, 0, 0);
 }
 
 void Labyrinth::init_pillen(bool firstInit) {
@@ -296,16 +296,14 @@ void Labyrinth::init_pillen(bool firstInit) {
 }
 
 void Labyrinth::draw_pillen() {
-	SDL_BlitSurface(pillSurface, NULL, Screen::getInstance()->getSurface(), NULL);
-	SDL_Rect dest;
+	Screen::getInstance()->draw(pillSurface, 0, 0);
+	int x, y;
 	for (int i = 0; i < 4; i++) {
 		if (pillen[idxSuperpills[i]].sichtbar) {
-			dest.x = (short int) (pillen[idxSuperpills[i]].x - 4);
-			dest.y = (short int) (pillen[idxSuperpills[i]].y - 4);
-			dest.w = superpille->w;
-			dest.h = superpille->h;
-			SDL_BlitSurface(superpille, NULL, Screen::getInstance()->getSurface(), &dest);
-			Screen::getInstance()->AddUpdateRects(dest.x, dest.y, superpille->w, superpille->h);
+			x = pillen[idxSuperpills[i]].x - 4;
+			y = pillen[idxSuperpills[i]].y - 4;
+			Screen::getInstance()->draw(superpille, x, y);
+			Screen::getInstance()->AddUpdateRects(x, y, superpille->w, superpille->h);
 		}
 	}
 }
@@ -441,6 +439,7 @@ void Labyrinth::nextLevel() {
 }
 
 void Labyrinth::resetLevel(int level) {
+	Screen::getInstance()->clear();
 	hideFruit();
 	resetAllFigures();
 	if (level >= 1)

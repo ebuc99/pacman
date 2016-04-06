@@ -80,7 +80,7 @@ int Menu::eventloop() {
 				break;
 		case SDL_MOUSEMOTION:
 			for(unsigned int i = 0; i < menuItems.size(); ++i) {
-				if(menuItems.at(i)->getXPosition() <= event.motion.x && event.motion.x <= menuItems.at(i)->getXPosition()+menuItems.at(i)->getCurrentMenuItem()->w && menuItems.at(i)->getYPosition() <= event.motion.y && event.motion.y <= menuItems.at(i)->getYPosition()+menuItems.at(i)->getCurrentMenuItem()->h) {
+				if(menuItems.at(i)->getXPosition() <= event.motion.x-Screen::getInstance()->getOffsetX() && event.motion.x-Screen::getInstance()->getOffsetX() <= menuItems.at(i)->getXPosition()+menuItems.at(i)->getCurrentMenuItem()->w && menuItems.at(i)->getYPosition() <= event.motion.y-Screen::getInstance()->getOffsetY() && event.motion.y-Screen::getInstance()->getOffsetY() <= menuItems.at(i)->getYPosition()+menuItems.at(i)->getCurrentMenuItem()->h) {
 					menuItemSelect(i);
 					break;
 				}
@@ -88,10 +88,10 @@ int Menu::eventloop() {
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.button.button == SDL_BUTTON_LEFT) {
-					if(menuItems.at(selection)->getXPosition() <= event.motion.x &&
-					   event.motion.x <= menuItems.at(selection)->getXPosition()+menuItems.at(selection)->getCurrentMenuItem()->w &&
-					   menuItems.at(selection)->getYPosition() <= event.motion.y &&
-					   event.motion.y <= menuItems.at(selection)->getYPosition()+menuItems.at(selection)->getCurrentMenuItem()->h)
+					if(menuItems.at(selection)->getXPosition() <= event.motion.x-Screen::getInstance()->getOffsetX() &&
+					   event.motion.x-Screen::getInstance()->getOffsetX() <= menuItems.at(selection)->getXPosition()+menuItems.at(selection)->getCurrentMenuItem()->w &&
+					   menuItems.at(selection)->getYPosition() <= event.motion.y-Screen::getInstance()->getOffsetY() &&
+					   event.motion.y-Screen::getInstance()->getOffsetY() <= menuItems.at(selection)->getYPosition()+menuItems.at(selection)->getCurrentMenuItem()->h)
 						return handleSelection();
 			}
 			break;

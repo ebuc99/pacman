@@ -20,12 +20,12 @@ MenuMain::MenuMain() {
 		SDL_SetWindowIcon(Screen::getInstance()->getWindow(), icon);
 		SDL_FreeSurface(icon);
 		this->menuTitle = NULL;
-		appTitle1 = TTF_RenderText_Solid(Screen::getHugeFont(), "Pa", Constants::WHITE_COLOR);
-		appTitle2 = TTF_RenderText_Solid(Screen::getHugeFont(), "man", Constants::WHITE_COLOR);
+		appTitle1 = Screen::getTextSurface(Screen::getHugeFont(), "Pa", Constants::WHITE_COLOR);
+		appTitle2 = Screen::getTextSurface(Screen::getHugeFont(), "man", Constants::WHITE_COLOR);
 		titlePacman = Screen::loadImage("gfx/title_pacman.png", 0);
 		std::string str_version = "version ";
 		str_version.append(VERSION);
-		version = TTF_RenderText_Solid(Screen::getSmallFont(), str_version.c_str(), Constants::GRAY_COLOR);
+		version = Screen::getTextSurface(Screen::getSmallFont(), str_version.c_str(), Constants::GRAY_COLOR);
 		this->addMenuItem("Quit");
 		this->addMenuItem("About");
 		this->addMenuItem("Highscore List");

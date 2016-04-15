@@ -5,13 +5,13 @@ MenuItem::MenuItem(const char* menuItem, const char* menuItemAlt):
 	altMenu(false),
 	menuItem(NULL),
 	menuItemSel(NULL),
-	menuItemAlt(NULL), 
+	menuItemAlt(NULL),
 	menuItemSelAlt(NULL) {
-	this->menuItem = TTF_RenderText_Solid(Screen::getFont(), menuItem, Constants::GRAY_COLOR);
-	this->menuItemSel = TTF_RenderText_Solid(Screen::getLargeFont(), menuItem, Constants::WHITE_COLOR);
+	this->menuItem = Screen::getTextSurface(Screen::getFont(), menuItem, Constants::GRAY_COLOR);
+	this->menuItemSel = Screen::getTextSurface(Screen::getLargeFont(), menuItem, Constants::WHITE_COLOR);
 	if(menuItemAlt) {
-		this->menuItemAlt = TTF_RenderText_Solid(Screen::getFont(), menuItemAlt, Constants::GRAY_COLOR);
-		this->menuItemSelAlt = TTF_RenderText_Solid(Screen::getLargeFont(), menuItemAlt, Constants::WHITE_COLOR);
+		this->menuItemAlt = Screen::getTextSurface(Screen::getFont(), menuItemAlt, Constants::GRAY_COLOR);
+		this->menuItemSelAlt = Screen::getTextSurface(Screen::getLargeFont(), menuItemAlt, Constants::WHITE_COLOR);
 	}
 }
 
@@ -22,7 +22,7 @@ MenuItem::~MenuItem() {
 	SDL_FreeSurface(menuItemSelAlt);
 }
 
-SDL_Surface* MenuItem::getCurrentMenuItem() {	 	   
+SDL_Surface* MenuItem::getCurrentMenuItem() {
 	if(selected)
 		return (altMenu ? menuItemSelAlt : menuItemSel);
 	else

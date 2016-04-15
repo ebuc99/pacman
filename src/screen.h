@@ -73,6 +73,12 @@ class Screen {
 
 		int getOffsetX() { return clipRect.x; }
 		int getOffsetY() { return clipRect.y; }
+		int getScalingFactor() { return scalingFactor; }
+
+		// transforms x, y coordinates from screen (e.g. by mouse event) to game coordinates,
+		// within the clipping rectangle, also considering its offset and scaling factor.
+		static int xToClipRect(int x);
+		static int yToClipRect(int y);
 
 	private:
 		static Screen *instance;
@@ -88,5 +94,6 @@ class Screen {
 		bool fullscreen;
 		static TTF_Font *smallFont, *font, *largeFont, *veryLargeFont, *hugeFont;
 		void computeClipRect();
+		int scalingFactor;
 };
 #endif

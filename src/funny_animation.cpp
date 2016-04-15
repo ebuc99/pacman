@@ -7,30 +7,30 @@ FunnyAnimation::FunnyAnimation():
 	pacman(Pacman::getInstance()),
 	ghosts(Ghost::getGhostArray()),
 	labyrinth(Labyrinth::getInstance()){
-		animScore200 = TTF_RenderText_Solid(Screen::getSmallFont(), "200", Constants::WHITE_COLOR);
-		animScore400 = TTF_RenderText_Solid(Screen::getSmallFont(), "400", Constants::WHITE_COLOR);
-		animScore800 = TTF_RenderText_Solid(Screen::getSmallFont(), "800", Constants::WHITE_COLOR);
-		animScore1600 = TTF_RenderText_Solid(Screen::getSmallFont(), "1600", Constants::WHITE_COLOR);
-		pacmanName = TTF_RenderText_Solid(Screen::getLargeFont(), "Pacman", Constants::YELLOW_COLOR);
-		blinkyName = TTF_RenderText_Solid(Screen::getLargeFont(), "Blinky", Constants::BLINKY_COLOR);
-		pinkyName = TTF_RenderText_Solid(Screen::getLargeFont(), "Pinky", Constants::PINKY_COLOR);
-		inkyName = TTF_RenderText_Solid(Screen::getLargeFont(), "Inky", Constants::INKY_COLOR);
-		clydeName = TTF_RenderText_Solid(Screen::getLargeFont(), "Clyde", Constants::CLYDE_COLOR);
-		animFruits = new SDL_Surface*[NUM_FRUITS];
-		animScores = new SDL_Surface*[NUM_FRUITS];
-		const char* fruits[NUM_FRUITS][2] = {{"gfx/cherry.png", "100"},
+		animScore200  = Screen::getTextSurface(Screen::getSmallFont(), "200",    Constants::WHITE_COLOR);
+		animScore400  = Screen::getTextSurface(Screen::getSmallFont(), "400",    Constants::WHITE_COLOR);
+		animScore800  = Screen::getTextSurface(Screen::getSmallFont(), "800",    Constants::WHITE_COLOR);
+		animScore1600 = Screen::getTextSurface(Screen::getSmallFont(), "1600",   Constants::WHITE_COLOR);
+		pacmanName    = Screen::getTextSurface(Screen::getLargeFont(), "Pacman", Constants::YELLOW_COLOR);
+		blinkyName    = Screen::getTextSurface(Screen::getLargeFont(), "Blinky", Constants::BLINKY_COLOR);
+		pinkyName     = Screen::getTextSurface(Screen::getLargeFont(), "Pinky",  Constants::PINKY_COLOR);
+		inkyName      = Screen::getTextSurface(Screen::getLargeFont(), "Inky",   Constants::INKY_COLOR);
+		clydeName     = Screen::getTextSurface(Screen::getLargeFont(), "Clyde",  Constants::CLYDE_COLOR);
+		animFruits    = new SDL_Surface*[NUM_FRUITS];
+		animScores    = new SDL_Surface*[NUM_FRUITS];
+		const char* fruits[NUM_FRUITS][2] = {{"gfx/cherry.png",     "100"},
 											 {"gfx/strawberry.png", "300"},
-											 {"gfx/orange.png", "500"},
-											 {"gfx/apple.png", "700"},
-											 {"gfx/grapes.png", "1000"},
-											 {"gfx/banana.png", "2000"},
-											 {"gfx/pear.png", "3000"},
-											 {"gfx/key.png", "5000"}};
+											 {"gfx/orange.png",     "500"},
+											 {"gfx/apple.png",      "700"},
+											 {"gfx/grapes.png",    "1000"},
+											 {"gfx/banana.png",    "2000"},
+											 {"gfx/pear.png",      "3000"},
+											 {"gfx/key.png",       "5000"}};
 		for(int i = 0; i < NUM_FRUITS; ++i) {
 			animFruits[i] = Screen::loadImage(fruits[i][0], 255);
-			animScores[i] = TTF_RenderText_Solid(Screen::getSmallFont(),  fruits[i][1], Constants::WHITE_COLOR);
+			animScores[i] = Screen::getTextSurface(Screen::getSmallFont(), fruits[i][1], Constants::WHITE_COLOR);
 		}
-	
+
 		animRect.x = 0;
 		animRect.y = 200;
 		animRect.w = 640;
@@ -41,18 +41,18 @@ FunnyAnimation::FunnyAnimation():
 		}
 		animation_counter = 0;
 		timeScore200 = 0;
-		timeScore400 = 0; 
-		timeScore800 = 0; 
+		timeScore400 = 0;
+		timeScore800 = 0;
 		timeScore1600 = 0;
-		xScore200 = 0; 
-		xScore400 = 0; 
+		xScore200 = 0;
+		xScore400 = 0;
 		xScore800 = 0;
 		xScore1600 = 0;
 		xTarget = 0;
 		idxAnimation = 0;
-		animationPart = 0; 
-		animationTime = 0; 
-		lastAnimTime = 0; 
+		animationPart = 0;
+		animationTime = 0;
+		lastAnimTime = 0;
 		animWaitUntil = 0;
 }
 
@@ -84,7 +84,7 @@ void FunnyAnimation::cleanUpInstance() {
 		instance = NULL;
 	}
 }
-	
+
 void FunnyAnimation::animate() {
 	lastAnimTime = animationTime;
 	animationTime += MIN_FRAME_DURATION;
@@ -108,8 +108,8 @@ void FunnyAnimation::animate() {
 			pacman->draw();
 			pacman->addUpdateRect();
 			screen->Refresh();
-		} 
-						
+		}
+
 	} else if (idxAnimation == 1) {
 		// Animation 2: Pacman comes from the left, followed by blinky, pinky, inky and clyde.
 		//              Pacman eats the superpill on the right, turns around and eats each ghost.
@@ -442,7 +442,7 @@ void FunnyAnimation::animate() {
 				}
 			}
 			screen->Refresh();
-		}					
+		}
 	} else if (idxAnimation == 3) {
 		// Animation 4: Pacman comes from the right eating all bonus fruits.
 		if (animationTime >= ANIMATION_WAIT) {
@@ -495,7 +495,7 @@ void FunnyAnimation::animate() {
 				}
 			}
 			screen->Refresh();
-		}					
+		}
 	}else if (idxAnimation == 4) {
 		// Animation 5: Pacman comes from the left, followed by Blinky, Inky and Clyde. But Pinky
 		//              comes from the right, and moves beyond the superpill which Pacman thus cannot

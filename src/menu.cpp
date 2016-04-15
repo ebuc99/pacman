@@ -4,7 +4,7 @@ Menu::Menu(const char* title):
 	selection(0) {
 	this->screen = Screen::getInstance();
 	if(title)
-		menuTitle = TTF_RenderText_Solid(Screen::getVeryLargeFont(), title, Constants::WHITE_COLOR);
+		menuTitle = Screen::getTextSurface(Screen::getVeryLargeFont(), title, Constants::WHITE_COLOR);
 }
 Menu::~Menu() {
 	SDL_FreeSurface(menuTitle);
@@ -56,6 +56,7 @@ void Menu::addMenuItem(const char* menuItem, const char* menuItemAlt) {
 
 int Menu::eventloop() {
 	SDL_Event event;
+	int event_x, event_y;
 	while(SDL_PollEvent(&event)) {
 		switch(event.type) {
 		case SDL_KEYDOWN:
@@ -79,20 +80,30 @@ int Menu::eventloop() {
 					return 2;
 				break;
 		case SDL_MOUSEMOTION:
-			for(unsigned int i = 0; i < menuItems.size(); ++i) {
-				if(menuItems.at(i)->getXPosition() <= event.motion.x-Screen::getInstance()->getOffsetX() && event.motion.x-Screen::getInstance()->getOffsetX() <= menuItems.at(i)->getXPosition()+menuItems.at(i)->getCurrentMenuItem()->w && menuItems.at(i)->getYPosition() <= event.motion.y-Screen::getInstance()->getOffsetY() && event.motion.y-Screen::getInstance()->getOffsetY() <= menuItems.at(i)->getYPosition()+menuItems.at(i)->getCurrentMenuItem()->h) {
+			event_x = Screen::xToClipRect(event.motion.x);
+			event_y = Screen::yToClipRect(event.motion.y);
+			for(uint8_t i = 0; i < menuItems.size(); ++i) {
+				if (menuItems.at(i)->getXPosition() <= event_x &&
+					event_x <= menuItems.at(i)->getXPosition()+menuItems.at(i)->getCurrentMenuItem()->w &&
+					menuItems.at(i)->getYPosition() <= event_y &&
+					event_y <= menuItems.at(i)->getYPosition()+menuItems.at(i)->getCurrentMenuItem()->h)
+				{
 					menuItemSelect(i);
 					break;
 				}
 			}
 			break;
 		case SDL_MOUSEBUTTONDOWN:
+			event_x = Screen::xToClipRect(event.motion.x);
+			event_y = Screen::yToClipRect(event.motion.y);
 			if (event.button.button == SDL_BUTTON_LEFT) {
-					if(menuItems.at(selection)->getXPosition() <= event.motion.x-Screen::getInstance()->getOffsetX() &&
-					   event.motion.x-Screen::getInstance()->getOffsetX() <= menuItems.at(selection)->getXPosition()+menuItems.at(selection)->getCurrentMenuItem()->w &&
-					   menuItems.at(selection)->getYPosition() <= event.motion.y-Screen::getInstance()->getOffsetY() &&
-					   event.motion.y-Screen::getInstance()->getOffsetY() <= menuItems.at(selection)->getYPosition()+menuItems.at(selection)->getCurrentMenuItem()->h)
-						return handleSelection();
+				if (menuItems.at(selection)->getXPosition() <= event_x &&
+					event_x <= menuItems.at(selection)->getXPosition()+menuItems.at(selection)->getCurrentMenuItem()->w &&
+					menuItems.at(selection)->getYPosition() <= event_y &&
+					event_y <= menuItems.at(selection)->getYPosition()+menuItems.at(selection)->getCurrentMenuItem()->h)
+				{
+					return handleSelection();
+				}
 			}
 			break;
 		case SDL_QUIT:
@@ -109,18 +120,20 @@ int Menu::eventloop() {
 }
 
 void Menu::menuItemDown() {
-	selection = (selection - 1 + (unsigned int)menuItems.size()) % (unsigned int)menuItems.size();
+	selection = (uint8_t) (selection - 1 + (uint8_t)menuItems.size()) % (uint8_t)menuItems.size();
 	draw(false);
 }
 
 void Menu::menuItemUp() {
-	selection = (selection + 1) % (unsigned int)menuItems.size();
+	selection = (uint8_t) (selection + 1) % (uint8_t)menuItems.size();
 	draw(false);
 }
 
-void Menu::menuItemSelect(int selection) {
-	this->selection = selection;
-	draw(false);
+void Menu::menuItemSelect(uint8_t selection) {
+	if (this->selection != selection) {
+		this->selection = selection;
+		draw(false);
+	}
 }
 
 MenuItem* Menu::getSelectedMenuItem() {

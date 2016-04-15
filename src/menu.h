@@ -18,11 +18,11 @@ class Menu {
 		void addMenuItem(const char* menuItem, const char* menuItemAlt = NULL);
 		void menuItemUp();
 		void menuItemDown();
-		void menuItemSelect(int selection);
+		void menuItemSelect(uint8_t selection);
 		MenuItem* getSelectedMenuItem();
 	protected:
 		static const int MIN_FRAME_DURATION = 30;
-		unsigned int selection;
+		uint8_t selection;
 		vector<MenuItem*> menuItems;
 		Screen *screen;
 		SDL_Surface *menuTitle;

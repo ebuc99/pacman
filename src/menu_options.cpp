@@ -2,20 +2,20 @@
 
 MenuOptions::MenuOptions():
 	Menu("Options") {
-	this->addMenuItem("back");
-	this->addMenuItem("Window 640x480", "Fullscreen");
-	this->addMenuItem("Sound: on", "Sound: off");
+	addMenuItem("back");
+	addMenuItem("Window 640x480", "Fullscreen");
+	addMenuItem("Sound: on", "Sound: off");
 }
 
 MenuOptions::~MenuOptions() {
 }
 
 int MenuOptions::show() {
-	setMenuSelections();
+	updateMenuItemNames();
 	draw();
 	int event;
-	while(!(event = eventloop()))
-		SDL_Delay(MIN_FRAME_DURATION);
+	while (!(event = eventloop()))
+		SDL_Delay(Constants::MIN_FRAME_DURATION);
 	return (event == 1 ? 1 : 0);
 }
 
@@ -23,24 +23,12 @@ int MenuOptions::handleSelection() {
 	if(selection == BACK)
 		return 2;
 	if(selection == FULLSCREEN)
-		screen->toggleFullscreen();
+		Screen::getInstance()->toggleFullscreen();
 	else if(selection == SOUND)
 		Sounds::getInstance()->toggleEnabled();
 	updateMenuItemNames();
-	this->draw();
+	draw();
 	return 0;
-}
-
-void MenuOptions::setMenuSelections() {
-	if (Sounds::getInstance()->isEnabled())
-		menuItems.at(SOUND)->setMenuItemAlt(false);
-	else
-		menuItems.at(SOUND)->setMenuItemAlt(true);
-
-	if(screen->isFullscreen())
-		menuItems.at(FULLSCREEN)->setMenuItemAlt(true);
-	else
-		menuItems.at(FULLSCREEN)->setMenuItemAlt(false);
 }
 
 void MenuOptions::updateMenuItemNames() {

@@ -5,6 +5,7 @@
 #include <vector>
 #include "menu_item.h"
 #include "sounds.h"
+#include "constants.h"
 
 using namespace std;
 
@@ -21,10 +22,8 @@ class Menu {
 		void menuItemSelect(uint8_t selection);
 		MenuItem* getSelectedMenuItem();
 	protected:
-		static const int MIN_FRAME_DURATION = 30;
 		uint8_t selection;
 		vector<MenuItem*> menuItems;
-		Screen *screen;
 		SDL_Surface *menuTitle;
 		virtual int eventloop();
 		void drawMenuItems();

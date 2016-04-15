@@ -19,19 +19,18 @@ MenuMain::MenuMain() {
 		SDL_Surface *icon = Screen::loadImage("gfx/pacman_desktop.png", 0);
 		SDL_SetWindowIcon(Screen::getInstance()->getWindow(), icon);
 		SDL_FreeSurface(icon);
-		this->menuTitle = NULL;
 		appTitle1 = Screen::getTextSurface(Screen::getHugeFont(), "Pa", Constants::WHITE_COLOR);
 		appTitle2 = Screen::getTextSurface(Screen::getHugeFont(), "man", Constants::WHITE_COLOR);
 		titlePacman = Screen::loadImage("gfx/title_pacman.png", 0);
 		std::string str_version = "version ";
 		str_version.append(VERSION);
 		version = Screen::getTextSurface(Screen::getSmallFont(), str_version.c_str(), Constants::GRAY_COLOR);
-		this->addMenuItem("Quit");
-		this->addMenuItem("About");
-		this->addMenuItem("Highscore List");
-		this->addMenuItem("Options");
-		this->addMenuItem("Start Game");
-		this->selection = STARTGAME;
+		addMenuItem("Quit");
+		addMenuItem("About");
+		addMenuItem("Highscore List");
+		addMenuItem("Options");
+		addMenuItem("Start Game");
+		selection = STARTGAME;
 		menuoptions = new MenuOptions();
 		menuabout = new MenuAbout();
 		draw();
@@ -53,19 +52,19 @@ void MenuMain::drawTitle() {
 	rect.w = 640;
 	rect.h = 480;
 	rect.x = (short int) (320 - ((appTitle1->w + titlePacman->w + appTitle2->w) >> 1));
-	screen->draw(appTitle1, rect.x, 30);
+	Screen::getInstance()->draw(appTitle1, rect.x, 30);
 	rect.x = (short int) (rect.x + appTitle1->w + titlePacman->w);
-	screen->draw(appTitle2, rect.x, 30);
+	Screen::getInstance()->draw(appTitle2, rect.x, 30);
 	rect.x = (short int) (rect.x - titlePacman->w);
-	screen->draw(titlePacman, rect.x, 40);
-	screen->draw(version, (short int)(320 - (version->w >> 1)), 140);
+	Screen::getInstance()->draw(titlePacman, rect.x, 40);
+	Screen::getInstance()->draw(version, (short int)(320 - (version->w >> 1)), 140);
 }
 
 int MenuMain::show() {
 	draw();
 	int event;
 	while(!(event = eventloop())) {
-		SDL_Delay(MIN_FRAME_DURATION);
+		SDL_Delay(Constants::MIN_FRAME_DURATION);
 		FunnyAnimation::getInstance()->animate();
 	}
 	FunnyAnimation::cleanUpInstance();

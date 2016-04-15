@@ -65,7 +65,6 @@ Screen::Screen():
                            		  Constants::WINDOW_HEIGHT,
                            		  fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
 		screen_surface = SDL_GetWindowSurface(window);
-std::cout << "new surface size: " << screen_surface->w << "x" << screen_surface->h << std::endl;
 		computeClipRect();
 		if(screen_surface == 0) {
 			printf("Setting video mode failed: %s\n",SDL_GetError());
@@ -162,7 +161,6 @@ void Screen::setFullscreen(bool fs) {
 	SDL_Surface* newScreen = SDL_GetWindowSurface(window);
 	if(newScreen) {
 		screen_surface = newScreen;
-std::cout << "new surface size: " << screen_surface->w << "x" << screen_surface->h << std::endl;
 		computeClipRect();
 		addTotalUpdateRect();
 		fullscreen = fs;
@@ -266,7 +264,9 @@ TTF_Font *Screen::getHugeFont() {
 }
 
 void Screen::computeClipRect() {
-	if (screen_surface->w == Constants::WINDOW_WIDTH) {
+	bool scaling_allowed = !CommandLineOptions::exists("","noscaling");
+	bool centering_allowed = !CommandLineOptions::exists("","nocentering");
+	if (screen_surface->w == Constants::WINDOW_WIDTH || !centering_allowed) {
 		clipRect.x = 0;
 	} else {
 		clipRect.x = (screen_surface->w - Constants::WINDOW_WIDTH) >> 1;
@@ -274,7 +274,7 @@ void Screen::computeClipRect() {
 			clipRect.x = 0;
 	}
 	clipRect.w = Constants::WINDOW_WIDTH;
-	if (screen_surface->h == Constants::WINDOW_HEIGHT) {
+	if (screen_surface->h == Constants::WINDOW_HEIGHT || !centering_allowed) {
 		clipRect.y = 0;
 	} else {
 		clipRect.y = (screen_surface->h - Constants::WINDOW_HEIGHT) >> 1;
@@ -282,18 +282,17 @@ void Screen::computeClipRect() {
 			clipRect.y = 0;
 	}
 	clipRect.h = Constants::WINDOW_HEIGHT;
-std::cout << "new clip rect: (" << clipRect.x << ";" << clipRect.y << ") " << clipRect.w << "x" << clipRect.h << std::endl;
-	int scalingX = screen_surface->w / clipRect.w;
-	int scalingY = screen_surface->h / clipRect.h;
-	scalingFactor = scalingX < scalingY ? scalingX : scalingY;
-	if (scalingFactor < 1) {
-		scalingFactor = 1;
-	}
-std::cout << "scaling factor: " << scalingFactor << std::endl;
-	if (scalingFactor >= 2) {
-		clipRect.x = (screen_surface->w - clipRect.w * scalingFactor) >> 1;
-		clipRect.y = (screen_surface->h - clipRect.h * scalingFactor) >> 1;
-std::cout << "adjusted x/y of clip rect: (" << clipRect.x << ";" << clipRect.y << ")" << std::endl;
+	if (scaling_allowed) {
+		int scalingX = screen_surface->w / clipRect.w;
+		int scalingY = screen_surface->h / clipRect.h;
+		scalingFactor = scalingX < scalingY ? scalingX : scalingY;
+		if (scalingFactor < 1) {
+			scalingFactor = 1;
+		}
+		if (scalingFactor >= 2 && centering_allowed) {
+			clipRect.x = (screen_surface->w - clipRect.w * scalingFactor) >> 1;
+			clipRect.y = (screen_surface->h - clipRect.h * scalingFactor) >> 1;
+		}
 	}
 }
 

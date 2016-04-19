@@ -15,7 +15,7 @@ void Menu::draw(bool updateAll) {
 		Screen::getInstance()->clear();
 		drawTitle();
 		drawMenuItems();
-		Screen::getInstance()->addTotalUpdateRect();
+		Screen::getInstance()->addUpdateClipRect();
 	} else {
 		drawMenuItems();
 	}
@@ -114,6 +114,7 @@ int Menu::eventloop() {
 		// Redraw, when overlapped by foreign window
 		if(event.window.event == SDL_WINDOWEVENT_EXPOSED ||
 		   event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
+			Screen::getInstance()->clearOutsideClipRect();
 			Screen::getInstance()->addTotalUpdateRect();
 			Screen::getInstance()->Refresh();
 		}

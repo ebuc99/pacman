@@ -111,6 +111,10 @@ void Screen::addTotalUpdateRect() {
 	rect_num = 1;  // all other update rects will be included in this one
 }
 
+void Screen::addUpdateClipRect() {
+	AddUpdateRects(0, 0, Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
+}
+
 void Screen::Refresh() {
 	SDL_UpdateWindowSurfaceRects(window, rects, rect_num);
 	rect_num = 0;
@@ -162,6 +166,7 @@ void Screen::setFullscreen(bool fs) {
 	if(newScreen) {
 		screen_surface = newScreen;
 		computeClipRect();
+		clearOutsideClipRect();
 		addTotalUpdateRect();
 		fullscreen = fs;
 	} else {
@@ -222,6 +227,38 @@ SDL_Surface *Screen::getTextSurface(TTF_Font *font, const char *text, SDL_Color 
 void Screen::clear() {
 	SDL_Rect rect = {0, 0, screen_surface->w * scalingFactor, screen_surface->h * scalingFactor};
 	SDL_FillRect(screen_surface, &rect, SDL_MapRGB(screen_surface->format, 0, 0, 0));
+}
+
+void Screen::clearOutsideClipRect() {
+	SDL_Rect rect;
+	if (clipRect.x > 0) {
+		rect.x = 0;
+		rect.y = 0;
+		rect.w = clipRect.x;
+		rect.h = screen_surface->h;
+		SDL_FillRect(screen_surface, &rect, SDL_MapRGB(screen_surface->format, 0, 0, 0));
+	}
+	if (clipRect.x + clipRect.w*scalingFactor < screen_surface->w) {
+		rect.x = clipRect.x + clipRect.w*scalingFactor;
+		rect.y = 0;
+		rect.w = screen_surface->w - rect.x;
+		rect.h = screen_surface->h;
+		SDL_FillRect(screen_surface, &rect, SDL_MapRGB(screen_surface->format, 0, 0, 0));
+	}
+	if (clipRect.y > 0) {
+		rect.x = clipRect.x;
+		rect.y = 0;
+		rect.w = clipRect.w*scalingFactor;
+		rect.h = clipRect.y;
+		SDL_FillRect(screen_surface, &rect, SDL_MapRGB(screen_surface->format, 0, 0, 0));
+	}
+	if (clipRect.y + clipRect.h*scalingFactor < screen_surface->h) {
+		rect.x = clipRect.x;
+		rect.y = clipRect.y + clipRect.h*scalingFactor;
+		rect.w = clipRect.w*scalingFactor;
+		rect.h = screen_surface->h - rect.y;
+		SDL_FillRect(screen_surface, &rect, SDL_MapRGB(screen_surface->format, 0, 0, 0));
+	}
 }
 
 void Screen::fillRect(SDL_Rect *rect, Uint8 r, Uint8 g, Uint8 b) {

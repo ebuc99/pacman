@@ -23,7 +23,8 @@ Game::Game():
 	stopMoving(false),
 	refreshGhosts(false),
 	pause(false),
-	cnt_hunting_mode(-1)
+	cnt_hunting_mode(-1),
+	completeRedraw(false)
 {
 	scoreLabel = Screen::getTextSurface(Screen::getFont(), "Score", Constants::WHITE_COLOR);
 	levelLabel = Screen::getTextSurface(Screen::getFont(), "Level", Constants::WHITE_COLOR);
@@ -62,7 +63,7 @@ void Game::init() {
 	currentScore = Labyrinth::getInstance()->getScore();
 	Screen::getInstance()->draw(scoreLabel, Constants::SCORE_X, Constants::SCORE_Y);
 	Screen::getInstance()->draw(levelLabel, Constants::LEVEL_X, Constants::LEVEL_Y);
-	Screen::getInstance()->addTotalUpdateRect();
+	Screen::getInstance()->addUpdateClipRect();
 	Screen::getInstance()->Refresh();
 	currentTicks     = SDL_GetTicks();
 }
@@ -113,6 +114,7 @@ bool Game::eventloop() {
 			if(event.key.keysym.sym == SDLK_f) {
 				Uint32 ticksBefore = SDL_GetTicks();
 			    Screen::getInstance()->toggleFullscreen();
+			    completeRedraw = true;
 			    currentTicks += (SDL_GetTicks() - ticksBefore);
 			} else if(event.key.keysym.sym == SDLK_s) {
 				Sounds::getInstance()->toggleEnabled();
@@ -133,6 +135,7 @@ bool Game::eventloop() {
 		// Redraw, when overlapped by foreign window
 		if(event.window.event == SDL_WINDOWEVENT_EXPOSED ||
 		   event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
+			Screen::getInstance()->clearOutsideClipRect();
 			Screen::getInstance()->addTotalUpdateRect();
 			Screen::getInstance()->Refresh();
 		}
@@ -239,7 +242,7 @@ void Game::handleAnimations() {
 				stop(true);
 				Pacman::getInstance()->addLives(-1);
 				checkGameOver();
-				Screen::getInstance()->addTotalUpdateRect();
+				Screen::getInstance()->addUpdateClipRect();
 			}
 		}
 		Labyrinth::getInstance()->pill_animation();
@@ -335,7 +338,7 @@ void Game::checkedMove() {
 
 void Game::checkedRedraw() {
 	// redraw, if something has to be redrawn
-	if (Ghost::was_moving_leader || refreshGhosts) {
+	if (Ghost::was_moving_leader || refreshGhosts || completeRedraw) {
 		// objects within the level
 		Labyrinth::getInstance()->draw_pillen();  // including background
 		Labyrinth::getInstance()->drawFruit();
@@ -357,6 +360,10 @@ void Game::checkedRedraw() {
 		Screen::getInstance()->draw_dynamic_content(levelLabel, Constants::LEVEL_X, Constants::LEVEL_Y);
 		Pacman::getInstance()->drawLives();
 		Labyrinth::getInstance()->drawInfoFruits();
+		if (completeRedraw) {
+			completeRedraw = false;
+			Screen::getInstance()->addTotalUpdateRect();
+		}
 		// bring it to the screen, really
 		Screen::getInstance()->Refresh();
 	}

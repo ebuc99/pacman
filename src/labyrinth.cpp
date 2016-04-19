@@ -431,7 +431,7 @@ void Labyrinth::resetAllFigures() {
 void Labyrinth::nextLevel() {
 	hideFruit();
 	drawScoreValue();
-	Screen::getInstance()->addTotalUpdateRect();
+	Screen::getInstance()->addUpdateClipRect();
 	Screen::getInstance()->Refresh();
 	SDL_Delay(Constants::WAIT_FOR_NEW_LEVEL);
 	level->nextLevel();
@@ -460,7 +460,7 @@ void Labyrinth::resetLevel(int level) {
 	sprintf(charLevel, "%d", this->level->getLevelNumber());
 	levelNumber = Screen::getTextSurface(Screen::getVeryLargeFont(), charLevel, Constants::WHITE_COLOR);
 	drawLevelNumber();
-	Screen::getInstance()->addTotalUpdateRect();
+	Screen::getInstance()->addUpdateClipRect();
 	Screen::getInstance()->Refresh();
 	for(unsigned int i = 0; i < vec_observer.size(); i++)
 		vec_observer.at(i)->setPanicMode(false);

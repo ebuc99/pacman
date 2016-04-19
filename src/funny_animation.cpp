@@ -292,7 +292,7 @@ void FunnyAnimation::animate() {
 					screen->fillRect(&animRectTmp, 0, 0, 0);
 					screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
 					animationPart = 3;
-				} else if (redrawMenu) {
+				} else {
 					screen->draw(pacmanName, animRectTmp.x, animRectTmp.y);
 					screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
 				}
@@ -319,7 +319,7 @@ void FunnyAnimation::animate() {
 					screen->fillRect(&animRectTmp, 0, 0, 0);
 					screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
 					animationPart = 6;
-				} else if (redrawMenu) {
+				} else {
 					screen->draw(blinkyName, animRectTmp.x, animRectTmp.y);
 					screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
 				}
@@ -346,7 +346,7 @@ void FunnyAnimation::animate() {
 					screen->fillRect(&animRectTmp, 0, 0, 0);
 					screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
 					animationPart = 9;
-				} else if (redrawMenu) {
+				} else {
 					screen->draw(pinkyName, animRectTmp.x, animRectTmp.y);
 					screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
 				}
@@ -373,7 +373,7 @@ void FunnyAnimation::animate() {
 					screen->fillRect(&animRectTmp, 0, 0, 0);
 					screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
 					animationPart = 12;
-				} else if (redrawMenu) {
+				} else {
 					screen->draw(inkyName, animRectTmp.x, animRectTmp.y);
 					screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
 				}
@@ -400,7 +400,7 @@ void FunnyAnimation::animate() {
 					screen->fillRect(&animRectTmp, 0, 0, 0);
 					screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
 					animationPart = 15;
-				} else if (redrawMenu) {
+				} else {
 					screen->draw(clydeName, animRectTmp.x, animRectTmp.y);
 					screen->AddUpdateRects(animRectTmp.x, animRectTmp.y, animRectTmp.w, animRectTmp.h);
 				}

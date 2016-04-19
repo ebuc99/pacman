@@ -24,6 +24,7 @@ class Screen {
 		// register graphic parts for updating
 		void AddUpdateRects(int x, int y, int w, int h);  // should be renamed to addUpdateRect
 		void addTotalUpdateRect();
+		void addUpdateClipRect();
 		// actually display the updated rectangles
 		void Refresh();
 
@@ -56,6 +57,7 @@ class Screen {
 		}
 
 		void clear();
+		void clearOutsideClipRect();
 
 		static SDL_Surface *loadImage(const char *filename, int transparentColor = -1);
 		static TTF_Font *loadFont(const char *filename, int ptSize);

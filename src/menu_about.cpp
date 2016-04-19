@@ -22,7 +22,7 @@ void MenuAbout::draw(bool updateAll) {
 	Screen::getInstance()->draw(coding, 320 - (coding->w >> 1), 300 - (coding->h >> 1));
 	Screen::getInstance()->draw(coding2, 320 - (coding2->w >> 1), 340 - (coding2->h >> 1));
 	if (updateAll)
-		Screen::getInstance()->addTotalUpdateRect();
+		Screen::getInstance()->addUpdateClipRect();
 	Screen::getInstance()->Refresh();
 }
 

@@ -326,7 +326,7 @@ void HighscoreList::draw(bool nameAlterable, bool highlightLast) {
 		Screen::getInstance()->draw(sfReadonly, (Constants::WINDOW_WIDTH-sfReadonly->w)>>1, (Constants::WINDOW_HEIGHT-sfReadonly->h)>>1);
 	if (!nameAlterable)
 		Screen::getInstance()->draw(sfBackItem, (Constants::WINDOW_WIDTH-sfBackItem->w)>>1, 430);
-	Screen::getInstance()->addTotalUpdateRect();
+	Screen::getInstance()->addUpdateClipRect();
 	Screen::getInstance()->Refresh();
 }
 
@@ -513,6 +513,7 @@ bool HighscoreList::eventloop(bool nameAlterable, bool *redrawNeeded) {
 		}
 	}
 	if (refreshWindow) {
+		Screen::getInstance()->clearOutsideClipRect();
 		Screen::getInstance()->addTotalUpdateRect();
 		Screen::getInstance()->Refresh();
 	}

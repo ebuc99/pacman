@@ -33,6 +33,7 @@ class Game {
 		void stop(bool stop);  // stop all figures
 
 		bool refreshGhosts;
+		bool completeRedraw;
 
 		bool pause;
 

@@ -107,6 +107,7 @@ void FunnyAnimation::animate() {
 			pacman->animate();
 			pacman->draw();
 			pacman->addUpdateRect();
+			screen->clearOutsideClipRect();
 			screen->Refresh();
 		}
 
@@ -250,6 +251,7 @@ void FunnyAnimation::animate() {
 				}
 				screen->AddUpdateRects(xScore1600, 205, animScore1600->w, animScore1600->h);
 			}
+			screen->clearOutsideClipRect();
 			screen->Refresh();
 		}
 	}else if (idxAnimation == 2) {
@@ -441,6 +443,7 @@ void FunnyAnimation::animate() {
 					ghosts[3]->addUpdateRect();
 				}
 			}
+			screen->clearOutsideClipRect();
 			screen->Refresh();
 		}
 	} else if (idxAnimation == 3) {
@@ -494,6 +497,7 @@ void FunnyAnimation::animate() {
 					screen->AddUpdateRects(xFruits[i], 205, animScores[i]->w, animScores[i]->h);
 				}
 			}
+			screen->clearOutsideClipRect();
 			screen->Refresh();
 		}
 	}else if (idxAnimation == 4) {
@@ -588,6 +592,7 @@ void FunnyAnimation::animate() {
 				pacman->draw();
 				pacman->addUpdateRect();
 			}
+			screen->clearOutsideClipRect();
 			screen->Refresh();
 		}
 	}//Ende Animation 3

@@ -14,6 +14,7 @@ int main(int argc, char *argv[]) {
 		          << "  --noscaling        Do not try to scale the game in fullscreen mode." << std::endl
 		          << "  --nocentering      Do not center the game in fullscreen mode."       << std::endl
 		          << "  -s, --nosound      Start with sound switched off."                   << std::endl
+		          << "  -m, --nomusic      Start with music switched off."                   << std::endl
 		          << "  -v, --version      Print version number and quit."                   << std::endl
 		          << "  --name=...         Provide the player's name."                       << std::endl
 		          << "  --highscore=...    Define path to highscore file."                   << std::endl

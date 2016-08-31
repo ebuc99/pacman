@@ -4,6 +4,7 @@ MenuOptions::MenuOptions():
 	Menu("Options") {
 	addMenuItem("back");
 	addMenuItem("Window 640x480", "Fullscreen");
+	addMenuItem("Music: on", "Music: off");
 	addMenuItem("Sound: on", "Sound: off");
 }
 
@@ -26,6 +27,8 @@ int MenuOptions::handleSelection() {
 		Screen::getInstance()->toggleFullscreen();
 	else if(selection == SOUND)
 		Sounds::getInstance()->toggleEnabled();
+	else if(selection == MUSIC)
+		Sounds::getInstance()->toggleMusicEnabled();
 	updateMenuItemNames();
 	draw();
 	return 0;
@@ -34,4 +37,5 @@ int MenuOptions::handleSelection() {
 void MenuOptions::updateMenuItemNames() {
 	menuItems.at(FULLSCREEN)->setMenuItemAlt(Screen::getInstance()->isFullscreen());
 	menuItems.at(SOUND)->setMenuItemAlt(!Sounds::getInstance()->isEnabled());
+	menuItems.at(MUSIC)->setMenuItemAlt(!Sounds::getInstance()->isMusicEnabled());
 }

@@ -14,8 +14,11 @@ class Sounds : public LabyrinthObserver {
 		static Sounds *getInstance();
 		static void cleanUpInstance();
 		bool isEnabled() const;
+		bool isMusicEnabled() const;
 		void setEnabled(bool newValue = true);
+		void setMusicEnabled(bool newValue = true);
 		void toggleEnabled();
+		void toggleMusicEnabled();
 		enum MusicType {NONE, INTRO, NORMAL, SUPERPILL, GHOST_EATEN};
 		enum SingleSounds {DYING, EXTRA_MAN, FRUIT, EAT_GHOST};
 		void pauseAll();
@@ -36,6 +39,7 @@ class Sounds : public LabyrinthObserver {
 		~Sounds();
 		MusicType musicPlaying;
 		bool enabled;
+		bool musicEnabled;
 		bool audioAvailable;
 		Mix_Chunk *chunk_munch_a = NULL;
 		Mix_Chunk *chunk_munch_b = NULL;

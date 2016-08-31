@@ -78,6 +78,11 @@ int Menu::eventloop() {
 					updateMenuItemNames();
 					this->draw();
 				}
+				else if(event.key.keysym.sym == SDLK_m) {
+					Sounds::getInstance()->toggleMusicEnabled();
+					updateMenuItemNames();
+					this->draw();
+				}
 				else if((event.key.keysym.sym == SDLK_q)||(event.key.keysym.sym == SDLK_ESCAPE))
 					return 2;
 				break;

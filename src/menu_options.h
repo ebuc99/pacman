@@ -9,7 +9,7 @@ class MenuOptions : public Menu {
 		~MenuOptions();
 		int show();
 	private:
-		enum Entries {BACK, FULLSCREEN, SOUND};
+		enum Entries {BACK, FULLSCREEN, MUSIC, SOUND};
 		int handleSelection();
 		void updateMenuItemNames();
 };

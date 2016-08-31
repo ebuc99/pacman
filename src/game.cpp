@@ -118,7 +118,9 @@ bool Game::eventloop() {
 			    currentTicks += (SDL_GetTicks() - ticksBefore);
 			} else if(event.key.keysym.sym == SDLK_s) {
 				Sounds::getInstance()->toggleEnabled();
-				if (Sounds::getInstance()->isEnabled()) {
+			} else if(event.key.keysym.sym == SDLK_m) {
+				Sounds::getInstance()->toggleMusicEnabled();
+				if (Sounds::getInstance()->isMusicEnabled()) {
 					checkMusic();
 				}
 			} else if(event.key.keysym.sym == SDLK_p) {

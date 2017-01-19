@@ -37,6 +37,7 @@ class HighscoreList {
 		int getIdxLastInsertedEntry() { return idxLastInsertedEntry; }
 		void print();
 		void show(bool nameAlterable, bool highlightLast);
+		void resetHighlightedEntry();
 		void load();
 		void save();
 		HighscoreEntry *getEntry(int index);

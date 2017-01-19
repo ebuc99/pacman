@@ -538,6 +538,26 @@ void HighscoreList::show(bool nameAlterable, bool highlightLast) {
 	}
 }
 
+void HighscoreList::resetHighlightedEntry() {
+	idxHighlightedEntry = -1;
+	if (sfCurrentPos) {
+		SDL_FreeSurface(sfCurrentPos);
+		sfCurrentPos = NULL;
+	}
+	if (sfCurrentName) {
+		SDL_FreeSurface(sfCurrentName);
+		sfCurrentName = NULL;
+	}
+	if (sfCurrentScore) {
+		SDL_FreeSurface(sfCurrentScore);
+		sfCurrentScore = NULL;
+	}
+	if (sfCurrentLevel) {
+		SDL_FreeSurface(sfCurrentLevel);
+		sfCurrentLevel = NULL;
+	}
+}
+
 bool HighscoreList::readEncryptedLine(std::ifstream &f, std::string &line) {
 	line.clear();
 	if (f.eof()) {

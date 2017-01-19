@@ -163,6 +163,7 @@ void Game::setGameOver(bool gameOver) {
 	}
 	HighscoreList::getInstance()->load();
 	if (!HighscoreList::getInstance()->isReadonly()) {
+		HighscoreList::getInstance()->resetHighlightedEntry();
 		HighscoreList::getInstance()->insertEntry(new HighscoreEntry(CommandLineOptions::getValue("","name"), Labyrinth::getInstance()->getScore(), Labyrinth::getInstance()->getLevelNumber()));
 		//HighscoreList::getInstance()->print();  // for testing purposes
 	}

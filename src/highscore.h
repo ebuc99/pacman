@@ -49,6 +49,7 @@ class HighscoreList {
 		void draw(bool nameAlterable, bool highlightLast);
 		bool eventloop(bool nameAlterable, bool *redrawNeeded);
 		bool readEncryptedLine(std::ifstream &f, std::string &line);
+		bool readLine(std::ifstream &f, std::string &line);
 		uint8_t maxSize;
 		std::vector<HighscoreEntry*> *entries;
 		int idxLastInsertedEntry, idxHighlightedEntry;

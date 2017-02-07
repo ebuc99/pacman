@@ -79,7 +79,7 @@ pacman_LDFLAGS = -I/usr/include/SDL2 -D_REENTRANT #$(SDL2_CFLAGS)
 pacman_LDADD =  \
 	$(SDL2_LIBS) \
 	-lSDL2_mixer \
-	-L/usr/lib64 -lSDL2 -lpthread
+	-L/usr/lib64 -lSDL2
 
 
 

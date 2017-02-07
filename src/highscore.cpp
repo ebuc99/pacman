@@ -586,6 +586,11 @@ bool HighscoreList::readEncryptedLine(std::ifstream &f, std::string &line) {
 	}
 }
 
+bool HighscoreList::readLine(std::ifstream &f, std::string &line) {
+    std::getline(f, line);
+    return (line.length() > 0);
+}
+
 void HighscoreList::load() {
 	if (readonly)
 		return;
@@ -618,7 +623,7 @@ void HighscoreList::load() {
 		if (f.is_open()) {
 			std::string line;
 			uint8_t linesRead = 0, validLines = 0;
-			while (fileIsEncrypted ? readEncryptedLine(f, line) : std::getline(f, line)) {
+			while (fileIsEncrypted ? readEncryptedLine(f, line) : readLine(f, line)) {
 				if (line.length() >= 1) {
 					++linesRead;
 					std::string::size_type pos = line.find('|');

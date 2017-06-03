@@ -50,11 +50,11 @@ Screen::Screen():
 {
 	// initialize SDL
 	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
-        printf("SDL initialization failed: %s\n", SDL_GetError());
+		std::cout << "SDL initialization failed: " << SDL_GetError() << std::endl;
         sdlInitErrorOccured = true;
     }
 	if(!sdlInitErrorOccured && TTF_Init() == -1) {
-		printf("TTF initialization failed: %s\n", TTF_GetError());
+		std::cout << "TTF initialization failed: " << TTF_GetError() << std::endl;
         sdlInitErrorOccured = true;
 	}
 	if (!sdlInitErrorOccured) {
@@ -67,7 +67,7 @@ Screen::Screen():
 		screen_surface = SDL_GetWindowSurface(window);
 		computeClipRect();
 		if(screen_surface == 0) {
-			printf("Setting video mode failed: %s\n",SDL_GetError());
+			std::cout << "Setting video mode failed: " << SDL_GetError() << std::endl;
 			sdlInitErrorOccured = true;
 		}
 	}
@@ -171,9 +171,9 @@ void Screen::setFullscreen(bool fs) {
 		fullscreen = fs;
 	} else {
 		if (fs) {
-			printf("Switching to fullscreen mode failed: %s\n",SDL_GetError());
+			std::cout << "Switching to fullscreen mode failed: " << SDL_GetError() << std::endl;
 		} else {
-			printf("Switching from fullscreen mode failed: %s\n",SDL_GetError());
+			std::cout << "Switching from fullscreen mode failed: " << SDL_GetError() << std::endl;
 		}
 	}
 }
@@ -184,14 +184,14 @@ SDL_Surface *Screen::loadImage(const char *filename, int transparentColor) {
 	SDL_Surface *surface, *temp;
 	temp = IMG_Load(filePath);
 	if (!temp) {
-		printf("Unable to load image: %s\n", IMG_GetError());
+		std::cout << "Unable to load image: " << IMG_GetError() << std::endl;
 		exit(EXIT_FAILURE);
 	}
 	if (transparentColor != -1)
 		SDL_SetColorKey(temp, SDL_TRUE | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, (uint8_t)transparentColor, (uint8_t)transparentColor, (uint8_t)transparentColor));
 	surface = SDL_ConvertSurface(temp,  Screen::getInstance()->getSurface()->format, 0);
 	if (surface == NULL) {
-		printf("Unable to convert image to display format: %s\n", SDL_GetError());
+		std::cout << "Unable to convert image to display format: " << SDL_GetError() << std::endl;
 		exit(EXIT_FAILURE);
 	}
 	SDL_FreeSurface(temp);
@@ -203,7 +203,7 @@ TTF_Font *Screen::loadFont(const char *filename, int ptSize) {
 	getFilePath(filePath, filename);
 	TTF_Font *font = TTF_OpenFont(filePath, ptSize);
 	if (!font) {
-		printf("Unable to open TTF font: %s\n", TTF_GetError());
+		std::cout << "Unable to open TTF font: " << TTF_GetError() << std::endl;
 		exit(EXIT_FAILURE);
 	}
 	return font;
@@ -212,12 +212,12 @@ TTF_Font *Screen::loadFont(const char *filename, int ptSize) {
 SDL_Surface *Screen::getTextSurface(TTF_Font *font, const char *text, SDL_Color color) {
 	SDL_Surface *temp = TTF_RenderText_Solid(font, text, color);
 	if (!temp) {
-		printf("Unable to render text \"%s\": %s\n", text, TTF_GetError());
+		std::cout << "Unable to render text \"" << text << "\": " << TTF_GetError() << std::endl;
 		exit(EXIT_FAILURE);
 	}
 	SDL_Surface *surface = SDL_ConvertSurface(temp,  Screen::getInstance()->getSurface()->format, 0);
 	if (surface == NULL) {
-		printf("Unable to convert text surface to display format: %s\n", SDL_GetError());
+		std::cout << "Unable to convert text surface to display format: " << SDL_GetError() << std::endl;
 		exit(EXIT_FAILURE);
 	}
 	SDL_FreeSurface(temp);

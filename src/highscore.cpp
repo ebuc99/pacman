@@ -1,4 +1,6 @@
 #include "highscore.h"
+#include <sstream>
+using namespace std;
 
 HighscoreEntry::HighscoreEntry(std::string playerName, int score, int level) {
 	this->playerName = std::string(playerName);
@@ -214,6 +216,7 @@ void HighscoreList::draw(bool nameAlterable, bool highlightLast) {
 	if (readonly && !sfReadonly)
 		sfReadonly = Screen::getTextSurface(Screen::getFont(), "Highscore file could not be read!", Constants::RED_COLOR);
 	char ch_array[8];
+	string str_array;
 	if (idxLastInsertedEntry < 0 || !highlightLast) {
 		idxHighlightedEntry = -1;
 	} else {
@@ -221,16 +224,19 @@ void HighscoreList::draw(bool nameAlterable, bool highlightLast) {
 			idxHighlightedEntry = idxLastInsertedEntry;
 			if (sfCurrentPos)
 				SDL_FreeSurface(sfCurrentPos);
-			sprintf(ch_array, "%d.", idxHighlightedEntry+1);
-			sfCurrentPos = Screen::getTextSurface(Screen::getFont(), ch_array, Constants::YELLOW_COLOR);
+			//sprintf(ch_array, "%d.", idxHighlightedEntry+1);
+			str_array = static_cast<ostringstream*>( &(ostringstream() << idxHighlightedEntry+1 << "."))->str();	
+			sfCurrentPos = Screen::getTextSurface(Screen::getFont(), /*ch_array*/ str_array.c_str(), Constants::YELLOW_COLOR);
 			if (sfCurrentScore)
 				SDL_FreeSurface(sfCurrentScore);
-			sprintf(ch_array, "%d", entries->at(idxHighlightedEntry)->getScore());
-			sfCurrentScore = Screen::getTextSurface(Screen::getFont(), ch_array, Constants::YELLOW_COLOR);
+			//sprintf(ch_array, "%d", entries->at(idxHighlightedEntry)->getScore());
+			str_array = static_cast<ostringstream*>( &(ostringstream() << entries->at(idxHighlightedEntry)->getScore()))->str();	
+			sfCurrentScore = Screen::getTextSurface(Screen::getFont(), /*ch_array*/str_array.c_str(), Constants::YELLOW_COLOR);
 			if (sfCurrentLevel)
 				SDL_FreeSurface(sfCurrentLevel);
-			sprintf(ch_array, "%d", entries->at(idxHighlightedEntry)->getLevel());
-			sfCurrentLevel = Screen::getTextSurface(Screen::getFont(), ch_array, Constants::YELLOW_COLOR);
+			//sprintf(ch_array, "%d", entries->at(idxHighlightedEntry)->getLevel());
+			str_array = static_cast<ostringstream*>( &(ostringstream() << entries->at(idxHighlightedEntry)->getLevel()))->str();	
+			sfCurrentLevel = Screen::getTextSurface(Screen::getFont(), /*ch_array*/str_array.c_str(), Constants::YELLOW_COLOR);
 		}
 		if (sfCurrentName)
 			SDL_FreeSurface(sfCurrentName);

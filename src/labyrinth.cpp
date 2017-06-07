@@ -1,7 +1,6 @@
 #include "labyrinth.h"
 #include "game.h"
-#include <string.h>
-#include <iostream>
+#include <sstream>
 #include "level.h"
 
 Labyrinth *Labyrinth::instance = NULL;
@@ -319,11 +318,12 @@ void Labyrinth::pill_animation() {
 
 void Labyrinth::drawScoreValue() {
 	if (punktestand != lastPunktestand || !score) {
-		char charPunktestand[8] = "0";
-		sprintf(charPunktestand, "%d", punktestand);
+		ostringstream ostrPunktestand;
+		ostrPunktestand.str("0");
+		ostrPunktestand << punktestand;
 		if (score)
 			SDL_FreeSurface(score);
-		score = Screen::getTextSurface(Screen::getFont(), charPunktestand, Constants::YELLOW_COLOR);
+		score = Screen::getTextSurface(Screen::getFont(), ostrPunktestand.str().c_str(), Constants::YELLOW_COLOR);
 	}
 	Screen::getInstance()->draw_dynamic_content(score, Constants::SCORE_X, Constants::SCORE_VALUE_Y);
 }
@@ -344,9 +344,9 @@ void Labyrinth::resetBonusStage() {
 void Labyrinth::addScore(int value, int show_x, int show_y) {
 	punktestand += value;
 	// show the score at the specified position
-	char ch[8] = "0";
-	sprintf(ch, "%d", value);
-	smallScore = Screen::getTextSurface(Screen::getSmallFont(), ch, Constants::WHITE_COLOR);
+	ostringstream ostrScore;
+	ostrScore << value;
+	smallScore = Screen::getTextSurface(Screen::getSmallFont(), ostrScore.str().c_str(), Constants::WHITE_COLOR);
 	smallScore_x = show_x - (smallScore->w >> 1);
 	smallScore_y = show_y - (smallScore->h >> 1);
 	drawSmallScore();
@@ -448,17 +448,18 @@ void Labyrinth::resetLevel(int level) {
 	draw_pillen();  // including background
 	loadLevelFruit();
 	startFruitRandomizer(true);
-	char charLevel[20];
+	ostringstream ostrLevel;
 	if (level == 1) {
 		setInitText("Get Ready!");
 	} else {
-		sprintf(charLevel, "Level %d", this->level->getLevelNumber());
-		setInitText(charLevel);
+		ostrLevel << "Level " << this->level->getLevelNumber();	
+		setInitText(ostrLevel.str().c_str());
 	}
 	if (levelNumber)
 		SDL_FreeSurface(levelNumber);
-	sprintf(charLevel, "%d", this->level->getLevelNumber());
-	levelNumber = Screen::getTextSurface(Screen::getVeryLargeFont(), charLevel, Constants::WHITE_COLOR);
+	ostrLevel.str("");
+	ostrLevel << this->level->getLevelNumber();	
+	levelNumber = Screen::getTextSurface(Screen::getVeryLargeFont(), /*charLevel*/ostrLevel.str().c_str(), Constants::WHITE_COLOR);
 	drawLevelNumber();
 	Screen::getInstance()->addUpdateClipRect();
 	Screen::getInstance()->Refresh();

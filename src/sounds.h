@@ -37,9 +37,11 @@ class Sounds : public LabyrinthObserver {
 		static Sounds *instance;
 		Sounds();
 		~Sounds();
+		void initialize();
 		MusicType musicPlaying;
 		bool enabled;
 		bool musicEnabled;
+		bool initialized;
 		bool audioAvailable;
 		Mix_Chunk *chunk_munch_a = NULL;
 		Mix_Chunk *chunk_munch_b = NULL;

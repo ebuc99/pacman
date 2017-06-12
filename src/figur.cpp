@@ -120,15 +120,16 @@ Figur::Hunter Figur::get_hunter() const {
 }
 
 void Figur::set_hunter(Hunter hunter) {
-		this->hunter = hunter;
+	this->hunter = hunter;
 }
 
 void Figur::setVisibility(bool v) {
 	int prev_value = this->visible;
 	this->visible = (v == false) ? false : true;
-	if (prev_value != this->visible)
+	if (prev_value != this->visible) {
 		draw();
-		addUpdateRect();
+	}
+	addUpdateRect();
 }
 
 bool Figur::isVisible() {

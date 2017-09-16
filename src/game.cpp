@@ -325,9 +325,17 @@ bool Game::checkLastPillEaten() {
 void Game::checkScoreForExtraLife() {
 	int lastScore = currentScore;
 	currentScore = Labyrinth::getInstance()->getScore();
-	if ((lastScore<10000 && currentScore>=10000) || (lastScore<30000 && currentScore>=30000)) {
+
+        int target = ( currentScore / 10000 ) * 10000;
+
+	if (lastScore<10000 && currentScore>=10000){
 		Pacman::getInstance()->addLives(1);
 		Sounds::getInstance()->playSingleSound(Sounds::EXTRA_MAN);
+	}else{
+                if (lastScore<target && currentScore>=target){
+		  Pacman::getInstance()->addLives(1);
+		  Sounds::getInstance()->playSingleSound(Sounds::EXTRA_MAN);
+		}
 	}
 }
 

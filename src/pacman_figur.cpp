@@ -335,10 +335,12 @@ bool Pacman::ghostTouched() const{
     for(int i = 0; i < 4; i++) {
     	int x_real_ghost = Ghost::getGhostArray()[i]->x + (int)(Ghost::getGhostArray()[i]->get_Surface()->w * 0.5);
 		int y_real_ghost = Ghost::getGhostArray()[i]->y + (int)(Ghost::getGhostArray()[i]->get_Surface()->h * 0.5);
-		if((x_real_ghost >= x_left_pacman) && (x_real_ghost <= x_right_pacman) && (y_real_ghost >= y_up_pacman) && (y_real_ghost <= y_down_pacman))
+		if ((x_real_ghost >= x_left_pacman) && (x_real_ghost <= x_right_pacman) && (y_real_ghost >= y_up_pacman) && (y_real_ghost <= y_down_pacman)) {
 			touch_result = Ghost::getGhostArray()[i]->touched();
-			if(touch_result != 0)
+			if (touch_result != 0) {
 				return true;
+			}
+		}
 	}
 	return false;
 }

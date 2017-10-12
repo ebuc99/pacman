@@ -152,14 +152,16 @@ void Screen::draw(SDL_Surface* graphic, int offset_x, int offset_y) {
 }
 
 void Screen::setFullscreen(bool fs) {
-    if (fs == fullscreen)
-        return;  // the desired mode already has been activated, so do nothing
+	if (fs == fullscreen) {
+		return;  // the desired mode already has been activated, so do nothing
+	}
 	SDL_SetWindowSize(window, Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
 	SDL_SetWindowPosition(window, 0, 0);
-    if(fs)
+	if (fs) {
 		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-	else
+	} else {
 		SDL_SetWindowFullscreen(window, 0);
+	}
 	SDL_SetWindowSize(window, Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
 	SDL_SetWindowPosition(window, 0, 0);
 	SDL_Surface* newScreen = SDL_GetWindowSurface(window);

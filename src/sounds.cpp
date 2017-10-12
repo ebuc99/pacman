@@ -24,9 +24,16 @@ Sounds::Sounds():
 	audioAvailable(true),
 	enabled(!CommandLineOptions::exists("s","nosound")),
 	musicEnabled(!CommandLineOptions::exists("m","nomusic")),
+	initialized(false),
 	musicPlaying(NONE),
 	panicMode(false)
 {
+	if (enabled || musicEnabled) {
+		initialize();
+	}
+}
+
+void Sounds::initialize() {
 	int audio_rate = 44100;
 	Uint16 audio_format = AUDIO_S16SYS;
 	int audio_channels = 2;
@@ -51,12 +58,13 @@ Sounds::Sounds():
 		music_siren_fast = loadWaveMusic("sounds/siren_fast.wav");
 		music_superpill_loop = loadWaveMusic("sounds/large_pellet_loop.wav");
 		music_eat_ghost = loadWaveMusic("sounds/ghost_eat_1.wav");
+		initialized = true;
 	}
 	Labyrinth::getInstance()->setLabyrinthObserver(this);
 }
 
 Sounds::~Sounds() {
-	if (audioAvailable) {
+	if (initialized) {
 		Mix_HaltChannel(-1);
 		Mix_HaltMusic();
 		SAFE_FREE_CHUNK(chunk_munch_a);
@@ -82,6 +90,9 @@ bool Sounds::isMusicEnabled() const {
 }
 
 void Sounds::setEnabled(bool newValue) {
+	if (newValue && !initialized) {
+		initialize();
+	}
 	if (audioAvailable || !newValue) {
 		enabled = newValue;
 		if (!enabled && audioAvailable) {
@@ -93,6 +104,9 @@ void Sounds::setEnabled(bool newValue) {
 }
 
 void Sounds::setMusicEnabled(bool newValue) {
+	if (newValue && !initialized) {
+		initialize();
+	}
 	if (audioAvailable || !newValue) {
 		musicEnabled = newValue;
 		if (!musicEnabled && audioAvailable) {

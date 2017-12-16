@@ -1,8 +1,11 @@
 #include "pacman.h"
 #include "config.h"
+#include "config_file.h"
 int main(int argc, char *argv[]) {
 	srand((unsigned int)time(0)); // init randomize
-
+	ConfigFile *configfile = ConfigFile::getInstance();
+	configfile->readConfig();
+	configfile->cleanUpInstance();
 	CommandLineOptions::set(argc, argv);
 	if (CommandLineOptions::exists("h", "help")) {
 		std::cout << "This game is a Pacman clone (version " << VERSION << ")."              << std::endl

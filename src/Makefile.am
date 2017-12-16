@@ -54,7 +54,9 @@ pacman_SOURCES =  \
 	level.h \
 	level.cpp \
 	highscore.h \
-	highscore.cpp
+	highscore.cpp \
+	config_file.cpp \
+	config_file.h
 
 pacman_CXXFLAGS = -ansi \
 	-fno-default-inline \

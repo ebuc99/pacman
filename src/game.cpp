@@ -81,13 +81,13 @@ void Game::updateDelayTime() {
 }
 
 void Game::preselectDirection(int keycode) {
-	if (keycode == SDLK_LEFT) {
+	if (keycode == SDLK_LEFT || keycode == SDLK_h) {
 		Pacman::getInstance()->direction_pre = Figur::LEFT;
-	} else if (keycode == SDLK_UP) {
+	} else if (keycode == SDLK_UP || keycode == SDLK_k) {
 		Pacman::getInstance()->direction_pre = Figur::UP;
-	} else if(keycode == SDLK_RIGHT) {
+	} else if(keycode == SDLK_RIGHT || keycode == SDLK_l) {
 		Pacman::getInstance()->direction_pre = Figur::RIGHT;
-	} else if (keycode == SDLK_DOWN) {
+	} else if (keycode == SDLK_DOWN || SDLK_j) {
 		Pacman::getInstance()->direction_pre = Figur::DOWN;
 	}
 }

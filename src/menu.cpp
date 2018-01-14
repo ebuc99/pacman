@@ -64,9 +64,9 @@ int Menu::eventloop() {
 		case SDL_KEYDOWN:
 				if(event.key.keysym.sym == SDLK_RETURN)
 					return handleSelection();
-				else if(event.key.keysym.sym == SDLK_UP)
+				else if(event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_k)
 					menuItemUp();
-				else if(event.key.keysym.sym == SDLK_DOWN)
+				else if(event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_j)
 					menuItemDown();
 				else if(event.key.keysym.sym == SDLK_f) {
 					Screen::getInstance()->toggleFullscreen();

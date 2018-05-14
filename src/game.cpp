@@ -87,7 +87,7 @@ void Game::preselectDirection(int keycode) {
 		Pacman::getInstance()->direction_pre = Figur::UP;
 	} else if(keycode == SDLK_RIGHT || keycode == SDLK_l) {
 		Pacman::getInstance()->direction_pre = Figur::RIGHT;
-	} else if (keycode == SDLK_DOWN || SDLK_j) {
+	} else if (keycode == SDLK_DOWN || keycode == SDLK_j) {
 		Pacman::getInstance()->direction_pre = Figur::DOWN;
 	}
 }

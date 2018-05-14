@@ -2,7 +2,7 @@
 
 ## Created by Anjuta
 
-AM_CPPFLAGS = \
+AM_CPPFLAGS = -I/usr/include/SDL2\
 	-DPACKAGE_LOCALE_DIR=\""$(localedir)"\" \
 	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
 	-DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\"

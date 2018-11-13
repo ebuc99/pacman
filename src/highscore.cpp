@@ -503,6 +503,11 @@ bool HighscoreList::eventloop(bool nameAlterable, bool *redrawNeeded) {
 				}
 			}
 			break;
+		case SDL_CONTROLLERBUTTONDOWN:
+			if (event.cbutton.button == SDL_CONTROLLER_BUTTON_START || event.cbutton.button == SDL_CONTROLLER_BUTTON_BACK) {
+				return false;
+			}
+			break;
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.button.button == SDL_BUTTON_LEFT && !nameAlterable) {
 				int event_x = Screen::xToClipRect(event.motion.x);

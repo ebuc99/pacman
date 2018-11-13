@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_gamecontroller.h>
 #include "constants.h"
 #include "pacman_figur.h"
 #include "ghost_figur.h"

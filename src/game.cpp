@@ -53,6 +53,7 @@ void Game::init() {
 	cnt_hunting_mode = -1;
 	cnt_sleep        = -1;
 
+	GameController::getInstance()->searchAndOpen();
 	Labyrinth::getInstance()->resetLevel(1);
 
 	// TODO: extract new class Player with a method reset()?

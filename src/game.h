@@ -8,6 +8,7 @@
 #include "pacman_figur.h"
 #include "ghost_figur.h"
 #include "highscore.h"
+#include "gamecontroller.h"
 
 class Game {
 	public:

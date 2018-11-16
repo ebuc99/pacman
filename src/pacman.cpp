@@ -1,7 +1,8 @@
 #include "pacman.h"
 #include "config.h"
+
 int main(int argc, char *argv[]) {
-	srand((unsigned int)time(0)); // init randomize
+	srand((unsigned int) time(0));  // init randomize
 
 	CommandLineOptions::set(argc, argv);
 	if (CommandLineOptions::exists("h", "help")) {
@@ -30,18 +31,6 @@ int main(int argc, char *argv[]) {
 	if(Screen::getInstance()->hasSDLInitErrorOccured())
 		return EXIT_FAILURE;
 
-	SDL_GameController *gameController = NULL;
-	for (int i = 0; i < SDL_NumJoysticks(); ++i) {
-		if (SDL_IsGameController(i)) {
-			gameController = SDL_GameControllerOpen(i);
-			if (gameController) {
-				break;
-			} else {
-				std::cerr << "Unable to open game controller " << i << ": " << SDL_GetError() << std::endl;
-			}
-		}
-	}
-
 	while(MenuMain::getInstance()->show()) {
 		Game::getInstance()->start();
 		if (Game::getInstance()->isGameOver()) {
@@ -60,14 +49,12 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	if (gameController)
-		SDL_GameControllerClose(gameController);
-
 	Game::cleanUpInstance();
 	MenuMain::cleanUpInstance();
 	Labyrinth::cleanUpInstance();
 	Pacman::cleanUpInstance();
 	Ghost::cleanUpGhostArray();
+	GameController::cleanUpInstance();
 	Sounds::cleanUpInstance();
 	Screen::cleanUpInstance();
 	HighscoreList::cleanUpInstance();

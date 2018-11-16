@@ -8,10 +8,12 @@
 #include "cmdline_options.h"
 #include "constants.h"
 #include "game.h"
+#include "gamecontroller.h"
+#include "screen.h"
+#include "sounds.h"
 #include "ghost_figur.h"
 #include "pacman_figur.h"
 #include "menu_main.h"
 #include "highscore.h"
 
 #endif
-

@@ -1,5 +1,4 @@
 #include "sounds.h"
-#include <iostream>
 #include "labyrinth.h"
 
 Sounds *Sounds::instance = NULL;
@@ -37,13 +36,16 @@ void Sounds::initialize() {
 	int audio_rate = 44100;
 	Uint16 audio_format = AUDIO_S16SYS;
 	int audio_channels = 2;
-	int audio_buffers = 2048; //1024;
+	int audio_buffers = 2048;
 
-	if(Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers) != 0) {
-		std::cerr << "Unable to initialize audio: " << Mix_GetError() << std::endl;
+	if (SDL_InitSubSystem(SDL_INIT_AUDIO) != 0) {
+		std::cout << "SDL audio initialization failed (SDL_InitSubSystem): " << SDL_GetError() << std::endl;
 		audioAvailable = false;
-		enabled        = false;
-		musicEnabled   = false;
+	}
+
+	if (audioAvailable && Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers) != 0) {
+		std::cerr << "Unable to initialize audio (MixOpenAudio): " << Mix_GetError() << std::endl;
+		audioAvailable = false;
 	}
 	if (audioAvailable) {
 		chunk_munch_a = loadWaveSound("sounds/munch_a.wav");
@@ -59,6 +61,9 @@ void Sounds::initialize() {
 		music_superpill_loop = loadWaveMusic("sounds/large_pellet_loop.wav");
 		music_eat_ghost = loadWaveMusic("sounds/ghost_eat_1.wav");
 		initialized = true;
+	} else {
+		enabled      = false;
+		musicEnabled = false;
 	}
 	Labyrinth::getInstance()->setLabyrinthObserver(this);
 }
@@ -78,6 +83,7 @@ Sounds::~Sounds() {
 		SAFE_FREE_MUSIC(music_superpill_loop);
 		SAFE_FREE_MUSIC(music_eat_ghost);
 		Mix_CloseAudio();
+		SDL_QuitSubSystem(SDL_INIT_AUDIO);
 	}
 }
 

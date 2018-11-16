@@ -61,6 +61,7 @@ void MenuMain::drawTitle() {
 }
 
 int MenuMain::show() {
+	GameController::getInstance()->searchAndOpen();
 	draw();
 	int event;
 	while(!(event = eventloop())) {

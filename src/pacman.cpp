@@ -1,7 +1,8 @@
 #include "pacman.h"
 #include "config.h"
+
 int main(int argc, char *argv[]) {
-	srand((unsigned int)time(0)); // init randomize
+	srand((unsigned int) time(0));  // init randomize
 
 	CommandLineOptions::set(argc, argv);
 	if (CommandLineOptions::exists("h", "help")) {
@@ -53,6 +54,7 @@ int main(int argc, char *argv[]) {
 	Labyrinth::cleanUpInstance();
 	Pacman::cleanUpInstance();
 	Ghost::cleanUpGhostArray();
+	GameController::cleanUpInstance();
 	Sounds::cleanUpInstance();
 	Screen::cleanUpInstance();
 	HighscoreList::cleanUpInstance();

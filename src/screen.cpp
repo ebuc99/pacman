@@ -49,8 +49,8 @@ Screen::Screen():
 	scalingFactor(1)
 {
 	// initialize SDL
-	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
-		std::cout << "SDL initialization failed: " << SDL_GetError() << std::endl;
+	if(SDL_InitSubSystem(SDL_INIT_VIDEO) != 0) {
+		std::cout << "SDL video initialization failed: " << SDL_GetError() << std::endl;
         sdlInitErrorOccured = true;
     }
 	if(!sdlInitErrorOccured && TTF_Init() == -1) {
@@ -76,7 +76,7 @@ Screen::Screen():
 
 Screen::~Screen() {
 	TTF_Quit();
-	SDL_Quit();
+	SDL_QuitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
 }
 
 void Screen::AddUpdateRects(int x, int y, int w, int h) {

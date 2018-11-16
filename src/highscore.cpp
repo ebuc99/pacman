@@ -2,6 +2,8 @@
 #include <sstream>
 using namespace std;
 
+const std::string VALID_CHARACTERS = std::string(" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.:,;!?");
+
 HighscoreEntry::HighscoreEntry(std::string playerName, int score, int level) {
 	this->playerName = std::string(playerName);
 	this->score      = score;
@@ -21,6 +23,20 @@ void HighscoreEntry::removeLastCharFromPlayerName() {
 	}
 }
 
+void HighscoreEntry::rotateLastCharOfPlayerName(bool reverse) {
+	if (playerName.length() >= 1) {
+		char c = playerName[playerName.length()-1];
+		std::string::size_type pos = VALID_CHARACTERS.find(c);
+		if (reverse) {
+			pos = (pos + VALID_CHARACTERS.length() - 1) % VALID_CHARACTERS.length();
+		} else {
+			pos = (pos + 1) % VALID_CHARACTERS.length();
+		}
+		playerName[playerName.length()-1] = VALID_CHARACTERS[pos];
+	} else {
+		addCharToPlayerName(reverse ? '?' : 'A');
+	}
+}
 
 HighscoreList *HighscoreList::instance = NULL;
 
@@ -337,6 +353,15 @@ void HighscoreList::draw(bool nameAlterable, bool highlightLast) {
 	Screen::getInstance()->Refresh();
 }
 
+void HighscoreList::finishEntry() {
+	if (entries->at(idxLastInsertedEntry)->getPlayerNameLength() == 0)
+		entries->at(idxLastInsertedEntry)->setPlayerName("Pacman");  // default name if none has been entered
+	if (sfPlayerNames[idxLastInsertedEntry]) {
+		SDL_FreeSurface(sfPlayerNames[idxLastInsertedEntry]);
+		sfPlayerNames[idxLastInsertedEntry] = NULL;  // has to be updated when drawn next time
+	}
+}
+
 bool HighscoreList::eventloop(bool nameAlterable, bool *redrawNeeded) {
 	SDL_Event event;
 	bool refreshWindow = false;
@@ -347,14 +372,9 @@ bool HighscoreList::eventloop(bool nameAlterable, bool *redrawNeeded) {
 			if (nameAlterable) {
 				bool upper = ((event.key.keysym.mod & KMOD_LSHIFT) | (event.key.keysym.mod & KMOD_RSHIFT)) > 0;
 				if (event.key.keysym.sym == SDLK_RETURN) {
-					if (entries->at(idxLastInsertedEntry)->getPlayerNameLength() == 0)
-						entries->at(idxLastInsertedEntry)->setPlayerName("Pacman");  // default name if none has been entered
-					if (sfPlayerNames[idxLastInsertedEntry]) {
-						SDL_FreeSurface(sfPlayerNames[idxLastInsertedEntry]);
-						sfPlayerNames[idxLastInsertedEntry] = NULL;  // has to be updated when drawn next time
-					}
+					finishEntry();
 					return false;
-				} else if (event.key.keysym.sym == SDLK_BACKSPACE) {
+				} else if (event.key.keysym.sym == SDLK_BACKSPACE || event.key.keysym.sym == SDLK_LEFT) {
 					entries->at(idxLastInsertedEntry)->removeLastCharFromPlayerName();
 					*redrawNeeded = true;
 				} else if (event.key.keysym.sym == SDLK_SPACE) {
@@ -489,16 +509,47 @@ bool HighscoreList::eventloop(bool nameAlterable, bool *redrawNeeded) {
 				} else if (event.key.keysym.sym == SDLK_z) {
 					entries->at(idxLastInsertedEntry)->addCharToPlayerName(upper ? 'Z' : 'z');
 					*redrawNeeded = true;
+				} else if (event.key.keysym.sym == SDLK_UP) {
+					entries->at(idxLastInsertedEntry)->rotateLastCharOfPlayerName(false);
+					*redrawNeeded = true;
+				} else if (event.key.keysym.sym == SDLK_DOWN) {
+					entries->at(idxLastInsertedEntry)->rotateLastCharOfPlayerName(true);
+					*redrawNeeded = true;
+				} else if (event.key.keysym.sym == SDLK_RIGHT) {
+					entries->at(idxLastInsertedEntry)->addCharToPlayerName('A');
+					*redrawNeeded = true;
 				}
 			} else {
-				if (event.key.keysym.sym == SDLK_RETURN) {
+				if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_ESCAPE || event.key.keysym.sym == SDLK_q) {
 					return false;
 				} else if (event.key.keysym.sym == SDLK_f) {
 					Screen::getInstance()->toggleFullscreen();
 					*redrawNeeded = true;
 				} else if (event.key.keysym.sym == SDLK_s) {
 					Sounds::getInstance()->toggleEnabled();
-				} else if ((event.key.keysym.sym == SDLK_q)||(event.key.keysym.sym == SDLK_ESCAPE)) {
+				}
+			}
+			break;
+		case SDL_CONTROLLERBUTTONDOWN:
+			if (nameAlterable) {
+				if (event.cbutton.button == SDL_CONTROLLER_BUTTON_START) {
+					finishEntry();
+					return false;
+				} else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_UP) {
+					entries->at(idxLastInsertedEntry)->rotateLastCharOfPlayerName(false);
+					*redrawNeeded = true;
+				} else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN) {
+					entries->at(idxLastInsertedEntry)->rotateLastCharOfPlayerName(true);
+					*redrawNeeded = true;
+				} else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_RIGHT) {
+					entries->at(idxLastInsertedEntry)->addCharToPlayerName('A');
+					*redrawNeeded = true;
+				} else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_LEFT) {
+					entries->at(idxLastInsertedEntry)->removeLastCharFromPlayerName();
+					*redrawNeeded = true;
+				}
+			} else {
+				if (event.cbutton.button == SDL_CONTROLLER_BUTTON_START || event.cbutton.button == SDL_CONTROLLER_BUTTON_BACK) {
 					return false;
 				}
 			}

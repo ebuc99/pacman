@@ -2,6 +2,7 @@
 #define MENU_H
 #include "platform.h"
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_gamecontroller.h>
 #include <vector>
 #include "menu_item.h"
 #include "sounds.h"

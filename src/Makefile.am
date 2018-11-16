@@ -21,6 +21,8 @@ pacman_SOURCES =  \
 	figur.h \
 	game.cpp \
 	game.h \
+	gamecontroller.cpp \
+	gamecontroller.h \
 	ghost_figur.cpp \
 	ghost_figur.h \
 	pacman.cpp \

@@ -2,6 +2,7 @@
 #define SOUNDS_H
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
+#include <iostream>
 #include "cmdline_options.h"
 #include "platform.h"
 #include "labyrinth_observer.h"

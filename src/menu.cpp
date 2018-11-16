@@ -62,30 +62,40 @@ int Menu::eventloop() {
 	while(SDL_PollEvent(&event)) {
 		switch(event.type) {
 		case SDL_KEYDOWN:
-				if(event.key.keysym.sym == SDLK_RETURN)
-					return handleSelection();
-				else if(event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_k)
-					menuItemUp();
-				else if(event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_j)
-					menuItemDown();
-				else if(event.key.keysym.sym == SDLK_f) {
-					Screen::getInstance()->toggleFullscreen();
-					updateMenuItemNames();
-					this->draw();
-				}
-				else if(event.key.keysym.sym == SDLK_s) {
-					Sounds::getInstance()->toggleEnabled();
-					updateMenuItemNames();
-					this->draw();
-				}
-				else if(event.key.keysym.sym == SDLK_m) {
-					Sounds::getInstance()->toggleMusicEnabled();
-					updateMenuItemNames();
-					this->draw();
-				}
-				else if((event.key.keysym.sym == SDLK_q)||(event.key.keysym.sym == SDLK_ESCAPE))
-					return 2;
-				break;
+			if(event.key.keysym.sym == SDLK_RETURN)
+				return handleSelection();
+			else if(event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_k)
+				menuItemUp();
+			else if(event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_j)
+				menuItemDown();
+			else if(event.key.keysym.sym == SDLK_f) {
+				Screen::getInstance()->toggleFullscreen();
+				updateMenuItemNames();
+				this->draw();
+			}
+			else if(event.key.keysym.sym == SDLK_s) {
+				Sounds::getInstance()->toggleEnabled();
+				updateMenuItemNames();
+				this->draw();
+			}
+			else if(event.key.keysym.sym == SDLK_m) {
+				Sounds::getInstance()->toggleMusicEnabled();
+				updateMenuItemNames();
+				this->draw();
+			}
+			else if((event.key.keysym.sym == SDLK_q)||(event.key.keysym.sym == SDLK_ESCAPE))
+				return 2;
+			break;
+		case SDL_CONTROLLERBUTTONDOWN:
+			if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_UP)
+				menuItemUp();
+			else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN)
+				menuItemDown();
+			else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_RIGHT || event.cbutton.button == SDL_CONTROLLER_BUTTON_START)
+				return handleSelection();
+			else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_BACK)
+				return 2;
+			break;
 		case SDL_MOUSEMOTION:
 			event_x = Screen::xToClipRect(event.motion.x);
 			event_y = Screen::yToClipRect(event.motion.y);

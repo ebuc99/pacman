@@ -6,6 +6,7 @@
 #include "menu_about.h"
 #include "funny_animation.h"
 #include "highscore.h"
+#include "gamecontroller.h"
 
 class MenuMain : public Menu {
 	public:

@@ -1,9 +1,9 @@
 autoscan-2.69: warning: missing AC_CHECK_FUNCS([mkdir]) wanted by: 
 	src/platform.cpp:63
 autoscan-2.69: warning: missing AC_CHECK_FUNCS([strtol]) wanted by: 
-	src/highscore.cpp:89
+	src/highscore.cpp:105
 autoscan-2.69: warning: missing AC_CHECK_FUNCS([strtoul]) wanted by: 
-	src/highscore.cpp:581
+	src/highscore.cpp:632
 autoscan-2.69: warning: missing AC_TYPE_SIZE_T wanted by: 
 	src/platform.cpp:39
 	src/platform.cpp:46
@@ -22,23 +22,23 @@ autoscan-2.69: warning: missing AC_TYPE_UINT16_T wanted by:
 	src/constants.h:20
 	src/constants.h:30
 autoscan-2.69: warning: missing AC_TYPE_UINT8_T wanted by: 
-	src/highscore.h:47
-	src/highscore.h:53
+	src/highscore.h:49
+	src/highscore.h:56
 	src/menu.cpp:33
-	src/menu.cpp:92
-	src/menu.cpp:131
-	src/menu.cpp:131
-	src/menu.cpp:131
-	src/menu.cpp:136
-	src/menu.cpp:136
-	src/menu.cpp:140
+	src/menu.cpp:102
+	src/menu.cpp:141
+	src/menu.cpp:141
+	src/menu.cpp:141
+	src/menu.cpp:146
+	src/menu.cpp:146
+	src/menu.cpp:150
 	src/screen.cpp:193
 	src/screen.cpp:193
 	src/screen.cpp:193
-	src/menu.h:22
-	src/menu.h:25
+	src/menu.h:23
+	src/menu.h:26
 	src/constants.h:75
-	src/highscore.cpp:40
-	src/highscore.cpp:308
-	src/highscore.cpp:574
-	src/highscore.cpp:632
+	src/highscore.cpp:56
+	src/highscore.cpp:324
+	src/highscore.cpp:625
+	src/highscore.cpp:683

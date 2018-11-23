@@ -35,11 +35,13 @@ GameController::~GameController() {
 void GameController::searchAndOpen(bool reopen) {
 	if (!reopen && gameController)
 		return;
-	int mapping = SDL_GameControllerAddMappingsFromFile("gamecontrollerdb.txt");
+	char filePath[256];
+	getFilePath(filePath, "txt/gamecontrollerdb.txt");
+	int mapping = SDL_GameControllerAddMappingsFromFile(filePath);
 	if (mapping == -1)
-		std::cout << "Fehler beim Laden des Mapping" << std::endl;
+		std::cout << "Error loading game controller mappings" << std::endl;
 	else
-		std::cout << "Anzahl geladene Mapping: " << mapping << std::endl;
+		std::cout << "Number of loaded game controller mappings: " << mapping << std::endl;
 	for (int i = 0; i < SDL_NumJoysticks(); ++i) {
 		if (SDL_IsGameController(i)) {
 			SDL_GameController *controllerToOpen = SDL_GameControllerOpen(i);

@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_gamecontroller.h>
 #include <iostream>
-
+#include "platform.h"
 class GameController {
 	public:
 		static GameController *getInstance();

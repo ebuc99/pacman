@@ -42,6 +42,7 @@ AC_CHECK_FUNCS([atexit])
 AC_CONFIG_FILES([Makefile data/Makefile
                  data/fonts/Makefile
                  data/gfx/Makefile
-data/sounds/Makefile
+				 data/sounds/Makefile
+				 data/txt/Makefile
                  src/Makefile])
 AC_OUTPUT

@@ -96,6 +96,16 @@ int Menu::eventloop() {
 			else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_BACK)
 				return 2;
 			break;
+		case SDL_CONTROLLERAXISMOTION:
+			if((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY) && (event.caxis.value < -8000))
+				menuItemUp();
+			else if((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY) && (event.caxis.value > 8000))
+				menuItemDown();
+			else if((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTX) && (event.caxis.value > 8000))
+				return handleSelection();
+			else if((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTX) && (event.caxis.value < -8000))
+				return 2;
+			break;
 		case SDL_MOUSEMOTION:
 			event_x = Screen::xToClipRect(event.motion.x);
 			event_y = Screen::yToClipRect(event.motion.y);

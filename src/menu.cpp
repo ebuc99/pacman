@@ -97,13 +97,13 @@ int Menu::eventloop() {
 				return 2;
 			break;
 		case SDL_CONTROLLERAXISMOTION:
-			if((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY) && (event.caxis.value < -8000))
+			if((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY) && (event.caxis.value < -Constants::AXIS_ACTIVE_ZONE))
 				menuItemUp();
-			else if((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY) && (event.caxis.value > 8000))
+			else if((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY) && (event.caxis.value > Constants::AXIS_ACTIVE_ZONE))
 				menuItemDown();
-			else if((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTX) && (event.caxis.value > 8000))
+			else if((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTX) && (event.caxis.value > Constants::AXIS_ACTIVE_ZONE))
 				return handleSelection();
-			else if((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTX) && (event.caxis.value < -8000))
+			else if((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTX) && (event.caxis.value < -Constants::AXIS_ACTIVE_ZONE))
 				return 2;
 			break;
 		case SDL_MOUSEMOTION:

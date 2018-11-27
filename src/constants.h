@@ -74,6 +74,7 @@ class Constants {
 		static const int MAX_UPDATE_RECTS             = 200;
 		static const uint8_t HIGHSCORE_LIST_MAX_SIZE  = 10;    // maximum number of entries in highscore list
 		static const int HIGHSCORE_COLUMN_SPACING     = 20;    // space between the columns of the highscore table
+		static const uint16_t AXIS_ACTIVE_ZONE		  = 8000;  // axis value to interpret as action
 #ifdef _WIN32
 		static const char FILE_SEPARATOR              = '\\';
 #else

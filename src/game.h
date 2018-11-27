@@ -47,7 +47,7 @@ class Game {
 		int cnt_hunting_mode;
 		void stopHuntingMode();
 
-		void preselectDirection(int keycode);
+		void preselectDirection(int keycode, int value = 0);
 		void togglePause();
 		bool eventloop();
 

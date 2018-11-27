@@ -554,6 +554,23 @@ bool HighscoreList::eventloop(bool nameAlterable, bool *redrawNeeded) {
 				}
 			}
 			break;
+		case SDL_CONTROLLERAXISMOTION:
+			if (nameAlterable) {
+				if ((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY) && (event.caxis.value < -Constants::AXIS_ACTIVE_ZONE)) {
+					entries->at(idxLastInsertedEntry)->rotateLastCharOfPlayerName(false);
+					*redrawNeeded = true;
+				} else if ((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY) && (event.caxis.value > Constants::AXIS_ACTIVE_ZONE)) {
+					entries->at(idxLastInsertedEntry)->rotateLastCharOfPlayerName(true);
+					*redrawNeeded = true;
+				} else if ((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTX) && (event.caxis.value > Constants::AXIS_ACTIVE_ZONE)) {
+					entries->at(idxLastInsertedEntry)->addCharToPlayerName('A');
+					*redrawNeeded = true;
+				} else if ((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTX) && (event.caxis.value < -Constants::AXIS_ACTIVE_ZONE)) {
+					entries->at(idxLastInsertedEntry)->removeLastCharFromPlayerName();
+					*redrawNeeded = true;
+				}
+			}
+			break;
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.button.button == SDL_BUTTON_LEFT && !nameAlterable) {
 				int event_x = Screen::xToClipRect(event.motion.x);

@@ -549,7 +549,8 @@ bool HighscoreList::eventloop(bool nameAlterable, bool *redrawNeeded) {
 					*redrawNeeded = true;
 				}
 			} else {
-				if (event.cbutton.button == SDL_CONTROLLER_BUTTON_START || event.cbutton.button == SDL_CONTROLLER_BUTTON_BACK) {
+				if (event.cbutton.button == SDL_CONTROLLER_BUTTON_START || event.cbutton.button == SDL_CONTROLLER_BUTTON_BACK || 
+					event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_RIGHT || event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_LEFT) {
 					return false;
 				}
 			}
@@ -568,6 +569,11 @@ bool HighscoreList::eventloop(bool nameAlterable, bool *redrawNeeded) {
 				} else if ((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTX) && (event.caxis.value < -Constants::AXIS_ACTIVE_ZONE)) {
 					entries->at(idxLastInsertedEntry)->removeLastCharFromPlayerName();
 					*redrawNeeded = true;
+				}
+			} else {
+				if (((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTX) && (event.caxis.value > Constants::AXIS_ACTIVE_ZONE)) || 
+					((event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTX) && (event.caxis.value < -Constants::AXIS_ACTIVE_ZONE))) {
+					return false;
 				}
 			}
 			break;

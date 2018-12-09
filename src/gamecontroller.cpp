@@ -40,8 +40,8 @@ void GameController::searchAndOpen(bool reopen) {
 	int mapping = SDL_GameControllerAddMappingsFromFile(filePath);
 	if (mapping == -1)
 		std::cout << "Error loading game controller mappings" << std::endl;
-	else
-		std::cout << "Number of loaded game controller mappings: " << mapping << std::endl;
+	/*else  // comment in when debug option is implemented
+		std::cout << "Number of loaded game controller mappings: " << mapping << std::endl;*/
 	for (int i = 0; i < SDL_NumJoysticks(); ++i) {
 		if (SDL_IsGameController(i)) {
 			SDL_GameController *controllerToOpen = SDL_GameControllerOpen(i);

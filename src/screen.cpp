@@ -189,12 +189,18 @@ SDL_Surface *Screen::loadImage(const char *filename, int transparentColor) {
 		std::cout << "Unable to load image: " << IMG_GetError() << std::endl;
 		exit(EXIT_FAILURE);
 	}
-	if (transparentColor != -1)
-		SDL_SetColorKey(temp, SDL_TRUE | SDL_RLEACCEL, (Uint32)SDL_MapRGB(temp->format, (uint8_t)transparentColor, (uint8_t)transparentColor, (uint8_t)transparentColor));
 	surface = SDL_ConvertSurface(temp,  Screen::getInstance()->getSurface()->format, 0);
 	if (surface == NULL) {
 		std::cout << "Unable to convert image to display format: " << SDL_GetError() << std::endl;
 		exit(EXIT_FAILURE);
+	}
+	if (transparentColor != -1) {
+		if (SDL_SetColorKey(surface, SDL_TRUE, (Uint32)SDL_MapRGB(surface->format, (uint8_t)transparentColor, (uint8_t)transparentColor, (uint8_t)transparentColor))) {
+			std::cout << "Unable to set transparent color: " << SDL_GetError() << std::endl;
+		}
+	}
+	if (SDL_SetSurfaceRLE(surface, SDL_TRUE) < 0) {
+		std::cout << "Unable to enable RLE: " << SDL_GetError() << std::endl;
 	}
 	SDL_FreeSurface(temp);
 	return surface;

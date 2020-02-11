@@ -1,0 +1,13 @@
+Makefile.in
+aclocal.m4
+compile
+configure
+
+autom4te.cache
+
+*.o
+Makefile
+src/pacman
+src/.deps
+config.log
+config.status

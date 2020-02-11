@@ -38,6 +38,7 @@ sudo dnf install make gcc-c++ SDL2 SDL2-devel SDL2_image SDL2_image-devel SDL2_m
 Then, download and extract the zip file or clone the pacman repository.
 Inside the pacman directory, run
 ```
+./autogen.sh
 ./configure
 make
 make install

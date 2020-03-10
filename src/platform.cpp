@@ -8,10 +8,11 @@
 
 void getFilePath(char filePath[], const char file[]) {
      char installDir[256];
-     if(WINDOWS)
+#if WINDOWS
          strcpy(installDir, "");
-     else
-         strcpy(installDir, "/usr/local/share/pacman/");
+#else
+         strcpy(installDir, PACKAGE_DATA_DIR "/");
+#endif
      strcpy(filePath, installDir);
      strcat(filePath, file);
 }

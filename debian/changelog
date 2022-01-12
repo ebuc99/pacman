@@ -1,4 +1,4 @@
-pacman (0.9-1) UNRELEASED; urgency=low
+pacman (0.9) UNRELEASED; urgency=low
 
   * increase game speed
   * increase difficulty per level (longer panic mode, shorter hunting mode, shorter bonus fruit time)

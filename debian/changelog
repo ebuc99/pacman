@@ -1,0 +1,7 @@
+pacman (0.9) UNRELEASED; urgency=low
+
+  * increase game speed
+  * increase difficulty per level (longer panic mode, shorter hunting mode, shorter bonus fruit time)
+  * highscore list with possibility to encrypt the list (see pacman --help)
+
+ -- Ryan Fortner <ryankfortner@gmail.com>  Mon, 10 Jan 2022 07:19:41 -0500
